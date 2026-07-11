@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-display: 'Outfit', var(--font-sans);
+
+  /* Color Palette - Cream & Navy Theme from Logo Images */
+  --bg-base: #fcf6eb; /* Warm Cream/Beige */
+  --bg-surface: rgba(255, 255, 255, 0.75); /* Soft transparent white for cards */
+  --bg-surface-hover: rgba(255, 255, 255, 0.9);
+  --border-color: rgba(10, 49, 74, 0.12); /* Soft navy border */
+  --border-color-glow: rgba(194, 41, 38, 0.35); /* Red glow border */
+
+  --color-primary: #0a314a; /* Deep Navy Blue */
+  --color-primary-glow: rgba(10, 49, 74, 0.08);
+  --color-secondary: #0c5c36; /* Portuguese Flag Green */
+  --color-accent: #c22926; /* Portuguese Flag Red */
+  
+  --text-primary: #0a314a; /* Navy Blue text for maximum contrast */
+  --text-secondary: #1a4968;
+  --text-muted: #4e6e85;
+
+  --shadow-sm: 0 1px 2px 0 rgba(10, 49, 74, 0.03);
+  --shadow-md: 0 4px 6px -1px rgba(10, 49, 74, 0.05), 0 2px 4px -1px rgba(10, 49, 74, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(10, 49, 74, 0.08), 0 4px 6px -2px rgba(10, 49, 74, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(10, 49, 74, 0.12), 0 10px 10px -5px rgba(10, 49, 74, 0.06);
+  
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Background Gradients & Ambient Glows */
+.ambient-glow {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.ambient-glow::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(circle, var(--color-primary-glow) 0%, transparent 70%);
+  filter: blur(100px);
+}
+
+.ambient-glow::after {
+  content: "";
+  position: absolute;
+  bottom: -10%;
+  right: -10%;
+  width: 50%;
+  height: 50%;
+  background: radial-gradient(circle, rgba(194, 41, 38, 0.05) 0%, transparent 70%);
+  filter: blur(100px);
+}
+
+/* Glassmorphism Classes */
+.glass {
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-xl);
+}
+
+.glass-interactive {
+  background: var(--bg-surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  transition: var(--transition-normal);
+}
+
+.glass-interactive:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--border-color-glow);
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}

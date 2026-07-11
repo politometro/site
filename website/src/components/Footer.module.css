@@ -1,0 +1,32 @@
+.footer {
+  width: 100%;
+  padding: 1.5rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(252, 246, 235, 0.85); /* Cream matching layout background */
+  border-top: 1px solid var(--border-color);
+  margin-top: auto; /* Ensures it stays at bottom of flex layouts */
+  z-index: 10;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.dot {
+  color: var(--color-accent); /* Portuguese Flag Red dot for separator style */
+  font-weight: bold;
+}
+
+.brand {
+  font-weight: 600;
+  color: var(--text-primary);
+}

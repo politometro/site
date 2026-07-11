@@ -1,0 +1,53 @@
+{
+  "podcasts": [
+    {
+      "name": "Linhas Vermelhas",
+      "author": "SIC Notícias",
+      "description": "Podcast de debate e comentário político sobre a atualidade portuguesa, com opiniões contrastantes e temas marcantes da semana.",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts116/v4/de/b4/87/deb48721-4601-e763-124b-48e840174086/mza_1147058005738878156.jpg/600x600bb.jpg",
+      "link": "https://sicnoticias.pt/programas/linhas-vermelhas"
+    },
+    {
+      "name": "Perguntar Não Ofende",
+      "author": "Daniel Oliveira",
+      "description": "Conversas aprofundadas com contraditório, focadas principalmente na política portuguesa, conduzidas por Daniel Oliveira.",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/b8/b5/1d/b8b51d56-0275-c9bf-0306-bf254ad7845f/mza_11306346261596706782.png/600x600bb.jpg",
+      "link": "https://perguntarnaoofende.pt"
+    },
+    {
+      "name": "O Princípio da Incerteza",
+      "author": "CNN Portugal",
+      "description": "Debate semanal com perspetivas cruzadas sobre a economia, finanças e as grandes decisões governativas de Portugal.",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts116/v4/7c/4a/01/7c4a01c4-54c2-9e90-c0b7-9fa41ab312cd/mza_16694665426364024345.jpg/600x600bb.jpg",
+      "link": "https://tvi.iol.pt/cnn/programa/o-principio-da-incerteza"
+    },
+    {
+      "name": "Sem Moderação",
+      "author": "SIC Notícias",
+      "description": "Discussão e debate livre de temas políticos nacionais e europeus, com quatro comentadores e moderação dinâmica.",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/a7/67/6f/a7676f28-a400-b6f7-c5a4-23db94f69906/mza_5431627993437340246.jpg/600x600bb.jpg",
+      "link": "https://sicnoticias.pt"
+    },
+    {
+      "name": "Expresso da Meia-Noite",
+      "author": "Expresso",
+      "description": "O debate que marca a atualidade informativa semanal, reunindo políticos, jornalistas e comentadores de referência.",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/91/9f/f0/919ff089-9a72-7f2c-7389-c430ee8e6128/mza_4833215234509176315.jpg/600x600bb.jpg",
+      "link": "https://expresso.pt"
+    },
+    {
+      "name": "A Noite da Má Língua",
+      "author": "SIC",
+      "description": "O regresso do clássico programa de sátira política e crítica humorística da atualidade portuguesa.",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts125/v4/bf/cd/d8/bfcdd8c0-3fb3-f661-d703-99b392ee5a2b/mza_15509931758509865181.jpg/600x600bb.jpg",
+      "link": "https://sicnoticias.pt"
+    },
+    {
+      "name": "Fora do Baralho",
+      "author": "Observador",
+      "description": "Um olhar semanal sobre os meandros da política, coligações e jogadas de bastidores no panorama partidário português.",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts116/v4/5a/04/e6/5a04e6c3-1ad9-d2d0-ca5d-d9fe7f2025bc/mza_15684949576326168541.jpg/600x600bb.jpg",
+      "link": "https://observador.pt"
+    }
+  ]
+}

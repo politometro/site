@@ -1,0 +1,42 @@
+name: Instagram Weekly Recommendations Post
+
+on:
+  schedule:
+    # Trigger every Sunday at 09:00 UTC (which is 09:00 Lisbon WET in winter, 10:00 Lisbon WEST in summer)
+    - cron: '0 9 * * 0'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Essential to update the queue JSON file
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow requests
+
+      - name: Run posting script
+        env:
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_ACCOUNT_ID: ${{ secrets.INSTAGRAM_ACCOUNT_ID }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python .github/scripts/post_to_instagram.py
+
+      - name: Commit and push queue updates
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add website/public/recommendations.json
+          git diff-index --quiet HEAD || git commit -m "Update recommendations queue [automated post]"
+          git push

@@ -1,0 +1,45 @@
+name: Auto Instagram Recommendations
+
+on:
+  schedule:
+    # Runs at 10:00 AM on the 1st and 15th of every month (approximately every 2 weeks)
+    - cron: '0 10 1,15 * *'
+  workflow_dispatch: # Allows manual trigger at any time from GitHub UI
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow requests
+
+      - name: Generate Post Image & Caption
+        run: |
+          python scripts/generate_post.py
+
+      - name: Commit and Push Updated Database & Generated Post
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add website/public/recommendations.json website/public/current_post.png website/public/current_caption.txt
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Generate weekly post and update recommendations DB [skip ci]" && git push)
+
+      - name: Post to Instagram
+        env:
+          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
+          FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          # Give GitHub raw servers a brief moment to update cache for the raw image URL
+          sleep 10
+          python scripts/post_instagram.py
