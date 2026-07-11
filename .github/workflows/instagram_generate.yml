@@ -1,0 +1,35 @@
+name: Generate Weekly Instagram Post
+
+on:
+  schedule:
+    # Runs every Saturday at 19:00 UTC (approximately 20:00 Lisbon local time)
+    - cron: '0 19 * * 6'
+  workflow_dispatch: # Allows manual trigger at any time from GitHub UI
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install Pillow requests
+
+      - name: Generate Post Image & Caption
+        run: |
+          python scripts/generate_post.py
+
+      - name: Commit and Push Generated Post & Updated Database
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add website/public/recommendations.json website/public/current_post.png website/public/current_caption.txt
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Generate weekly post and update recommendations DB [skip ci]" && git push)
