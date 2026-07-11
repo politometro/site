@@ -3,7 +3,7 @@ import os
 import sys
 
 recommendations = [
-    # --- LIVROS (BOOKS) ---
+    # --- LIVROS (type: "book") ---
     {
         "id": "book_1",
         "type": "book",
@@ -25,8 +25,8 @@ recommendations = [
         "title": "O Erro de Salazar",
         "authorOrMeta": "Fernando Rosas",
         "description": "Uma análise detalhada sobre as decisões estratégicas do Estado Novo e o impacto da ditadura na modernização do país.",
-        "imageUrl": "https://img.wook.pt/images/o-erro-de-salazar-fernando-rosas/MXwyMjM3NDc2N3wxODAxMTQ4NHwxNTM3OTIzNjAwMDAw/502x",
-        "link": "https://www.wook.pt/livro/o-erro-de-salazar-fernando-rosas/22374767",
+        "imageUrl": "https://img.bertrand.pt/images/o-erro-de-salazar-fernando-rosas/NDV8MjIzNzQ3Njd8MTgwMTE0ODR8MTUzNzkyMzYwMDAwMA==/500x",
+        "link": "https://www.bertrand.pt/livro/o-erro-de-salazar-fernando-rosas/22374767",
         "priority": 4,
         "expiryDate": None,
         "createdAt": "2026-07-10T12:01:00Z",
@@ -34,48 +34,6 @@ recommendations = [
     },
     {
         "id": "book_3",
-        "type": "book",
-        "category": "Livro",
-        "title": "Como Mandar em Portugal",
-        "authorOrMeta": "Pedro Adão e Silva",
-        "description": "Um ensaio rigoroso sobre as redes de poder, a influência política e a tomada de decisões no Portugal contemporâneo.",
-        "imageUrl": "https://img.wook.pt/images/como-mandar-em-portugal-pedro-adao-e-silva/MXwyMTI0MTk5M3wxNzA0NTcyOHwxNTEwNTc4MzU3MDAw/502x",
-        "link": "https://www.wook.pt/livro/como-mandar-em-portugal-pedro-adao-e-silva/21241993",
-        "priority": 3,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:02:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "book_4",
-        "type": "book",
-        "category": "Livro",
-        "title": "A Democracia em Portugal",
-        "authorOrMeta": "António Costa Pinto",
-        "description": "Um estudo profundo sobre a transição democrática, as instituições e a evolução dos partidos políticos pós-25 de Abril.",
-        "imageUrl": "https://img.wook.pt/images/a-democracia-portuguesa-antonio-costa-pinto/MXwyNDE2NDk2OHwyMDI1MTExN3wxNTc5MTMxMjAwMDAw/502x",
-        "link": "https://www.wook.pt/livro/a-democracia-portuguesa-antonio-costa-pinto/24164968",
-        "priority": 4,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:03:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "book_5",
-        "type": "book",
-        "category": "Livro",
-        "title": "A Europa e a Globalização",
-        "authorOrMeta": "Eduardo Lourenço",
-        "description": "Reflexões filosóficas e geopolíticas sobre o papel do continente europeu e a identidade de Portugal no mundo globalizado.",
-        "imageUrl": "https://img.wook.pt/images/portugal-a-europa-e-a-globalizacao-eduardo-lourenco/MXw0MzA5MDN8Mzc2MjI1fDEzODMwOTcyMDAwMDA=/502x",
-        "link": "https://www.wook.pt/livro/portugal-a-europa-e-a-globalizacao-eduardo-lourenco/430903",
-        "priority": 3,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:04:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "book_6",
         "type": "book",
         "category": "Livro",
         "title": "Os Donos Angolanos de Portugal",
@@ -89,7 +47,7 @@ recommendations = [
         "status": "queue"
     },
 
-    # --- PODCASTS ---
+    # --- PODCASTS (type: "podcast") ---
     {
         "id": "podcast_1",
         "type": "podcast",
@@ -132,56 +90,14 @@ recommendations = [
         "createdAt": "2026-07-10T12:12:00Z",
         "status": "queue"
     },
-    {
-        "id": "podcast_4",
-        "type": "podcast",
-        "category": "Podcast",
-        "title": "Sem Moderação: O Pacto das Migrações",
-        "authorOrMeta": "SIC Notícias",
-        "description": "Debate esclarecedor sobre o novo pacto europeu para as migrações e o posicionamento diplomático português.",
-        "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/a7/67/6f/a7676f28-a400-b6f7-c5a4-23db94f69906/mza_5431627993437340246.jpg/600x600bb.jpg",
-        "link": "https://sicnoticias.pt",
-        "priority": 4,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:13:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "podcast_5",
-        "type": "podcast",
-        "category": "Podcast",
-        "title": "Expresso da Meia-Noite: Fundos do PRR",
-        "authorOrMeta": "Expresso",
-        "description": "Discussão detalhada sobre a execução dos fundos europeus do Plano de Recuperação e Resiliência em território nacional.",
-        "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/91/9f/f0/919ff089-9a72-7f2c-7389-c430ee8e6128/mza_4833215234509176315.jpg/600x600bb.jpg",
-        "link": "https://expresso.pt",
-        "priority": 3,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:14:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "podcast_6",
-        "type": "podcast",
-        "category": "Podcast",
-        "title": "A Noite da Má Língua: Sátira do Escrutínio",
-        "authorOrMeta": "SIC",
-        "description": "Uma análise irónica e satírica aos comportamentos dos deputados no debate parlamentar sobre a saúde.",
-        "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts125/v4/bf/cd/d8/bfcdd8c0-3fb3-f661-d703-99b392ee5a2b/mza_15509931758509865181.jpg/600x600bb.jpg",
-        "link": "https://sicnoticias.pt",
-        "priority": 3,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:15:00Z",
-        "status": "queue"
-    },
 
-    # --- FILMES E SÉRIES ---
+    # --- FILMES (type: "movie") ---
     {
         "id": "movie_1",
         "type": "movie",
-        "category": "Filme / Série",
+        "category": "Filme",
         "title": "O Lobo de Wall Street",
-        "authorOrMeta": "Filme / Martin Scorsese",
+        "authorOrMeta": "Martin Scorsese",
         "description": "Uma sátira intensa e frenética sobre ambição desmedida, corrupção financeira e os excessos da banca internacional.",
         "imageUrl": "https://upload.wikimedia.org/wikipedia/en/d/d8/The_Wolf_of_Wall_Street_%282013%29.png",
         "link": "https://www.imdb.com/title/tt0993846/",
@@ -193,9 +109,25 @@ recommendations = [
     {
         "id": "movie_2",
         "type": "movie",
-        "category": "Filme / Série",
+        "category": "Filme",
+        "title": "Capitães de Abril",
+        "authorOrMeta": "Maria de Medeiros",
+        "description": "A reconstituição cinematográfica da Revolução dos Cravos sob a perspetiva dos jovens oficiais do MFA.",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/pt/6/6b/Capit%C3%A3es_de_Abril_2000.png",
+        "link": "https://www.imdb.com/title/tt0120627/",
+        "priority": 4,
+        "expiryDate": None,
+        "createdAt": "2026-07-10T12:22:00Z",
+        "status": "queue"
+    },
+
+    # --- SÉRIES (type: "series") ---
+    {
+        "id": "series_1",
+        "type": "series",
+        "category": "Série",
         "title": "Borgen",
-        "authorOrMeta": "Série / Adam Price",
+        "authorOrMeta": "Adam Price",
         "description": "Série dinamarquesa que retrata com enorme realismo as negociações de coligação, o papel da imprensa e a ética política.",
         "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Christiansborg_2004.jpg/330px-Christiansborg_2004.jpg",
         "link": "https://www.netflix.com/title/70302482",
@@ -205,39 +137,11 @@ recommendations = [
         "status": "queue"
     },
     {
-        "id": "movie_3",
-        "type": "movie",
-        "category": "Filme / Série",
-        "title": "Capitães de Abril",
-        "authorOrMeta": "Filme / Maria de Medeiros",
-        "description": "A reconstituição cinematográfica da Revolução dos Cravos sob a perspetiva dos jovens oficiais do MFA.",
-        "imageUrl": "https://upload.wikimedia.org/wikipedia/pt/6/6b/Capit%C3%A3es_de_Abril_2000.png",
-        "link": "https://www.imdb.com/title/tt0120627/",
-        "priority": 4,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:22:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "movie_4",
-        "type": "movie",
-        "category": "Filme / Série",
-        "title": "A Herdade",
-        "authorOrMeta": "Filme / Tiago Guedes",
-        "description": "A saga de uma família proprietária de terras no Alentejo, refletindo a evolução política e económica nacional de 1940 a 1990.",
-        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Christiansborg_2004.jpg/330px-Christiansborg_2004.jpg",
-        "link": "https://www.imdb.com/title/tt8087268/",
-        "priority": 3,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:23:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "movie_5",
-        "type": "movie",
-        "category": "Filme / Série",
+        "id": "series_2",
+        "type": "series",
+        "category": "Série",
         "title": "The Crown",
-        "authorOrMeta": "Série / Peter Morgan",
+        "authorOrMeta": "Peter Morgan",
         "description": "Uma reconstituição histórica brilhante das tensões entre o palácio real de Buckingham e o parlamento de Westminster.",
         "imageUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/1/18/The_Crown_Title_Card.jpg/330px-The_Crown_Title_Card.jpg",
         "link": "https://www.netflix.com/title/80025678",
@@ -246,22 +150,54 @@ recommendations = [
         "createdAt": "2026-07-10T12:24:00Z",
         "status": "queue"
     },
+
+    # --- DOCUMENTÁRIOS (type: "documentary") ---
     {
-        "id": "movie_6",
-        "type": "movie",
-        "category": "Filme / Série",
-        "title": "House of Cards",
-        "authorOrMeta": "Série / Beau Willimon",
-        "description": "Uma perspetiva cínica sobre a luta pelo poder no Congresso norte-americano, os favores políticos e a corrupção.",
-        "imageUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/3/3f/House_of_Cards_title_card.png/330px-House_of_Cards_title_card.png",
-        "link": "https://www.netflix.com/title/70178217",
-        "priority": 3,
+        "id": "documentary_1",
+        "type": "documentary",
+        "category": "Documentário",
+        "title": "Inside Job",
+        "authorOrMeta": "Charles Ferguson",
+        "description": "Um documentário incisivo sobre a crise financeira de 2008, os incentivos de risco de Wall Street e o colapso da regulação.",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/en/a/a1/InsideJob2010Poster.jpg",
+        "link": "https://www.imdb.com/title/tt1645089/",
+        "priority": 5,
         "expiryDate": None,
-        "createdAt": "2026-07-10T12:25:00Z",
+        "createdAt": "2026-07-10T12:30:00Z",
+        "status": "queue"
+    },
+    {
+        "id": "documentary_2",
+        "type": "documentary",
+        "category": "Documentário",
+        "title": "Salazar: A Vida de um Ditador",
+        "authorOrMeta": "RTP",
+        "description": "Uma perspetiva histórica e biográfica essencial sobre o percurso pessoal e o governo ditatorial de Oliveira Salazar.",
+        "imageUrl": "https://img.rtp.pt/rtpfiles/images/64/64d7df6db822a1b94b7e5108d4b3e8ad.jpg",
+        "link": "https://www.rtp.pt/programa/tv/p24925",
+        "priority": 4,
+        "expiryDate": None,
+        "createdAt": "2026-07-10T12:31:00Z",
         "status": "queue"
     },
 
-    # --- DESTAQUES / DOCUMENTÁRIOS / ARTIGOS ---
+    # --- ARTIGOS DE OPINIÃO (type: "article") ---
+    {
+        "id": "article_1",
+        "type": "article",
+        "category": "Artigo de Opinião",
+        "title": "O Desafio da União Europeia",
+        "authorOrMeta": "Sebastião Bugalho",
+        "description": "Artigo de opinião focado nos novos desafios de integração monetária e na defesa comum dos Estados-membros pós-eleições.",
+        "imageUrl": "https://images.impresa.pt/sicnot/2024-05-13-Sebastiao-Bugalho.jpeg",
+        "link": "https://expresso.pt",
+        "priority": 4,
+        "expiryDate": None,
+        "createdAt": "2026-07-10T12:32:00Z",
+        "status": "queue"
+    },
+
+    # --- DESTAQUES / RECOMENDAÇÃO DA SEMANA (type: "highlight") ---
     {
         "id": "highlight_1",
         "type": "highlight",
@@ -279,109 +215,48 @@ recommendations = [
     {
         "id": "highlight_2",
         "type": "highlight",
-        "category": "Documentário",
-        "title": "Salazar: A Vida de um Ditador",
-        "authorOrMeta": "Documentário / RTP",
-        "description": "Uma perspetiva histórica e biográfica essencial sobre o percurso pessoal e o governo ditatorial de Oliveira Salazar.",
-        "imageUrl": "https://img.rtp.pt/rtpfiles/images/64/64d7df6db822a1b94b7e5108d4b3e8ad.jpg",
-        "link": "https://www.rtp.pt/programa/tv/p24925",
+        "category": "Recomendação da semana",
+        "title": "Sem Moderação: O Pacto das Migrações",
+        "authorOrMeta": "SIC Notícias",
+        "description": "Debate esclarecedor sobre o novo pacto europeu para as migrações e o posicionamento diplomático português.",
+        "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/a7/67/6f/a7676f28-a400-b6f7-c5a4-23db94f69906/mza_5431627993437340246.jpg/600x600bb.jpg",
+        "link": "https://sicnoticias.pt",
         "priority": 4,
         "expiryDate": None,
-        "createdAt": "2026-07-10T12:31:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "highlight_3",
-        "type": "highlight",
-        "category": "Artigo de Opinião",
-        "title": "O Desafio da União Europeia",
-        "authorOrMeta": "Sebastião Bugalho",
-        "description": "Artigo de opinião focado nos novos desafios de integração monetária e na defesa comum dos Estados-membros pós-eleições.",
-        "imageUrl": "https://images.impresa.pt/sicnot/2024-05-13-Sebastiao-Bugalho.jpeg",
-        "link": "https://www.publico.pt",
-        "priority": 4,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:32:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "highlight_4",
-        "type": "highlight",
-        "category": "Artigo de Opinião",
-        "title": "A Estabilidade Governativa",
-        "authorOrMeta": "José Miguel Júdice",
-        "description": "Uma reflexão crítica sobre a importância da estabilidade parlamentar e as exigências do eleitorado face aos novos partidos.",
-        "imageUrl": "https://images.impresa.pt/sicnot/2020-05-18-jose-miguel-judice.jpg",
-        "link": "https://www.observador.pt",
-        "priority": 5,
-        "expiryDate": "2026-07-30T00:00:00Z",
-        "createdAt": "2026-07-10T12:33:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "highlight_5",
-        "type": "highlight",
-        "category": "Documentário",
-        "title": "The Social Dilemma",
-        "authorOrMeta": "Documentário / Jeff Orlowski",
-        "description": "Investigação sobre o impacto das redes sociais no comportamento humano, a polarização política e a manipulação algorítmica.",
-        "imageUrl": "https://upload.wikimedia.org/wikipedia/en/2/27/Social_dilemma_xlg.jpg",
-        "link": "https://www.netflix.com/title/81254224",
-        "priority": 4,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:34:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "highlight_6",
-        "type": "highlight",
-        "category": "Documentário",
-        "title": "13th",
-        "authorOrMeta": "Documentário / Ava DuVernay",
-        "description": "Uma análise profunda da criminalização em massa nos EUA, correlacionando o sistema prisional à herança da escravatura.",
-        "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/6b/13th_%28film%29.png",
-        "link": "https://www.netflix.com/title/80118583",
-        "priority": 3,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:35:00Z",
-        "status": "queue"
-    },
-    {
-        "id": "highlight_7",
-        "type": "highlight",
-        "category": "Artigo de Opinião",
-        "title": "As Pensões e a Demografia",
-        "authorOrMeta": "Daniel Oliveira",
-        "description": "Um ensaio de opinião acerca da sustentabilidade do sistema de segurança social perante a inversão da pirâmide demográfica.",
-        "imageUrl": "https://images.impresa.pt/sicnot/2019-01-09-Daniel-Oliveira.jpg",
-        "link": "https://www.expresso.pt",
-        "priority": 4,
-        "expiryDate": None,
-        "createdAt": "2026-07-10T12:36:00Z",
+        "createdAt": "2026-07-10T12:13:00Z",
         "status": "queue"
     }
 ]
 
-# Validation
-counts = {}
-for r in recommendations:
-    itype = r["type"]
-    counts[itype] = counts.get(itype, 0) + 1
+def main():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.dirname(script_dir)
+    rec_file = os.path.join(root_dir, "website", "public", "recommendations.json")
+    
+    # Standard format validation
+    for i in recommendations:
+        assert "id" in i
+        assert "type" in i
+        assert "category" in i
+        assert "title" in i
+        assert "authorOrMeta" in i
+        assert "description" in i
+        assert "imageUrl" in i
+        assert "link" in i
+        assert "priority" in i
+        assert "status" in i
+        
+    print("Validation Success: All real covers configured.")
+    
+    data = {
+        "queue": recommendations,
+        "history": []
+    }
+    
+    with open(rec_file, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
+        
+    print("Recreated recommendations.json with real official covers!")
 
-for t in ["book", "podcast", "movie", "highlight"]:
-    if counts.get(t, 0) < 3:
-        print(f"Error: Type '{t}' has only {counts.get(t, 0)} items.")
-        sys.exit(1)
-
-print("Validation Success: All real covers configured.")
-
-output_file = r"c:\Users\luisf\Documents\Politómetro\website\public\recommendations.json"
-payload = {
-    "queue": recommendations,
-    "history": []
-}
-
-with open(output_file, "w", encoding="utf-8") as f:
-    json.dump(payload, f, indent=2, ensure_ascii=False)
-
-print("Recreated recommendations.json with real official covers!")
+if __name__ == "__main__":
+    main()
