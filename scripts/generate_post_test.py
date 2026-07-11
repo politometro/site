@@ -1,14 +1,16 @@
 """
-Politometro - Test Post Generator v8
+Politometro - Test Post Generator v9
 Generates a test Instagram post image using the clean template.
 Features:
-- Aligns covers by the bottom of the image for the top row (podcast and book)
-- Prevents cover overlap with title descenders (adds space if title has 2 lines)
-- Perfect cover aspect ratios:
-  * Podcast: 192x192 (square)
-  * Book / Movie / Highlight: 160x220 (perfect vertical ratio, no stretching)
-- Descriptions vertically centered next to the covers (Montserrat-SemiBold, size 15)
-- Temporarily skips "Porque Sou Liberal" and "Linhas Vermelhas" for this test run.
+- Completely dynamic selection: The 3 general quadrants are chosen from the active queue
+  by highest priority, ensuring NO repeating types (no two books, no two podcasts, etc.)
+  and no overlap with the weekly highlight.
+- Cover dimensions are tied to the item TYPE, not the quadrant:
+  * Podcasts are always rendered at 192x192 (square)
+  * Books, Movies, and Highlights are always rendered at 160x220 (vertical)
+- Top row covers align perfectly by the bottom (using dynamic heights based on item types).
+- Spacing checks for 2-line title descenders to prevent overlaps.
+- Descriptions vertically centered next to the covers.
 """
 import os
 import sys
@@ -52,48 +54,35 @@ def ensure_fonts():
             with open(path, "wb") as f:
                 f.write(r.content)
 
-# --- QUADRANT CONFIGURATION ---
-# Note: x coordinates and widths are adjusted to accommodate the new 160px wide book/movie covers.
+# --- DYNAMIC QUADRANT BASE X AND DESC CONFIGURATION ---
 QUADRANTS_CONFIG = {
-    "podcast": {
+    "q1": { # Top Left
         "label_pos": (50, 150),
         "title_pos": (50, 172),
         "cover_x": 50,
-        "cover_w": 192,
-        "cover_h": 192,
-        "desc_x": 257,                 # 50 + 192 + 15px gap
-        "desc_width": 143,             # 400 - 257
-        "desc_max_lines": 11
+        "desc_x_default": 257, # x position of desc when cover width is 192
+        "desc_width_default": 143,
     },
-    "book": {
+    "q2": { # Top Right
         "label_pos": (435, 150),
         "title_pos": (435, 172),
         "cover_x": 435,
-        "cover_w": 160,                # 160px width
-        "cover_h": 220,                # 220px height
-        "desc_x": 610,                 # 435 + 160 + 15px gap
-        "desc_width": 170,             # 780 - 610
-        "desc_max_lines": 11
+        "desc_x_default": 610, # x position of desc when cover width is 160
+        "desc_width_default": 170,
     },
-    "movie": {
+    "q3": { # Bottom Left
         "label_pos": (50, 525),
         "title_pos": (50, 547),
         "cover_x": 50,
-        "cover_w": 160,
-        "cover_h": 220,
-        "desc_x": 225,                 # 50 + 160 + 15px gap
-        "desc_width": 175,             # 400 - 225
-        "desc_max_lines": 11
+        "desc_x_default": 225, # x position of desc when cover width is 160
+        "desc_width_default": 175,
     },
-    "highlight": {
+    "q4": { # Bottom Right (Highlight / Recomendacao da semana)
         "label_pos": (435, 525),
         "title_pos": (435, 547),
         "cover_x": 435,
-        "cover_w": 160,
-        "cover_h": 220,
-        "desc_x": 610,
-        "desc_width": 170,
-        "desc_max_lines": 11
+        "desc_x_default": 610,
+        "desc_width_default": 170,
     }
 }
 
@@ -125,6 +114,7 @@ def get_recommendations_with_valid_covers(queue):
                 pass
         return s
     
+    # Filter active queue items
     active_items = []
     for i in queue:
         # Dynamically skip "Porque Sou Liberal" and "Linhas Vermelhas" for this test run
@@ -137,29 +127,73 @@ def get_recommendations_with_valid_covers(queue):
     
     selected = {}
     covers = {}
-    types_needed = ["book", "podcast", "movie", "highlight"]
     
-    for t in types_needed:
-        type_items = [i for i in active_items if i["type"] == t]
-        found = False
-        for item in type_items:
-            print(f"Checking cover for [{t.upper()}] '{item['title']}'...")
-            cover_img = fetch_cover_for_item(item, allow_placeholder=False)
-            if cover_img:
-                selected[t] = item
-                covers[t] = cover_img
-                print(f"  -> SUCCESS! Selected '{item['title']}'")
-                found = True
-                break
-            else:
-                print(f"  -> FAILED to find cover for '{item['title']}', skipping...")
-        
-        if not found and type_items:
-            fallback_item = type_items[0]
-            print(f"  -> WARNING: No real cover found for any '{t}' recommendations. Using placeholder.")
-            selected[t] = fallback_item
-            covers[t] = generate_placeholder(fallback_item['title'])
+    # 1. First, select the "highlight" (Recomendacao da semana)
+    highlight_candidates = [i for i in active_items if i["type"] == "highlight"]
+    selected_highlight = None
+    
+    for item in highlight_candidates:
+        print(f"Checking cover for [HIGHLIGHT] '{item['title']}'...")
+        cover_img = fetch_cover_for_item(item, allow_placeholder=False)
+        if cover_img:
+            selected_highlight = item
+            covers["q4"] = cover_img
+            print(f"  -> SUCCESS! Selected highlight '{item['title']}'")
+            break
+        else:
+            print(f"  -> FAILED to find cover for '{item['title']}', skipping...")
             
+    if not selected_highlight and highlight_candidates:
+        fallback_item = highlight_candidates[0]
+        print(f"  -> WARNING: No real cover found for highlight candidates. Using placeholder.")
+        selected_highlight = fallback_item
+        covers["q4"] = generate_placeholder(fallback_item['title'])
+        
+    selected["q4"] = selected_highlight
+
+    # 2. Select the other 3 positions dynamically from other types (no two books, no two podcasts, etc.)
+    # We want 3 items with distinct types that are NOT "highlight".
+    other_candidates = [i for i in active_items if i["type"] != "highlight"]
+    
+    selected_others = []
+    seen_types = set()
+    
+    for item in other_candidates:
+        # We need a cover first
+        print(f"Checking cover for [{item['type'].upper()}] '{item['title']}'...")
+        if item["type"] in seen_types:
+            print(f"  -> Skipping '{item['title']}' because we already selected type '{item['type']}'")
+            continue
+            
+        cover_img = fetch_cover_for_item(item, allow_placeholder=False)
+        if cover_img:
+            selected_others.append(item)
+            covers[f"q{len(selected_others)}"] = cover_img
+            seen_types.add(item["type"])
+            print(f"  -> SUCCESS! Selected '{item['title']}' for position q{len(selected_others)}")
+            if len(selected_others) == 3:
+                break
+        else:
+            print(f"  -> FAILED to find cover for '{item['title']}', skipping...")
+            
+    # Fallback to placeholders if we couldn't find 3 items of distinct types with valid covers
+    if len(selected_others) < 3:
+        # Get all unique types available in candidates
+        all_types = list(set(i["type"] for i in other_candidates))
+        for t in all_types:
+            if t not in seen_types and len(selected_others) < 3:
+                type_items = [i for i in other_candidates if i["type"] == t]
+                if type_items:
+                    fallback_item = type_items[0]
+                    print(f"  -> WARNING: Using placeholder for '{fallback_item['title']}' (type: {t})")
+                    selected_others.append(fallback_item)
+                    covers[f"q{len(selected_others)}"] = generate_placeholder(fallback_item['title'])
+                    seen_types.add(t)
+
+    # Assign to positions q1, q2, q3
+    for idx, item in enumerate(selected_others):
+        selected[f"q{idx+1}"] = item
+        
     return selected, covers
 
 # --- TEXT WRAPPING ---
@@ -209,9 +243,9 @@ def generate_test_post():
     title_lines_map = {}
     title_bottoms = {}
     
-    for qtype in ["podcast", "book", "movie", "highlight"]:
-        item = selected[qtype]
-        config = QUADRANTS_CONFIG[qtype]
+    for qkey in ["q1", "q2", "q3", "q4"]:
+        item = selected[qkey]
+        config = QUADRANTS_CONFIG[qkey]
         
         # Draw category label
         draw.text(config["label_pos"], item["category"], fill=TEXT_COLOR, font=label_font)
@@ -219,7 +253,7 @@ def generate_test_post():
         # Wrap title
         tx, ty = config["title_pos"]
         lines = wrap_text(draw, item["title"], title_font, 350)
-        title_lines_map[qtype] = lines
+        title_lines_map[qkey] = lines
         
         # Draw title
         curr_y = ty
@@ -228,71 +262,88 @@ def generate_test_post():
             curr_y += 34
         
         # Calculate Y value where title ends
-        title_bottoms[qtype] = curr_y
+        title_bottoms[qkey] = curr_y
+
+    # Determine Cover Dimensions based on item TYPE dynamically
+    cover_dims = {}
+    for qkey in ["q1", "q2", "q3", "q4"]:
+        item = selected[qkey]
+        if item["type"] == "podcast":
+            cover_dims[qkey] = (192, 192) # Podcasts are always square
+        else:
+            cover_dims[qkey] = (160, 220) # Books, movies, highlights are vertical
 
     # --- ROW 1 (TOP) DYNAMIC ALIGNMENT ---
-    # Top Row: Align by the BOTTOM of the cover images.
-    # Podcast height is 192, Book height is 220.
+    # Top Row: Align by the BOTTOM of the cover images dynamically.
+    gap_q1 = 18 if len(title_lines_map["q1"]) >= 2 else 12
+    gap_q2 = 18 if len(title_lines_map["q2"]) >= 2 else 12
     
-    # Calculate bottom Y limit based on title heights + required space
-    # (If a title has 2 lines, we add more spacing (+18 instead of +12) for the 'ç' descenders)
-    gap_pod = 18 if len(title_lines_map["podcast"]) >= 2 else 12
-    gap_book = 18 if len(title_lines_map["book"]) >= 2 else 12
+    h_q1 = cover_dims["q1"][1]
+    h_q2 = cover_dims["q2"][1]
     
-    podcast_min_bottom = title_bottoms["podcast"] + gap_pod + QUADRANTS_CONFIG["podcast"]["cover_h"]
-    book_min_bottom = title_bottoms["book"] + gap_book + QUADRANTS_CONFIG["book"]["cover_h"]
+    q1_min_bottom = title_bottoms["q1"] + gap_q1 + h_q1
+    q2_min_bottom = title_bottoms["q2"] + gap_q2 + h_q2
     
     # Common bottom alignment Y
-    common_bottom_y = max(podcast_min_bottom, book_min_bottom)
+    common_bottom_y = max(q1_min_bottom, q2_min_bottom)
     
     # Calculate starting Y coordinates for top row covers
     cover_y_map = {
-        "podcast": common_bottom_y - QUADRANTS_CONFIG["podcast"]["cover_h"],
-        "book": common_bottom_y - QUADRANTS_CONFIG["book"]["cover_h"]
+        "q1": common_bottom_y - h_q1,
+        "q2": common_bottom_y - h_q2
     }
     
     # --- ROW 2 (BOTTOM) DYNAMIC ALIGNMENT ---
-    # Bottom Row: Since movie and highlight both have 220px height, they naturally align by both top and bottom.
-    gap_movie = 18 if len(title_lines_map["movie"]) >= 2 else 12
-    gap_highlight = 18 if len(title_lines_map["highlight"]) >= 2 else 12
+    # Bottom Row: Align by the TOP of the cover images dynamically.
+    gap_q3 = 18 if len(title_lines_map["q3"]) >= 2 else 12
+    gap_q4 = 18 if len(title_lines_map["q4"]) >= 2 else 12
     
-    movie_top_y = title_bottoms["movie"] + gap_movie
-    highlight_top_y = title_bottoms["highlight"] + gap_highlight
+    q3_top_y = title_bottoms["q3"] + gap_q3
+    q4_top_y = title_bottoms["q4"] + gap_q4
     
-    common_top_y = max(movie_top_y, highlight_top_y)
+    common_top_y = max(q3_top_y, q4_top_y)
     
-    cover_y_map["movie"] = common_top_y
-    cover_y_map["highlight"] = common_top_y
+    cover_y_map["q3"] = common_top_y
+    cover_y_map["q4"] = common_top_y
 
     # --- PASTE COVERS AND WRITE DESCRIPTIONS ---
-    for qtype in ["podcast", "book", "movie", "highlight"]:
-        config = QUADRANTS_CONFIG[qtype]
-        item = selected[qtype]
-        cover = covers[qtype]
+    for qkey in ["q1", "q2", "q3", "q4"]:
+        config = QUADRANTS_CONFIG[qkey]
+        item = selected[qkey]
+        cover = covers[qkey]
         
-        cover_w = config["cover_w"]
-        cover_h = config["cover_h"]
-        cover_y = cover_y_map[qtype]
+        cover_w, cover_h = cover_dims[qkey]
+        cover_y = cover_y_map[qkey]
         cx = config["cover_x"]
         
-        # Resize and apply rounded corners (radius 18px like sample)
+        # Resize and apply rounded corners
         cover_resized = cover.resize((cover_w, cover_h), Image.Resampling.LANCZOS)
         cover_rounded = apply_rounded_corners(cover_resized, radius=18)
         
-        cx = config["cover_x"]
+        # Draw soft cover (rounded) border by compositing to template
         template.alpha_composite(cover_rounded, (cx, cover_y))
         
-        # Wrap description
-        dx = config["desc_x"]
-        desc_lines = wrap_text(draw, item["description"], desc_font, config["desc_width"])
+        # Calculate description positioning dynamically based on the actual cover width
+        # gap = 15px
+        dx = cx + cover_w + 15
+        
+        # Determine maximum description width based on quadrant layout limits
+        # q1/q3 end at x=400. q2/q4 end at x=780.
+        if qkey in ["q1", "q3"]:
+            desc_w = 400 - dx
+        else:
+            desc_w = 780 - dx
+            
+        desc_lines = wrap_text(draw, item["description"], desc_font, desc_w)
         
         spacing = 18
-        text_block_h = len(desc_lines[:config["desc_max_lines"]]) * spacing
+        max_lines = 11
+        text_block_h = len(desc_lines[:max_lines]) * spacing
         
         # Vertically center the description relative to this cover's Y position and height
         dy = cover_y + (cover_h - text_block_h) // 2
         
-        for line in desc_lines[:config["desc_max_lines"]]:
+        for line in desc_lines[:max_lines]:
             draw.text((dx, dy), line, fill=TEXT_COLOR, font=desc_font)
             dy += spacing
             

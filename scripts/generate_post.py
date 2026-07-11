@@ -1,16 +1,15 @@
 """
 Politometro - Instagram Post Generator (Production Version)
 Generates the Instagram post image and caption using the template and auto-fetched cover art.
-Supports automatic recommendation skipping if a cover image is not resolved,
-ensuring all 4 selected recommendations have valid real covers.
-Updates the database (recommendations.json) by marking items as published.
+Supports completely dynamic recommendation selection, ensuring NO repeating types among
+the 3 general slots, and no duplication with the weekly highlight.
 Features:
-- Aligns covers by the bottom of the image for the top row (podcast and book)
-- Prevents cover overlap with title descenders (adds space if title has 2 lines)
-- Perfect cover aspect ratios:
-  * Podcast: 192x192 (square)
-  * Book / Movie / Highlight: 160x220 (perfect vertical ratio, no stretching)
-- Descriptions vertically centered next to the covers (Montserrat-SemiBold, size 15)
+- Cover dimensions are tied to the item TYPE, not the quadrant:
+  * Podcasts are always rendered at 192x192 (square)
+  * Books, Movies, and Highlights are always rendered at 160x220 (vertical)
+- Top row covers align perfectly by the bottom (using dynamic heights based on item types).
+- Spacing checks for 2-line title descenders to prevent overlaps.
+- Descriptions vertically centered next to the covers.
 - Elegant rounded corners on all covers (radius 18px)
 """
 import os
@@ -56,47 +55,27 @@ def ensure_fonts():
             with open(path, "wb") as f:
                 f.write(r.content)
 
-# --- QUADRANT CONFIGURATION ---
+# --- DYNAMIC QUADRANT BASE X AND DESC CONFIGURATION ---
 QUADRANTS_CONFIG = {
-    "podcast": {
+    "q1": {
         "label_pos": (50, 150),
         "title_pos": (50, 172),
         "cover_x": 50,
-        "cover_w": 192,
-        "cover_h": 192,
-        "desc_x": 257,
-        "desc_width": 143,
-        "desc_max_lines": 11
     },
-    "book": {
+    "q2": {
         "label_pos": (435, 150),
         "title_pos": (435, 172),
         "cover_x": 435,
-        "cover_w": 160,
-        "cover_h": 220,
-        "desc_x": 610,
-        "desc_width": 170,
-        "desc_max_lines": 11
     },
-    "movie": {
+    "q3": {
         "label_pos": (50, 525),
         "title_pos": (50, 547),
         "cover_x": 50,
-        "cover_w": 160,
-        "cover_h": 220,
-        "desc_x": 225,
-        "desc_width": 175,
-        "desc_max_lines": 11
     },
-    "highlight": {
+    "q4": {
         "label_pos": (435, 525),
         "title_pos": (435, 547),
         "cover_x": 435,
-        "cover_w": 160,
-        "cover_h": 220,
-        "desc_x": 610,
-        "desc_width": 170,
-        "desc_max_lines": 11
     }
 }
 
@@ -133,30 +112,70 @@ def get_recommendations_with_valid_covers(queue):
     
     selected = {}
     covers = {}
-    types_needed = ["book", "podcast", "movie", "highlight"]
     
-    for t in types_needed:
-        type_items = [i for i in active_items if i["type"] == t]
-        
-        found = False
-        for item in type_items:
-            print(f"Checking cover for [{t.upper()}] '{item['title']}'...")
-            cover_img = fetch_cover_for_item(item, allow_placeholder=False)
-            if cover_img:
-                selected[t] = item
-                covers[t] = cover_img
-                print(f"  -> SUCCESS! Selected '{item['title']}'")
-                found = True
-                break
-            else:
-                print(f"  -> FAILED to find cover for '{item['title']}', skipping...")
-        
-        if not found and type_items:
-            fallback_item = type_items[0]
-            print(f"  -> WARNING: No real cover found for any '{t}' recommendations. Using placeholder.")
-            selected[t] = fallback_item
-            covers[t] = generate_placeholder(fallback_item['title'])
+    # 1. First, select the "highlight" (Recomendacao da semana)
+    highlight_candidates = [i for i in active_items if i["type"] == "highlight"]
+    selected_highlight = None
+    
+    for item in highlight_candidates:
+        print(f"Checking cover for [HIGHLIGHT] '{item['title']}'...")
+        cover_img = fetch_cover_for_item(item, allow_placeholder=False)
+        if cover_img:
+            selected_highlight = item
+            covers["q4"] = cover_img
+            print(f"  -> SUCCESS! Selected highlight '{item['title']}'")
+            break
+        else:
+            print(f"  -> FAILED to find cover for '{item['title']}', skipping...")
             
+    if not selected_highlight and highlight_candidates:
+        fallback_item = highlight_candidates[0]
+        print(f"  -> WARNING: No real cover found for highlight candidates. Using placeholder.")
+        selected_highlight = fallback_item
+        covers["q4"] = generate_placeholder(fallback_item['title'])
+        
+    selected["q4"] = selected_highlight
+
+    # 2. Select the other 3 positions dynamically from other types (no two books, no two podcasts, etc.)
+    other_candidates = [i for i in active_items if i["type"] != "highlight"]
+    
+    selected_others = []
+    seen_types = set()
+    
+    for item in other_candidates:
+        print(f"Checking cover for [{item['type'].upper()}] '{item['title']}'...")
+        if item["type"] in seen_types:
+            print(f"  -> Skipping '{item['title']}' because we already selected type '{item['type']}'")
+            continue
+            
+        cover_img = fetch_cover_for_item(item, allow_placeholder=False)
+        if cover_img:
+            selected_others.append(item)
+            covers[f"q{len(selected_others)}"] = cover_img
+            seen_types.add(item["type"])
+            print(f"  -> SUCCESS! Selected '{item['title']}' for position q{len(selected_others)}")
+            if len(selected_others) == 3:
+                break
+        else:
+            print(f"  -> FAILED to find cover for '{item['title']}', skipping...")
+            
+    # Fallback if less than 3 distinct types found
+    if len(selected_others) < 3:
+        all_types = list(set(i["type"] for i in other_candidates))
+        for t in all_types:
+            if t not in seen_types and len(selected_others) < 3:
+                type_items = [i for i in other_candidates if i["type"] == t]
+                if type_items:
+                    fallback_item = type_items[0]
+                    print(f"  -> WARNING: Using placeholder for '{fallback_item['title']}' (type: {t})")
+                    selected_others.append(fallback_item)
+                    covers[f"q{len(selected_others)}"] = generate_placeholder(fallback_item['title'])
+                    seen_types.add(t)
+
+    # Assign
+    for idx, item in enumerate(selected_others):
+        selected[f"q{idx+1}"] = item
+        
     return selected, covers
 
 # --- TEXT WRAPPING ---
@@ -190,9 +209,9 @@ def generate_production_post():
     
     selected, covers = get_recommendations_with_valid_covers(queue)
     
-    missing = [t for t in ["book", "podcast", "movie", "highlight"] if t not in selected]
+    missing = [q for q in ["q1", "q2", "q3", "q4"] if q not in selected]
     if missing:
-        print(f"ERROR: Missing types: {missing}")
+        print(f"ERROR: Missing quadrants: {missing}")
         sys.exit(1)
     
     # Load clean template
@@ -214,9 +233,9 @@ def generate_production_post():
     title_lines_map = {}
     title_bottoms = {}
     
-    for qtype in ["podcast", "book", "movie", "highlight"]:
-        item = selected[qtype]
-        config = QUADRANTS_CONFIG[qtype]
+    for qkey in ["q1", "q2", "q3", "q4"]:
+        item = selected[qkey]
+        config = QUADRANTS_CONFIG[qkey]
         
         # Draw category label
         draw.text(config["label_pos"], item["category"], fill=TEXT_COLOR, font=label_font)
@@ -224,7 +243,7 @@ def generate_production_post():
         # Wrap title
         tx, ty = config["title_pos"]
         lines = wrap_text(draw, item["title"], title_font, 350)
-        title_lines_map[qtype] = lines
+        title_lines_map[qkey] = lines
         
         # Draw title
         curr_y = ty
@@ -232,44 +251,54 @@ def generate_production_post():
             draw.text((tx, curr_y), line, fill=TEXT_COLOR, font=title_font)
             curr_y += 34
         
-        title_bottoms[qtype] = curr_y
+        title_bottoms[qkey] = curr_y
+
+    # Determine Cover Dimensions based on item TYPE dynamically
+    cover_dims = {}
+    for qkey in ["q1", "q2", "q3", "q4"]:
+        item = selected[qkey]
+        if item["type"] == "podcast":
+            cover_dims[qkey] = (192, 192)
+        else:
+            cover_dims[qkey] = (160, 220)
 
     # --- ROW 1 (TOP) DYNAMIC ALIGNMENT ---
-    # Podcast height is 192, Book height is 220. Aligned by bottom of cover.
-    gap_pod = 18 if len(title_lines_map["podcast"]) >= 2 else 12
-    gap_book = 18 if len(title_lines_map["book"]) >= 2 else 12
+    gap_q1 = 18 if len(title_lines_map["q1"]) >= 2 else 12
+    gap_q2 = 18 if len(title_lines_map["q2"]) >= 2 else 12
     
-    podcast_min_bottom = title_bottoms["podcast"] + gap_pod + QUADRANTS_CONFIG["podcast"]["cover_h"]
-    book_min_bottom = title_bottoms["book"] + gap_book + QUADRANTS_CONFIG["book"]["cover_h"]
+    h_q1 = cover_dims["q1"][1]
+    h_q2 = cover_dims["q2"][1]
     
-    common_bottom_y = max(podcast_min_bottom, book_min_bottom)
+    q1_min_bottom = title_bottoms["q1"] + gap_q1 + h_q1
+    q2_min_bottom = title_bottoms["q2"] + gap_q2 + h_q2
+    
+    common_bottom_y = max(q1_min_bottom, q2_min_bottom)
     
     cover_y_map = {
-        "podcast": common_bottom_y - QUADRANTS_CONFIG["podcast"]["cover_h"],
-        "book": common_bottom_y - QUADRANTS_CONFIG["book"]["cover_h"]
+        "q1": common_bottom_y - h_q1,
+        "q2": common_bottom_y - h_q2
     }
     
     # --- ROW 2 (BOTTOM) DYNAMIC ALIGNMENT ---
-    gap_movie = 18 if len(title_lines_map["movie"]) >= 2 else 12
-    gap_highlight = 18 if len(title_lines_map["highlight"]) >= 2 else 12
+    gap_q3 = 18 if len(title_lines_map["q3"]) >= 2 else 12
+    gap_q4 = 18 if len(title_lines_map["q4"]) >= 2 else 12
     
-    movie_top_y = title_bottoms["movie"] + gap_movie
-    highlight_top_y = title_bottoms["highlight"] + gap_highlight
+    q3_top_y = title_bottoms["q3"] + gap_q3
+    q4_top_y = title_bottoms["q4"] + gap_q4
     
-    common_top_y = max(movie_top_y, highlight_top_y)
+    common_top_y = max(q3_top_y, q4_top_y)
     
-    cover_y_map["movie"] = common_top_y
-    cover_y_map["highlight"] = common_top_y
+    cover_y_map["q3"] = common_top_y
+    cover_y_map["q4"] = common_top_y
 
     # --- PASTE COVERS AND WRITE DESCRIPTIONS ---
-    for qtype in ["podcast", "book", "movie", "highlight"]:
-        config = QUADRANTS_CONFIG[qtype]
-        item = selected[qtype]
-        cover = covers[qtype]
+    for qkey in ["q1", "q2", "q3", "q4"]:
+        config = QUADRANTS_CONFIG[qkey]
+        item = selected[qkey]
+        cover = covers[qkey]
         
-        cover_w = config["cover_w"]
-        cover_h = config["cover_h"]
-        cover_y = cover_y_map[qtype]
+        cover_w, cover_h = cover_dims[qkey]
+        cover_y = cover_y_map[qkey]
         cx = config["cover_x"]
         
         # Resize and apply rounded corners
@@ -279,14 +308,20 @@ def generate_production_post():
         template.alpha_composite(cover_rounded, (cx, cover_y))
         
         # Wrap description
-        dx = config["desc_x"]
-        desc_lines = wrap_text(draw, item["description"], desc_font, config["desc_width"])
+        dx = cx + cover_w + 15
+        if qkey in ["q1", "q3"]:
+            desc_w = 400 - dx
+        else:
+            desc_w = 780 - dx
+            
+        desc_lines = wrap_text(draw, item["description"], desc_font, desc_w)
         
         spacing = 18
-        text_block_h = len(desc_lines[:config["desc_max_lines"]]) * spacing
+        max_lines = 11
+        text_block_h = len(desc_lines[:max_lines]) * spacing
         dy = cover_y + (cover_h - text_block_h) // 2
         
-        for line in desc_lines[:config["desc_max_lines"]]:
+        for line in desc_lines[:max_lines]:
             draw.text((dx, dy), line, fill=TEXT_COLOR, font=desc_font)
             dy += spacing
             
@@ -295,23 +330,22 @@ def generate_production_post():
     output.save(OUTPUT_PATH, "PNG", quality=95)
     print(f"\n[OK] Production post image saved to: {OUTPUT_PATH}")
     
-    # 5. Generate Instagram Caption
+    # 5. Generate Instagram Caption dynamically
     caption = f"""📢 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO 🇵🇹
     
 Trazemos-te a nossa seleção semanal de conteúdos essenciais para compreenderes a política, a história e a economia de Portugal e do mundo.
 
-🎙️ PODCAST: {selected['podcast']['title']} ({selected['podcast']['authorOrMeta']})
-👉 {selected['podcast']['description']}
+🎙️ {selected['q1']['category'].upper()}: {selected['q1']['title']} ({selected['q1']['authorOrMeta']})
+👉 {selected['q1']['description']}
 
-📚 LIVRO: {selected['book']['title']}
-✍️ de {selected['book']['authorOrMeta']}
-👉 {selected['book']['description']}
+📚 {selected['q2']['category'].upper()}: {selected['q2']['title']} ({selected['q2']['authorOrMeta']})
+👉 {selected['q2']['description']}
 
-🎬 FILME / SÉRIE: {selected['movie']['title']} ({selected['movie']['authorOrMeta']})
-👉 {selected['movie']['description']}
+🎬 {selected['q3']['category'].upper()}: {selected['q3']['title']} ({selected['q3']['authorOrMeta']})
+👉 {selected['q3']['description']}
 
-💡 RECOMENDAÇÃO DA SEMANA: {selected['highlight']['title']} ({selected['highlight']['authorOrMeta']})
-👉 {selected['highlight']['description']}
+💡 {selected['q4']['category'].upper()}: {selected['q4']['title']} ({selected['q4']['authorOrMeta']})
+👉 {selected['q4']['description']}
 
 ---
 #politometro #portugal #politica #recomendaçoes #livros #podcasts #filmes #documentarios #escrutinio #democracia #cultura
@@ -340,13 +374,13 @@ Trazemos-te a nossa seleção semanal de conteúdos essenciais para compreendere
     print("[OK] Updated recommendations.json database successfully.")
     
     # Pool size warning
-    remaining_counts = {}
+    remaining_types = {}
     for item in updated_queue:
         itype = item["type"]
-        remaining_counts[itype] = remaining_counts.get(itype, 0) + 1
+        remaining_types[itype] = remaining_types.get(itype, 0) + 1
         
     for t in ["book", "podcast", "movie", "highlight"]:
-        count = remaining_counts.get(t, 0)
+        count = remaining_types.get(t, 0)
         if count < 3:
             print(f"[WARNING] Pool depletion warning: Only {count} items of type '{t}' left in the queue!")
 

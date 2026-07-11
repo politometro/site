@@ -26,7 +26,8 @@ api_key = os.environ.get("PINECONE_API_KEY")
 index_name = os.environ.get("PINECONE_INDEX_NAME")
 
 if not api_key:
-    api_key = "pcsk_4AqUSn_UgboMWWKC7DUa9wD3SfXEQrNMdCEvcYbQNCjMJUc3399JXfgJD8zgU8pBhwk8Zk"
+    print("Error: PINECONE_API_KEY environment variable is not set. Please configure it in your environment.")
+    sys.exit(1)
 if not index_name:
     index_name = "politometro"
 
