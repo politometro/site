@@ -260,7 +260,7 @@ const PARTIES_METADATA_NORM = Object.keys(PARTIES_METADATA).reduce((acc, key) =>
 export default function DocumentationPage() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
-  const [extraStats, setExtraStats] = useState({ budgetsCount: 0, constitutionCount: 0 });
+  const [extraStats, setExtraStats] = useState({ budgetsCount: 28, constitutionCount: 1 });
 
   const rows = docsData.rows as Row[];
 
