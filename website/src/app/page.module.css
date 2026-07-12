@@ -348,9 +348,9 @@
   color: var(--text-primary);
 }
 
-.userWrapper .branchBtn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
+.branchBtn:hover:not(:disabled) {
+  background: rgba(10, 49, 74, 0.05);
+  color: var(--text-primary);
 }
 
 .branchBtn:disabled {
@@ -361,51 +361,36 @@
 /* Bubble action buttons container */
 .bubbleActions {
   display: flex;
-  gap: 0.5rem;
-  align-self: flex-end;
-  margin-top: 0.65rem;
-  opacity: 0;
+  gap: 0.25rem;
+  align-items: center;
+  opacity: 0.35;
   transition: opacity var(--transition-fast);
 }
 
-.messageBubble:hover .bubbleActions {
-  opacity: 0.85;
+.messageWrapper:hover .bubbleActions {
+  opacity: 0.8;
 }
 
 .bubbleActions:hover {
   opacity: 1 !important;
 }
 
-.actionBtn {
-  background: rgba(10, 49, 74, 0.02);
-  border: 1px solid var(--border-color);
+.actionIconBtn {
+  background: none;
+  border: none;
   color: var(--text-muted);
-  font-size: 0.7rem;
-  padding: 0.2rem 0.45rem;
-  border-radius: var(--radius-sm);
   cursor: pointer;
-  display: flex;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  justify-content: center;
   transition: var(--transition-fast);
 }
 
-.userBubble .actionBtn {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.actionBtn:hover {
-  background: rgba(12, 92, 54, 0.08);
-  border-color: rgba(12, 92, 54, 0.25);
-  color: var(--color-secondary);
-}
-
-.userBubble .actionBtn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.4);
-  color: #fff;
+.actionIconBtn:hover {
+  background: rgba(10, 49, 74, 0.06);
+  color: var(--color-primary);
 }
 
 /* Inline editing elements */

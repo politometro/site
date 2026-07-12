@@ -112,6 +112,26 @@ export async function POST(req: NextRequest) {
         }
 
         if (queryVector) {
+          // Determine if query is regional
+          let filter: any = undefined;
+          const lowerMessage = lastUserMessage.toLowerCase();
+          const isRegionalQuery = 
+            lowerMessage.includes("açores") || 
+            lowerMessage.includes("açor") || 
+            lowerMessage.includes("madeira") || 
+            lowerMessage.includes("madeir") || 
+            lowerMessage.includes("regional") || 
+            lowerMessage.includes("regiões") || 
+            lowerMessage.includes("região");
+
+          if (!isRegionalQuery) {
+            filter = {
+              category: {
+                $nin: ["Açores", "Madeira"]
+              }
+            };
+          }
+
           // Step 3: Query Pinecone index using the vector
           const queryRes = await fetch(`https://${indexHost}/query`, {
             method: "POST",
@@ -123,6 +143,7 @@ export async function POST(req: NextRequest) {
               vector: queryVector,
               topK: 30,
               includeMetadata: true,
+              ...(filter ? { filter } : {})
             }),
           });
 
@@ -176,7 +197,9 @@ Regras Estritas de Fidelidade à Pesquisa:
 1. Nunca respondas com base em suposições, notícias ou fontes não incluídas nas tuas bases de conhecimento. Se não encontrares resposta, assume isso com transparência e diz que não encontras registo documental dessa proposta específica.
 2. Nunca alteres ou "corrijas" nomes próprios, termos ou grafias inseridos pelo utilizador para outros nomes semelhantes (por exemplo, se o utilizador perguntar por "David Strango", deves referir-te a ele exatamente como "David Strango" na resposta e informar que não constam registos desse nome, em vez de assumir que é um erro e responder sobre "David Strangio").
 3. Nunca menciones nomes de ficheiros PDF, metadados internos, fontes consultadas ou referências técnicas na resposta. Não incluas secções como "Fontes:", "Referências:" ou listas de documentos. Para indicar a origem da informação, integra-a naturalmente no texto utilizando expressões como "no programa eleitoral do [partido] para as legislativas de [ano]" ou "no programa do [partido] de [ano]".
-4. Se não encontrares informação sobre um tema ou período específico, diz simplesmente que não encontraste registos sobre esse tema nos programas eleitorais consultados, sem sugerir limitações temporais da base de dados.
+4. Se não encontrares informação sobre um tema ou período específico, diz simplesmente que não encontraste registos sobre esse tema nos programas eleitorais consultados, sem sugerir limitações temporais ou de sistema da base de dados.
+5. NUNCA uses expressões defensivas como "embora não tenha acesso", "não tenho acesso", "não posso aceder", "não me é possível consultar" ou semelhantes. Evita justificar respostas negativas com supostas limitações técnicas; responde de forma direta e afirmativa baseando-te apenas nos trechos disponíveis.
+6. Evita citar propostas de programas eleitorais regionais dos Açores ou da Madeira a menos que o utilizador pergunte especificamente por assuntos dessas regiões autónomas.
 
 [CONTEXTO DOCUMENTAL RECUPERADO (Base de Conhecimento)]
 ${contextText || "Nenhum documento relevante encontrado."}

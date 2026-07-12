@@ -541,7 +541,7 @@ export default function Home() {
                   <div className={styles.avatar}>
                     {msg.role === "user" ? "👤" : "🗳️"}
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", maxWidth: "calc(100% - 50px)" }}>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", maxWidth: "calc(100% - 50px)", alignItems: msg.role === "user" ? "flex-end" : "flex-start", width: "100%" }}>
                     <div className={`${styles.messageBubble} ${msg.role === "user" ? styles.userBubble : styles.assistantBubble}`}>
                       {isEditing ? (
                         <div className={styles.editContainer}>
@@ -572,81 +572,67 @@ export default function Home() {
                           </div>
                         </div>
                       ) : (
-                        <>
-                          <div className={styles.messageContent}>
-                            {renderMarkdown(msg.content)}
-                          </div>
-
-                          {msg.role === "assistant" && msg.sources && msg.sources.length > 0 && (
-                            <div className={styles.sourcesContainer}>
-                              <span className={styles.sourcesTitle}>Fontes Recuperadas:</span>
-                              <div className={styles.sourcesList}>
-                                {msg.sources.map((src: any, sIdx: number) => (
-                                  <div 
-                                    key={sIdx} 
-                                    className={styles.sourceTag}
-                                    title={`${src.filename || "Documento"}\nPontuação RAG: ${(src.score * 100).toFixed(1)}%`}
-                                  >
-                                    <span className={styles.sourceTagParty}>{src.party}</span>
-                                    {src.category && <span className={styles.sourceTagCategory}>{src.category}</span>}
-                                    <span>{src.year}</span>
-                                    <span className={styles.sourceTagPage}>Pág. {src.page}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                          
-                          <div className={styles.bubbleActions}>
-                            <button 
-                              className={styles.actionBtn}
-                              type="button"
-                              onClick={() => handleCopy(msg.content, msg.id)}
-                              title="Copiar texto"
-                            >
-                              {copiedMessageId === msg.id ? "✓ Copiado!" : "📋 Copiar"}
-                            </button>
-                            
-                            {msg.role === "user" && (
-                              <button 
-                                className={styles.actionBtn}
-                                type="button"
-                                onClick={() => {
-                                  setEditingMessageId(msg.id);
-                                  setEditInput(msg.content);
-                                }}
-                                disabled={isLoading}
-                                title="Editar pergunta"
-                              >
-                                ✏️ Editar
-                              </button>
-                            )}
-                          </div>
-                        </>
+                        <div className={styles.messageContent}>
+                          {renderMarkdown(msg.content)}
+                        </div>
                       )}
                     </div>
                     
-                    {isBranch && !isEditing && (
-                      <div className={`${styles.branchNav} ${msg.role === "user" ? styles.branchNavRight : ""}`}>
-                        <button 
-                          className={styles.branchBtn}
-                          type="button"
-                          onClick={() => handleNavigateSibling(msg.id, -1)}
-                          disabled={siblingIndex === 0 || isLoading}
-                          title="Ramo anterior"
-                        >
-                          ◀
-                        </button>
-                        <span>{siblingIndex + 1} / {siblings.length}</span>
-                        <button 
-                          className={styles.branchBtn}
-                          type="button"
-                          onClick={() => handleNavigateSibling(msg.id, 1)}
-                          disabled={siblingIndex === siblings.length - 1 || isLoading}
-                          title="Próximo ramo"
-                        >
-                          ▶
-                        </button>
+                    {!isEditing && (
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", width: "100%", justifyContent: "flex-end", marginTop: "2px" }}>
+                        {isBranch && (
+                          <div className={styles.branchNav} style={{ margin: 0 }}>
+                            <button 
+                              className={styles.branchBtn}
+                              type="button"
+                              onClick={() => handleNavigateSibling(msg.id, -1)}
+                              disabled={siblingIndex === 0 || isLoading}
+                              title="Ramo anterior"
+                            >
+                              ◀
+                            </button>
+                            <span>{siblingIndex + 1} / {siblings.length}</span>
+                            <button 
+                              className={styles.branchBtn}
+                              type="button"
+                              onClick={() => handleNavigateSibling(msg.id, 1)}
+                              disabled={siblingIndex === siblings.length - 1 || isLoading}
+                              title="Próximo ramo"
+                            >
+                              ▶
+                            </button>
+                          </div>
+                        )}
+                        
+                        <div className={styles.bubbleActions} style={{ margin: 0 }}>
+                          <button 
+                            className={styles.actionIconBtn}
+                            type="button"
+                            onClick={() => handleCopy(msg.content, msg.id)}
+                            title={copiedMessageId === msg.id ? "Copiado!" : "Copiar texto"}
+                          >
+                            {copiedMessageId === msg.id ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--color-secondary)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            )}
+                          </button>
+                          
+                          {msg.role === "user" && (
+                            <button 
+                              className={styles.actionIconBtn}
+                              type="button"
+                              onClick={() => {
+                                setEditingMessageId(msg.id);
+                                setEditInput(msg.content);
+                              }}
+                              disabled={isLoading}
+                              title="Editar pergunta"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"></path></svg>
+                            </button>
+                          )}
+                        </div>
                       </div>
                     )}
                   </div>
