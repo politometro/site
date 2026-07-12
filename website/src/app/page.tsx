@@ -106,6 +106,7 @@ Podes perguntar-me sobre posições de partidos, comparações entre anos ou tem
       const decoder = new TextDecoder();
       let done = false;
       let accumulatedContent = "";
+      let buffer = ""; // Buffer to store incomplete JSON lines from stream chunks
 
       if (!reader) {
         throw new Error("Não foi possível estabelecer ligação de streaming.");
@@ -116,13 +117,18 @@ Podes perguntar-me sobre posições de partidos, comparações entre anos ou tem
         done = readerDone;
         
         if (value) {
-          const chunk = decoder.decode(value, { stream: !done });
+          buffer += decoder.decode(value, { stream: !done });
           
-          // Parse SSE stream format
-          const lines = chunk.split("\n");
+          const lines = buffer.split("\n");
+          // Save the last line (which could be incomplete) back to the buffer
+          buffer = lines.pop() || "";
+          
           for (const line of lines) {
-            if (line.startsWith("data: ")) {
-              const dataStr = line.slice(6).trim();
+            const trimmedLine = line.trim();
+            if (!trimmedLine) continue;
+
+            if (trimmedLine.startsWith("data: ")) {
+              const dataStr = trimmedLine.slice(6).trim();
               if (dataStr === "[DONE]") {
                 done = true;
                 break;
@@ -140,9 +146,31 @@ Podes perguntar-me sobre posições de partidos, comparações entre anos ou tem
                   )
                 );
               } catch (e) {
-                // Ignore non-JSON chunks
+                // Ignore syntax errors for incomplete lines in loop
               }
             }
+          }
+        }
+      }
+
+      // Process any remaining content in the buffer at the end
+      if (buffer.trim()) {
+        const trimmedLine = buffer.trim();
+        if (trimmedLine.startsWith("data: ")) {
+          const dataStr = trimmedLine.slice(6).trim();
+          if (dataStr !== "[DONE]") {
+            try {
+              const dataJson = JSON.parse(dataStr);
+              const textChunk = dataJson.choices?.[0]?.delta?.content || "";
+              accumulatedContent += textChunk;
+              setMessages((prev) =>
+                prev.map((msg) =>
+                  msg.id === assistantMessageId
+                    ? { ...msg, content: accumulatedContent, sources }
+                    : msg
+                )
+              );
+            } catch (e) {}
           }
         }
       }
