@@ -378,34 +378,43 @@
   
   .statsGrid {
     grid-template-columns: repeat(3, 1fr); /* 3 cards side-by-side on mobile */
-    gap: 0.35rem;
+    gap: 0.25rem;
     margin-bottom: 0.5rem;
   }
   
   .statCard {
-    padding: 0.5rem 0.35rem;
-    gap: 0.35rem;
-    border-left: 3px solid var(--color-primary);
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0.5rem 0.2rem;
+    gap: 0.25rem;
+    border-left: none;
+    border-top: 3px solid var(--color-primary);
   }
 
   .statIcon {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
   }
 
   .statIcon svg {
-    width: 12px;
-    height: 12px;
+    width: 11px;
+    height: 11px;
     stroke-width: 2.2;
   }
 
+  .statInfo {
+    align-items: center;
+  }
+
   .statValue {
-    font-size: 1.1rem;
+    font-size: 0.85rem;
     line-height: 1.1;
+    font-weight: 800;
   }
 
   .statLabel {
-    font-size: 0.55rem;
+    font-size: 0.5rem;
     line-height: 1.2;
     letter-spacing: -0.02em;
   }
