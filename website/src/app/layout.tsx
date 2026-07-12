@@ -53,8 +53,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt">
-      <body>
+    <html lang="pt" suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <div className="ambient-glow"></div>
         <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", width: "100%" }}>
           <div style={{ flex: "1 1 auto", width: "100%", display: "flex", flexDirection: "column" }}>
