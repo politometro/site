@@ -53,8 +53,18 @@ export default function Home() {
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editInput, setEditInput] = useState("");
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
   
   const messageListRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   // Hydrate conversation from sessionStorage on client-side mount
   useEffect(() => {
@@ -558,7 +568,7 @@ export default function Home() {
                   <div className={styles.avatar}>
                     {msg.role === "user" ? "👤" : "🗳️"}
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.25rem", maxWidth: "calc(100% - 50px)", alignItems: msg.role === "user" ? "flex-end" : "flex-start", width: "100%" }}>
+                  <div className={styles.bubbleContainer} style={{ alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
                     <div className={`${styles.messageBubble} ${msg.role === "user" ? styles.userBubble : styles.assistantBubble}`}>
                       {isEditing ? (
                         <div className={styles.editContainer}>
@@ -672,7 +682,26 @@ export default function Home() {
               disabled={isLoading || !input.trim()} 
               className={styles.sendBtn}
             >
-              {isLoading ? "..." : "Enviar"}
+              {isLoading ? (
+                "..."
+              ) : isMobile ? (
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="18" 
+                  height="18" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  <line x1="12" y1="19" x2="12" y2="5"></line>
+                  <polyline points="5 12 12 5 19 12"></polyline>
+                </svg>
+              ) : (
+                "Enviar"
+              )}
             </button>
           </form>
         </div>

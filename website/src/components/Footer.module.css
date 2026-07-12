@@ -46,3 +46,9 @@
   height: 14px;
   fill: currentColor;
 }
+
+@media (max-width: 640px) {
+  .footer {
+    padding: 0.75rem 0;
+  }
+}

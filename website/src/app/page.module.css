@@ -94,6 +94,14 @@
   flex-shrink: 0;
 }
 
+.bubbleContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: calc(100% - 50px);
+  width: 100%;
+}
+
 .messageBubble {
   padding: 1rem 1.25rem;
   border-radius: var(--radius-md);
@@ -273,12 +281,18 @@
 }
 
 @media (max-width: 640px), (max-height: 500px) {
+  .container {
+    height: calc(100dvh - 65px - 42px); /* Header is 65px on mobile, Footer is ~42px */
+  }
+
   .messageWrapper {
-    max-width: 95%;
+    max-width: 98%;
+    gap: 0.5rem;
   }
   
   .chatBox {
-    height: calc(100vh - 125px);
+    flex: 1;
+    height: auto; /* Let flex scale it dynamically */
     border-radius: var(--radius-md);
   }
   
@@ -288,12 +302,23 @@
   }
   
   .messageList {
-    padding: 0.75rem;
+    padding: 0.5rem;
     gap: 0.75rem;
+  }
+
+  .avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 1rem;
+  }
+
+  .bubbleContainer {
+    max-width: calc(100% - 36px); /* 30px avatar + 6px gap */
   }
   
   .messageBubble {
-    padding: 0.65rem 0.85rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.85rem;
   }
   
   .inputArea {
@@ -302,13 +327,23 @@
   }
   
   .input {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 0.75rem;
     font-size: 1rem; /* 16px to prevent iOS auto-zoom and text clipping */
+  }
+
+  .input::placeholder {
+    font-size: 0.78rem; /* decrease placeholder size on mobile to fit text fully */
   }
   
   .sendBtn {
-    padding: 0.6rem 1.25rem;
-    font-size: 0.85rem;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    flex-shrink: 0;
   }
 }
 
