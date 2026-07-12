@@ -369,7 +369,11 @@ export default function DocumentationPage() {
           {/* Card 1: Programas Disponíveis */}
           <div className={`${styles.statCard} glass`}>
             <div className={styles.statIcon}>
-              ✓
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+                <polyline points="14 2 14 8 20 8" />
+                <path d="m9 15 2 2 4-4" />
+              </svg>
             </div>
             <div className={styles.statInfo}>
               <span className={styles.statValue}>{stats.available}</span>
@@ -380,7 +384,14 @@ export default function DocumentationPage() {
           {/* Card 2: Orçamentos de Estado */}
           <div className={`${styles.statCard} glass`}>
             <div className={styles.statIcon}>
-              📊
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="22" x2="21" y2="22" />
+                <line x1="6" y1="18" x2="6" y2="11" />
+                <line x1="10" y1="18" x2="10" y2="11" />
+                <line x1="14" y1="18" x2="14" y2="11" />
+                <line x1="18" y1="18" x2="18" y2="11" />
+                <polygon points="12 2 2 7 22 7 12 2" />
+              </svg>
             </div>
             <div className={styles.statInfo}>
               <span className={styles.statValue}>{extraStats.budgetsCount}</span>
@@ -391,10 +402,12 @@ export default function DocumentationPage() {
           {/* Card 3: Constituição */}
           <div className={`${styles.statCard} glass`}>
             <div className={styles.statIcon}>
-              📕
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 3v17M12 20H8m4 0h4M3 9h6M21 9h-6M6 9v6c0 1.5 1 2.5 2.5 2.5S11 16.5 11 15V9m4 0v6c0 1.5 1 2.5 2.5 2.5S20 16.5 20 15V9" />
+              </svg>
             </div>
             <div className={styles.statInfo}>
-              <span className={styles.statValue}>{extraStats.constitutionCount}</span>
+              <span className={styles.statValue}>{extraStats.constitutionCount > 0 ? "Sim" : "Não"}</span>
               <span className={styles.statLabel}>Constituição da República</span>
             </div>
           </div>

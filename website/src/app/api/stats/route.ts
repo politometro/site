@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     // Bulletproof dataDir location (handles both root and website run folders)
@@ -10,18 +12,29 @@ export async function GET() {
       dataDir = path.join(process.cwd(), "..", "data");
     }
 
-    const budgetsDir = path.join(dataDir, "Orçamentos de Estado");
     let budgetsCount = 0;
+    let constitutionCount = 0;
 
-    if (fs.existsSync(budgetsDir)) {
-      const files = fs.readdirSync(budgetsDir);
-      // Count PDF files in the Orçamentos de Estado directory
-      budgetsCount = files.filter((f) => f.toLowerCase().endsWith(".pdf")).length;
+    if (fs.existsSync(dataDir)) {
+      const filesInDocs = fs.readdirSync(dataDir);
+
+      // Resolve budgets folder dynamically to prevent encoding mismatches
+      const budgetsFolder = filesInDocs.find(
+        (f) => f.toLowerCase().includes("orçamento") || f.toLowerCase().includes("orcamento")
+      );
+      const budgetsDir = budgetsFolder ? path.join(dataDir, budgetsFolder) : null;
+
+      if (budgetsDir && fs.existsSync(budgetsDir)) {
+        const files = fs.readdirSync(budgetsDir);
+        budgetsCount = files.filter((f) => f.toLowerCase().endsWith(".pdf")).length;
+      }
+
+      // Resolve Constitution file dynamically
+      const constitutionFile = filesInDocs.find(
+        (f) => f.toLowerCase().includes("constitui") || f.toLowerCase().startsWith("constit")
+      );
+      constitutionCount = constitutionFile ? 1 : 0;
     }
-
-    // Check if Constituição.pdf exists in the data directory
-    const constitutionPath = path.join(dataDir, "Constituição.pdf");
-    const constitutionCount = fs.existsSync(constitutionPath) ? 1 : 0;
 
     return NextResponse.json({
       budgetsCount,
