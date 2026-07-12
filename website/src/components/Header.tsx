@@ -21,20 +21,20 @@ export default function Header() {
           Escrutínio IA
         </Link>
         <Link 
-          href="/suggestions" 
-          className={`${styles.navLink} ${pathname === "/suggestions" ? styles.active : ""}`}
+          href="/sugestoes" 
+          className={`${styles.navLink} ${pathname === "/sugestoes" ? styles.active : ""}`}
         >
           Sugerir Conteúdo
         </Link>
         <Link 
-          href="/recommendations" 
-          className={`${styles.navLink} ${pathname === "/recommendations" ? styles.active : ""}`}
+          href="/recomendacoes" 
+          className={`${styles.navLink} ${pathname === "/recomendacoes" ? styles.active : ""}`}
         >
           Recomendações
         </Link>
         <Link 
-          href="/documentation" 
-          className={`${styles.navLink} ${pathname === "/documentation" ? styles.active : ""}`}
+          href="/documentacao" 
+          className={`${styles.navLink} ${pathname === "/documentacao" ? styles.active : ""}`}
         >
           Documentação
         </Link>
