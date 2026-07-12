@@ -1,9 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
-// Helper to determine the specific folder name under data/ for a category
-function getCategoryFolder(category: string): string {
+function getCategoryFolder(category) {
   const catLower = category.toLowerCase();
   if (catLower.includes("açores") || catLower.includes("acores")) {
     return "Açores";
@@ -26,8 +24,7 @@ function getCategoryFolder(category: string): string {
   return "";
 }
 
-// Shared memory helper to recursively scan data directory
-function findPdf(dir: string, party: string, category: string, year: number | null): string | null {
+function findPdf(dir, party, category, year) {
   if (!fs.existsSync(dir)) return null;
   const entries = fs.readdirSync(dir, { withFileTypes: true });
 
@@ -43,7 +40,6 @@ function findPdf(dir: string, party: string, category: string, year: number | nu
       if (year) {
         const yearStr = String(year);
         const shortYear = yearStr.slice(2);
-        // Exclude if it doesn't mention the year
         if (!nameLower.includes(yearStr) && !nameLower.includes(shortYear)) {
           continue;
         }
@@ -53,7 +49,6 @@ function findPdf(dir: string, party: string, category: string, year: number | nu
       const partyLower = party.toLowerCase();
       let isMatch = false;
 
-      // Handle common abbreviations and aliases
       if (partyLower === "psd" && (nameLower.includes("psd") || nameLower.includes("ppd"))) {
         isMatch = true;
       } else if (partyLower.includes("cdu") && (nameLower.includes("cdu") || nameLower.includes("pcp") || nameLower.includes("pev"))) {
@@ -68,7 +63,6 @@ function findPdf(dir: string, party: string, category: string, year: number | nu
         isMatch = true;
       }
 
-      // Coalition check fallbacks
       if (!isMatch) {
         if (nameLower.includes("ad") && (partyLower.includes("psd") || partyLower.includes("cds") || partyLower.includes("ppm") || partyLower.includes("ad"))) {
           isMatch = true;
@@ -85,66 +79,27 @@ function findPdf(dir: string, party: string, category: string, year: number | nu
   return null;
 }
 
-export async function GET(req: NextRequest) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const party = searchParams.get("party");
-    const col = searchParams.get("col");
+// Find dataDir from cwd or parent
+let dataDir = path.join(process.cwd(), "data");
+if (!fs.existsSync(dataDir)) {
+  dataDir = path.join(process.cwd(), "..", "data");
+}
 
-    if (!party || !col) {
-      return NextResponse.json({ error: "Parâmetros em falta (party, col)." }, { status: 400 });
-    }
+console.log("Using dataDir:", dataDir, "Exists:", fs.existsSync(dataDir));
 
-    // Determine category and year
-    let category = col;
-    let year: number | null = null;
+const testCases = [
+  { party: "PSD", category: "Legislativas", year: 2024 },
+  { party: "PS", category: "Legislativas", year: 2024 },
+  { party: "CHEGA", category: "Legislativas", year: 2024 },
+  { party: "IL", category: "Legislativas", year: 2024 },
+  { party: "CDU - PCP/PEV", category: "Legislativas", year: 2024 },
+  { party: "PSD", category: "Açores", year: 2024 },
+  { party: "PSD", category: "Legislativas", year: 1976 }
+];
 
-    if (col.includes(" - ")) {
-      const parts = col.split(" - ");
-      category = parts[0];
-      try {
-        year = parseInt(parts[1], 10);
-      } catch (e) {}
-    } else if (col.includes(" 1999")) {
-      category = "Europeias";
-      year = 1999;
-    }
-
-    // Bulletproof dataDir location (handles both root and website run folders)
-    let dataDir = path.join(process.cwd(), "data");
-    if (!fs.existsSync(dataDir)) {
-      dataDir = path.join(process.cwd(), "..", "data");
-    }
-
-    const catFolder = getCategoryFolder(category);
-    const searchPath = catFolder ? path.join(dataDir, catFolder) : dataDir;
-
-    const matchedPath = findPdf(searchPath, party, category, year);
-
-    if (!matchedPath || !fs.existsSync(matchedPath)) {
-      return NextResponse.json(
-        { error: `Ficheiro PDF não encontrado para: ${party} (${col}) em ${searchPath}` },
-        { status: 404 }
-      );
-    }
-
-    // Read the file buffer
-    const fileBuffer = fs.readFileSync(matchedPath);
-    const filename = path.basename(matchedPath);
-
-    // Return the PDF response with headers forcing instant attachment download
-    return new Response(fileBuffer, {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${filename}"`,
-        "Content-Length": String(fileBuffer.length),
-      },
-    });
-  } catch (err: any) {
-    console.error("Erro no download de PDF:", err);
-    return NextResponse.json(
-      { error: `Erro no servidor: ${err.message}` },
-      { status: 500 }
-    );
-  }
+for (const tc of testCases) {
+  const catFolder = getCategoryFolder(tc.category);
+  const searchPath = catFolder ? path.join(dataDir, catFolder) : dataDir;
+  const res = findPdf(searchPath, tc.party, tc.category, tc.year);
+  console.log(`${tc.party} (${tc.category} - ${tc.year}) -> ${res}`);
 }

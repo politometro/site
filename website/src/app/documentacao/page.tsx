@@ -20,7 +20,7 @@ interface Row {
 
 interface PartyMetadata {
   firstElection: string;
-  foundedYear?: number;
+  foundedYear?: number | string;
   isExtinct?: boolean;
   extinctionElection?: string;
   extinctionNote?: string;
@@ -69,7 +69,7 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
   },
   "CDU - PCP/PEV": {
     firstElection: "Legislativas - 1975",
-    foundedYear: 1987,
+    foundedYear: "1921 (PCP) / 1987 (CDU)",
     website: "https://www.cdu.pt"
   },
   "LIVRE": {
@@ -99,7 +99,7 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
   },
   "ADN/PDR": {
     firstElection: "Legislativas - 2015",
-    foundedYear: 2014,
+    foundedYear: "2014 (PDR) / 2022 (ADN)",
     website: "https://partidoadn.pt"
   },
   "R.I.R": {
@@ -136,7 +136,7 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
   },
   "MPT/ALTERNATIVA 21": {
     firstElection: "Legislativas - 1995",
-    foundedYear: 1993,
+    foundedYear: "1993 (MPT) / 2024 (Alternativa 21)",
     website: "https://mpt.pt",
     coalitions: {
       "Legislativas - 2024": "Alternativa 21",
@@ -516,7 +516,23 @@ export default function DocumentationPage() {
                                     <span
                                       className={`${styles.statusBadge} ${styles.statusAvailable}`}
                                     >
-                                      ✓ Disponível 📥
+                                      <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        width="12" 
+                                        height="12" 
+                                        viewBox="0 0 24 24" 
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        strokeWidth="2.5" 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round" 
+                                        style={{ marginRight: "4px", flexShrink: 0 }}
+                                      >
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                      </svg>
+                                      Disponível
                                     </span>
                                   </a>
                                   <div className={styles.cellNoteGreen}>{creationText}</div>
@@ -532,7 +548,23 @@ export default function DocumentationPage() {
                                     <span
                                       className={`${styles.statusBadge} ${styles.statusAvailable}`}
                                     >
-                                      ✓ Disponível 📥
+                                      <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        width="12" 
+                                        height="12" 
+                                        viewBox="0 0 24 24" 
+                                        fill="none" 
+                                        stroke="currentColor" 
+                                        strokeWidth="2.5" 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round" 
+                                        style={{ marginRight: "4px", flexShrink: 0 }}
+                                      >
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                        <polyline points="7 10 12 15 17 10"></polyline>
+                                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                                      </svg>
+                                      Disponível
                                     </span>
                                   </a>
                                   {coalitionName && (
