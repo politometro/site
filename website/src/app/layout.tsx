@@ -56,7 +56,7 @@ export default function RootLayout({
     <html lang="pt" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <div className="ambient-glow"></div>
-        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", width: "100%" }}>
+        <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh", width: "100%" }}>
           <div style={{ flex: "1 1 auto", width: "100%", display: "flex", flexDirection: "column" }}>
             {children}
           </div>

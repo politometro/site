@@ -70,6 +70,9 @@ export default function Home() {
       if (savedMap && savedActiveId) {
         try {
           const parsedMap = JSON.parse(savedMap);
+          if (parsedMap[welcomeMsgId]) {
+            parsedMap[welcomeMsgId].content = WELCOME_CONTENT;
+          }
           if (parsedMap[savedActiveId]) {
             setMessagesMap(parsedMap);
             setActiveMessageId(savedActiveId);
@@ -667,7 +670,7 @@ export default function Home() {
           <form onSubmit={handleSend} className={styles.inputArea}>
             <input
               type="text"
-              placeholder={isLoading ? "A aguardar..." : "Pergunta sobre os programas eleitorais..."}
+              placeholder={isLoading ? "A aguardar..." : "Pergunta sobre os programas eleitorais."}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={isLoading}
