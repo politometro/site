@@ -169,6 +169,48 @@
       "status": "queue"
     },
     {
+      "id": "documentary_3",
+      "type": "documentary",
+      "category": "Investigação",
+      "title": "A Prova dos Factos",
+      "authorOrMeta": "RTP",
+      "description": "Espaço semanal de grande reportagem e jornalismo de investigação da RTP, focado no escrutínio público, fraudes e atualidade nacional.",
+      "imageUrl": "https://cdn-images.rtp.pt/EPG/imagens/42141_65007_38834.jpg?q=100&format=pjpg&auto=webp&v=3&w=400",
+      "link": "https://www.rtp.pt/play/p10271/a-prova-dos-factos",
+      "priority": 4,
+      "expiryDate": null,
+      "createdAt": "2026-07-10T12:35:00Z",
+      "status": "queue"
+    },
+    {
+      "id": "documentary_4",
+      "type": "documentary",
+      "category": "Investigação",
+      "title": "Exclusivo com Sandra Felgueiras",
+      "authorOrMeta": "TVI / CNN Portugal",
+      "description": "Rubrica semanal de jornalismo de investigação na TVI que traz à luz casos de criminalidade económica, escândalos e fraudes em Portugal.",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/2/24/Log%C3%B3tipo_TVI.png",
+      "link": "https://tviplayer.iol.pt/programa/exclusivo-com-sandra-felgueiras/6332b3940cf2ea4f0a5e50f1",
+      "priority": 4,
+      "expiryDate": null,
+      "createdAt": "2026-07-10T12:36:00Z",
+      "status": "queue"
+    },
+    {
+      "id": "documentary_5",
+      "type": "documentary",
+      "category": "Investigação",
+      "title": "Sexta às 9",
+      "authorOrMeta": "RTP / Sandra Felgueiras",
+      "description": "O histórico programa de jornalismo de investigação da televisão pública portuguesa, conhecido por revelar grandes casos políticos e financeiros.",
+      "imageUrl": "https://cdn-images.rtp.pt/EPG/imagens/24959_60626_44570.jpg?q=100&format=pjpg&auto=webp&v=3&w=400",
+      "link": "https://www.rtp.pt/play/p8277/sexta-as-9",
+      "priority": 4,
+      "expiryDate": null,
+      "createdAt": "2026-07-10T12:37:00Z",
+      "status": "queue"
+    },
+    {
       "id": "article_1",
       "type": "article",
       "category": "Artigo de Opinião",

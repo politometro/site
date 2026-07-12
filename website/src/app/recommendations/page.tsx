@@ -30,11 +30,13 @@ export default function RecommendationsPage() {
       const res = await fetch("/api/suggestions", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
-        // We only show items in the queue that are NOT suggestions of projects (only content recommendations)
-        const filteredQueue = (data.queue || []).filter(
+        // We show items in the history (already published content recommendations)
+        const filteredHistory = (data.history || []).filter(
           (item: Recommendation) => item.type !== "project"
         );
-        setQueue(filteredQueue);
+        // Sort history by date descending so the newest published ones appear first
+        filteredHistory.sort((a: Recommendation, b: Recommendation) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        setQueue(filteredHistory);
       }
     } catch (err) {
       console.error("Erro ao carregar recomendações:", err);
@@ -84,12 +86,12 @@ export default function RecommendationsPage() {
         <div className={styles.grid}>
           {isLoading ? (
             <div className={styles.loadingState}>
-              <span className={styles.loadingSpinner}>⏳</span> A carregar recomendações da fila...
+              <span className={styles.loadingSpinner}>⏳</span> A carregar recomendações...
             </div>
           ) : queue.length === 0 ? (
             <div className={styles.emptyState}>
               <span className={styles.emptyIcon}>📭</span>
-              <p>Não existem recomendações ativas na fila neste momento.</p>
+              <p>Ainda não foram publicadas recomendações no Politómetro.</p>
             </div>
           ) : (
             <div className={styles.feedList}>
