@@ -265,7 +265,7 @@ export default function DocumentationPage() {
   const rows = docsData.rows as Row[];
 
   useEffect(() => {
-    fetch("/api/stats")
+    fetch("/api/stats", { cache: "no-store" })
       .then((res) => res.json())
       .then((data) => {
         setExtraStats({

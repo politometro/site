@@ -36,12 +36,29 @@ export async function GET() {
       constitutionCount = constitutionFile ? 1 : 0;
     }
 
-    return NextResponse.json({
-      budgetsCount,
-      constitutionCount,
-    });
+    return new Response(
+      JSON.stringify({
+        budgetsCount,
+        constitutionCount,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
+        },
+      }
+    );
   } catch (err: any) {
     console.error("Erro na API de estatísticas:", err);
-    return NextResponse.json({ budgetsCount: 0, constitutionCount: 0 }, { status: 500 });
+    return new Response(
+      JSON.stringify({ budgetsCount: 0, constitutionCount: 0 }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
+        },
+      }
+    );
   }
 }
