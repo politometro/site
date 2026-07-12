@@ -222,6 +222,34 @@ recommendations = [
         "createdAt": "2026-07-10T12:37:00Z",
         "status": "queue"
     },
+    {
+        "id": "documentary_6",
+        "type": "documentary",
+        "category": "Investigação",
+        "title": "Grande Reportagem SIC",
+        "authorOrMeta": "SIC / SIC Notícias",
+        "description": "Espaço de jornalismo de investigação de referência da SIC, focado em grandes temas sociais, económicos e políticos nacionais e internacionais.",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/SIC_Not%C3%ADcias_%282023%29.png",
+        "link": "https://sicnoticias.pt/programas/grandereportagem",
+        "priority": 4,
+        "expiryDate": None,
+        "createdAt": "2026-07-10T12:38:00Z",
+        "status": "queue"
+    },
+    {
+        "id": "documentary_7",
+        "type": "documentary",
+        "category": "Investigação",
+        "title": "SIC Verifica",
+        "authorOrMeta": "SIC Notícias",
+        "description": "Rubrica de fact-checking e investigação focada no escrutínio de declarações políticas, desinformação e transparência pública em Portugal.",
+        "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/SIC_Not%C3%ADcias_%282023%29.png",
+        "link": "https://sicnoticias.pt/programas/sicverifica",
+        "priority": 4,
+        "expiryDate": None,
+        "createdAt": "2026-07-10T12:39:00Z",
+        "status": "queue"
+    },
 
     # --- ARTIGOS DE OPINIÃO (type: "article") ---
     {
