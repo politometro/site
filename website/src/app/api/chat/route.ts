@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "edge"; // Use edge runtime for fast, streaming responses
 
 export async function POST(req: NextRequest) {
   try {
@@ -79,23 +78,25 @@ export async function POST(req: NextRequest) {
         if (!queryVector && hfToken) {
           console.log("Pinecone embedding quota reached or failed. Trying Hugging Face fallback...");
           try {
-            const hfRes = await fetch("https://router.huggingface.co/v1/embeddings", {
+            const hfRes = await fetch("https://api-inference.huggingface.co/models/intfloat/multilingual-e5-large", {
               method: "POST",
               headers: {
                 "Authorization": `Bearer ${hfToken}`,
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                model: "intfloat/multilingual-e5-large",
-                input: `query: ${lastUserMessage}`,
+                inputs: `query: ${lastUserMessage}`
               }),
             });
 
             if (hfRes.ok) {
               const hfData = await hfRes.json();
-              queryVector = hfData.data?.[0]?.embedding;
-              if (queryVector) {
+              if (Array.isArray(hfData)) {
+                // Feature extraction might return a 2D array or 1D array
+                queryVector = Array.isArray(hfData[0]) ? hfData[0] : hfData;
                 console.log("Successfully generated query embedding using Hugging Face fallback!");
+              } else {
+                console.error("Hugging Face API returned non-array data:", hfData);
               }
             } else {
               const errText = await hfRes.text();
