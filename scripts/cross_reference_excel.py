@@ -37,6 +37,19 @@ matrix_updated = []
 found_new = []
 missing_files = []
 
+EXTRA_PRE_1999_COLS = [
+    "Legislativas - 1997",
+    "Legislativas - 1995",
+    "Legislativas - 1991",
+    "Legislativas - 1987",
+    "Legislativas - 1985",
+    "Legislativas - 1983",
+    "Legislativas - 1980",
+    "Legislativas - 1979",
+    "Legislativas - 1976",
+    "Legislativas - 1975"
+]
+
 for row in excel_data:
     party = row["party"]
     # Skip rows that are "Extras" or nan
@@ -45,7 +58,23 @@ for row in excel_data:
         
     updated_cells = []
     
-    for cell in row["cells"]:
+    # Inject pre-1999 columns dynamically
+    cells = list(row["cells"])
+    eur_idx = -1
+    for idx, c in enumerate(cells):
+        if c["col"] == "Europeias 1999":
+            eur_idx = idx
+            break
+            
+    if eur_idx != -1:
+        for col_name in reversed(EXTRA_PRE_1999_COLS):
+            cells.insert(eur_idx + 1, {
+                "col": col_name,
+                "value": None,
+                "color": None
+            })
+            
+    for cell in cells:
         col = cell["col"]
         val = cell["value"]
         color = cell["color"]
@@ -188,7 +217,7 @@ if len(missing_files) > 15:
 # Write updated matrix for website
 output_dir = "website/src/data"
 os.makedirs(output_dir, exist_ok=True)
-headers = [cell["col"] for cell in excel_data[0]["cells"]]
+headers = [cell["col"] for cell in matrix_updated[0]["cells"]]
 with open(os.path.join(output_dir, "political_docs.json"), "w", encoding="utf-8") as f:
     json.dump({
         "headers": [h for h in headers if h not in ["Unnamed_45", "Unnamed_47", "Unnamed_48"]],

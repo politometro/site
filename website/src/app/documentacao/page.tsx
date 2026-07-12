@@ -25,12 +25,14 @@ interface PartyMetadata {
   extinctionElection?: string;
   extinctionNote?: string;
   coalitions?: { [election: string]: string };
+  website?: string;
 }
 
 const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
   "PSD": {
-    firstElection: "Legislativas - 1999",
+    firstElection: "Legislativas - 1975",
     foundedYear: 1974,
+    website: "https://www.psd.pt",
     coalitions: {
       "Legislativas - 2025": "Aliança Democrática (AD)",
       "Europeias - 2024": "Aliança Democrática (AD)",
@@ -43,39 +45,47 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
     }
   },
   "PS": {
-    firstElection: "Legislativas - 1999",
-    foundedYear: 1973
+    firstElection: "Legislativas - 1975",
+    foundedYear: 1973,
+    website: "https://www.ps.pt"
   },
   "CHEGA": {
     firstElection: "Europeias - 2019",
     foundedYear: 2019,
+    website: "https://partidochega.pt",
     coalitions: {
       "Europeias - 2019": "BASTA!"
     }
   },
   "IL": {
     firstElection: "Europeias - 2019",
-    foundedYear: 2017
+    foundedYear: 2017,
+    website: "https://iniciativaliberal.pt"
   },
   "BE": {
     firstElection: "Europeias 1999",
-    foundedYear: 1999
+    foundedYear: 1999,
+    website: "https://www.bloco.org"
   },
   "CDU - PCP/PEV": {
-    firstElection: "Europeias 1999",
-    foundedYear: 1987
+    firstElection: "Legislativas - 1975",
+    foundedYear: 1987,
+    website: "https://www.cdu.pt"
   },
   "LIVRE": {
     firstElection: "Europeias - 2014",
-    foundedYear: 2014
+    foundedYear: 2014,
+    website: "https://partidolivre.pt"
   },
   "PAN": {
     firstElection: "Legislativas - 2011",
-    foundedYear: 2009
+    foundedYear: 2009,
+    website: "https://www.pan.com.pt"
   },
   "CDS": {
-    firstElection: "Legislativas - 1999",
+    firstElection: "Legislativas - 1975",
     foundedYear: 1974,
+    website: "https://www.cds.pt",
     coalitions: {
       "Legislativas - 2025": "Aliança Democrática (AD)",
       "Europeias - 2024": "Aliança Democrática (AD)",
@@ -89,37 +99,45 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
   },
   "ADN/PDR": {
     firstElection: "Legislativas - 2015",
-    foundedYear: 2014
+    foundedYear: 2014,
+    website: "https://partidoadn.pt"
   },
   "R.I.R": {
     firstElection: "Legislativas - 2019",
-    foundedYear: 2019
+    foundedYear: 2019,
+    website: "https://rir.com.pt"
   },
   "JPP": {
     firstElection: "Madeira - 2015",
-    foundedYear: 2015
+    foundedYear: 2015,
+    website: "https://www.juntospelopovo.pt"
   },
   "NOVA DIREITA": {
     firstElection: "Legislativas - 2024",
-    foundedYear: 2023
+    foundedYear: 2023,
+    website: "https://novadireita.pt"
   },
   "PCTP/MRPP": {
-    firstElection: "Europeias 1999",
-    foundedYear: 1970
+    firstElection: "Legislativas - 1975",
+    foundedYear: 1970,
+    website: "https://www.pctpmrpp.org"
   },
   "VOLT PORTUGAL": {
     firstElection: "Legislativas - 2022",
-    foundedYear: 2020
+    foundedYear: 2020,
+    website: "https://www.voltportugal.org"
   },
   "ERGUE-TE/PNR": {
     firstElection: "Legislativas - 2002",
     foundedYear: 2000,
     isExtinct: true,
+    website: "https://www.ergue-te.pt",
     extinctionNote: "extinto em agosto de 2025 pelo Tribunal Constitucional"
   },
   "MPT/ALTERNATIVA 21": {
-    firstElection: "Europeias 1999",
+    firstElection: "Legislativas - 1995",
     foundedYear: 1993,
+    website: "https://mpt.pt",
     coalitions: {
       "Legislativas - 2024": "Alternativa 21",
       "Europeias - 2024": "Alternativa 21"
@@ -127,15 +145,18 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
   },
   "PTP": {
     firstElection: "Europeias - 2009",
-    foundedYear: 2009
+    foundedYear: 2009,
+    website: "https://ptp.org.pt"
   },
   "NÓS, CIDADÃOS!": {
     firstElection: "Legislativas - 2015",
-    foundedYear: 2015
+    foundedYear: 2015,
+    website: "https://noscidadaos.pt"
   },
   "PPM": {
-    firstElection: "Europeias 1999",
+    firstElection: "Legislativas - 1975",
     foundedYear: 1974,
+    website: "https://ppm.pt",
     coalitions: {
       "Legislativas - 2025": "Aliança Democrática (AD)",
       "Legislativas - 2024": "Aliança Democrática (AD)",
@@ -145,7 +166,8 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
   },
   "MAS": {
     firstElection: "Europeias - 2014",
-    foundedYear: 2013
+    foundedYear: 2013,
+    website: "https://mas.org.pt"
   },
   "PURP/(A)TUA": {
     firstElection: "Legislativas - 2015",
@@ -194,7 +216,7 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
     extinctionElection: "Legislativas - 2002"
   },
   "UDP": {
-    firstElection: "Europeias 1999",
+    firstElection: "Legislativas - 1975",
     isExtinct: true,
     extinctionElection: "Legislativas - 2005",
     extinctionNote: "fundiu-se no Bloco de Esquerda"
@@ -218,6 +240,14 @@ const normalizePartyName = (name: string) => {
     .replace(/[\u0300-\u036f]/g, "")
     .toUpperCase()
     .replace(/[^A-Z0-9]/g, "");
+};
+
+const getYearFromCol = (col: string): number => {
+  if (col.toLowerCase().includes("princípios") || col.toLowerCase().includes("principios") || col.toLowerCase().includes("declara")) {
+    return 9999;
+  }
+  const match = col.match(/\d{4}/);
+  return match ? parseInt(match[0], 10) : 1975;
 };
 
 const PARTIES_METADATA_NORM = Object.keys(PARTIES_METADATA).reduce((acc, key) => {
@@ -396,7 +426,35 @@ export default function DocumentationPage() {
                   return (
                     <tr key={rIdx} className={styles.tr}>
                       <td className={styles.tdParty}>
-                        {row.party}
+                        {meta && meta.website ? (
+                          <a
+                            href={meta.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.partyLink}
+                            title={`Visitar site oficial do ${row.party}`}
+                          >
+                            {row.party}
+                            <svg 
+                              xmlns="http://www.w3.org/2000/svg" 
+                              width="10" 
+                              height="10" 
+                              viewBox="0 0 24 24" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              strokeWidth="2.5" 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round" 
+                              className={styles.partyLinkIcon}
+                            >
+                              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                              <polyline points="15 3 21 3 21 9"></polyline>
+                              <line x1="10" y1="14" x2="21" y2="3"></line>
+                            </svg>
+                          </a>
+                        ) : (
+                          row.party
+                        )}
                         {meta && meta.isExtinct && (
                           <span 
                             style={{ 
@@ -424,6 +482,13 @@ export default function DocumentationPage() {
                           const isExtinctionElection = meta && meta.isExtinct && meta.extinctionElection === cell.col;
                           const coalitionName = meta && meta.coalitions && meta.coalitions[cell.col];
 
+                          // Check if cell year is before first election (meaning before party existed)
+                          const firstYear = meta ? getYearFromCol(meta.firstElection) : 1975;
+                          const cellYear = getYearFromCol(cell.col);
+                          if (meta && cellYear < firstYear) {
+                            return <td key={cIdx} className={styles.tdCell}></td>; // Empty cell
+                          }
+
                           if (isExtinctionElection) {
                             return (
                               <td key={cIdx} className={styles.tdCell}>
@@ -440,17 +505,20 @@ export default function DocumentationPage() {
                             );
                           }
 
-                          if (isFirstElection) {
-                            const creationText = meta && meta.foundedYear ? `Criado em ${meta.foundedYear}` : "Criado aqui";
-                            if (cell.status === "available") {
+                          if (cell.status === "available") {
+                            const downloadUrl = `/api/download?party=${encodeURIComponent(row.party)}&col=${encodeURIComponent(cell.col)}`;
+
+                            if (isFirstElection) {
+                              const creationText = meta && meta.foundedYear ? `Criado em ${meta.foundedYear}` : "Criado aqui";
                               return (
                                 <td key={cIdx} className={styles.tdCell}>
-                                  <span
-                                    className={`${styles.statusBadge} ${styles.statusAvailable}`}
-                                    title={`${row.party} - ${cell.col}\nEstado: Disponível (Primeira participação)`}
-                                  >
-                                    ✓ Disponível
-                                  </span>
+                                  <a href={downloadUrl} className={styles.downloadLink} title="Descarregar programa (PDF)">
+                                    <span
+                                      className={`${styles.statusBadge} ${styles.statusAvailable}`}
+                                    >
+                                      ✓ Disponível 📥
+                                    </span>
+                                  </a>
                                   <div className={styles.cellNoteGreen}>{creationText}</div>
                                   {coalitionName && (
                                     <div className={styles.cellNote}>integrou a coligação {coalitionName}</div>
@@ -460,29 +528,31 @@ export default function DocumentationPage() {
                             } else {
                               return (
                                 <td key={cIdx} className={styles.tdCell}>
-                                  <span
-                                    className={`${styles.statusBadge} ${styles.statusFirstUnavailable}`}
-                                    title={`${row.party} - ${cell.col}\nEstado: Primeira participação (sem programa)`}
-                                  >
-                                    {creationText}
-                                  </span>
+                                  <a href={downloadUrl} className={styles.downloadLink} title="Descarregar programa (PDF)">
+                                    <span
+                                      className={`${styles.statusBadge} ${styles.statusAvailable}`}
+                                    >
+                                      ✓ Disponível 📥
+                                    </span>
+                                  </a>
+                                  {coalitionName && (
+                                    <div className={styles.cellNote}>integrou a coligação {coalitionName}</div>
+                                  )}
                                 </td>
                               );
                             }
                           }
 
-                          if (cell.status === "available") {
+                          if (isFirstElection) {
+                            const creationText = meta && meta.foundedYear ? `Criado em ${meta.foundedYear}` : "Criado aqui";
                             return (
                               <td key={cIdx} className={styles.tdCell}>
                                 <span
-                                  className={`${styles.statusBadge} ${styles.statusAvailable}`}
-                                  title={`${row.party} - ${cell.col}\nEstado: Disponível no sistema`}
+                                  className={`${styles.statusBadge} ${styles.statusFirstUnavailable}`}
+                                  title={`${row.party} - ${cell.col}\nEstado: Primeira participação (sem programa)`}
                                 >
-                                  ✓ Disponível
+                                  {creationText}
                                 </span>
-                                {coalitionName && (
-                                  <div className={styles.cellNote}>integrou a coligação {coalitionName}</div>
-                                )}
                               </td>
                             );
                           }

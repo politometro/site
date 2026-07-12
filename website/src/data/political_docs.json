@@ -44,6 +44,16 @@
     "Madeira - 2000",
     "Legislativas - 1999",
     "Europeias 1999",
+    "Legislativas - 1997",
+    "Legislativas - 1995",
+    "Legislativas - 1991",
+    "Legislativas - 1987",
+    "Legislativas - 1985",
+    "Legislativas - 1983",
+    "Legislativas - 1980",
+    "Legislativas - 1979",
+    "Legislativas - 1976",
+    "Legislativas - 1975",
     "Declaração de Princípios",
     "Orçamento de Estado",
     "Orçamento da UE",
@@ -359,6 +369,76 @@
           "col": "Europeias 1999",
           "excel_status": "not_found",
           "status": "not_found",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
           "value": null,
           "on_disk": false
         },
@@ -732,6 +812,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -1095,6 +1245,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -1470,6 +1690,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -1837,6 +2127,76 @@
           "status": "available",
           "value": "Sim",
           "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
         },
         {
           "col": "Unnamed_45",
@@ -2208,6 +2568,76 @@
           "on_disk": true
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -2571,6 +3001,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -2946,6 +3446,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -3315,6 +3885,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "available",
+          "value": null,
+          "on_disk": true
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -3678,6 +4318,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -4053,6 +4763,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -4416,6 +5196,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -4791,6 +5641,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -5154,6 +6074,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -5529,6 +6519,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -5892,6 +6952,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -6267,6 +7397,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -6630,6 +7830,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -7005,6 +8275,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -7368,6 +8708,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -7743,6 +9153,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -8106,6 +9586,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -8481,6 +10031,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -8844,6 +10464,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -9219,6 +10909,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -9582,6 +11342,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -9957,6 +11787,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -10320,6 +12220,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -10695,6 +12665,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -11058,6 +13098,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -11433,6 +13543,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -11796,6 +13976,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,
@@ -12171,6 +14421,76 @@
           "on_disk": false
         },
         {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
           "col": "Unnamed_45",
           "excel_status": "not_searched",
           "status": "not_searched",
@@ -12534,6 +14854,76 @@
         },
         {
           "col": "Europeias 1999",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1997",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1995",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1991",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1987",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1985",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1983",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1980",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1979",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1976",
+          "excel_status": "not_searched",
+          "status": "not_searched",
+          "value": null,
+          "on_disk": false
+        },
+        {
+          "col": "Legislativas - 1975",
           "excel_status": "not_searched",
           "status": "not_searched",
           "value": null,

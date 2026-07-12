@@ -54,7 +54,7 @@ export default function Home() {
   const [editInput, setEditInput] = useState("");
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messageListRef = useRef<HTMLDivElement>(null);
 
   // Hydrate conversation from sessionStorage on client-side mount
   useEffect(() => {
@@ -106,7 +106,10 @@ export default function Home() {
   }, [activePath]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messageListRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
   };
 
   const handleCopy = (text: string, msgId: string) => {
@@ -538,7 +541,7 @@ export default function Home() {
       
       <main className={styles.main}>
         <div className={`${styles.chatBox} glass`}>
-          <div className={styles.messageList}>
+          <div ref={messageListRef} className={styles.messageList}>
             {activePath.map((msg) => {
               const parentNode: MessageNode | undefined = msg.parentId ? messagesMap[msg.parentId] : undefined;
               const siblings = parentNode ? parentNode.children : [];
@@ -653,7 +656,6 @@ export default function Home() {
                 </div>
               );
             })}
-            <div ref={messagesEndRef} />
           </div>
 
           <form onSubmit={handleSend} className={styles.inputArea}>

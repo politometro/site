@@ -225,6 +225,41 @@
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.04);
 }
 
+.partyLink {
+  color: var(--color-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: var(--transition-fast);
+}
+
+.partyLink:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+.partyLinkIcon {
+  flex-shrink: 0;
+  opacity: 0.6;
+  transition: var(--transition-fast);
+}
+
+.partyLink:hover .partyLinkIcon {
+  opacity: 1;
+  transform: translate(1px, -1px);
+}
+
+.downloadLink {
+  text-decoration: none;
+  display: inline-block;
+  transition: var(--transition-fast);
+}
+
+.downloadLink:hover {
+  transform: scale(1.04);
+}
+
 .tdCell {
   padding: 0.75rem 0.5rem;
   text-align: center;
@@ -358,5 +393,35 @@
   
   .filterSelect {
     flex: 1;
+  }
+
+  /* Compact responsive overrides for the document matrix on mobile */
+  .tdParty, .thParty {
+    max-width: 100px !important;
+    min-width: 100px !important;
+    width: 100px !important;
+    padding: 0.6rem 0.4rem !important;
+    font-size: 0.75rem !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+  }
+
+  .tdCell, .th {
+    padding: 0.5rem 0.35rem !important;
+    min-width: 110px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .statusBadge {
+    font-size: 0.7rem !important;
+    padding: 0.25rem 0.4rem !important;
+    max-width: 100px !important;
+    white-space: normal !important;
+    text-align: center;
+  }
+
+  .cellNote, .cellNoteGreen {
+    font-size: 0.6rem !important;
+    line-height: 1.2 !important;
   }
 }
