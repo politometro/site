@@ -20,6 +20,7 @@ interface Row {
 
 interface PartyMetadata {
   firstElection: string;
+  foundedYear?: number;
   isExtinct?: boolean;
   extinctionElection?: string;
   extinctionNote?: string;
@@ -29,7 +30,11 @@ interface PartyMetadata {
 const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
   "PSD": {
     firstElection: "Legislativas - 1999",
+    foundedYear: 1974,
     coalitions: {
+      "Legislativas - 2025": "Aliança Democrática (AD)",
+      "Europeias - 2024": "Aliança Democrática (AD)",
+      "Madeira - 2024": "PSD/CDS-PP",
       "Legislativas - 2024": "Aliança Democrática (AD)",
       "Açores - 2024": "Aliança Democrática (AD)",
       "Legislativas - 2015": "Portugal à Frente (PaF)",
@@ -38,32 +43,43 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
     }
   },
   "PS": {
-    firstElection: "Legislativas - 1999"
+    firstElection: "Legislativas - 1999",
+    foundedYear: 1973
   },
   "CHEGA": {
     firstElection: "Europeias - 2019",
+    foundedYear: 2019,
     coalitions: {
       "Europeias - 2019": "BASTA!"
     }
   },
   "IL": {
-    firstElection: "Europeias - 2019"
+    firstElection: "Europeias - 2019",
+    foundedYear: 2017
   },
   "BE": {
-    firstElection: "Europeias 1999"
+    firstElection: "Europeias 1999",
+    foundedYear: 1999
   },
   "CDU - PCP/PEV": {
-    firstElection: "Europeias 1999"
+    firstElection: "Europeias 1999",
+    foundedYear: 1987
   },
   "LIVRE": {
-    firstElection: "Europeias - 2014"
+    firstElection: "Europeias - 2014",
+    foundedYear: 2014
   },
   "PAN": {
-    firstElection: "Legislativas - 2011"
+    firstElection: "Legislativas - 2011",
+    foundedYear: 2009
   },
   "CDS": {
     firstElection: "Legislativas - 1999",
+    foundedYear: 1974,
     coalitions: {
+      "Legislativas - 2025": "Aliança Democrática (AD)",
+      "Europeias - 2024": "Aliança Democrática (AD)",
+      "Madeira - 2024": "PSD/CDS-PP",
       "Legislativas - 2024": "Aliança Democrática (AD)",
       "Açores - 2024": "Aliança Democrática (AD)",
       "Legislativas - 2015": "Portugal à Frente (PaF)",
@@ -72,49 +88,64 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
     }
   },
   "ADN/PDR": {
-    firstElection: "Legislativas - 2015"
+    firstElection: "Legislativas - 2015",
+    foundedYear: 2014
   },
   "R.I.R": {
-    firstElection: "Legislativas - 2019"
+    firstElection: "Legislativas - 2019",
+    foundedYear: 2019
   },
   "JPP": {
-    firstElection: "Madeira - 2015"
+    firstElection: "Madeira - 2015",
+    foundedYear: 2015
   },
   "NOVA DIREITA": {
-    firstElection: "Legislativas - 2024"
+    firstElection: "Legislativas - 2024",
+    foundedYear: 2023
   },
   "PCTP/MRPP": {
-    firstElection: "Europeias 1999"
+    firstElection: "Europeias 1999",
+    foundedYear: 1970
   },
   "VOLT PORTUGAL": {
-    firstElection: "Legislativas - 2022"
+    firstElection: "Legislativas - 2022",
+    foundedYear: 2020
   },
   "ERGUE-TE/PNR": {
-    firstElection: "Legislativas - 2002"
+    firstElection: "Legislativas - 2002",
+    foundedYear: 2000,
+    isExtinct: true,
+    extinctionNote: "extinto em agosto de 2025 pelo Tribunal Constitucional"
   },
   "MPT/ALTERNATIVA 21": {
     firstElection: "Europeias 1999",
+    foundedYear: 1993,
     coalitions: {
       "Legislativas - 2024": "Alternativa 21",
       "Europeias - 2024": "Alternativa 21"
     }
   },
   "PTP": {
-    firstElection: "Europeias - 2009"
+    firstElection: "Europeias - 2009",
+    foundedYear: 2009
   },
   "NÓS, CIDADÃOS!": {
-    firstElection: "Legislativas - 2015"
+    firstElection: "Legislativas - 2015",
+    foundedYear: 2015
   },
   "PPM": {
     firstElection: "Europeias 1999",
+    foundedYear: 1974,
     coalitions: {
+      "Legislativas - 2025": "Aliança Democrática (AD)",
       "Legislativas - 2024": "Aliança Democrática (AD)",
       "Açores - 2024": "Aliança Democrática (AD)",
       "Europeias - 2019": "BASTA!"
     }
   },
   "MAS": {
-    firstElection: "Europeias - 2014"
+    firstElection: "Europeias - 2014",
+    foundedYear: 2013
   },
   "PURP/(A)TUA": {
     firstElection: "Legislativas - 2015",
@@ -368,7 +399,28 @@ export default function DocumentationPage() {
 
                   return (
                     <tr key={rIdx} className={styles.tr}>
-                      <td className={styles.tdParty}>{row.party}</td>
+                      <td className={styles.tdParty}>
+                        {row.party}
+                        {meta && meta.isExtinct && (
+                          <span 
+                            style={{ 
+                              fontSize: "0.65rem", 
+                              color: "#c22926", 
+                              background: "rgba(194, 41, 38, 0.08)", 
+                              padding: "2px 6px", 
+                              borderRadius: "4px", 
+                              marginLeft: "8px",
+                              border: "1px solid rgba(194, 41, 38, 0.2)",
+                              display: "inline-block",
+                              fontWeight: "800",
+                              textTransform: "uppercase"
+                            }}
+                            title={meta.extinctionNote || "Este partido foi extinto."}
+                          >
+                            Extinto
+                          </span>
+                        )}
+                      </td>
                       {row.cells
                         .filter((c) => filteredHeaders.includes(c.col))
                         .map((cell, cIdx) => {
@@ -393,6 +445,7 @@ export default function DocumentationPage() {
                           }
 
                           if (isFirstElection) {
+                            const creationText = meta && meta.foundedYear ? `Criado em ${meta.foundedYear}` : "Criado aqui";
                             if (cell.status === "available") {
                               return (
                                 <td key={cIdx} className={styles.tdCell}>
@@ -402,7 +455,7 @@ export default function DocumentationPage() {
                                   >
                                     ✓ Disponível
                                   </span>
-                                  <div className={styles.cellNoteGreen}>Criado aqui</div>
+                                  <div className={styles.cellNoteGreen}>{creationText}</div>
                                   {coalitionName && (
                                     <div className={styles.cellNote}>integrou a coligação {coalitionName}</div>
                                   )}
@@ -415,7 +468,7 @@ export default function DocumentationPage() {
                                     className={`${styles.statusBadge} ${styles.statusFirstUnavailable}`}
                                     title={`${row.party} - ${cell.col}\nEstado: Primeira participação (sem programa)`}
                                   >
-                                    Criado aqui
+                                    {creationText}
                                   </span>
                                 </td>
                               );
