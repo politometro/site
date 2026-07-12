@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
         if (!queryVector && hfToken) {
           console.log("Pinecone embedding quota reached or failed. Trying Hugging Face fallback...");
           try {
-            const hfRes = await fetch("https://api-inference.huggingface.co/models/intfloat/multilingual-e5-large", {
+            const hfRes = await fetch("https://api-inference.huggingface.co/pipeline/feature-extraction/intfloat/multilingual-e5-large", {
               method: "POST",
               headers: {
                 "Authorization": `Bearer ${hfToken}`,
