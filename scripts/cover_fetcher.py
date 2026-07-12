@@ -220,6 +220,17 @@ def fetch_cover(title, media_type, author_or_meta=None, image_url_hint=None, cat
         print(f"    [CACHE] {title}")
         return Image.open(cached).convert("RGBA")
     
+    # 1.5. If image_url_hint is provided, try resolving it first to ensure correct cover
+    if image_url_hint:
+        print(f"    [Hint Search] Trying hint URL for '{title}': {image_url_hint}")
+        img, raw = _download_image(image_url_hint)
+        if img:
+            _save_to_cache(raw, title, media_type)
+            print(f"    [OK - Hint URL] {title}")
+            return img.convert("RGBA")
+        else:
+            print(f"      [Hint URL Failed] Falling back to search strategies...")
+            
     cover_url = None
     source = ""
     
