@@ -39,7 +39,11 @@ def get_file_metadata(filepath, filename):
     # Get party
     lower = filename.lower()
     party = "Outro"
-    if "psd" in lower or "ppd" in lower:
+    if "ad " in lower or "ad_" in lower or lower.startswith("ad") or "aliança democrática" in lower:
+        party = "AD"
+    elif "paf" in lower or "portugal à frente" in lower:
+        party = "PaF"
+    elif "psd" in lower or "ppd" in lower:
         party = "PSD"
     elif "ps" in lower and not "psd" in lower and not "psn" in lower:
         party = "PS"

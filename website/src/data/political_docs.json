@@ -11872,9 +11872,9 @@
         {
           "col": "Legislativas - 2025",
           "excel_status": "available",
-          "status": "not_found",
+          "status": "available",
           "value": "Sim",
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Madeira - 2025",

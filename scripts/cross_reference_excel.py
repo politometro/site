@@ -110,6 +110,11 @@ for row in excel_data:
                 
                 def check_match(dp, ep):
                     dp_upper = dp.strip().upper()
+                    ep_upper = ep.strip().upper()
+                    if dp_upper == "PLS" and ep_upper == "PARTIDO LIBERAL SOCIAL":
+                        return True
+                    if dp_upper == "PARTIDO LIBERAL SOCIAL" and ep_upper == "PLS":
+                        return True
                     dp_tokens = set(t.strip().upper() for t in re.split(r'[\s/-]+', dp) if t.strip())
                     ep_tokens = set(t.strip().upper() for t in re.split(r'[\s/-]+', ep) if t.strip())
                     if len(dp_tokens.intersection(ep_tokens)) > 0:
