@@ -23,6 +23,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install Pillow requests
 
+      - name: Auto Populate Recommendations using AI
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          python scripts/auto_populate_ai.py
+
       - name: Generate Post Image & Caption
         run: |
           python scripts/generate_post.py
