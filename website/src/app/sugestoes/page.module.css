@@ -398,4 +398,17 @@
     width: 80px;
     height: 110px;
   }
+
+  .itemTitle {
+    font-size: 1.05rem;
+  }
+
+  .itemAuthor {
+    font-size: 0.75rem;
+  }
+
+  .itemDesc {
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
 }

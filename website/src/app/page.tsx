@@ -371,11 +371,25 @@ export default function Home() {
       content: node.content
     }));
     
+    // Retrieve or generate unique client identifier for rate limiting
+    let clientId = "anonymous";
+    try {
+      let storedId = localStorage.getItem("politometro_client_id");
+      if (!storedId) {
+        storedId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem("politometro_client_id", storedId);
+      }
+      clientId = storedId;
+    } catch (e) {
+      console.warn("localStorage not available:", e);
+    }
+    
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "X-Client-ID": clientId
         },
         body: JSON.stringify({
           messages: chatHistory

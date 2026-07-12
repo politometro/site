@@ -205,14 +205,10 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
     extinctionElection: "Legislativas - 1999"
   },
   "Partido Liberal Social": {
-    firstElection: "Europeias 1999",
-    isExtinct: true,
-    extinctionElection: "Europeias 1999"
+    firstElection: "Europeias 1999"
   },
   "Partido Libertário": {
-    firstElection: "Legislativas - 2022",
-    isExtinct: true,
-    extinctionElection: "Legislativas - 2022"
+    firstElection: "Legislativas - 2022"
   }
 };
 

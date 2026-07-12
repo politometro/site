@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
+// Shared memory in the Node process to track daily limit exhaustions
+// (Keys are model names, value is the timestamp when it can be retried)
+const modelDailyExhaustionTimes: { [model: string]: number } = {};
+
+// Shared memory to track request counts for rate limiting (100 requests per user per day)
+const requestCounts: { [key: string]: { count: number; day: string } } = {};
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,6 +21,41 @@ export async function POST(req: NextRequest) {
         { error: "Ainda não configurou as chaves de API secretas no ficheiro .env.local do servidor." },
         { status: 500 }
       );
+    }
+
+    // Rate limiting: 100 requests per user per day
+    const clientId = req.headers.get("x-client-id") || "anonymous";
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || req.headers.get("x-real-ip") || "unknown";
+    const todayStr = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+
+    if (clientId && clientId !== "anonymous") {
+      const clientKey = `client:${clientId}`;
+      const clientData = requestCounts[clientKey];
+      if (clientData && clientData.day === todayStr) {
+        if (clientData.count >= 100) {
+          return NextResponse.json(
+            { error: "Atingiu o limite de 100 perguntas diárias por utilizador. Por favor, tente novamente amanhã!" },
+            { status: 429 }
+          );
+        }
+        clientData.count += 1;
+      } else {
+        requestCounts[clientKey] = { count: 1, day: todayStr };
+      }
+    } else if (ip && ip !== "unknown") {
+      const ipKey = `ip:${ip}`;
+      const ipData = requestCounts[ipKey];
+      if (ipData && ipData.day === todayStr) {
+        if (ipData.count >= 100) {
+          return NextResponse.json(
+            { error: "Atingiu o limite de 100 perguntas diárias por utilizador. Por favor, tente novamente amanhã!" },
+            { status: 429 }
+          );
+        }
+        ipData.count += 1;
+      } else {
+        requestCounts[ipKey] = { count: 1, day: todayStr };
+      }
     }
 
     // Get the last user message
@@ -206,29 +247,85 @@ ${contextText || "Nenhum documento relevante encontrado."}
 
 Utiliza o contexto documental acima para fundamentar as tuas respostas. Se as passagens não contiverem a informação pedida, esclarece que não encontraste essa informação específica nos programas eleitorais consultados.`;
 
-    // Call Groq API with streaming
-    const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${groqApiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model: groqModel || "llama-3.3-70b-versatile",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
-        temperature: 0.15,
-        stream: true,
-      }),
+    // Call Groq API with fallback chain
+    const requestedModel = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
+    const fallbackChain = Array.from(new Set([
+      requestedModel,
+      "llama-3.3-70b-versatile",
+      "meta-llama/llama-4-scout-17b-16e-instruct",
+      "qwen/qwen3-32b",
+      "qwen/qwen3.6-27b",
+      "llama-3.1-8b-instant"
+    ]));
+
+    const now = Date.now();
+    const availableChain = fallbackChain.filter(m => {
+      const blockedUntil = modelDailyExhaustionTimes[m];
+      return !blockedUntil || now > blockedUntil;
     });
 
-    if (!groqRes.ok) {
-      const errText = await groqRes.text();
+    const modelsToTry = availableChain.length > 0 ? availableChain : fallbackChain;
+
+    let groqRes: Response | null = null;
+    let lastErrorText = "";
+    let chosenModel = "";
+
+    for (const model of modelsToTry) {
+      console.log(`[API CHAT] Trying model: ${model}`);
+      try {
+        groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${groqApiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              { role: "system", content: systemPrompt },
+              ...messages,
+            ],
+            temperature: 0.15,
+            stream: true,
+          }),
+        });
+
+        if (groqRes.ok) {
+          chosenModel = model;
+          console.log(`[API CHAT] Successfully initiated stream using model: ${chosenModel}`);
+          break; // Success! Break the loop
+        }
+
+        // It failed, inspect the error
+        const errText = await groqRes.clone().text(); // Use clone() so we can read it without locking body
+        lastErrorText = errText;
+        console.error(`[API CHAT] Model ${model} failed: ${groqRes.status} - ${errText}`);
+
+        // Check if this was a daily limit (token or request per day limit)
+        const errStr = errText.toLowerCase();
+        const isDailyLimit = 
+          errStr.includes("tokens_per_day") || 
+          errStr.includes("requests_per_day") || 
+          errStr.includes("daily") || 
+          errStr.includes("tpd") || 
+          errStr.includes("rpd") ||
+          groqRes.status === 403; // Quota exceeded is sometimes 403 or 429 depending on API
+          
+        if (isDailyLimit) {
+          // Blacklist the model for 12 hours
+          modelDailyExhaustionTimes[model] = Date.now() + 12 * 60 * 60 * 1000;
+          console.warn(`[API CHAT] Model ${model} blacklisted due to daily limit exhaustion.`);
+        }
+      } catch (fetchErr: any) {
+        console.error(`[API CHAT] Fetch error trying model ${model}:`, fetchErr);
+        lastErrorText = fetchErr.message || String(fetchErr);
+      }
+    }
+
+    if (!groqRes || !groqRes.ok) {
       return NextResponse.json(
-        { error: `Erro na API do Groq: ${errText}` },
-        { status: groqRes.status }
+        { error: `Erro na API do Groq (todas as tentativas falharam): ${lastErrorText}` },
+        { status: groqRes ? groqRes.status : 500 }
       );
     }
 
