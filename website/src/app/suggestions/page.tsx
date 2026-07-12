@@ -265,15 +265,15 @@ export default function SuggestionsPage() {
 
       <main className={styles.main}>
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>Recomendações</h1>
+          <h1 className={styles.title}>Sugerir Conteúdo</h1>
           <p className={styles.subtitle}>
-            Partilha de livros, podcasts, artigos ou melhorias para o próprio projeto do Politómetro.
+            Partilha livros, podcasts, artigos ou melhorias para o próprio projeto do Politómetro.
           </p>
         </div>
         <div className={styles.grid}>
           {/* Add Form Card */}
           <div className={`${styles.formCard} glass`}>
-            <h2>Adicionar Recomendação</h2>
+            <h2>Adicionar Sugestão</h2>
             
             <form onSubmit={handleAddRecommendation} className={styles.form}>
               <div className={styles.inputGroup}>
@@ -327,96 +327,31 @@ export default function SuggestionsPage() {
                 {isLoading ? (
                   <>✨ A analisar com IA...</>
                 ) : (
-                  <>Adicionar Recomendação {getTypeEmoji(type)}</>
+                  <>Submeter Sugestão {getTypeEmoji(type)}</>
                 )}
               </button>
             </form>
           </div>
 
-          {/* Recommendations Feed List */}
-          <div className={styles.feedContainer}>
-            <div className={styles.feedHeader}>
-              <h2 className={styles.feedTitle}>Fila de Recomendações ({queue.length})</h2>
-              {isSyncing && <span className={styles.loadingSpinner}>⏳ Sincronizando...</span>}
-            </div>
-
-            {syncStatus && <div className={styles.statusBanner} style={{ background: "rgba(10, 49, 74, 0.05)", border: "1px solid var(--border-color)", marginBottom: "1rem" }}>
-              <span className={styles.statusText}>{syncStatus}</span>
-            </div>}
-
-            {queue.length === 0 ? (
-              <div className={styles.emptyState}>
-                <span className={styles.emptyIcon}>📭</span>
-                <p>Nenhuma recomendação pendente na fila. Adicione uma acima!</p>
+          {/* Recommendations Feed List (Admin only in localhost) */}
+          {isAdmin && (
+            <div className={styles.feedContainer} style={{ marginTop: "2rem" }}>
+              <div className={styles.feedHeader}>
+                <h2 className={styles.feedTitle}>Fila de Moderação ({queue.length})</h2>
+                {isSyncing && <span className={styles.loadingSpinner}>⏳ A sincronizar...</span>}
               </div>
-            ) : (
-              <div className={styles.feedList}>
-                {queue.map((item) => {
-                  const isProject = item.type === "project";
-                  return (
-                    <div key={item.id} className={isProject ? styles.projectCard : styles.card}>
-                      {isProject ? (
-                        <div className={styles.projectIconWrapper}>💡</div>
-                      ) : (
-                        item.imageUrl && (
-                          <div className={styles.coverImageWrapper}>
-                            <img src={item.imageUrl} alt={item.title} className={styles.coverImage} />
-                          </div>
-                        )
-                      )}
-                      
-                      <div className={styles.cardContent}>
-                        <div className={styles.badgeRow}>
-                          <span className={`${styles.badge} ${getBadgeClass(item.type)}`}>
-                            {getTypeEmoji(item.type)} {getTypeLabel(item.type)}
-                          </span>
-                          <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                            {new Date(item.createdAt).toLocaleDateString("pt-PT")}
-                          </span>
-                        </div>
-                        
-                        <h3 className={styles.itemTitle}>{item.title}</h3>
-                        {!isProject && item.authorOrMeta && (
-                          <span className={styles.itemAuthor}>de {item.authorOrMeta}</span>
-                        )}
-                        <p className={styles.itemDesc}>{item.description}</p>
-                        
-                        {!isProject && item.link && (
-                          <a href={item.link} target="_blank" rel="noopener noreferrer" className={styles.linkBtn}>
-                            Ver conteúdo ↗
-                          </a>
-                        )}
 
-                        {/* Admin actions shown in localhost mode */}
-                        {isAdmin && (
-                          <div className={styles.adminActions}>
-                            <button onClick={() => handleArchive(item.id)} className={styles.adminBtn}>
-                              📦 Arquivar (Histórico)
-                            </button>
-                            <button onClick={() => handleDelete(item.id, true)} className={`${styles.adminBtn} ${styles.deleteBtn}`}>
-                              🗑️ Eliminar
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* History Feed List (Admin only) */}
-            {isAdmin && history.length > 0 && (
-              <div className={styles.feedContainer} style={{ marginTop: "3rem" }}>
-                <div className={styles.feedHeader}>
-                  <h2 className={styles.feedTitle} style={{ color: "var(--text-secondary)" }}>Histórico de Publicações ({history.length})</h2>
+              {queue.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <span className={styles.emptyIcon}>📭</span>
+                  <p>Nenhuma recomendação pendente na fila.</p>
                 </div>
-
+              ) : (
                 <div className={styles.feedList}>
-                  {history.map((item) => {
+                  {queue.map((item) => {
                     const isProject = item.type === "project";
                     return (
-                      <div key={item.id} className={isProject ? styles.projectCard : styles.card} style={{ opacity: 0.75 }}>
+                      <div key={item.id} className={isProject ? styles.projectCard : styles.card}>
                         {isProject ? (
                           <div className={styles.projectIconWrapper}>💡</div>
                         ) : (
@@ -433,7 +368,7 @@ export default function SuggestionsPage() {
                               {getTypeEmoji(item.type)} {getTypeLabel(item.type)}
                             </span>
                             <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                              Publicado
+                              {new Date(item.createdAt).toLocaleDateString("pt-PT")}
                             </span>
                           </div>
                           
@@ -443,11 +378,17 @@ export default function SuggestionsPage() {
                           )}
                           <p className={styles.itemDesc}>{item.description}</p>
                           
+                          {!isProject && item.link && (
+                            <a href={item.link} target="_blank" rel="noopener noreferrer" className={styles.linkBtn}>
+                              Ver conteúdo ↗
+                            </a>
+                          )}
+
                           <div className={styles.adminActions}>
-                            <button onClick={() => handleRestore(item.id)} className={styles.adminBtn}>
-                              ↩️ Restaurar na Fila
+                            <button onClick={() => handleArchive(item.id)} className={styles.adminBtn}>
+                              📦 Aprovar e Arquivar (Histórico)
                             </button>
-                            <button onClick={() => handleDelete(item.id, false)} className={`${styles.adminBtn} ${styles.deleteBtn}`}>
+                            <button onClick={() => handleDelete(item.id, true)} className={`${styles.adminBtn} ${styles.deleteBtn}`}>
                               🗑️ Eliminar
                             </button>
                           </div>
@@ -456,9 +397,63 @@ export default function SuggestionsPage() {
                     );
                   })}
                 </div>
-              </div>
-            )}
-          </div>
+              )}
+
+              {/* History Feed List (Admin only) */}
+              {history.length > 0 && (
+                <div className={styles.feedContainer} style={{ marginTop: "3rem" }}>
+                  <div className={styles.feedHeader}>
+                    <h2 className={styles.feedTitle} style={{ color: "var(--text-secondary)" }}>Histórico de Publicações ({history.length})</h2>
+                  </div>
+
+                  <div className={styles.feedList}>
+                    {history.map((item) => {
+                      const isProject = item.type === "project";
+                      return (
+                        <div key={item.id} className={isProject ? styles.projectCard : styles.card} style={{ opacity: 0.75 }}>
+                          {isProject ? (
+                            <div className={styles.projectIconWrapper}>💡</div>
+                          ) : (
+                            item.imageUrl && (
+                              <div className={styles.coverImageWrapper}>
+                                <img src={item.imageUrl} alt={item.title} className={styles.coverImage} />
+                              </div>
+                            )
+                          )}
+                          
+                          <div className={styles.cardContent}>
+                            <div className={styles.badgeRow}>
+                              <span className={`${styles.badge} ${getBadgeClass(item.type)}`}>
+                                {getTypeEmoji(item.type)} {getTypeLabel(item.type)}
+                              </span>
+                              <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                                Publicado
+                              </span>
+                            </div>
+                            
+                            <h3 className={styles.itemTitle}>{item.title}</h3>
+                            {!isProject && item.authorOrMeta && (
+                              <span className={styles.itemAuthor}>de {item.authorOrMeta}</span>
+                            )}
+                            <p className={styles.itemDesc}>{item.description}</p>
+                            
+                            <div className={styles.adminActions}>
+                              <button onClick={() => handleRestore(item.id)} className={styles.adminBtn}>
+                                ↩️ Restaurar na Fila
+                              </button>
+                              <button onClick={() => handleDelete(item.id, false)} className={`${styles.adminBtn} ${styles.deleteBtn}`}>
+                                🗑️ Eliminar
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </main>
     </div>

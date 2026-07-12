@@ -212,10 +212,6 @@ Podes perguntar-me sobre posições de partidos, comparações entre anos ou tem
       <Header />
       
       <main className={styles.main}>
-        <div className={styles.bannerContainer}>
-          <img src="/banner.jpg" alt="Politómetro - O teu voto. A tua voz. A tua informação." className={styles.bannerImage} />
-        </div>
-
         <div className={`${styles.chatBox} glass`}>
           <div className={styles.messageList}>
             {messages.map((msg) => (

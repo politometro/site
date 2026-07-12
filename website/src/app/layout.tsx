@@ -57,7 +57,7 @@ export default function RootLayout({
       <body>
         <div className="ambient-glow"></div>
         <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", width: "100%" }}>
-          <div style={{ flex: "1 0 auto", width: "100%" }}>
+          <div style={{ flex: "1 1 auto", width: "100%", display: "flex", flexDirection: "column" }}>
             {children}
           </div>
           <Footer />
