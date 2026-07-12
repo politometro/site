@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Header from "@/components/Header";
 import docsData from "@/data/political_docs.json";
 import styles from "./page.module.css";
@@ -227,10 +227,12 @@ const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
     extinctionElection: "Legislativas - 1999"
   },
   "Partido Liberal Social": {
-    firstElection: "Europeias 1999"
+    firstElection: "Europeias 1999",
+    website: "https://www.partidoliberalsocial.pt"
   },
   "Partido Libertário": {
-    firstElection: "Legislativas - 2022"
+    firstElection: "Legislativas - 2022",
+    website: "https://www.partidolibertario.pt"
   }
 };
 
@@ -258,8 +260,21 @@ const PARTIES_METADATA_NORM = Object.keys(PARTIES_METADATA).reduce((acc, key) =>
 export default function DocumentationPage() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [extraStats, setExtraStats] = useState({ budgetsCount: 0, constitutionCount: 0 });
 
   const rows = docsData.rows as Row[];
+
+  useEffect(() => {
+    fetch("/api/stats")
+      .then((res) => res.json())
+      .then((data) => {
+        setExtraStats({
+          budgetsCount: data.budgetsCount || 0,
+          constitutionCount: data.constitutionCount || 0,
+        });
+      })
+      .catch((err) => console.error("Erro ao carregar estatísticas extra:", err));
+  }, []);
 
   // Exclude the 4 budget columns and any unnamed columns from the matrix headers completely
   const headers = useMemo(() => {
@@ -349,15 +364,38 @@ export default function DocumentationPage() {
           </p>
         </div>
 
-        {/* Stats Grid Dashboard - Only shows available count */}
+        {/* Stats Grid Dashboard */}
         <div className={styles.statsGrid}>
-          <div className={`${styles.statCard} glass`} style={{ borderLeft: "4px solid var(--color-secondary)", maxWidth: "350px", margin: "0 auto" }}>
-            <div className={styles.statIcon} style={{ background: "rgba(12, 92, 54, 0.1)", color: "var(--color-secondary)" }}>
+          {/* Card 1: Programas Disponíveis */}
+          <div className={`${styles.statCard} glass`}>
+            <div className={styles.statIcon}>
               ✓
             </div>
             <div className={styles.statInfo}>
               <span className={styles.statValue}>{stats.available}</span>
               <span className={styles.statLabel}>Programas Disponíveis</span>
+            </div>
+          </div>
+
+          {/* Card 2: Orçamentos de Estado */}
+          <div className={`${styles.statCard} glass`}>
+            <div className={styles.statIcon}>
+              📊
+            </div>
+            <div className={styles.statInfo}>
+              <span className={styles.statValue}>{extraStats.budgetsCount}</span>
+              <span className={styles.statLabel}>Orçamentos de Estado</span>
+            </div>
+          </div>
+
+          {/* Card 3: Constituição */}
+          <div className={`${styles.statCard} glass`}>
+            <div className={styles.statIcon}>
+              📕
+            </div>
+            <div className={styles.statInfo}>
+              <span className={styles.statValue}>{extraStats.constitutionCount}</span>
+              <span className={styles.statLabel}>Constituição da República</span>
             </div>
           </div>
         </div>
