@@ -26,7 +26,23 @@
   font-weight: bold;
 }
 
-.brand {
+.brandLink {
   font-weight: 600;
   color: var(--text-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.brandLink:hover {
+  color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.instagramIcon {
+  width: 14px;
+  height: 14px;
+  fill: currentColor;
 }

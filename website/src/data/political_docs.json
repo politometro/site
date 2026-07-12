@@ -71,9 +71,9 @@
         {
           "col": "Madeira - 2025",
           "excel_status": "not_found",
-          "status": "available",
+          "status": "not_found",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Europeias - 2024",
@@ -85,9 +85,9 @@
         {
           "col": "Madeira - 2024",
           "excel_status": "not_found",
-          "status": "not_found",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Legislativas - 2024",
@@ -148,16 +148,16 @@
         {
           "col": "Madeira - 2019",
           "excel_status": "not_found",
-          "status": "available",
+          "status": "not_found",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Europeias - 2019",
           "excel_status": "not_searched",
-          "status": "not_searched",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Autárquicas - 2017",
@@ -3016,9 +3016,9 @@
         {
           "col": "Legislativas - 2025",
           "excel_status": "available",
-          "status": "not_found",
+          "status": "available",
           "value": "Sim",
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Madeira - 2025",
@@ -3030,30 +3030,30 @@
         {
           "col": "Europeias - 2024",
           "excel_status": "available",
-          "status": "not_found",
+          "status": "available",
           "value": "Sim",
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Madeira - 2024",
           "excel_status": "not_found",
-          "status": "not_found",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Legislativas - 2024",
           "excel_status": "available",
-          "status": "not_found",
+          "status": "available",
           "value": "Sim",
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Açores - 2024",
           "excel_status": "available",
-          "status": "not_found",
+          "status": "available",
           "value": "Sim",
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Madeira - 2023",
@@ -3107,9 +3107,9 @@
         {
           "col": "Europeias - 2019",
           "excel_status": "not_found",
-          "status": "not_found",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Autárquicas - 2017",
@@ -7089,30 +7089,30 @@
         {
           "col": "Europeias - 2024",
           "excel_status": "not_searched",
-          "status": "not_searched",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Madeira - 2024",
           "excel_status": "not_searched",
-          "status": "not_searched",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Legislativas - 2024",
           "excel_status": "not_searched",
-          "status": "not_searched",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Açores - 2024",
           "excel_status": "not_searched",
-          "status": "not_searched",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Madeira - 2023",
@@ -7124,9 +7124,9 @@
         {
           "col": "Legislativas - 2022",
           "excel_status": "not_found",
-          "status": "not_found",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Autárquicas - 2021",
@@ -7166,9 +7166,9 @@
         {
           "col": "Europeias - 2019",
           "excel_status": "not_found",
-          "status": "not_found",
+          "status": "available",
           "value": null,
-          "on_disk": false
+          "on_disk": true
         },
         {
           "col": "Autárquicas - 2017",
@@ -10765,23 +10765,23 @@
         {
           "col": "Legislativas - 2025",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Madeira - 2025",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Europeias - 2024",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Madeira - 2024",
@@ -10793,16 +10793,16 @@
         {
           "col": "Legislativas - 2024",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Açores - 2024",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Madeira - 2023",
@@ -10814,9 +10814,9 @@
         {
           "col": "Legislativas - 2022",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Autárquicas - 2021",
@@ -10835,23 +10835,23 @@
         {
           "col": "Açores - 2020",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Legislativas - 2019",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Madeira - 2019",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Europeias - 2019",
@@ -10877,16 +10877,16 @@
         {
           "col": "Açores - 2016",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Legislativas - 2015",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Madeira - 2015",
@@ -10926,9 +10926,9 @@
         {
           "col": "Legislativas - 2011",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Presidenciais - 2011",
@@ -10947,9 +10947,9 @@
         {
           "col": "Legislativas - 2009",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Europeias - 2009",
@@ -10989,9 +10989,9 @@
         {
           "col": "Legislativas - 2005",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Açores - 2004",
@@ -11017,9 +11017,9 @@
         {
           "col": "Legislativas - 2002",
           "excel_status": "not_searched",
-          "status": "available",
+          "status": "not_searched",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Autárquicas - 2001",
@@ -11052,9 +11052,9 @@
         {
           "col": "Legislativas - 1999",
           "excel_status": "not_found",
-          "status": "available",
+          "status": "not_found",
           "value": null,
-          "on_disk": true
+          "on_disk": false
         },
         {
           "col": "Europeias 1999",

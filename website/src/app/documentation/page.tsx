@@ -18,6 +18,186 @@ interface Row {
   cells: Cell[];
 }
 
+interface PartyMetadata {
+  firstElection: string;
+  isExtinct?: boolean;
+  extinctionElection?: string;
+  extinctionNote?: string;
+  coalitions?: { [election: string]: string };
+}
+
+const PARTIES_METADATA: { [party: string]: PartyMetadata } = {
+  "PSD": {
+    firstElection: "Legislativas - 1999",
+    coalitions: {
+      "Legislativas - 2024": "Aliança Democrática (AD)",
+      "Açores - 2024": "Aliança Democrática (AD)",
+      "Legislativas - 2015": "Portugal à Frente (PaF)",
+      "Europeias - 2014": "Aliança Portugal",
+      "Madeira - 2023": "Somos Madeira"
+    }
+  },
+  "PS": {
+    firstElection: "Legislativas - 1999"
+  },
+  "CHEGA": {
+    firstElection: "Europeias - 2019",
+    coalitions: {
+      "Europeias - 2019": "BASTA!"
+    }
+  },
+  "IL": {
+    firstElection: "Europeias - 2019"
+  },
+  "BE": {
+    firstElection: "Europeias 1999"
+  },
+  "CDU - PCP/PEV": {
+    firstElection: "Europeias 1999"
+  },
+  "LIVRE": {
+    firstElection: "Europeias - 2014"
+  },
+  "PAN": {
+    firstElection: "Legislativas - 2011"
+  },
+  "CDS": {
+    firstElection: "Legislativas - 1999",
+    coalitions: {
+      "Legislativas - 2024": "Aliança Democrática (AD)",
+      "Açores - 2024": "Aliança Democrática (AD)",
+      "Legislativas - 2015": "Portugal à Frente (PaF)",
+      "Europeias - 2014": "Aliança Portugal",
+      "Madeira - 2023": "Somos Madeira"
+    }
+  },
+  "ADN/PDR": {
+    firstElection: "Legislativas - 2015"
+  },
+  "R.I.R": {
+    firstElection: "Legislativas - 2019"
+  },
+  "JPP": {
+    firstElection: "Madeira - 2015"
+  },
+  "NOVA DIREITA": {
+    firstElection: "Legislativas - 2024"
+  },
+  "PCTP/MRPP": {
+    firstElection: "Europeias 1999"
+  },
+  "VOLT PORTUGAL": {
+    firstElection: "Legislativas - 2022"
+  },
+  "ERGUE-TE/PNR": {
+    firstElection: "Legislativas - 2002"
+  },
+  "MPT/ALTERNATIVA 21": {
+    firstElection: "Europeias 1999",
+    coalitions: {
+      "Legislativas - 2024": "Alternativa 21",
+      "Europeias - 2024": "Alternativa 21"
+    }
+  },
+  "PTP": {
+    firstElection: "Europeias - 2009"
+  },
+  "NÓS, CIDADÃOS!": {
+    firstElection: "Legislativas - 2015"
+  },
+  "PPM": {
+    firstElection: "Europeias 1999",
+    coalitions: {
+      "Legislativas - 2024": "Aliança Democrática (AD)",
+      "Açores - 2024": "Aliança Democrática (AD)",
+      "Europeias - 2019": "BASTA!"
+    }
+  },
+  "MAS": {
+    firstElection: "Europeias - 2014"
+  },
+  "PURP/(A)TUA": {
+    firstElection: "Legislativas - 2015",
+    isExtinct: true,
+    extinctionElection: "Europeias - 2024"
+  },
+  "MEP": {
+    firstElection: "Europeias - 2009",
+    isExtinct: true,
+    extinctionElection: "Açores - 2012"
+  },
+  "PND": {
+    firstElection: "Europeias - 2004",
+    isExtinct: true,
+    extinctionElection: "Legislativas - 2015"
+  },
+  "PPV": {
+    firstElection: "Europeias - 2009",
+    isExtinct: true,
+    extinctionElection: "Açores - 2020",
+    extinctionNote: "fundiu-se com o CHEGA"
+  },
+  "POUS": {
+    firstElection: "Legislativas - 1999",
+    isExtinct: true,
+    extinctionElection: "Açores - 2020"
+  },
+  "PDA": {
+    firstElection: "Legislativas - 1999",
+    isExtinct: true,
+    extinctionElection: "Legislativas - 2015"
+  },
+  "P.H.": {
+    firstElection: "Europeias 1999",
+    isExtinct: true,
+    extinctionElection: "Legislativas - 2015"
+  },
+  "MMS": {
+    firstElection: "Europeias - 2009",
+    isExtinct: true,
+    extinctionElection: "Legislativas - 2011"
+  },
+  "PSN": {
+    firstElection: "Legislativas - 1999",
+    isExtinct: true,
+    extinctionElection: "Legislativas - 2002"
+  },
+  "UDP": {
+    firstElection: "Europeias 1999",
+    isExtinct: true,
+    extinctionElection: "Legislativas - 2005",
+    extinctionNote: "fundiu-se no Bloco de Esquerda"
+  },
+  "MD": {
+    firstElection: "Europeias 1999",
+    isExtinct: true,
+    extinctionElection: "Legislativas - 1999"
+  },
+  "Partido Liberal Social": {
+    firstElection: "Europeias 1999",
+    isExtinct: true,
+    extinctionElection: "Europeias 1999"
+  },
+  "Partido Libertário": {
+    firstElection: "Legislativas - 2022",
+    isExtinct: true,
+    extinctionElection: "Legislativas - 2022"
+  }
+};
+
+const normalizePartyName = (name: string) => {
+  return name
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .replace(/[^A-Z0-9]/g, "");
+};
+
+const PARTIES_METADATA_NORM = Object.keys(PARTIES_METADATA).reduce((acc, key) => {
+  acc[normalizePartyName(key)] = PARTIES_METADATA[key];
+  return acc;
+}, {} as { [key: string]: PartyMetadata });
+
 export default function DocumentationPage() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -51,18 +231,42 @@ export default function DocumentationPage() {
     });
   }, [headers, categoryFilter]);
 
-  // Filter rows based on search
+  // Filter rows based on search and active status
   const filteredRows = useMemo(() => {
-    return rows.filter((row) =>
-      row.party.toLowerCase().includes(search.toLowerCase())
-    );
-  }, [rows, search]);
+    return rows
+      .filter((row) => {
+        const normName = normalizePartyName(row.party);
+        const meta = PARTIES_METADATA_NORM[normName];
+        
+        // Exclude if extinct AND has no available documents in the headers
+        const hasAvailableDocs = row.cells.some(
+          (c) => headers.includes(c.col) && c.status === "available"
+        );
+        if (meta?.isExtinct && !hasAvailableDocs) {
+          return false;
+        }
+        return true;
+      })
+      .filter((row) =>
+        row.party.toLowerCase().includes(search.toLowerCase())
+      );
+  }, [rows, search, headers]);
 
   // Calculate statistics across all active cells in the matrix (excluding budget columns)
   const stats = useMemo(() => {
     let available = 0;
 
     rows.forEach((row) => {
+      // Check if row is not filtered out
+      const normName = normalizePartyName(row.party);
+      const meta = PARTIES_METADATA_NORM[normName];
+      const hasAvailableDocs = row.cells.some(
+        (c) => headers.includes(c.col) && c.status === "available"
+      );
+      if (meta?.isExtinct && !hasAvailableDocs) {
+        return; // skip stats for excluded rows
+      }
+
       row.cells.forEach((cell) => {
         if (headers.includes(cell.col)) {
           if (cell.status === "available") available++;
@@ -133,6 +337,10 @@ export default function DocumentationPage() {
               <span>Programa Disponível</span>
             </div>
             <div className={styles.legendItem}>
+              <span className={`${styles.dot} styles.dotGray`} style={{ background: "#6c757d" }} />
+              <span>Primeira Participação / Criado</span>
+            </div>
+            <div className={styles.legendItem}>
               <span style={{ color: "var(--text-muted)", fontWeight: "bold", paddingLeft: "0.25rem" }}>---</span>
               <span style={{ marginLeft: "0.25rem" }}>Não disponível / Não participou</span>
             </div>
@@ -154,34 +362,92 @@ export default function DocumentationPage() {
             </thead>
             <tbody>
               {filteredRows.length > 0 ? (
-                filteredRows.map((row, rIdx) => (
-                  <tr key={rIdx} className={styles.tr}>
-                    <td className={styles.tdParty}>{row.party}</td>
-                    {row.cells
-                      .filter((c) => filteredHeaders.includes(c.col))
-                      .map((cell, cIdx) => {
-                        if (cell.status === "available") {
+                filteredRows.map((row, rIdx) => {
+                  const normName = normalizePartyName(row.party);
+                  const meta = PARTIES_METADATA_NORM[normName];
+
+                  return (
+                    <tr key={rIdx} className={styles.tr}>
+                      <td className={styles.tdParty}>{row.party}</td>
+                      {row.cells
+                        .filter((c) => filteredHeaders.includes(c.col))
+                        .map((cell, cIdx) => {
+                          const isFirstElection = meta && meta.firstElection === cell.col;
+                          const isExtinctionElection = meta && meta.isExtinct && meta.extinctionElection === cell.col;
+                          const coalitionName = meta && meta.coalitions && meta.coalitions[cell.col];
+
+                          if (isExtinctionElection) {
+                            return (
+                              <td key={cIdx} className={styles.tdCell}>
+                                <span
+                                  className={`${styles.statusBadge} ${styles.statusExtinct}`}
+                                  title={`${row.party} - ${cell.col}\nEstado: Extinto`}
+                                >
+                                  Extinto
+                                </span>
+                                {meta.extinctionNote && (
+                                  <div className={styles.cellNote}>{meta.extinctionNote}</div>
+                                )}
+                              </td>
+                            );
+                          }
+
+                          if (isFirstElection) {
+                            if (cell.status === "available") {
+                              return (
+                                <td key={cIdx} className={styles.tdCell}>
+                                  <span
+                                    className={`${styles.statusBadge} ${styles.statusAvailable}`}
+                                    title={`${row.party} - ${cell.col}\nEstado: Disponível (Primeira participação)`}
+                                  >
+                                    ✓ Disponível
+                                  </span>
+                                  <div className={styles.cellNoteGreen}>Criado aqui</div>
+                                  {coalitionName && (
+                                    <div className={styles.cellNote}>integrou a coligação {coalitionName}</div>
+                                  )}
+                                </td>
+                              );
+                            } else {
+                              return (
+                                <td key={cIdx} className={styles.tdCell}>
+                                  <span
+                                    className={`${styles.statusBadge} ${styles.statusFirstUnavailable}`}
+                                    title={`${row.party} - ${cell.col}\nEstado: Primeira participação (sem programa)`}
+                                  >
+                                    Criado aqui
+                                  </span>
+                                </td>
+                              );
+                            }
+                          }
+
+                          if (cell.status === "available") {
+                            return (
+                              <td key={cIdx} className={styles.tdCell}>
+                                <span
+                                  className={`${styles.statusBadge} ${styles.statusAvailable}`}
+                                  title={`${row.party} - ${cell.col}\nEstado: Disponível no sistema`}
+                                >
+                                  ✓ Disponível
+                                </span>
+                                {coalitionName && (
+                                  <div className={styles.cellNote}>integrou a coligação {coalitionName}</div>
+                                )}
+                              </td>
+                            );
+                          }
+
+                          // Return --- for not_found and not_searched cells
                           return (
-                            <td key={cIdx} className={styles.tdCell}>
-                              <span
-                                className={`${styles.statusBadge} ${styles.statusAvailable}`}
-                                title={`${row.party} - ${cell.col}\nEstado: Disponível no sistema`}
-                              >
-                                ✓ Disp.
-                              </span>
+                            <td key={cIdx} className={styles.tdCell} style={{ color: "var(--text-muted)", fontWeight: "500" }}>
+                              ---
                             </td>
                           );
-                        }
-
-                        // Return --- for not_found and not_searched cells
-                        return (
-                          <td key={cIdx} className={styles.tdCell} style={{ color: "var(--text-muted)", fontWeight: "500" }}>
-                            ---
-                          </td>
-                        );
-                      })}
-                  </tr>
-                ))
+                        })}
+                    </tr>
+                  );
+                })
               ) : (
                 <tr>
                   <td

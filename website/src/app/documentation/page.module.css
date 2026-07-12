@@ -226,11 +226,12 @@
 }
 
 .tdCell {
-  padding: 0.75rem;
+  padding: 0.75rem 0.5rem;
   text-align: center;
   border-bottom: 1px solid var(--border-color);
   border-right: 1px solid var(--border-color);
-  min-width: 100px;
+  min-width: 150px;
+  vertical-align: middle;
 }
 
 /* Status badges inside table */
@@ -244,7 +245,7 @@
   font-weight: 700;
   font-size: 0.75rem;
   width: 100%;
-  max-width: 110px;
+  max-width: 130px;
   cursor: default;
 }
 
@@ -252,6 +253,34 @@
   background: rgba(12, 92, 54, 0.08);
   color: var(--color-secondary);
   border: 1px solid rgba(12, 92, 54, 0.2);
+}
+
+.statusExtinct {
+  background: rgba(108, 117, 125, 0.08);
+  color: #6c757d;
+  border: 1px solid rgba(108, 117, 125, 0.2);
+}
+
+.statusFirstUnavailable {
+  background: rgba(108, 117, 125, 0.05);
+  color: #5a6268;
+  border: 1px dashed rgba(108, 117, 125, 0.3);
+}
+
+.cellNote {
+  font-size: 0.675rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  line-height: 1.25;
+  font-weight: 500;
+}
+
+.cellNoteGreen {
+  font-size: 0.675rem;
+  color: var(--color-secondary);
+  margin-top: 0.25rem;
+  line-height: 1.25;
+  font-weight: 700;
 }
 
 .statusNotFound {

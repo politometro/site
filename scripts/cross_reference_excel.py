@@ -95,10 +95,35 @@ for row in excel_data:
             # Excel "ADN/PDR", on disk "ADN" or "PDR"
             on_disk = (party, category, year) in disk_docs
             if not on_disk:
-                # Try some relaxed matching
-                normalized_party = party.split(" - ")[0].split("/")[0].strip()
+                COALITION_MEMBERS = {
+                    "AD": {"PSD", "CDS", "PPM"},
+                    "A21": {"MPT/ALTERNATIVA 21", "MPT"},
+                    "ALTERNATIVA 21": {"MPT/ALTERNATIVA 21", "MPT"},
+                    "BASTA": {"PPM", "CHEGA", "PPV"},
+                    "PAF": {"PSD", "CDS"},
+                    "PORTUGAL À FRENTE": {"PSD", "CDS"},
+                    "PORTUGAL A FRENTE": {"PSD", "CDS"},
+                    "ALIANÇA PORTUGAL": {"PSD", "CDS"},
+                    "ALIANCA PORTUGAL": {"PSD", "CDS"},
+                    "SOMOS MADEIRA": {"PSD", "CDS"}
+                }
+                
+                def check_match(dp, ep):
+                    dp_upper = dp.strip().upper()
+                    dp_tokens = set(t.strip().upper() for t in re.split(r'[\s/-]+', dp) if t.strip())
+                    ep_tokens = set(t.strip().upper() for t in re.split(r'[\s/-]+', ep) if t.strip())
+                    if len(dp_tokens.intersection(ep_tokens)) > 0:
+                        return True
+                    for coal, members in COALITION_MEMBERS.items():
+                        if coal in dp_upper or dp_upper in coal:
+                            for m in members:
+                                m_tokens = set(t.strip().upper() for t in re.split(r'[\s/-]+', m) if t.strip())
+                                if len(m_tokens.intersection(ep_tokens)) > 0:
+                                    return True
+                    return False
+                
                 on_disk = any(
-                    (d[0] == normalized_party or normalized_party in d[0] or d[0] in normalized_party)
+                    check_match(d[0], party)
                     and d[1] == category
                     and d[2] == year
                     for d in disk_docs
