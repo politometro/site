@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
       } catch (err: any) {
         console.error("Erro RAG Pinecone:", err);
         // We will fallback to calling LLM without context, but notify the LLM about it in a system prompt
-        contextText = "[Erro ao aceder à base de dados de programas políticos. Responder com base no conhecimento interno mas sinalizar claramente que a base de dados documental está temporariamente indisponível.]";
+        contextText = "[AVISO DE ERRO DE LIGAÇÃO: A base de dados documental de programas eleitorais está temporariamente inacessível. Por favor, inicia a resposta dizendo exatamente: 'Infelizmente, devido a um erro de ligação à base de dados de programas políticos, não me é possível consultar os documentos oficiais neste momento. Contudo, com base no conhecimento geral...' e depois responde com o teu conhecimento interno da melhor forma possível.]";
       }
     }
 
