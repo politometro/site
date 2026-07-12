@@ -659,7 +659,7 @@ export default function Home() {
           <form onSubmit={handleSend} className={styles.inputArea}>
             <input
               type="text"
-              placeholder={isLoading ? "A aguardar resposta..." : "Pergunta sobre os programas eleitorais..."}
+              placeholder={isLoading ? "A aguardar..." : "Pergunta sobre os programas..."}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={isLoading}
