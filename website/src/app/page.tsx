@@ -50,6 +50,7 @@ export default function Home() {
   const [editInput, setEditInput] = useState("");
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   
   const messageListRef = useRef<HTMLDivElement>(null);
 
@@ -61,6 +62,8 @@ export default function Home() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+
 
   // Hydrate conversation from sessionStorage on client-side mount
   useEffect(() => {
@@ -112,6 +115,24 @@ export default function Home() {
 
   useEffect(() => {
     scrollToBottom();
+  }, [activePath]);
+
+  // Scroll listener to toggle top shadow fade effect when messages go out of view
+  useEffect(() => {
+    const list = messageListRef.current;
+    if (!list) return;
+
+    const handleScroll = () => {
+      setIsScrolled(list.scrollTop > 5);
+    };
+
+    list.addEventListener("scroll", handleScroll);
+    // Initial check
+    handleScroll();
+
+    return () => {
+      list.removeEventListener("scroll", handleScroll);
+    };
   }, [activePath]);
 
   const scrollToBottom = () => {
@@ -549,7 +570,7 @@ export default function Home() {
       <Header />
       
       <main className={styles.main}>
-        <div className={`${styles.chatBox} glass`}>
+        <div className={`${styles.chatBox} ${isScrolled ? styles.scrolled : ""} glass`}>
           <div ref={messageListRef} className={styles.messageList}>
             {activePath.map((msg) => {
               const parentNode: MessageNode | undefined = msg.parentId ? messagesMap[msg.parentId] : undefined;

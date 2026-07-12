@@ -25,9 +25,18 @@ export default function Header() {
       }
     };
 
+    const handleClose = () => {
+      setIsOpen(false);
+    };
+
     document.addEventListener("mousedown", handleClickOutside);
+    window.addEventListener("scroll", handleClose, { capture: true, passive: true });
+    window.addEventListener("touchmove", handleClose, { passive: true });
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      window.removeEventListener("scroll", handleClose, { capture: true });
+      window.removeEventListener("touchmove", handleClose);
     };
   }, [isOpen]);
 
