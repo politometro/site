@@ -403,11 +403,15 @@ export default function DocumentationPage() {
           <div className={`${styles.statCard} glass`}>
             <div className={styles.statIcon}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M12 3v17M12 20H8m4 0h4M3 9h6M21 9h-6M6 9v6c0 1.5 1 2.5 2.5 2.5S11 16.5 11 15V9m4 0v6c0 1.5 1 2.5 2.5 2.5S20 16.5 20 15V9" />
+                <path d="M12 3v17" />
+                <path d="M12 20H8m4 0h4" />
+                <path d="M5 7h14" />
+                <path d="M5 7l-2 6a3 3 0 0 0 6 0z" />
+                <path d="M19 7l-2 6a3 3 0 0 0 6 0z" />
               </svg>
             </div>
             <div className={styles.statInfo}>
-              <span className={styles.statValue}>{extraStats.constitutionCount > 0 ? "Sim" : "Não"}</span>
+              <span className={styles.statValue}>{extraStats.constitutionCount > 0 ? "Disponível" : "Não Disponível"}</span>
               <span className={styles.statLabel}>Constituição da República</span>
             </div>
           </div>
