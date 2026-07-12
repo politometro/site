@@ -15,15 +15,11 @@ interface MessageNode {
 }
 
 const welcomeMsgId = "welcome";
-const WELCOME_CONTENT = `📘 **Bem-vindo! Sou o Politómetro**, um assistente especializado em programas eleitorais portugueses (sem discriminação de partidos) e em alguns documentos importantes, como a Constituição Portuguesa e Orçamentos do Estado.
+const WELCOME_CONTENT = `📘 **Bem-vindo ao Politómetro!** Sou um assistente neutro especializado em programas eleitorais portugueses, na Constituição da República e em Orçamentos do Estado.
 
-📄 Todas as respostas que dou baseiam-se exclusivamente nos documentos oficiais desses programas, e, quando pertinente, na Constituição da República Portuguesa.
+📄 As respostas baseiam-se estritamente em documentos oficiais, indicando sempre a fonte, o ano e o contexto político das propostas.
 
-Podes perguntar-me sobre posições de partidos, comparações entre anos ou temas específicos — e eu indico-te sempre o ano e o contexto político das propostas.
-
-⚠️ Como qualquer inteligência artificial, o Politómetro pode fornecer dados falsos, porém é sempre citada a fonte dos dados apresentadas e nunca é acrescentada nenhuma opinião nem mantida nenhuma afiliação partidária. 
-
-⚠️ O site fornece um número de respostas limitadas por dia.
+⚠️ Como qualquer IA, posso cometer erros, pelo que as fontes originais são sempre citadas para verificação. O limite de utilização é diário.
 
 🗳️ **O que gostarias de saber?**`;
 
@@ -671,7 +667,7 @@ export default function Home() {
           <form onSubmit={handleSend} className={styles.inputArea}>
             <input
               type="text"
-              placeholder={isLoading ? "A aguardar..." : "Pergunta sobre os programas..."}
+              placeholder={isLoading ? "A aguardar..." : "Pergunta sobre os programas eleitorais..."}
               value={input}
               onChange={(e) => setInput(e.target.value)}
               disabled={isLoading}

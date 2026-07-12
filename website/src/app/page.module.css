@@ -167,66 +167,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* Sources styling */
-.sourcesContainer {
-  margin-top: 0.75rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  padding-top: 0.75rem;
-}
-
-.sourcesTitle {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--color-secondary);
-  letter-spacing: 0.05em;
-  display: block;
-  margin-bottom: 0.5rem;
-}
-
-.sourcesList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.sourceTag {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  padding: 0.25rem 0.5rem;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.7rem;
-  color: var(--text-secondary);
-  transition: var(--transition-fast);
-  cursor: default;
-}
-
-.sourceTag:hover {
-  background: rgba(6, 182, 212, 0.05);
-  border-color: rgba(6, 182, 212, 0.2);
-}
-
-.sourceTagParty {
-  font-weight: 700;
-  color: var(--text-primary);
-}
-
-.sourceTagPage {
-  color: var(--text-muted);
-}
-
-.sourceTagCategory {
-  background: rgba(99, 102, 241, 0.15);
-  color: var(--color-primary);
-  border-radius: 3px;
-  padding: 0 4px;
-  font-size: 0.65rem;
-  font-weight: 600;
-  text-transform: uppercase;
-}
 
 /* Input Area */
 .inputArea {
@@ -282,7 +222,7 @@
 
 @media (max-width: 640px), (max-height: 500px) {
   .container {
-    height: calc(100dvh - 65px - 42px); /* Header is 65px on mobile, Footer is ~42px */
+    height: calc(100dvh - 42px); /* Footer is ~42px on mobile */
   }
 
   .messageWrapper {
@@ -332,7 +272,7 @@
   }
 
   .input::placeholder {
-    font-size: 0.78rem; /* decrease placeholder size on mobile to fit text fully */
+    font-size: 0.74rem; /* decrease placeholder size on mobile to fit text fully */
   }
   
   .sendBtn {
