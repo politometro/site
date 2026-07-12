@@ -3,7 +3,7 @@ import "./globals.css";
 import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://politometro.politiza-te.pt"),
+  metadataBase: new URL("https://politometro.vercel.app"),
   title: "Politómetro - Análise de Programas Eleitorais Portugueses",
   description: "Explore, pesquise e compare propostas dos partidos políticos portugueses de forma rigorosa, imparcial e baseada exclusivamente em documentos oficiais.",
   keywords: [
