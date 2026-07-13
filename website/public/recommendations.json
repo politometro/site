@@ -12,7 +12,7 @@
       "priority": 5,
       "expiryDate": null,
       "createdAt": "2026-07-10T12:00:00Z",
-      "status": "queue"
+      "status": "skip"
     },
     {
       "id": "book_2",
@@ -54,7 +54,7 @@
       "priority": 5,
       "expiryDate": null,
       "createdAt": "2026-07-10T12:10:00Z",
-      "status": "queue"
+      "status": "skip"
     },
     {
       "id": "podcast_2",
@@ -124,7 +124,7 @@
       "priority": 5,
       "expiryDate": null,
       "createdAt": "2026-07-10T12:21:00Z",
-      "status": "queue"
+      "status": "skip"
     },
     {
       "id": "series_2",
@@ -264,7 +264,7 @@
       "priority": 5,
       "expiryDate": null,
       "createdAt": "2026-07-10T12:30:00Z",
-      "status": "queue"
+      "status": "skip"
     },
     {
       "id": "highlight_2",
