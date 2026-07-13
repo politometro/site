@@ -15,7 +15,7 @@ interface MessageNode {
 }
 
 const welcomeMsgId = "welcome";
-const WELCOME_CONTENT = `📘 **Bem-vindo ao Politómetro!** Sou um assistente neutro especializado em programas eleitorais portugueses, na Constituição da República e em Orçamentos do Estado.
+const WELCOME_CONTENT = `📘 **Bem-vindo ao Politómetro!** Sou um assistente neutro especializado em programas eleitorais portugueses, na [Constituição da República](https://www.parlamento.pt/Legislacao/Paginas/ConstituicaoRepublicaPortuguesa.aspx) e em [Orçamentos do Estado](https://www.parlamento.pt/OrcamentoEstado/Paginas/OrcamentoEstadoanosanteriores.aspx).
 
 📄 As respostas baseiam-se estritamente em documentos oficiais, indicando sempre a fonte, o ano e o contexto político das propostas.
 
@@ -535,6 +535,7 @@ export default function Home() {
       
       content = content.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
       content = content.replace(/`(.*?)`/g, "<code>$1</code>");
+      content = content.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 
       if (content.startsWith("### ")) {
         return <h3 key={idx} className={styles.mdH3}>{content.replace("### ", "")}</h3>;
@@ -586,7 +587,15 @@ export default function Home() {
                   className={`${styles.messageWrapper} ${msg.role === "user" ? styles.userWrapper : styles.assistantWrapper}`}
                 >
                   <div className={styles.avatar}>
-                    {msg.role === "user" ? "👤" : "🗳️"}
+                    {msg.role === "user" ? (
+                      "👤"
+                    ) : (
+                      <img 
+                        src="/logo-chat.jpg" 
+                        alt="Politómetro" 
+                        className={styles.avatarImg} 
+                      />
+                    )}
                   </div>
                   <div className={styles.bubbleContainer} style={{ alignItems: msg.role === "user" ? "flex-end" : "flex-start" }}>
                     <div className={`${styles.messageBubble} ${msg.role === "user" ? styles.userBubble : styles.assistantBubble}`}>
