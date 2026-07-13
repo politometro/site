@@ -199,6 +199,44 @@ def wrap_text(draw, text, font, max_width):
 
 # --- MAIN ---
 def generate_production_post():
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--review", action="store_true", help="Generate draft post for review without modifying database")
+    parser.add_argument("--commit", action="store_true", help="Commit the currently approved review draft to database")
+    args = parser.parse_args()
+
+    DRAFT_FILE = os.path.join(SCRIPT_DIR, "review_draft.json")
+
+    if args.commit:
+        if not os.path.exists(DRAFT_FILE):
+            print("ERROR: No draft file found to commit.")
+            sys.exit(1)
+        with open(DRAFT_FILE, "r", encoding="utf-8") as f:
+            selected = json.load(f)
+        with open(REC_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        queue = data.get("queue", [])
+        history = data.get("history", [])
+        
+        selected_ids = [item["id"] for item in selected.values()]
+        updated_queue = []
+        for item in queue:
+            if item["id"] in selected_ids:
+                item["status"] = "published"
+                history.append(item)
+            else:
+                updated_queue.append(item)
+        data["queue"] = updated_queue
+        data["history"] = history
+        with open(REC_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        print("[OK] Committed draft to recommendations.json database successfully.")
+        try:
+            os.remove(DRAFT_FILE)
+        except:
+            pass
+        return
+
     ensure_fonts()
     
     with open(REC_FILE, "r", encoding="utf-8") as f:
@@ -354,6 +392,12 @@ Trazemos-te a nossa seleção semanal de conteúdos essenciais para compreendere
     with open(OUTPUT_CAPTION_PATH, "w", encoding="utf-8") as f:
         f.write(caption)
     print(f"[OK] Production Instagram caption saved to: {OUTPUT_CAPTION_PATH}")
+    
+    if args.review:
+        with open(DRAFT_FILE, "w", encoding="utf-8") as f:
+            json.dump(selected, f, indent=2, ensure_ascii=False)
+        print("[OK] Review draft saved. Database recommendations.json remains unchanged.")
+        return
     
     # 6. Update database recommendations.json (Production actions)
     selected_ids = [item["id"] for item in selected.values()]

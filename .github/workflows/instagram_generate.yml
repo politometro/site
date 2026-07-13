@@ -31,11 +31,22 @@ jobs:
 
       - name: Generate Post Image & Caption
         run: |
-          python scripts/generate_post.py
+          python scripts/generate_post.py --review
+        env:
+          GOOGLE_CSE_API_KEY: ${{ secrets.GOOGLE_CSE_API_KEY }}
+          GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
+          IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
 
-      - name: Commit and Push Generated Post & Updated Database
+      - name: Commit and Push Generated Post (Review Mode)
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add website/public/recommendations.json website/public/current_post.png website/public/current_caption.txt
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Generate weekly post and update recommendations DB [skip ci]" && git push)
+          git add website/public/current_post.png website/public/current_caption.txt scripts/review_draft.json scripts/cover_cache/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Generate weekly post draft for review [skip ci]" && git push)
+
+      - name: Send Review Card to Discord
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_REVIEW_CHANNEL_ID: ${{ secrets.DISCORD_REVIEW_CHANNEL_ID }}
+        run: |
+          python scripts/send_to_discord.py

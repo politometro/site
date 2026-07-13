@@ -23,6 +23,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install requests
 
+      - name: Commit Approved Recommendations to Database
+        run: |
+          python scripts/generate_post.py --commit
+
+      - name: Commit and Push Updated Database
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add website/public/recommendations.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Commit approved recommendations DB [skip ci]" && git push)
+
       - name: Post to Instagram
         env:
           INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
@@ -30,5 +41,5 @@ jobs:
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           # Give GitHub raw servers a brief moment to update cache for the raw image URL
-          sleep 10
+          sleep 15
           python scripts/post_instagram.py
