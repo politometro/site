@@ -1,0 +1,58 @@
+{
+  "q4": {
+    "id": "highlight_1",
+    "type": "highlight",
+    "category": "Recomendação da semana",
+    "title": "Inside Job",
+    "authorOrMeta": "Documentário / Charles Ferguson",
+    "description": "Um documentário incisivo sobre a crise financeira de 2008, os incentivos de risco de Wall Street e o colapso da regulação.",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/a/a1/InsideJob2010Poster.jpg",
+    "link": "https://www.imdb.com/title/tt1645089/",
+    "priority": 5,
+    "expiryDate": null,
+    "createdAt": "2026-07-10T12:30:00Z",
+    "status": "queue"
+  },
+  "q1": {
+    "id": "book_1",
+    "type": "book",
+    "category": "Livro",
+    "title": "Porque Sou Liberal",
+    "authorOrMeta": "João Cotrim de Figueiredo",
+    "description": "Um retrato pessoal e político, com reflexões sobre o liberalismo e o percurso do autor na política portuguesa.",
+    "imageUrl": "https://img.wook.pt/images/porque-sou-liberal-joao-cotrim-de-figueiredo/MXwzMjY3NjU4NHwyOTA4NTk1OXwxNzc4MjI3NzgyMDAw/502x",
+    "link": "https://www.wook.pt/livro/porque-sou-liberal-joao-cotrim-de-figueiredo/32676584",
+    "priority": 5,
+    "expiryDate": null,
+    "createdAt": "2026-07-10T12:00:00Z",
+    "status": "queue"
+  },
+  "q2": {
+    "id": "podcast_1",
+    "type": "podcast",
+    "category": "Podcast",
+    "title": "Linhas Vermelhas: O Futuro da Esquerda",
+    "authorOrMeta": "SIC Notícias",
+    "description": "Episódio dedicado ao debate sobre as novas lideranças partidárias e os desafios da coesão da esquerda parlamentar.",
+    "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts116/v4/de/b4/87/deb48721-4601-e763-124b-48e840174086/mza_1147058005738878156.jpg/600x600bb.jpg",
+    "link": "https://sicnoticias.pt/programas/linhas-vermelhas",
+    "priority": 5,
+    "expiryDate": null,
+    "createdAt": "2026-07-10T12:10:00Z",
+    "status": "queue"
+  },
+  "q3": {
+    "id": "series_1",
+    "type": "series",
+    "category": "Série",
+    "title": "Borgen",
+    "authorOrMeta": "Adam Price",
+    "description": "Série dinamarquesa que retrata com enorme realismo as negociações de coligação, o papel da imprensa e a ética política.",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Christiansborg_2004.jpg/330px-Christiansborg_2004.jpg",
+    "link": "https://www.netflix.com/title/70302482",
+    "priority": 5,
+    "expiryDate": null,
+    "createdAt": "2026-07-10T12:21:00Z",
+    "status": "queue"
+  }
+}
