@@ -15,7 +15,7 @@ interface MessageNode {
 }
 
 const welcomeMsgId = "welcome";
-const WELCOME_CONTENT = `📘 **Bem-vindo ao Politómetro!** Sou um assistente neutro especializado em programas eleitorais portugueses, na [Constituição da República](https://www.parlamento.pt/Legislacao/Paginas/ConstituicaoRepublicaPortuguesa.aspx) e em [Orçamentos do Estado](https://www.parlamento.pt/OrcamentoEstado/Paginas/OrcamentoEstadoanosanteriores.aspx).
+const WELCOME_CONTENT = `📘 **Bem-vindo ao Politómetro!** Sou um assistente neutro especializado em programas eleitorais portugueses, na Constituição da República e em Orçamentos do Estado.
 
 📄 As respostas baseiam-se estritamente em documentos oficiais, indicando sempre a fonte, o ano e o contexto político das propostas.
 

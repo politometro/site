@@ -382,7 +382,13 @@ export default function DocumentationPage() {
           </div>
 
           {/* Card 2: Orçamentos de Estado */}
-          <div className={`${styles.statCard} glass`}>
+          <a 
+            href="https://www.parlamento.pt/OrcamentoEstado/Paginas/OrcamentoEstadoanosanteriores.aspx" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className={`${styles.statCard} ${styles.statCardLink} glass`}
+            title="Ver arquivo oficial de Orçamentos do Estado no Parlamento"
+          >
             <div className={styles.statIcon}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <line x1="3" y1="22" x2="21" y2="22" />
@@ -394,13 +400,37 @@ export default function DocumentationPage() {
               </svg>
             </div>
             <div className={styles.statInfo}>
-              <span className={styles.statValue}>{extraStats.budgetsCount}</span>
+              <span className={styles.statValue}>
+                {extraStats.budgetsCount}
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="12" 
+                  height="12" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  style={{ marginLeft: "6px", verticalAlign: "middle", opacity: 0.6 }}
+                >
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </span>
               <span className={styles.statLabel}>Orçamentos de Estado</span>
             </div>
-          </div>
+          </a>
 
           {/* Card 3: Constituição */}
-          <div className={`${styles.statCard} glass`}>
+          <a 
+            href="https://www.parlamento.pt/Legislacao/Paginas/ConstituicaoRepublicaPortuguesa.aspx" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className={`${styles.statCard} ${styles.statCardLink} glass`}
+            title="Ver Constituição da República Portuguesa no Parlamento"
+          >
             <div className={styles.statIcon}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M12 3v17" />
@@ -411,10 +441,28 @@ export default function DocumentationPage() {
               </svg>
             </div>
             <div className={styles.statInfo}>
-              <span className={styles.statValue}>{extraStats.constitutionCount > 0 ? "Disponível" : "Não Disponível"}</span>
+              <span className={styles.statValue}>
+                {extraStats.constitutionCount > 0 ? "Disponível" : "Não Disponível"}
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  width="12" 
+                  height="12" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2.5" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  style={{ marginLeft: "6px", verticalAlign: "middle", opacity: 0.6 }}
+                >
+                  <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                  <polyline points="15 3 21 3 21 9"></polyline>
+                  <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+              </span>
               <span className={styles.statLabel}>Constituição da República</span>
             </div>
-          </div>
+          </a>
         </div>
 
         {/* Filters and Controls */}
