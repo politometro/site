@@ -36,6 +36,8 @@ with open(CAPTION_PATH, "r", encoding="utf-8") as f:
     caption = f.read()
 
 intents = discord.Intents.default()
+# Enable message content intent to suppress the bot commands warning
+intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 # Persistent view with matching custom_ids
