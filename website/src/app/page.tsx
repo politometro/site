@@ -620,7 +620,15 @@ export default function Home() {
                         </div>
                       ) : (
                         <div className={styles.messageContent}>
-                          {renderMarkdown(msg.content)}
+                          {msg.role === "assistant" && msg.content.trim() === "" && isLoading ? (
+                            <div className={styles.typingIndicator}>
+                              <span></span>
+                              <span></span>
+                              <span></span>
+                            </div>
+                          ) : (
+                            renderMarkdown(msg.content)
+                          )}
                         </div>
                       )}
                     </div>

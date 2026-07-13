@@ -459,3 +459,42 @@
     opacity: 0.95 !important;
   }
 }
+
+/* Typing Indicator Animation */
+.typingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  height: 20px;
+}
+
+.typingIndicator span {
+  width: 8px;
+  height: 8px;
+  background-color: var(--text-muted);
+  border-radius: 50%;
+  display: inline-block;
+  opacity: 0.4;
+  animation: bounce 1.4s infinite ease-in-out both;
+}
+
+.typingIndicator span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typingIndicator span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.4;
+  }
+  40% {
+    transform: scale(1.0);
+    opacity: 1;
+    background-color: var(--color-primary);
+  }
+}
