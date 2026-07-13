@@ -125,8 +125,8 @@ Devolve APENAS um array JSON puro (sem formatação markdown ```json, sem texto 
                     json={
                         "model": model,
                         "messages": [
-                            {"role": "system", content: system_prompt},
-                            {"role": "user", content: "Gera 8 novas recomendações políticas e históricas portuguesas respeitando a lista de exclusões."}
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": "Gera 8 novas recomendações políticas e históricas portuguesas respeitando a lista de exclusões."}
                         ],
                         "temperature": 0.3,
                         "response_format": {"type": "json_object"}

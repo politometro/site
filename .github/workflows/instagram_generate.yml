@@ -4,7 +4,12 @@ on:
   schedule:
     # Runs every Saturday at 19:00 UTC (approximately 20:00 Lisbon local time)
     - cron: '0 19 * * 6'
-  workflow_dispatch: # Allows manual trigger at any time from GitHub UI
+  workflow_dispatch: # Allows manual trigger at any time from GitHub UI or Discord Bot
+    inputs:
+      channel_id:
+        description: 'Discord Channel/User ID to send the preview'
+        required: false
+        default: ''
 
 jobs:
   generate:
@@ -47,6 +52,7 @@ jobs:
       - name: Send Review Card to Discord
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          DISCORD_REVIEW_CHANNEL_ID: ${{ secrets.DISCORD_REVIEW_CHANNEL_ID }}
+          DISCORD_REVIEW_CHANNEL_ID: ${{ github.event.inputs.channel_id || secrets.DISCORD_REVIEW_CHANNEL_ID }}
+          PING_EVERYONE: ${{ github.event_name == 'schedule' }}
         run: |
           python scripts/send_to_discord.py
