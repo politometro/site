@@ -633,7 +633,7 @@ export default function Home() {
                       )}
                     </div>
                     
-                    {!isEditing && (
+                    {!isEditing && !(msg.role === "assistant" && msg.content.trim() === "" && isLoading) && (
                       <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", width: "100%", justifyContent: "flex-end", marginTop: "2px" }}>
                         {isBranch && (
                           <div className={styles.branchNav} style={{ margin: 0 }}>
