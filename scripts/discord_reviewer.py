@@ -114,7 +114,7 @@ def trigger_github_workflow(workflow_name):
         return str(e)
 
 # ===================== CHATBOT Q&A API =====================
-def query_politometro_chat(query):
+def query_politometro_chat(query, user_id="unknown"):
     """Queries the main Next.js website chat API"""
     base_url = WEBSITE_URL.rstrip("/")
     url = f"{base_url}/api/chat"
@@ -125,7 +125,7 @@ def query_politometro_chat(query):
     }
     headers = {
         "Content-Type": "application/json",
-        "x-client-id": "discord-bot"
+        "x-client-id": f"discord-bot:{user_id}"
     }
     
     try:
@@ -435,7 +435,7 @@ async def on_message(message):
             
         async with message.channel.typing():
             loop = asyncio.get_event_loop()
-            response_text = await loop.run_in_executor(None, query_politometro_chat, query)
+            response_text = await loop.run_in_executor(None, query_politometro_chat, query, message.author.id)
             
             # Smart message splitting:
             if len(response_text) <= 2000:
