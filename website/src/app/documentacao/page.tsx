@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Header from "@/components/Header";
 import docsData from "@/data/political_docs.json";
 import styles from "./page.module.css";
@@ -263,6 +263,41 @@ export default function DocumentationPage() {
   const [extraStats, setExtraStats] = useState({ budgetsCount: 28, constitutionCount: 1 });
 
   const rows = docsData.rows as Row[];
+
+  // Download handler: fetches the PDF via the API, validates the response,
+  // and triggers a real file download. Shows an alert if the PDF is not found.
+  const handleDownload = useCallback(async (downloadUrl: string, party: string, col: string) => {
+    try {
+      const res = await fetch(downloadUrl);
+      if (!res.ok) {
+        alert(`Não foi possível descarregar o programa de ${party} (${col}). O ficheiro não foi encontrado no servidor.`);
+        return;
+      }
+      const contentType = res.headers.get("Content-Type") || "";
+      if (contentType.includes("application/json")) {
+        alert(`Não foi possível descarregar o programa de ${party} (${col}). O ficheiro não foi encontrado no servidor.`);
+        return;
+      }
+      const blob = await res.blob();
+      // Extract filename from Content-Disposition header or fallback
+      const disposition = res.headers.get("Content-Disposition") || "";
+      let filename = `${party} - ${col}.pdf`;
+      const filenameMatch = disposition.match(/filename="?([^"\n;]+)"?/);
+      if (filenameMatch) {
+        filename = filenameMatch[1];
+      }
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+    } catch {
+      alert(`Erro ao descarregar o programa de ${party} (${col}). Tente novamente mais tarde.`);
+    }
+  }, []);
 
   useEffect(() => {
     fetch("/api/stats", { cache: "no-store" })
@@ -615,7 +650,13 @@ export default function DocumentationPage() {
                               const creationText = meta && meta.foundedYear ? `Criado em ${meta.foundedYear}` : "Criado aqui";
                               return (
                                 <td key={cIdx} className={styles.tdCell}>
-                                  <a href={downloadUrl} download className={styles.downloadLink} title="Descarregar programa (PDF)">
+                                  <a
+                                    href="#"
+                                    onClick={(e) => { e.preventDefault(); handleDownload(downloadUrl, row.party, cell.col); }}
+                                    className={styles.downloadLink}
+                                    title="Descarregar programa (PDF)"
+                                    role="button"
+                                  >
                                     <span
                                       className={`${styles.statusBadge} ${styles.statusAvailable}`}
                                     >
@@ -647,7 +688,13 @@ export default function DocumentationPage() {
                             } else {
                               return (
                                 <td key={cIdx} className={styles.tdCell}>
-                                  <a href={downloadUrl} download className={styles.downloadLink} title="Descarregar programa (PDF)">
+                                  <a
+                                    href="#"
+                                    onClick={(e) => { e.preventDefault(); handleDownload(downloadUrl, row.party, cell.col); }}
+                                    className={styles.downloadLink}
+                                    title="Descarregar programa (PDF)"
+                                    role="button"
+                                  >
                                     <span
                                       className={`${styles.statusBadge} ${styles.statusAvailable}`}
                                     >
