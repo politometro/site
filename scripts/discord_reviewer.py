@@ -170,6 +170,7 @@ class RejectionReasonSelect(discord.ui.Select):
             discord.SelectOption(label="Capas erradas (Nova Capa)", value="wrong_covers", description="Substituir capa de um quadrante por nova imagem.", emoji="📚"),
             discord.SelectOption(label="Erros na legenda", value="typo_text", description="Fornecer texto de legenda corrigido.", emoji="✍️"),
             discord.SelectOption(label="Erros de escrita na imagem", value="typo_image_text", description="Corrigir erros no texto desenhado na imagem.", emoji="📝"),
+            discord.SelectOption(label="Links inválidos/incorretos", value="bad_links", description="Corrigir links incorretos ou quebrados na base de dados.", emoji="🔗"),
             discord.SelectOption(label="Más recomendações (Regerar)", value="bad_recs", description="Descartar estes itens e buscar novos candidatos.", emoji="👎")
         ]
         super().__init__(placeholder="Selecione o motivo da rejeição...", options=options)
@@ -195,14 +196,14 @@ class RejectionReasonSelect(discord.ui.Select):
                     curr_layout = item.get("layout_preference", "template_1")
                     new_layout = "template_2" if curr_layout == "template_1" else ("template_3" if curr_layout == "template_2" else "template_1")
                     item["layout_preference"] = new_layout
-
+ 
             # Save draft changes back to GitHub
             new_draft_bytes = json.dumps(draft_data, indent=2, ensure_ascii=False).encode("utf-8")
             res_draft = update_github_file("scripts/review_draft.json", new_draft_bytes, "Cycle layout preference [bot]", sha=draft_sha)
             if res_draft is not True:
                 await interaction.followup.send(f"❌ Erro ao atualizar layout no GitHub: {res_draft}", ephemeral=True)
                 return
-
+ 
             # Trigger generate post
             res_wf = trigger_github_workflow("instagram_generate.yml")
             if res_wf is True:
@@ -213,7 +214,7 @@ class RejectionReasonSelect(discord.ui.Select):
                 await interaction.followup.send("Layout alterado! Imagem está a ser regerada no GitHub.", ephemeral=True)
             else:
                 await interaction.followup.send(f"❌ Erro ao acionar workflow de regeneração: {res_wf}", ephemeral=True)
-
+ 
         elif reason == "wrong_covers":
             quadrant_view = discord.ui.View()
             quadrant_view.add_item(QuadrantSelect(self.original_msg_id))
@@ -222,14 +223,14 @@ class RejectionReasonSelect(discord.ui.Select):
                 view=quadrant_view,
                 ephemeral=True
             )
-
+ 
         elif reason == "typo_text":
             waiting_for_text = True
             await interaction.response.send_message(
                 "✍️ Por favor, **responda a esta mensagem enviando o texto da legenda corrigido**.", 
                 ephemeral=True
             )
-
+ 
         elif reason == "typo_image_text":
             await interaction.response.send_message(
                 "📝 **Para corrigir erros de escrita na imagem:**\n"
@@ -237,6 +238,16 @@ class RejectionReasonSelect(discord.ui.Select):
                 "2. Edita o `title`, `authorOrMeta` ou `description` da recomendação correspondente.\n"
                 "3. Efetua o commit das alterações no GitHub.\n"
                 "4. Volta aqui ao Discord e corre `!check` novamente para regenerar a imagem com as correções!",
+                ephemeral=True
+            )
+
+        elif reason == "bad_links":
+            await interaction.response.send_message(
+                "🔗 **Para corrigir links incorretos ou inválidos:**\n"
+                "1. Acede ao teu GitHub e abre o ficheiro `website/public/recommendations.json`.\n"
+                "2. Localiza a recomendação e edita o campo `link` para o URL correto.\n"
+                "3. Efetua o commit das alterações no GitHub.\n"
+                "4. Volta ao Discord e corre `!check` novamente para regenerar o post com o link atualizado!",
                 ephemeral=True
             )
 
@@ -416,7 +427,7 @@ async def on_message(message):
                         with urllib.request.urlopen(req) as response:
                             image_bytes = response.read()
                         
-                        res_upload = update_github_file(f"scripts/cover_cache/{key}.jpg", image_bytes, "Update cover cache image [bot]")
+                        res_upload = update_github_file(f"website/public/covers/{key}.jpg", image_bytes, "Update cover cache image [bot]")
                         
                         if res_upload is True:
                             res_wf = trigger_github_workflow("instagram_generate.yml")

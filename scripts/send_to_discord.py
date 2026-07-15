@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -66,6 +67,27 @@ async def on_ready():
             description="Verifica a imagem em anexo. A legenda sugerida segue na mensagem abaixo.",
             color=discord.Color.blue()
         )
+        
+        # Load links from review_draft.json
+        draft_path = os.path.join(SCRIPT_DIR, "review_draft.json")
+        if os.path.exists(draft_path):
+            try:
+                with open(draft_path, "r", encoding="utf-8") as df:
+                    draft_data = json.load(df)
+                q1 = draft_data.get("q1", {})
+                q2 = draft_data.get("q2", {})
+                q3 = draft_data.get("q3", {})
+                q4 = draft_data.get("q4", {})
+                
+                links_text = (
+                    f"🎙️ **Q1 ({q1.get('category', 'Podcast')})**: [{q1.get('title')}]({q1.get('link')})\n"
+                    f"📚 **Q2 ({q2.get('category', 'Livro')})**: [{q2.get('title')}]({q2.get('link')})\n"
+                    f"🎬 **Q3 ({q3.get('category', 'Filme')})**: [{q3.get('title')}]({q3.get('link')})\n"
+                    f"⭐ **Q4 ({q4.get('category', 'Destaque')})**: [{q4.get('title')}]({q4.get('link')})"
+                )
+                embed.add_field(name="🔗 Links para Verificação", value=links_text, inline=False)
+            except Exception as e:
+                print(f"⚠️ Error parsing draft for links: {e}")
         
         file_to_send = discord.File(IMAGE_PATH, filename="post.png")
         embed.set_image(url="attachment://post.png")
