@@ -323,9 +323,6 @@
 
   .input::placeholder {
     font-size: 0.675rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
   }
   
   .clearBtn {
