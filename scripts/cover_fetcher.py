@@ -207,8 +207,8 @@ def _search_omdb(title, year=None):
     except Exception:
         pass
     return None
-
-# ===================== MAIN FETCH LOGIC ===============def _scrape_og_image(url):
+# ===================== MAIN FETCH LOGIC =====================
+def _scrape_og_image(url):
     """Fetch the page and extract og:image tag content."""
     try:
         r = requests.get(url, headers=HEADERS_BROWSER, timeout=10, allow_redirects=True)
