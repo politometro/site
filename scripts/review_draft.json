@@ -43,17 +43,17 @@
     "status": "queue"
   },
   "q4": {
-    "id": "highlight_2",
+    "id": "ai_highlight_1784150402_7",
     "type": "highlight",
-    "category": "Recomendação da semana",
-    "title": "Sem Moderação: O Pacto das Migrações",
-    "authorOrMeta": "SIC Notícias",
-    "description": "Debate esclarecedor sobre o novo pacto europeu para as migrações e o posicionamento diplomático português.",
-    "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/a7/67/6f/a7676f28-a400-b6f7-c5a4-23db94f69906/mza_5431627993437340246.jpg/600x600bb.jpg",
-    "link": "https://sicnoticias.pt",
-    "priority": 4,
+    "category": "Destaque",
+    "title": "Relatório sobre a Economia Portuguesa 2022",
+    "authorOrMeta": "Fundação Francisco Manuel dos Santos",
+    "description": "Análise detalhada da situação económica de Portugal em 2022, com recomendações para o futuro.",
+    "imageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=200",
+    "link": "https://ffms.pt/relatorio-sobre-a-economia-portuguesa-2022/",
+    "priority": 3,
     "expiryDate": null,
-    "createdAt": "2026-07-10T12:13:00Z",
+    "createdAt": "2026-07-15T21:20:02.320604Z",
     "status": "queue"
   }
 }
