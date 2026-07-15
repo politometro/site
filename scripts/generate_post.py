@@ -200,19 +200,21 @@ def get_recommendations_with_valid_covers(queue):
     for idx, item in enumerate(selected_others):
         selected[f"q{idx+1}"] = item
 
-    # Auto-resolve podcast episode links to avoid using generic show pages
+    # Auto-resolve correct links for all selected items to avoid hallucinated/patterned URLs
     for qkey in ["q1", "q2", "q3", "q4"]:
         item = selected.get(qkey)
-        if item and item.get("type") == "podcast":
-            title = item["title"]
-            author = item.get("authorOrMeta", "")
-            clean_author = re.sub(r'^(Filme|S[eé]rie|Document[aá]rio|Podcast)\s*/\s*', '', author).strip()
+        if not item:
+            continue
+            
+        title = item["title"]
+        itype = item["type"]
+        author = item.get("authorOrMeta", "")
+        clean_author = re.sub(r'^(Filme|S[eé]rie|Document[aá]rio|Podcast)\s*/\s*', '', author).strip()
+        
+        resolved = False
+        if itype == "podcast":
             query = f"episódio {title} {clean_author}"
-            
-            print(f"[Link Resolver] Attempting to automatically resolve specific episode link for podcast '{title}'...")
-            
-            # 1. Try iTunes Search API specifically for episode entity
-            resolved = False
+            # Try iTunes Search API first for podcasts
             try:
                 itunes_url = f"https://itunes.apple.com/search?term={urllib.parse.quote(query)}&media=podcast&entity=podcastEpisode&limit=1"
                 r = requests.get(itunes_url, timeout=5)
@@ -221,25 +223,30 @@ def get_recommendations_with_valid_covers(queue):
                     if results:
                         ep_link = results[0].get("trackViewUrl")
                         if ep_link:
-                            print(f"  -> Automatically resolved podcast episode link via iTunes: {ep_link}")
+                            print(f"[Link Resolver] Automatically resolved podcast episode link via iTunes: {ep_link}")
                             item["link"] = ep_link
                             resolved = True
             except Exception as e:
                 print(f"  -> iTunes episode check failed: {e}")
+        else:
+            if itype == "book":
+                query = f"site:wook.pt OR site:fnac.pt livro {title} {clean_author}"
+            elif itype in ["movie", "documentary", "series"]:
+                query = f"site:imdb.com OR site:rtp.pt {title} {clean_author}"
+            else:
+                query = f"{title} {clean_author}"
                 
-            # 2. Fallback: DuckDuckGo search
-            if not resolved:
-                try:
-                    found_url = search_duckduckgo_link(query)
-                    if found_url:
-                        print(f"  -> Automatically resolved podcast episode link via DDG: {found_url}")
-                        item["link"] = found_url
-                        resolved = True
-                except Exception as e:
-                    print(f"  -> DDG episode check failed: {e}")
-                    
-            if not resolved:
-                print(f"  -> Could not resolve specific episode URL for '{title}'. Keeping original link.")
+        if not resolved:
+            print(f"[Link Resolver] Searching DuckDuckGo for real link of '{title}' (type: {itype})...")
+            try:
+                found_url = search_duckduckgo_link(query)
+                if found_url:
+                    print(f"  -> Successfully resolved real link: {found_url}")
+                    item["link"] = found_url
+                else:
+                    print(f"  -> No link found on DDG. Keeping original link: {item['link']}")
+            except Exception as e:
+                print(f"  -> DDG link search failed: {e}. Keeping original link.")
         
     return selected, covers
 
@@ -410,11 +417,19 @@ def generate_production_post():
         # Wrap title
         tx, ty = config["title_pos"]
         lines = wrap_text(draw, item["title"], title_font, 350)
+        if len(lines) > 2:
+            lines = lines[:2]
+            # Truncate the second line to add '...'
+            words = lines[1].split()
+            if len(words) > 1:
+                lines[1] = " ".join(words[:-1]) + "..."
+            else:
+                lines[1] += "..."
         title_lines_map[qkey] = lines
         
         # Draw title
         curr_y = ty
-        for line in lines[:2]:
+        for line in lines:
             draw.text((tx, curr_y), line, fill=TEXT_COLOR, font=title_font)
             curr_y += 34
         

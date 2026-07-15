@@ -208,8 +208,31 @@ def _search_omdb(title, year=None):
         pass
     return None
 
-# ===================== MAIN FETCH LOGIC =====================
-def fetch_cover(title, media_type, author_or_meta=None, image_url_hint=None, category=None, allow_placeholder=False):
+# ===================== MAIN FETCH LOGIC ===============def _scrape_og_image(url):
+    """Fetch the page and extract og:image tag content."""
+    try:
+        r = requests.get(url, headers=HEADERS_BROWSER, timeout=10, allow_redirects=True)
+        if r.status_code == 200:
+            match = re.search(r'<meta\s+property=["\']og:image["\']\s+content=["\']([^"\']+)["\']', r.text, re.IGNORECASE)
+            if not match:
+                match = re.search(r'<meta\s+name=["\']twitter:image["\']\s+content=["\']([^"\']+)["\']', r.text, re.IGNORECASE)
+            if not match:
+                match = re.search(r'<meta\s+content=["\']([^"\']+)["\']\s+property=["\']og:image["\']', r.text, re.IGNORECASE)
+            
+            if match:
+                img_url = match.group(1).strip()
+                if img_url.startswith("//"):
+                    img_url = "https:" + img_url
+                elif img_url.startswith("/"):
+                    from urllib.parse import urljoin
+                    img_url = urljoin(url, img_url)
+                if "no-image" not in img_url.lower() and "dummy" not in img_url.lower():
+                    return img_url
+    except Exception as e:
+        print(f"      [Scrape og:image Error] {e}")
+    return None
+
+def fetch_cover(title, media_type, author_or_meta=None, image_url_hint=None, category=None, allow_placeholder=False, link=None):
     """
     Fetch the best cover image for a recommendation.
     
@@ -221,7 +244,21 @@ def fetch_cover(title, media_type, author_or_meta=None, image_url_hint=None, cat
         print(f"    [CACHE] {title}")
         return Image.open(cached).convert("RGBA")
     
-    # 1.5. If image_url_hint is provided, try resolving it first to ensure correct cover
+    # 1.3. Try extracting og:image from the recommendation link first to avoid fallbacks
+    if link:
+        print(f"    [Link Scraping] Trying to extract og:image from recommendation link: {link}")
+        og_image_url = _scrape_og_image(link)
+        if og_image_url:
+            print(f"      [Found og:image] {og_image_url}")
+            img, raw = _download_image(og_image_url)
+            if img:
+                _save_to_cache(raw, title, media_type)
+                print(f"    [OK - Link Scraping] {title}")
+                return img.convert("RGBA")
+            else:
+                print(f"      [Link Scraping Image Download Failed] Falling back...")
+    
+    # 1.5. If image_url_hint is provided, try resolving it next
     if image_url_hint:
         print(f"    [Hint Search] Trying hint URL for '{title}': {image_url_hint}")
         img, raw = _download_image(image_url_hint)
@@ -331,8 +368,6 @@ def generate_placeholder(title, width=180, height=240, bg_color=(220, 215, 205),
     
     return img
 
-
-
 def fetch_cover_for_item(item, allow_placeholder=False):
     """Convenience wrapper: fetch cover for a recommendation dict."""
     return fetch_cover(
@@ -341,5 +376,6 @@ def fetch_cover_for_item(item, allow_placeholder=False):
         author_or_meta=item.get("authorOrMeta"),
         image_url_hint=item.get("imageUrl"),
         category=item.get("category"),
-        allow_placeholder=allow_placeholder
+        allow_placeholder=allow_placeholder,
+        link=item.get("link")
     )
