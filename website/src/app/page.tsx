@@ -528,6 +528,20 @@ export default function Home() {
     }
   };
 
+  const handleClear = () => {
+    if (window.confirm("Tens a certeza que desejas limpar o histórico da conversa?")) {
+      setMessagesMap(initialMessagesMap);
+      setActiveMessageId(welcomeMsgId);
+      setEditingMessageId(null);
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("politometro_chat_map");
+        sessionStorage.removeItem("politometro_chat_active_id");
+      }
+    }
+  };
+
+  const canClear = Object.keys(messagesMap).length > 1;
+
   const renderMarkdown = (text: string) => {
     const lines = text.split("\n");
     return lines.map((line, idx) => {
@@ -714,6 +728,30 @@ export default function Home() {
               disabled={isLoading}
               className={styles.input}
             />
+            <button
+              type="button"
+              onClick={handleClear}
+              disabled={isLoading || !canClear}
+              className={styles.clearBtn}
+              title="Limpar histórico da conversa"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="18" 
+                height="18" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2.5" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+              </svg>
+            </button>
             <button 
               type="submit" 
               disabled={isLoading || !input.trim()} 

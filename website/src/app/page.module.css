@@ -523,3 +523,30 @@
     background-color: var(--color-primary);
   }
 }
+
+.clearBtn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 0.85rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+  background-color: rgba(255, 255, 255, 0.6);
+}
+
+.clearBtn:hover:not(:disabled) {
+  background-color: rgba(194, 41, 38, 0.08);
+  border-color: rgba(194, 41, 38, 0.3);
+  color: #c22926;
+  transform: translateY(-1px);
+}
+
+.clearBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
