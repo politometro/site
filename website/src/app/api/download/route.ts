@@ -85,57 +85,91 @@ function findPdf(dir: string, party: string, category: string, year: number | nu
   return null;
 }
 
+// Shared logic: resolve the PDF path from query params
+function resolvePdfPath(req: NextRequest): { error?: string; status?: number; matchedPath?: string } {
+  const { searchParams } = new URL(req.url);
+  const party = searchParams.get("party");
+  const col = searchParams.get("col");
+
+  if (!party || !col) {
+    return { error: "Parâmetros em falta (party, col).", status: 400 };
+  }
+
+  // Determine category and year
+  let category = col;
+  let year: number | null = null;
+
+  if (col.includes(" - ")) {
+    const parts = col.split(" - ");
+    category = parts[0];
+    try {
+      year = parseInt(parts[1], 10);
+    } catch (e) {}
+  } else if (col.includes(" 1999")) {
+    category = "Europeias";
+    year = 1999;
+  }
+
+  // data/ folder is inside the website project root
+  const dataDir = path.join(process.cwd(), "data");
+
+  const catFolder = getCategoryFolder(category);
+  const searchPath = catFolder ? path.join(dataDir, catFolder) : dataDir;
+
+  const matchedPath = findPdf(searchPath, party, category, year);
+
+  if (!matchedPath || !fs.existsSync(matchedPath)) {
+    return { error: `Ficheiro PDF não encontrado para: ${party} (${col})`, status: 404 };
+  }
+
+  return { matchedPath };
+}
+
+// HEAD handler: fast existence check without sending the file body.
+// Used by the frontend to verify a PDF exists before triggering the download.
+export async function HEAD(req: NextRequest) {
+  try {
+    const result = resolvePdfPath(req);
+    if (result.error) {
+      return new Response(null, { status: result.status || 404 });
+    }
+    const fileSize = fs.statSync(result.matchedPath!).size;
+    return new Response(null, {
+      status: 200,
+      headers: {
+        "Content-Type": "application/pdf",
+        "Content-Length": String(fileSize),
+      },
+    });
+  } catch {
+    return new Response(null, { status: 500 });
+  }
+}
+
+// GET handler: serve the actual PDF file
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const party = searchParams.get("party");
-    const col = searchParams.get("col");
-
-    if (!party || !col) {
-      return NextResponse.json({ error: "Parâmetros em falta (party, col)." }, { status: 400 });
-    }
-
-    // Determine category and year
-    let category = col;
-    let year: number | null = null;
-
-    if (col.includes(" - ")) {
-      const parts = col.split(" - ");
-      category = parts[0];
-      try {
-        year = parseInt(parts[1], 10);
-      } catch (e) {}
-    } else if (col.includes(" 1999")) {
-      category = "Europeias";
-      year = 1999;
-    }
-
-    // data/ folder is inside the website project root
-    const dataDir = path.join(process.cwd(), "data");
-
-    const catFolder = getCategoryFolder(category);
-    const searchPath = catFolder ? path.join(dataDir, catFolder) : dataDir;
-
-    const matchedPath = findPdf(searchPath, party, category, year);
-
-    if (!matchedPath || !fs.existsSync(matchedPath)) {
-      return NextResponse.json(
-        { error: `Ficheiro PDF não encontrado para: ${party} (${col}) em ${searchPath}` },
-        { status: 404 }
-      );
+    const result = resolvePdfPath(req);
+    if (result.error) {
+      return NextResponse.json({ error: result.error }, { status: result.status || 404 });
     }
 
     // Read the file buffer
-    const fileBuffer = fs.readFileSync(matchedPath);
-    const filename = path.basename(matchedPath);
+    const fileBuffer = fs.readFileSync(result.matchedPath!);
+    const filename = path.basename(result.matchedPath!);
 
     // Return the PDF response with headers forcing instant attachment download
-    // Use RFC 5987 filename* for proper Unicode (Portuguese) character support
+    // Use ASCII-safe filename for basic header, and RFC 5987 filename* for Unicode
     const encodedFilename = encodeURIComponent(filename).replace(/'/g, "%27");
+    // ASCII fallback: strip diacritics for browsers that don't support filename*
+    const asciiFilename = filename
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\x20-\x7E]/g, "_");
     return new Response(fileBuffer, {
       headers: {
         "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodedFilename}`,
+        "Content-Disposition": `attachment; filename="${asciiFilename}"; filename*=UTF-8''${encodedFilename}`,
         "Content-Length": String(fileBuffer.length),
         "X-Content-Type-Options": "nosniff",
         "Cache-Control": "no-cache",
