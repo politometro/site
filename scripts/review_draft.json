@@ -43,17 +43,17 @@
     "status": "queue"
   },
   "q4": {
-    "id": "ai_highlight_1784150402_7",
+    "id": "ai_highlight_1784151524_7",
     "type": "highlight",
     "category": "Destaque",
-    "title": "Relatório sobre a Economia Portuguesa 2022",
+    "title": "Relatório da Economia Portuguesa 2022",
     "authorOrMeta": "Fundação Francisco Manuel dos Santos",
-    "description": "Análise detalhada da situação económica de Portugal em 2022, com recomendações para o futuro.",
+    "description": "Análise detalhada da economia portuguesa em 2022, com previsões para o futuro.",
     "imageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=200",
-    "link": "https://ffms.pt/relatorio-sobre-a-economia-portuguesa-2022/",
-    "priority": 3,
+    "link": "https://www.ffms.pt/relatorio-da-economia-portuguesa-2022/",
+    "priority": 1,
     "expiryDate": null,
-    "createdAt": "2026-07-15T21:20:02.320604Z",
+    "createdAt": "2026-07-15T21:38:44.415815Z",
     "status": "queue"
   }
 }
