@@ -322,7 +322,7 @@
   }
 
   .input::placeholder {
-    font-size: 0.675rem;
+    font-size: clamp(0.5rem, 3vw, 0.8rem);
   }
   
   .clearBtn {
