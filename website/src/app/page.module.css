@@ -233,6 +233,11 @@
   text-overflow: ellipsis;
 }
 
+.input::placeholder {
+  text-overflow: clip;
+  overflow: visible;
+}
+
 .input:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 10px rgba(10, 49, 74, 0.12);
@@ -323,6 +328,8 @@
 
   .input::placeholder {
     font-size: clamp(0.5rem, 3vw, 0.8rem);
+    text-overflow: clip !important;
+    overflow: visible !important;
   }
   
   .clearBtn {

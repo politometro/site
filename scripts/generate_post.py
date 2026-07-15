@@ -200,53 +200,76 @@ def get_recommendations_with_valid_covers(queue):
     for idx, item in enumerate(selected_others):
         selected[f"q{idx+1}"] = item
 
-    # Auto-resolve correct links for all selected items to avoid hallucinated/patterned URLs
-    for qkey in ["q1", "q2", "q3", "q4"]:
-        item = selected.get(qkey)
-        if not item:
-            continue
-            
-        title = item["title"]
-        itype = item["type"]
-        author = item.get("authorOrMeta", "")
-        clean_author = re.sub(r'^(Filme|S[eé]rie|Document[aá]rio|Podcast)\s*/\s*', '', author).strip()
+    # Auto-resolve correct links and covers using Playwright browser automation
+    try:
+        from browser_resolver import resolve_all as browser_resolve_all
+        browser_results = browser_resolve_all(selected)
         
-        resolved = False
-        if itype == "podcast":
-            query = f"episódio {title} {clean_author}"
-            # Try iTunes Search API first for podcasts
-            try:
-                itunes_url = f"https://itunes.apple.com/search?term={urllib.parse.quote(query)}&media=podcast&entity=podcastEpisode&limit=1"
-                r = requests.get(itunes_url, timeout=5)
-                if r.ok:
-                    results = r.json().get("results", [])
-                    if results:
-                        ep_link = results[0].get("trackViewUrl")
-                        if ep_link:
-                            print(f"[Link Resolver] Automatically resolved podcast episode link via iTunes: {ep_link}")
-                            item["link"] = ep_link
-                            resolved = True
-            except Exception as e:
-                print(f"  -> iTunes episode check failed: {e}")
-        else:
-            if itype == "book":
-                query = f"site:wook.pt OR site:fnac.pt livro {title} {clean_author}"
-            elif itype in ["movie", "documentary", "series"]:
-                query = f"site:imdb.com OR site:rtp.pt {title} {clean_author}"
+        for qkey in ["q1", "q2", "q3", "q4"]:
+            bres = browser_results.get(qkey)
+            if not bres:
+                continue
+            item = selected.get(qkey)
+            if not item:
+                continue
+            
+            # Update link if browser found a real one
+            if bres.get("link"):
+                old_link = item.get("link", "")
+                item["link"] = bres["link"]
+                if old_link != bres["link"]:
+                    print(f"  [{qkey.upper()}] Link updated: {old_link} -> {bres['link']}")
+            
+            # Re-fetch cover from cache if browser resolver saved one
+            if bres.get("cover_bytes"):
+                new_cover = fetch_cover_for_item(item, allow_placeholder=False)
+                if new_cover:
+                    covers[qkey] = new_cover
+                    print(f"  [{qkey.upper()}] Cover updated from browser resolver")
+    except ImportError:
+        print("[Link Resolver] browser_resolver not available, falling back to DuckDuckGo...")
+        # Fallback to simple DuckDuckGo search
+        for qkey in ["q1", "q2", "q3", "q4"]:
+            item = selected.get(qkey)
+            if not item:
+                continue
+            title = item["title"]
+            itype = item["type"]
+            author = item.get("authorOrMeta", "")
+            clean_author = re.sub(r'^(Filme|S[eé]rie|Document[aá]rio|Podcast)\s*/\s*', '', author).strip()
+            
+            resolved = False
+            if itype == "podcast":
+                query = f"episodio {title} {clean_author}"
+                try:
+                    itunes_url = f"https://itunes.apple.com/search?term={urllib.parse.quote(query)}&media=podcast&entity=podcastEpisode&limit=1"
+                    r = requests.get(itunes_url, timeout=5)
+                    if r.ok:
+                        results = r.json().get("results", [])
+                        if results:
+                            ep_link = results[0].get("trackViewUrl")
+                            if ep_link:
+                                item["link"] = ep_link
+                                resolved = True
+                except Exception:
+                    pass
             else:
-                query = f"{title} {clean_author}"
-                
-        if not resolved:
-            print(f"[Link Resolver] Searching DuckDuckGo for real link of '{title}' (type: {itype})...")
-            try:
-                found_url = search_duckduckgo_link(query)
-                if found_url:
-                    print(f"  -> Successfully resolved real link: {found_url}")
-                    item["link"] = found_url
+                if itype == "book":
+                    query = f"site:wook.pt livro {title} {clean_author}"
+                elif itype in ["movie", "documentary", "series"]:
+                    query = f"site:imdb.com {title}"
                 else:
-                    print(f"  -> No link found on DDG. Keeping original link: {item['link']}")
-            except Exception as e:
-                print(f"  -> DDG link search failed: {e}. Keeping original link.")
+                    query = f"{title} {clean_author}"
+            
+            if not resolved:
+                try:
+                    found_url = search_duckduckgo_link(query)
+                    if found_url:
+                        item["link"] = found_url
+                except Exception:
+                    pass
+    except Exception as e:
+        print(f"[Link Resolver] Browser resolution failed: {e}. Continuing with original links.")
         
     return selected, covers
 
