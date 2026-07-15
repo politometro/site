@@ -281,5 +281,70 @@
       "status": "queue"
     }
   ],
-  "history": []
+  "history": [
+    {
+      "id": "book_2",
+      "type": "book",
+      "category": "Livro",
+      "title": "Salazar e o Poder",
+      "authorOrMeta": "Fernando Rosas",
+      "description": "Uma análise profunda sobre o funcionamento da ditadura salazarista, investigando os mecanismos que permitiram ao regime durar mais de quatro décadas.",
+      "imageUrl": "https://img.wook.pt/images/salazar-e-o-poder-fernando-rosas/MXwxNDQyMDgzMnwxMDgzNjI5N3wxNzI1OTIzNjAwMDAw/502x",
+      "link": "https://www.wook.pt/livro/salazar-e-o-poder-fernando-rosas/14420832",
+      "priority": 4,
+      "expiryDate": null,
+      "createdAt": "2026-07-15T20:13:17.086689+00:00",
+      "status": "published",
+      "is_test": true,
+      "expires_at": "2026-07-15T20:28:17.086689+00:00"
+    },
+    {
+      "id": "podcast_3",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "O Princípio da Incerteza: Orçamento do Estado",
+      "authorOrMeta": "CNN Portugal",
+      "description": "Episódio que analisa as negociações e as linhas vermelhas dos partidos para a viabilização do próximo Orçamento do Estado.",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts116/v4/7c/4a/01/7c4a01c4-54c2-9e90-c0b7-9fa41ab312cd/mza_16694665426364024345.jpg/600x600bb.jpg",
+      "link": "https://tvi.iol.pt/cnn/programa/o-principio-da-incerteza",
+      "priority": 5,
+      "expiryDate": "2026-10-15T00:00:00Z",
+      "createdAt": "2026-07-15T20:13:17.086689+00:00",
+      "status": "published",
+      "is_test": true,
+      "expires_at": "2026-07-15T20:28:17.086689+00:00"
+    },
+    {
+      "id": "documentary_1",
+      "type": "documentary",
+      "category": "Documentário",
+      "title": "Privacidade Hackeada",
+      "authorOrMeta": "Jehane Noujaim / Karim Amer",
+      "description": "Um documentário revelador sobre o escândalo da Cambridge Analytica, detalhando como os dados pessoais de milhões de utilizadores do Facebook foram explorados para influenciar eleições.",
+      "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/62/The_Great_Hack_poster.jpg",
+      "link": "https://www.imdb.com/title/tt4736550/",
+      "priority": 5,
+      "expiryDate": null,
+      "createdAt": "2026-07-15T20:13:17.086689+00:00",
+      "status": "published",
+      "is_test": true,
+      "expires_at": "2026-07-15T20:28:17.086689+00:00"
+    },
+    {
+      "id": "highlight_2",
+      "type": "highlight",
+      "category": "Recomendação da semana",
+      "title": "Sem Moderação: O Pacto das Migrações",
+      "authorOrMeta": "SIC Notícias",
+      "description": "Debate esclarecedor sobre o novo pacto europeu para as migrações e o posicionamento diplomático português.",
+      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/a7/67/6f/a7676f28-a400-b6f7-c5a4-23db94f69906/mza_5431627993437340246.jpg/600x600bb.jpg",
+      "link": "https://sicnoticias.pt",
+      "priority": 4,
+      "expiryDate": null,
+      "createdAt": "2026-07-15T20:13:17.086689+00:00",
+      "status": "published",
+      "is_test": true,
+      "expires_at": "2026-07-15T20:28:17.086689+00:00"
+    }
+  ]
 }
