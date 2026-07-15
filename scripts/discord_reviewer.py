@@ -162,143 +162,259 @@ def query_politometro_chat(query, user_id="unknown"):
     except Exception as e:
         return f"❌ Ocorreu um erro ao ligar à API do Politómetro: {e}"
 
+# ===================== DUCKDUCKGO SEARCH HELPER =====================
+def search_duckduckgo_link(query):
+    """Search DuckDuckGo HTML for a query and return the first result URL."""
+    url = "https://html.duckduckgo.com/html/"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+    }
+    try:
+        r = requests.post(url, data={"q": query}, headers=headers, timeout=10)
+        redirects = re.findall(r'href="([^"]+uddg=[^"]+)"', r.text)
+        for rl in redirects:
+            match = re.search(r'uddg=([^&"]+)', rl)
+            if match:
+                decoded = urllib.parse.unquote(match.group(1))
+                if "duckduckgo.com" not in decoded:
+                    return decoded
+        direct = re.findall(r'class="result__url"\s+href="([^"]+)"', r.text)
+        if direct:
+            return direct[0]
+    except Exception as e:
+        print(f"Error searching DDG: {e}")
+    return None
+
+async def update_recommendation_field(original_msg_id, quadrant, field_name, new_value):
+    """Helper to update a recommendation field in both draft and main DB, and trigger regeneration."""
+    draft_content, draft_sha = get_github_file("scripts/review_draft.json")
+    if not draft_content:
+        return f"Erro ao obter review_draft.json: {draft_sha}"
+        
+    draft_data = json.loads(draft_content.decode("utf-8"))
+    item = draft_data.get(quadrant)
+    if not item:
+        return f"Quadrante {quadrant} não encontrado no rascunho."
+        
+    item_id = item.get("id")
+    item[field_name] = new_value
+    
+    rec_content, rec_sha = get_github_file("website/public/recommendations.json")
+    if not rec_content:
+        return f"Erro ao obter recommendations.json: {rec_sha}"
+        
+    rec_data = json.loads(rec_content.decode("utf-8"))
+    
+    updated = False
+    for section in ["queue", "history"]:
+        for r_item in rec_data.get(section, []):
+            if r_item.get("id") == item_id:
+                r_item[field_name] = new_value
+                updated = True
+                break
+        if updated:
+            break
+            
+    new_rec_bytes = json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8")
+    res_db = update_github_file("website/public/recommendations.json", new_rec_bytes, f"Update {field_name} of {item_id} [bot]", sha=rec_sha)
+    if res_db is not True:
+        return f"Erro ao salvar recommendations.json: {res_db}"
+        
+    new_draft_bytes = json.dumps(draft_data, indent=2, ensure_ascii=False).encode("utf-8")
+    res_draft = update_github_file("scripts/review_draft.json", new_draft_bytes, f"Update {field_name} in draft [bot]", sha=draft_sha)
+    if res_draft is not True:
+        return f"Erro ao salvar review_draft.json: {res_draft}"
+        
+    res_wf = trigger_github_workflow("instagram_generate.yml")
+    if res_wf is not True:
+        return f"Erro ao acionar workflow: {res_wf}"
+        
+    return True
+
 # ===================== INTERACTIVE VIEWS =====================
 class RejectionReasonSelect(discord.ui.Select):
     def __init__(self, original_msg_id):
         options = [
             discord.SelectOption(label="Imagem mal formatada", value="bad_image", description="Alternar layout (template) e redesenhar.", emoji="🖼️"),
-            discord.SelectOption(label="Capas erradas (Nova Capa)", value="wrong_covers", description="Substituir capa de um quadrante por nova imagem.", emoji="📚"),
+            discord.SelectOption(label="Capas erradas (Nova Capa)", value="wrong_covers", description="Substituir capa de um quadrante (Pesquisa ou Manual).", emoji="📚"),
             discord.SelectOption(label="Erros na legenda", value="typo_text", description="Fornecer texto de legenda corrigido.", emoji="✍️"),
             discord.SelectOption(label="Erros de escrita na imagem", value="typo_image_text", description="Corrigir erros no texto desenhado na imagem.", emoji="📝"),
-            discord.SelectOption(label="Links inválidos/incorretos", value="bad_links", description="Corrigir links incorretos ou quebrados na base de dados.", emoji="🔗"),
+            discord.SelectOption(label="Links inválidos/incorretos", value="bad_links", description="Corrigir links incorretos ou quebrados (Pesquisa ou Manual).", emoji="🔗"),
             discord.SelectOption(label="Más recomendações (Regerar)", value="bad_recs", description="Descartar estes itens e buscar novos candidatos.", emoji="👎")
         ]
-        super().__init__(placeholder="Selecione o motivo da rejeição...", options=options)
+        super().__init__(
+            placeholder="Selecione o(s) motivo(s) da rejeição...", 
+            options=options,
+            min_values=1,
+            max_values=len(options)
+        )
         self.original_msg_id = original_msg_id
 
     async def callback(self, interaction: discord.Interaction):
         global waiting_for_text, waiting_for_image_quadrant
-        reason = self.values[0]
+        reasons = self.values
         channel = interaction.channel
 
-        if reason == "bad_image":
-            await interaction.response.defer(ephemeral=True)
-            # Fetch draft from GitHub
-            draft_content, draft_sha = get_github_file("scripts/review_draft.json")
-            if not draft_content:
-                await interaction.followup.send(f"❌ Não foi possível aceder ao rascunho do post no GitHub: {draft_sha}", ephemeral=True)
-                return
-            
-            draft_data = json.loads(draft_content.decode("utf-8"))
-            quadrants = {k: v for k, v in draft_data.items() if k in ["q1", "q2", "q3", "q4"]}
-            for qkey, item in quadrants.items():
-                if isinstance(item, dict):
-                    curr_layout = item.get("layout_preference", "template_1")
-                    new_layout = "template_2" if curr_layout == "template_1" else ("template_3" if curr_layout == "template_2" else "template_1")
-                    item["layout_preference"] = new_layout
- 
-            # Save draft changes back to GitHub
-            new_draft_bytes = json.dumps(draft_data, indent=2, ensure_ascii=False).encode("utf-8")
-            res_draft = update_github_file("scripts/review_draft.json", new_draft_bytes, "Cycle layout preference [bot]", sha=draft_sha)
-            if res_draft is not True:
-                await interaction.followup.send(f"❌ Erro ao atualizar layout no GitHub: {res_draft}", ephemeral=True)
-                return
- 
-            # Trigger generate post
-            res_wf = trigger_github_workflow("instagram_generate.yml")
-            if res_wf is True:
-                try:
-                    old_msg = await channel.fetch_message(self.original_msg_id)
-                    await old_msg.edit(content="❌ Post rejeitado. A alterar layout e a regerar imagem no GitHub Actions...", embed=None, view=None)
-                except: pass
-                await interaction.followup.send("Layout alterado! Imagem está a ser regerada no GitHub.", ephemeral=True)
-            else:
-                await interaction.followup.send(f"❌ Erro ao acionar workflow de regeneração: {res_wf}", ephemeral=True)
- 
-        elif reason == "wrong_covers":
-            quadrant_view = discord.ui.View()
-            quadrant_view.add_item(QuadrantSelect(self.original_msg_id))
-            await interaction.response.send_message(
-                "📚 Qual é o quadrante da capa incorreta?",
-                view=quadrant_view,
-                ephemeral=True
-            )
- 
-        elif reason == "typo_text":
-            waiting_for_text = True
-            await interaction.response.send_message(
-                "✍️ Por favor, **responda a esta mensagem enviando o texto da legenda corrigido**.", 
-                ephemeral=True
-            )
- 
-        elif reason == "typo_image_text":
-            await interaction.response.send_message(
-                "📝 **Para corrigir erros de escrita na imagem:**\n"
-                "1. Acede ao teu GitHub e abre o ficheiro `website/public/recommendations.json`.\n"
-                "2. Edita o `title`, `authorOrMeta` ou `description` da recomendação correspondente.\n"
-                "3. Efetua o commit das alterações no GitHub.\n"
-                "4. Volta aqui ao Discord e corre `!check` novamente para regenerar a imagem com as correções!",
-                ephemeral=True
-            )
+        await interaction.response.defer(ephemeral=True)
 
-        elif reason == "bad_links":
-            await interaction.response.send_message(
-                "🔗 **Para corrigir links incorretos ou inválidos:**\n"
-                "1. Acede ao teu GitHub e abre o ficheiro `website/public/recommendations.json`.\n"
-                "2. Localiza a recomendação e edita o campo `link` para o URL correto.\n"
-                "3. Efetua o commit das alterações no GitHub.\n"
-                "4. Volta ao Discord e corre `!check` novamente para regenerar o post com o link atualizado!",
-                ephemeral=True
-            )
+        for reason in reasons:
+            if reason == "bad_image":
+                draft_content, draft_sha = get_github_file("scripts/review_draft.json")
+                if not draft_content:
+                    await interaction.followup.send(f"❌ Não foi possível aceder ao rascunho do post no GitHub: {draft_sha}", ephemeral=True)
+                    continue
+                
+                draft_data = json.loads(draft_content.decode("utf-8"))
+                quadrants = {k: v for k, v in draft_data.items() if k in ["q1", "q2", "q3", "q4"]}
+                for qkey, item in quadrants.items():
+                    if isinstance(item, dict):
+                        curr_layout = item.get("layout_preference", "template_1")
+                        new_layout = "template_2" if curr_layout == "template_1" else ("template_3" if curr_layout == "template_2" else "template_1")
+                        item["layout_preference"] = new_layout
 
-        elif reason == "bad_recs":
-            await interaction.response.defer(ephemeral=True)
-            # Fetch draft from GitHub
-            draft_content, draft_sha = get_github_file("scripts/review_draft.json")
-            if not draft_content:
-                await interaction.followup.send(f"❌ Erro ao ler rascunho no GitHub: {draft_sha}", ephemeral=True)
-                return
-            
-            draft_data = json.loads(draft_content.decode("utf-8"))
-            quadrants = {k: v for k, v in draft_data.items() if k in ["q1", "q2", "q3", "q4"]}
-            selected_ids = [item["id"] for item in quadrants.values() if item and isinstance(item, dict) and "id" in item]
+                new_draft_bytes = json.dumps(draft_data, indent=2, ensure_ascii=False).encode("utf-8")
+                res_draft = update_github_file("scripts/review_draft.json", new_draft_bytes, "Cycle layout preference [bot]", sha=draft_sha)
+                if res_draft is not True:
+                    await interaction.followup.send(f"❌ Erro ao atualizar layout no GitHub: {res_draft}", ephemeral=True)
+                    continue
 
-            # Fetch recommendations.json from GitHub
-            rec_content, rec_sha = get_github_file("website/public/recommendations.json")
-            if not rec_content:
-                await interaction.followup.send(f"❌ Erro ao ler recommendations.json no GitHub: {rec_sha}", ephemeral=True)
-                return
-            
-            rec_data = json.loads(rec_content.decode("utf-8"))
-            
-            # Mark selected items as status='skip'
-            updated = False
-            for item in rec_data.get("queue", []):
-                if item["id"] in selected_ids:
-                    item["status"] = "skip"
-                    updated = True
+                res_wf = trigger_github_workflow("instagram_generate.yml")
+                if res_wf is True:
+                    try:
+                        old_msg = await channel.fetch_message(self.original_msg_id)
+                        await old_msg.edit(content="❌ Post rejeitado. A alterar layout e a regerar imagem no GitHub Actions...", embed=None, view=None)
+                    except: pass
+                    await interaction.followup.send("Layout alterado! Imagem está a ser regerada no GitHub.", ephemeral=True)
+                else:
+                    await interaction.followup.send(f"❌ Erro ao acionar workflow de regeneração: {res_wf}", ephemeral=True)
 
-            if not updated:
-                await interaction.followup.send("Itens do rascunho não encontrados na fila para saltar.", ephemeral=True)
-                return
+            elif reason == "wrong_covers":
+                quadrant_view = discord.ui.View()
+                quadrant_view.add_item(QuadrantSelect(self.original_msg_id))
+                await interaction.followup.send(
+                    "📚 Qual é o quadrante da capa incorreta?",
+                    view=quadrant_view,
+                    ephemeral=True
+                )
 
-            # Save recommendations back to GitHub
-            new_rec_bytes = json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8")
-            res_db = update_github_file("website/public/recommendations.json", new_rec_bytes, "Reject items and skip [bot]", sha=rec_sha)
-            if res_db is not True:
-                await interaction.followup.send(f"❌ Erro ao atualizar recommendations.json: {res_db}", ephemeral=True)
-                return
+            elif reason == "typo_text":
+                waiting_for_text = True
+                await interaction.followup.send(
+                    "✍️ Por favor, **responda a esta mensagem enviando o texto da legenda corrigido**.", 
+                    ephemeral=True
+                )
 
-            # Trigger generate post
-            res_wf = trigger_github_workflow("instagram_generate.yml")
-            if res_wf is True:
-                try:
-                    old_msg = await channel.fetch_message(self.original_msg_id)
-                    await old_msg.edit(content="❌ Post rejeitado. A selecionar novos candidatos e a regerar imagem no GitHub Actions...", embed=None, view=None)
-                except: pass
-                await interaction.followup.send("Itens rejeitados! Novas recomendações estão a ser geradas no GitHub.", ephemeral=True)
-            else:
-                await interaction.followup.send(f"❌ Erro ao acionar workflow de regeneração: {res_wf}", ephemeral=True)
+            elif reason == "typo_image_text":
+                await interaction.followup.send(
+                    "📝 **Para corrigir erros de escrita na imagem:**\n"
+                    "1. Acede ao teu GitHub e abre o ficheiro `website/public/recommendations.json`.\n"
+                    "2. Edita o `title`, `authorOrMeta` ou `description` da recomendação correspondente.\n"
+                    "3. Efetua o commit das alterações no GitHub.\n"
+                    "4. Volta aqui ao Discord e corre `!check` novamente para regenerar a imagem com as correções!",
+                    ephemeral=True
+                )
+
+            elif reason == "bad_links":
+                link_quad_view = discord.ui.View()
+                link_quad_view.add_item(LinkQuadrantSelect(self.original_msg_id))
+                await interaction.followup.send(
+                    "🔗 Qual é o quadrante do link incorreto?",
+                    view=link_quad_view,
+                    ephemeral=True
+                )
+
+            elif reason == "bad_recs":
+                draft_content, draft_sha = get_github_file("scripts/review_draft.json")
+                if not draft_content:
+                    await interaction.followup.send(f"❌ Erro ao ler rascunho no GitHub: {draft_sha}", ephemeral=True)
+                    continue
+                
+                draft_data = json.loads(draft_content.decode("utf-8"))
+                quadrants = {k: v for k, v in draft_data.items() if k in ["q1", "q2", "q3", "q4"]}
+                selected_ids = [item["id"] for item in quadrants.values() if item and isinstance(item, dict) and "id" in item]
+
+                rec_content, rec_sha = get_github_file("website/public/recommendations.json")
+                if not rec_content:
+                    await interaction.followup.send(f"❌ Erro ao ler recommendations.json no GitHub: {rec_sha}", ephemeral=True)
+                    continue
+                
+                rec_data = json.loads(rec_content.decode("utf-8"))
+                
+                updated = False
+                for item in rec_data.get("queue", []):
+                    if item["id"] in selected_ids:
+                        item["status"] = "skip"
+                        updated = True
+
+                if not updated:
+                    await interaction.followup.send("Itens do rascunho não encontrados na fila para saltar.", ephemeral=True)
+                    continue
+
+                new_rec_bytes = json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8")
+                res_db = update_github_file("website/public/recommendations.json", new_rec_bytes, "Reject items and skip [bot]", sha=rec_sha)
+                if res_db is not True:
+                    await interaction.followup.send(f"❌ Erro ao atualizar recommendations.json: {res_db}", ephemeral=True)
+                    continue
+
+                res_wf = trigger_github_workflow("instagram_generate.yml")
+                if res_wf is True:
+                    try:
+                        old_msg = await channel.fetch_message(self.original_msg_id)
+                        await old_msg.edit(content="❌ Post rejeitado. A selecionar novos candidatos e a regerar imagem no GitHub Actions...", embed=None, view=None)
+                    except: pass
+                    await interaction.followup.send("Itens rejeitados! Novas recomendações estão a ser geradas no GitHub.", ephemeral=True)
+                else:
+                    await interaction.followup.send(f"❌ Erro ao acionar workflow de regeneração: {res_wf}", ephemeral=True)
+
+class LinkQuadrantSelect(discord.ui.Select):
+    def __init__(self, original_msg_id):
+        options = [
+            discord.SelectOption(label="Quadrante 1 (Superior Esquerdo)", value="q1"),
+            discord.SelectOption(label="Quadrante 2 (Superior Direito)", value="q2"),
+            discord.SelectOption(label="Quadrante 3 (Inferior Esquerdo)", value="q3"),
+            discord.SelectOption(label="Quadrante 4 (Destaque da Semana)", value="q4")
+        ]
+        super().__init__(placeholder="Selecione o quadrante do link incorreto...", options=options)
+        self.original_msg_id = original_msg_id
+
+    async def callback(self, interaction: discord.Interaction):
+        quad = self.values[0]
+        view = LinkCorrectionView(self.original_msg_id, quad)
+        await interaction.response.send_message(
+            f"🔗 Como pretendes corrigir o link do quadrante **{quad}**?",
+            view=view,
+            ephemeral=True
+        )
+
+class LinkCorrectionView(discord.ui.View):
+    def __init__(self, original_msg_id, quadrant):
+        super().__init__(timeout=120)
+        self.original_msg_id = original_msg_id
+        self.quadrant = quadrant
+
+    @discord.ui.button(label="🔍 Auto-Pesquisar com IA", style=discord.ButtonStyle.primary, custom_id="link_auto_search")
+    async def auto_search(self, interaction: discord.Interaction, button: discord.ui.Button):
+        global waiting_for_link_query
+        waiting_for_link_query = {
+            "quadrant": self.quadrant,
+            "original_msg_id": self.original_msg_id
+        }
+        await interaction.response.send_message(
+            "🔍 Escreve o **termo de pesquisa** (ex: *nome do livro + autor* ou *nome do podcast*) para eu tentar encontrar o link correto no DuckDuckGo automaticamente.",
+            ephemeral=True
+        )
+
+    @discord.ui.button(label="✍️ Inserir Link Manualmente", style=discord.ButtonStyle.secondary, custom_id="link_manual")
+    async def manual_input(self, interaction: discord.Interaction, button: discord.ui.Button):
+        global waiting_for_link_manual
+        waiting_for_link_manual = {
+            "quadrant": self.quadrant,
+            "original_msg_id": self.original_msg_id
+        }
+        await interaction.response.send_message(
+            "✍️ Envia o **link direto** (começando com `http` ou `https`) que queres associar.",
+            ephemeral=True
+        )
 
 class QuadrantSelect(discord.ui.Select):
     def __init__(self, original_msg_id):
@@ -308,17 +424,45 @@ class QuadrantSelect(discord.ui.Select):
             discord.SelectOption(label="Quadrante 3 (Inferior Esquerdo)", value="q3"),
             discord.SelectOption(label="Quadrante 4 (Destaque da Semana)", value="q4")
         ]
-        super().__init__(placeholder="Selecione o quadrante...", options=options)
+        super().__init__(placeholder="Selecione o quadrante da capa incorreta...", options=options)
         self.original_msg_id = original_msg_id
 
     async def callback(self, interaction: discord.Interaction):
-        global waiting_for_image_quadrant
-        waiting_for_image_quadrant = {
-            "quadrant": self.values[0],
+        quad = self.values[0]
+        view = CoverCorrectionView(self.original_msg_id, quad)
+        await interaction.response.send_message(
+            f"📚 Como pretendes corrigir a capa do quadrante **{quad}**?",
+            view=view,
+            ephemeral=True
+        )
+
+class CoverCorrectionView(discord.ui.View):
+    def __init__(self, original_msg_id, quadrant):
+        super().__init__(timeout=120)
+        self.original_msg_id = original_msg_id
+        self.quadrant = quadrant
+
+    @discord.ui.button(label="🔍 Auto-Pesquisar Capa", style=discord.ButtonStyle.primary, custom_id="cover_auto_search")
+    async def auto_search(self, interaction: discord.Interaction, button: discord.ui.Button):
+        global waiting_for_cover_query
+        waiting_for_cover_query = {
+            "quadrant": self.quadrant,
             "original_msg_id": self.original_msg_id
         }
         await interaction.response.send_message(
-            f"📥 Envia a nova imagem de capa em anexo para substituir a capa do quadrante **{self.values[0]}**.",
+            f"🔍 Escreve o **termo de pesquisa** (ex: *nome do livro + autor*) para eu tentar encontrar a capa do quadrante **{self.quadrant}** automaticamente.",
+            ephemeral=True
+        )
+
+    @discord.ui.button(label="📥 Carregar Capa Manualmente", style=discord.ButtonStyle.secondary, custom_id="cover_manual")
+    async def manual_input(self, interaction: discord.Interaction, button: discord.ui.Button):
+        global waiting_for_image_quadrant
+        waiting_for_image_quadrant = {
+            "quadrant": self.quadrant,
+            "original_msg_id": self.original_msg_id
+        }
+        await interaction.response.send_message(
+            f"📥 Envia a nova imagem de capa em anexo para substituir a capa do quadrante **{self.quadrant}**.",
             ephemeral=True
         )
 
@@ -330,7 +474,6 @@ class PostReviewView(discord.ui.View):
     async def approve_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer()
         
-        # Trigger publish workflow (updates DB & posts to instagram)
         res = trigger_github_workflow("instagram_publish.yml")
         if res is True:
             await interaction.followup.edit_message(
@@ -352,13 +495,11 @@ class PostReviewView(discord.ui.View):
             ephemeral=True
         )
 
+# ===================== BOT EVENTS & COMMANDS =====================
 @bot.event
 async def on_ready():
-    # Register persistent view
     bot.add_view(PostReviewView())
     print(f"✅ Bot de Revisão Politómetro ligado como {bot.user}!")
-    print("👉 Envia a mensagem privada `!check` para iniciar a geração de post no GitHub!")
-    print("👉 Perguntas normais em DMs ou menções em canais serão respondidas com IA do Politómetro!")
 
 @bot.command(name="check")
 async def check_queue(ctx):
@@ -375,7 +516,7 @@ async def check_queue(ctx):
 
 @bot.event
 async def on_message(message):
-    global waiting_for_text, waiting_for_image_quadrant
+    global waiting_for_text, waiting_for_image_quadrant, waiting_for_link_query, waiting_for_link_manual, waiting_for_cover_query
     if message.author.bot:
         return
 
@@ -389,10 +530,9 @@ async def on_message(message):
         await bot.process_commands(message)
         return
 
-    # Review replies
     if is_allowed:
+        # 1. Caption text correction
         if waiting_for_text and message.reference:
-            # Overwrite the caption file on GitHub
             await message.channel.typing()
             content_bytes = message.content.encode("utf-8")
             res = update_github_file("website/public/current_caption.txt", content_bytes, "Update caption text [bot]")
@@ -404,19 +544,118 @@ async def on_message(message):
                 await message.reply(f"❌ Erro ao guardar legenda no GitHub: {res}")
             return
 
+        # 2. Manual link correction
+        elif waiting_for_link_manual:
+            url_input = message.content.strip()
+            quad_info = waiting_for_link_manual
+            quad = quad_info["quadrant"]
+            waiting_for_link_manual = None
+            
+            if not url_input.startswith("http"):
+                await message.reply("❌ Link inválido. Deve começar com http:// ou https://.")
+                return
+                
+            await message.reply(f"⏳ A atualizar o link do quadrante **{quad}** no GitHub...")
+            res = await update_recommendation_field(quad_info["original_msg_id"], quad, "link", url_input)
+            if res is True:
+                await message.reply(f"🔗 Link do quadrante **{quad}** atualizado! A regerar proposta de post no GitHub Actions...")
+            else:
+                await message.reply(f"❌ Erro ao atualizar no GitHub: {res}")
+            return
+
+        # 3. Auto link search correction
+        elif waiting_for_link_query:
+            query = message.content.strip()
+            quad_info = waiting_for_link_query
+            quad = quad_info["quadrant"]
+            waiting_for_link_query = None
+            
+            await message.reply(f"🔍 A pesquisar link para '{query}' no DuckDuckGo...")
+            found_url = search_duckduckgo_link(query)
+            if not found_url:
+                await message.reply("❌ Não foi possível encontrar nenhum link para a tua pesquisa. Por favor, envia o link direto manualmente.")
+                return
+                
+            await message.reply(f"✅ Link encontrado: <{found_url}>\nA atualizar no GitHub...")
+            res = await update_recommendation_field(quad_info["original_msg_id"], quad, "link", found_url)
+            if res is True:
+                await message.reply(f"🔗 Link do quadrante **{quad}** atualizado! A regerar proposta de post no GitHub Actions...")
+            else:
+                await message.reply(f"❌ Erro ao atualizar no GitHub: {res}")
+            return
+
+        # 4. Auto cover search correction
+        elif waiting_for_cover_query:
+            query = message.content.strip()
+            quad_info = waiting_for_cover_query
+            quad = quad_info["quadrant"]
+            waiting_for_cover_query = None
+            
+            await message.reply(f"🔍 A pesquisar capa para '{query}' com a IA de busca...")
+            
+            # Fetch draft details to get the media type
+            draft_content, _ = get_github_file("scripts/review_draft.json")
+            if not draft_content:
+                await message.reply("❌ Não foi possível aceder ao rascunho do post no GitHub.")
+                return
+                
+            draft_data = json.loads(draft_content.decode("utf-8"))
+            item = draft_data.get(quad)
+            if not item:
+                await message.reply(f"❌ Item do quadrante {quad} não encontrado.")
+                return
+                
+            from cover_fetcher import fetch_cover, _cache_key
+            
+            loop = asyncio.get_event_loop()
+            try:
+                cover_img = await loop.run_in_executor(
+                    None,
+                    fetch_cover,
+                    query,
+                    item["type"],
+                    None,
+                    None,
+                    item.get("category")
+                )
+                if not cover_img:
+                    await message.reply("❌ Não foi possível encontrar uma capa. Por favor, carrega a imagem manualmente.")
+                    return
+                    
+                from io import BytesIO
+                bio = BytesIO()
+                cover_img.convert("RGB").save(bio, format="JPEG", quality=90)
+                image_bytes = bio.getvalue()
+                
+                key = _cache_key(item["title"], item["type"])
+                res_upload = update_github_file(f"website/public/covers/{key}.jpg", image_bytes, "Update cover cache image [bot]")
+                if res_upload is True:
+                    res_db = await update_recommendation_field(quad_info["original_msg_id"], quad, "imageUrl", f"/covers/{key}.jpg")
+                    if res_db is True:
+                        await message.reply(f"🖼️ Nova capa para o quadrante **{quad}** pesquisada e atualizada! A regerar proposta...")
+                    else:
+                        await message.reply(f"❌ Erro ao atualizar imageUrl na base de dados: {res_db}")
+                else:
+                    await message.reply(f"❌ Erro ao guardar capa no GitHub: {res_upload}")
+            except Exception as e:
+                await message.reply(f"❌ Ocorreu um erro na pesquisa da capa: {e}")
+            return
+
+        # 5. Manual cover file correction
         elif waiting_for_image_quadrant and (message.attachments or message.content.startswith("http")):
             attachment_url = message.attachments[0].url if message.attachments else message.content.strip()
             quad_info = waiting_for_image_quadrant
             quad = quad_info["quadrant"]
+            waiting_for_image_quadrant = None
             
             await message.reply(f"⏳ A processar e a enviar a nova imagem para o quadrante **{quad}** no GitHub...")
             
-            # Fetch draft from GitHub
             draft_content, _ = get_github_file("scripts/review_draft.json")
             if draft_content:
                 selected = json.loads(draft_content.decode("utf-8"))
                 item = selected.get(quad)
                 if item:
+                    from cover_fetcher import _cache_key
                     key = _cache_key(item["title"], item["type"])
                     
                     try:
@@ -430,21 +669,15 @@ async def on_message(message):
                         res_upload = update_github_file(f"website/public/covers/{key}.jpg", image_bytes, "Update cover cache image [bot]")
                         
                         if res_upload is True:
-                            res_wf = trigger_github_workflow("instagram_generate.yml")
-                            if res_wf is True:
-                                try:
-                                    old_msg = await message.channel.fetch_message(quad_info["original_msg_id"])
-                                    await old_msg.edit(content="❌ Post rejeitado. Nova capa enviada para o GitHub. A regerar imagem...", embed=None, view=None)
-                                except: pass
-                                
+                            res_db = await update_recommendation_field(quad_info["original_msg_id"], quad, "imageUrl", f"/covers/{key}.jpg")
+                            if res_db is True:
                                 await message.reply("🖼️ Nova capa gravada com sucesso! A regerar proposta de post no GitHub Actions...")
                             else:
-                                await message.reply(f"❌ Erro ao acionar workflow de regeneração: {res_wf}")
+                                await message.reply(f"❌ Erro ao atualizar base de dados: {res_db}")
                         else:
                             await message.reply(f"❌ Erro ao guardar capa no GitHub: {res_upload}")
                     except Exception as e:
                         await message.reply(f"❌ Erro ao descarregar imagem: {e}")
-            waiting_for_image_quadrant = None
             return
 
     # Q&A logic (mentions or DMs)
@@ -462,7 +695,6 @@ async def on_message(message):
             loop = asyncio.get_event_loop()
             response_text = await loop.run_in_executor(None, query_politometro_chat, query, message.author.id)
             
-            # Smart message splitting:
             if len(response_text) <= 2000:
                 await message.reply(response_text)
             else:
@@ -479,10 +711,8 @@ async def on_message(message):
                 if current_chunk:
                     chunks.append(current_chunk.strip())
                 
-                # Send the first chunk as a reply-mention
                 if chunks:
                     await message.reply(chunks[0])
-                    # Send subsequent chunks as normal messages in the channel (not replies)
                     for chunk in chunks[1:]:
                         await message.channel.send(chunk)
         return
