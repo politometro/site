@@ -133,11 +133,15 @@ export async function GET(req: NextRequest) {
     const filename = path.basename(matchedPath);
 
     // Return the PDF response with headers forcing instant attachment download
+    // Use RFC 5987 filename* for proper Unicode (Portuguese) character support
+    const encodedFilename = encodeURIComponent(filename).replace(/'/g, "%27");
     return new Response(fileBuffer, {
       headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${filename}"`,
+        "Content-Type": "application/octet-stream",
+        "Content-Disposition": `attachment; filename="${filename}"; filename*=UTF-8''${encodedFilename}`,
         "Content-Length": String(fileBuffer.length),
+        "X-Content-Type-Options": "nosniff",
+        "Cache-Control": "no-cache",
       },
     });
   } catch (err: any) {

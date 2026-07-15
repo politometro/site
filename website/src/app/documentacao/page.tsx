@@ -615,7 +615,7 @@ export default function DocumentationPage() {
                               const creationText = meta && meta.foundedYear ? `Criado em ${meta.foundedYear}` : "Criado aqui";
                               return (
                                 <td key={cIdx} className={styles.tdCell}>
-                                  <a href={downloadUrl} className={styles.downloadLink} title="Descarregar programa (PDF)">
+                                  <a href={downloadUrl} download className={styles.downloadLink} title="Descarregar programa (PDF)">
                                     <span
                                       className={`${styles.statusBadge} ${styles.statusAvailable}`}
                                     >
@@ -647,7 +647,7 @@ export default function DocumentationPage() {
                             } else {
                               return (
                                 <td key={cIdx} className={styles.tdCell}>
-                                  <a href={downloadUrl} className={styles.downloadLink} title="Descarregar programa (PDF)">
+                                  <a href={downloadUrl} download className={styles.downloadLink} title="Descarregar programa (PDF)">
                                     <span
                                       className={`${styles.statusBadge} ${styles.statusAvailable}`}
                                     >
