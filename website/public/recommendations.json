@@ -293,10 +293,10 @@
       "link": "https://www.wook.pt/livro/salazar-e-o-poder-fernando-rosas/14420832",
       "priority": 4,
       "expiryDate": null,
-      "createdAt": "2026-07-15T20:13:17.086689+00:00",
+      "createdAt": "2026-07-15T21:39:32.673936+00:00",
       "status": "published",
       "is_test": true,
-      "expires_at": "2026-07-15T20:28:17.086689+00:00"
+      "expires_at": "2026-07-15T21:54:32.673936+00:00"
     },
     {
       "id": "podcast_3",
@@ -309,10 +309,10 @@
       "link": "https://tvi.iol.pt/cnn/programa/o-principio-da-incerteza",
       "priority": 5,
       "expiryDate": "2026-10-15T00:00:00Z",
-      "createdAt": "2026-07-15T20:13:17.086689+00:00",
+      "createdAt": "2026-07-15T21:39:32.673936+00:00",
       "status": "published",
       "is_test": true,
-      "expires_at": "2026-07-15T20:28:17.086689+00:00"
+      "expires_at": "2026-07-15T21:54:32.673936+00:00"
     },
     {
       "id": "documentary_1",
@@ -325,26 +325,10 @@
       "link": "https://www.imdb.com/title/tt4736550/",
       "priority": 5,
       "expiryDate": null,
-      "createdAt": "2026-07-15T20:13:17.086689+00:00",
+      "createdAt": "2026-07-15T21:39:32.673936+00:00",
       "status": "published",
       "is_test": true,
-      "expires_at": "2026-07-15T20:28:17.086689+00:00"
-    },
-    {
-      "id": "highlight_2",
-      "type": "highlight",
-      "category": "Recomendação da semana",
-      "title": "Sem Moderação: O Pacto das Migrações",
-      "authorOrMeta": "SIC Notícias",
-      "description": "Debate esclarecedor sobre o novo pacto europeu para as migrações e o posicionamento diplomático português.",
-      "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts112/v4/a7/67/6f/a7676f28-a400-b6f7-c5a4-23db94f69906/mza_5431627993437340246.jpg/600x600bb.jpg",
-      "link": "https://sicnoticias.pt",
-      "priority": 4,
-      "expiryDate": null,
-      "createdAt": "2026-07-15T20:13:17.086689+00:00",
-      "status": "published",
-      "is_test": true,
-      "expires_at": "2026-07-15T20:28:17.086689+00:00"
+      "expires_at": "2026-07-15T21:54:32.673936+00:00"
     }
   ]
 }
