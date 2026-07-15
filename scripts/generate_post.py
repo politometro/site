@@ -21,7 +21,7 @@ import requests
 
 # Import cover fetcher
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from cover_fetcher import fetch_cover_for_item, generate_placeholder
+from cover_fetcher import fetch_cover_for_item, generate_placeholder, _cache_key
 
 # --- PATHS ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -257,6 +257,15 @@ def generate_production_post():
                     copied_item["is_test"] = True
                     copied_item["expires_at"] = expires_at
                     copied_item["createdAt"] = now.isoformat()
+                    
+                    # Resolve cached cover file format
+                    ckey = _cache_key(copied_item["title"], copied_item["type"])
+                    ext = ".jpg"
+                    covers_dir = os.path.join(ROOT_DIR, "website", "public", "covers")
+                    if os.path.exists(os.path.join(covers_dir, f"{ckey}.png")):
+                        ext = ".png"
+                    copied_item["imageUrl"] = f"/covers/{ckey}{ext}"
+                    
                     history.append(copied_item)
             # queue remains unmodified
         else:
@@ -265,6 +274,15 @@ def generate_production_post():
                 if item["id"] in selected_ids:
                     item["status"] = "published"
                     item["createdAt"] = now.isoformat()
+                    
+                    # Resolve cached cover file format
+                    ckey = _cache_key(item["title"], item["type"])
+                    ext = ".jpg"
+                    covers_dir = os.path.join(ROOT_DIR, "website", "public", "covers")
+                    if os.path.exists(os.path.join(covers_dir, f"{ckey}.png")):
+                        ext = ".png"
+                    item["imageUrl"] = f"/covers/{ckey}{ext}"
+                    
                     history.append(item)
                 else:
                     updated_queue.append(item)

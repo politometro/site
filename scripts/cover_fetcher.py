@@ -20,7 +20,8 @@ from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-CACHE_DIR = os.path.join(SCRIPT_DIR, "cover_cache")
+ROOT_DIR = os.path.dirname(SCRIPT_DIR)
+CACHE_DIR = os.path.join(ROOT_DIR, "website", "public", "covers")
 
 # Common headers
 HEADERS_API = {
