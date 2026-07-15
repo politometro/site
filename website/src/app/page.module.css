@@ -317,12 +317,12 @@
   
   .input {
     height: 40px;
-    padding: 0 0.85rem;
+    padding: 0 0.6rem;
     font-size: 0.95rem; /* ~15.2px, prevents iOS auto-zoom if kept near 16px/1rem */
   }
 
   .input::placeholder {
-    font-size: 0.8rem;
+    font-size: 0.675rem;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
