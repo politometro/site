@@ -392,19 +392,56 @@ class LinkCorrectionView(discord.ui.View):
         self.original_msg_id = original_msg_id
         self.quadrant = quadrant
 
-    @discord.ui.button(label="🔍 Auto-Pesquisar com IA", style=discord.ButtonStyle.primary, custom_id="link_auto_search")
-    async def auto_search(self, interaction: discord.Interaction, button: discord.ui.Button):
+    @discord.ui.button(label="🔍 Pesquisa Automática", style=discord.ButtonStyle.success, custom_id="link_auto_search_item")
+    async def auto_search_item(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer(ephemeral=True)
+        # 1. Fetch draft
+        draft_content, _ = get_github_file("scripts/review_draft.json")
+        if not draft_content:
+            await interaction.followup.send("❌ Erro ao ler rascunho do post no GitHub.", ephemeral=True)
+            return
+        draft_data = json.loads(draft_content.decode("utf-8"))
+        item = draft_data.get(self.quadrant)
+        if not item:
+            await interaction.followup.send(f"❌ Item do quadrante {self.quadrant} não encontrado.", ephemeral=True)
+            return
+            
+        # 2. Build query
+        query = item["title"]
+        if item.get("authorOrMeta"):
+            # Clean author type indicators
+            clean_author = re.sub(r'^(Filme|S[eé]rie|Document[aá]rio|Podcast)\s*/\s*', '', item["authorOrMeta"]).strip()
+            query += f" {clean_author}"
+            
+        await interaction.followup.send(f"🔍 A pesquisar link para '{query}' no DuckDuckGo...", ephemeral=True)
+        
+        loop = asyncio.get_event_loop()
+        found_url = await loop.run_in_executor(None, search_duckduckgo_link, query)
+        
+        if not found_url:
+            await interaction.followup.send("❌ Não foi possível encontrar nenhum link automaticamente. Por favor, usa o botão de pesquisa manual ou introduz o link direto.", ephemeral=True)
+            return
+            
+        await interaction.followup.send(f"✅ Link encontrado: <{found_url}>\nA atualizar no GitHub...", ephemeral=True)
+        res = await update_recommendation_field(self.original_msg_id, self.quadrant, "link", found_url)
+        if res is True:
+            await interaction.followup.send(f"🔗 Link do quadrante **{self.quadrant}** atualizado! A regerar proposta...", ephemeral=True)
+        else:
+            await interaction.followup.send(f"❌ Erro ao atualizar no GitHub: {res}", ephemeral=True)
+
+    @discord.ui.button(label="✍️ Pesquisa Manual (Digitar)", style=discord.ButtonStyle.primary, custom_id="link_auto_search_query")
+    async def auto_search_query(self, interaction: discord.Interaction, button: discord.ui.Button):
         global waiting_for_link_query
         waiting_for_link_query = {
             "quadrant": self.quadrant,
             "original_msg_id": self.original_msg_id
         }
         await interaction.response.send_message(
-            "🔍 Escreve o **termo de pesquisa** (ex: *nome do livro + autor* ou *nome do podcast*) para eu tentar encontrar o link correto no DuckDuckGo automaticamente.",
+            "✍️ Escreve o **termo de pesquisa** para eu tentar encontrar o link correto no DuckDuckGo.",
             ephemeral=True
         )
 
-    @discord.ui.button(label="✍️ Inserir Link Manualmente", style=discord.ButtonStyle.secondary, custom_id="link_manual")
+    @discord.ui.button(label="🔗 Inserir Link Direto", style=discord.ButtonStyle.secondary, custom_id="link_manual")
     async def manual_input(self, interaction: discord.Interaction, button: discord.ui.Button):
         global waiting_for_link_manual
         waiting_for_link_manual = {
@@ -442,15 +479,73 @@ class CoverCorrectionView(discord.ui.View):
         self.original_msg_id = original_msg_id
         self.quadrant = quadrant
 
-    @discord.ui.button(label="🔍 Auto-Pesquisar Capa", style=discord.ButtonStyle.primary, custom_id="cover_auto_search")
-    async def auto_search(self, interaction: discord.Interaction, button: discord.ui.Button):
+    @discord.ui.button(label="🔍 Pesquisa Automática", style=discord.ButtonStyle.success, custom_id="cover_auto_search_item")
+    async def auto_search_item(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer(ephemeral=True)
+        # 1. Fetch draft
+        draft_content, _ = get_github_file("scripts/review_draft.json")
+        if not draft_content:
+            await interaction.followup.send("❌ Erro ao ler rascunho do post no GitHub.", ephemeral=True)
+            return
+        draft_data = json.loads(draft_content.decode("utf-8"))
+        item = draft_data.get(self.quadrant)
+        if not item:
+            await interaction.followup.send(f"❌ Item do quadrante {self.quadrant} não encontrado.", ephemeral=True)
+            return
+            
+        # 2. Build search query
+        query = item["title"]
+        author = item.get("authorOrMeta")
+        clean_author = None
+        if author:
+            clean_author = re.sub(r'^(Filme|S[eé]rie|Document[aá]rio|Podcast)\s*/\s*', '', author).strip()
+            
+        await interaction.followup.send(f"🔍 A pesquisar capa para '{query}' automaticamente com a IA...", ephemeral=True)
+        
+        from cover_fetcher import fetch_cover, _cache_key
+        
+        loop = asyncio.get_event_loop()
+        try:
+            cover_img = await loop.run_in_executor(
+                None,
+                fetch_cover,
+                query,
+                item["type"],
+                clean_author,
+                None,  # Do a fresh search instead of using hint URL
+                item.get("category")
+            )
+            if not cover_img:
+                await interaction.followup.send("❌ Não foi possível encontrar nenhuma capa automaticamente. Por favor, usa o botão de pesquisa manual (digitar) ou carrega o ficheiro diretamente.", ephemeral=True)
+                return
+                
+            from io import BytesIO
+            bio = BytesIO()
+            cover_img.convert("RGB").save(bio, format="JPEG", quality=90)
+            image_bytes = bio.getvalue()
+            
+            key = _cache_key(item["title"], item["type"])
+            res_upload = update_github_file(f"website/public/covers/{key}.jpg", image_bytes, "Update cover cache image [bot]")
+            if res_upload is True:
+                res_db = await update_recommendation_field(self.original_msg_id, self.quadrant, "imageUrl", f"/covers/{key}.jpg")
+                if res_db is True:
+                    await interaction.followup.send(f"🖼️ Capa do quadrante **{self.quadrant}** atualizada! A regerar proposta...", ephemeral=True)
+                else:
+                    await interaction.followup.send(f"❌ Erro ao atualizar base de dados: {res_db}", ephemeral=True)
+            else:
+                await interaction.followup.send(f"❌ Erro ao guardar capa no GitHub: {res_upload}", ephemeral=True)
+        except Exception as e:
+            await interaction.followup.send(f"❌ Ocorreu um erro na pesquisa da capa: {e}", ephemeral=True)
+
+    @discord.ui.button(label="✍️ Pesquisa Manual (Digitar)", style=discord.ButtonStyle.primary, custom_id="cover_auto_search_query")
+    async def auto_search_query(self, interaction: discord.Interaction, button: discord.ui.Button):
         global waiting_for_cover_query
         waiting_for_cover_query = {
             "quadrant": self.quadrant,
             "original_msg_id": self.original_msg_id
         }
         await interaction.response.send_message(
-            f"🔍 Escreve o **termo de pesquisa** (ex: *nome do livro + autor*) para eu tentar encontrar a capa do quadrante **{self.quadrant}** automaticamente.",
+            f"🔍 Escreve o **termo de pesquisa** para eu tentar encontrar a capa do quadrante **{self.quadrant}** automaticamente.",
             ephemeral=True
         )
 
