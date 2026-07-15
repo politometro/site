@@ -110,11 +110,8 @@ export async function GET(req: NextRequest) {
       year = 1999;
     }
 
-    // Bulletproof dataDir location (handles both root and website run folders)
-    let dataDir = path.join(process.cwd(), "data");
-    if (!fs.existsSync(dataDir)) {
-      dataDir = path.join(process.cwd(), "..", "data");
-    }
+    // data/ folder is inside the website project root
+    const dataDir = path.join(process.cwd(), "data");
 
     const catFolder = getCategoryFolder(category);
     const searchPath = catFolder ? path.join(dataDir, catFolder) : dataDir;
