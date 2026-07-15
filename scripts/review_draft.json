@@ -1,21 +1,34 @@
 {
   "is_test": true,
   "q1": {
-    "id": "podcast_3",
-    "type": "podcast",
-    "category": "Podcast",
-    "title": "O Princípio da Incerteza: Orçamento do Estado",
-    "authorOrMeta": "CNN Portugal",
-    "description": "Episódio que analisa as negociações e as linhas vermelhas dos partidos para a viabilização do próximo Orçamento do Estado.",
-    "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts116/v4/7c/4a/01/7c4a01c4-54c2-9e90-c0b7-9fa41ab312cd/mza_16694665426364024345.jpg/600x600bb.jpg",
-    "link": "https://tvi.iol.pt/cnn/programa/o-principio-da-incerteza",
-    "priority": 5,
-    "expiryDate": "2026-10-15T00:00:00Z",
-    "createdAt": "2026-07-10T12:12:00Z",
-    "status": "queue",
-    "layout_preference": "template_2"
+    "id": "ai_movie_1784153376_6",
+    "type": "movie",
+    "category": "Filme",
+    "title": "April Captains: The Revolt",
+    "authorOrMeta": "Maria de Medeiros",
+    "description": "Filme que retrata a Revolução dos Cravos e o seu impacto na sociedade portuguesa.",
+    "imageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=200",
+    "link": "https://www.imdb.com/title/tt0327133/",
+    "priority": 7,
+    "expiryDate": null,
+    "createdAt": "2026-07-15T22:09:36.855420Z",
+    "status": "queue"
   },
   "q2": {
+    "id": "ai_podcast_1784153376_5",
+    "type": "podcast",
+    "category": "Podcast",
+    "title": "Linhas Vermelhas: A Política Externa de Portugal",
+    "authorOrMeta": "SIC Notícias",
+    "description": "Análise da política externa portuguesa e seu impacto no mundo.",
+    "imageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=200",
+    "link": "https://sicnoticias.pt/programas/linhas-vermelhas",
+    "priority": 6,
+    "expiryDate": null,
+    "createdAt": "2026-07-15T22:09:36.855420Z",
+    "status": "queue"
+  },
+  "q3": {
     "id": "documentary_1",
     "type": "documentary",
     "category": "Documentário",
@@ -27,37 +40,20 @@
     "priority": 5,
     "expiryDate": null,
     "createdAt": "2026-07-10T12:30:00Z",
-    "status": "queue",
-    "layout_preference": "template_2"
-  },
-  "q3": {
-    "id": "book_2",
-    "type": "book",
-    "category": "Livro",
-    "title": "Salazar e o Poder",
-    "authorOrMeta": "Fernando Rosas",
-    "description": "Uma análise profunda sobre o funcionamento da ditadura salazarista, investigando os mecanismos que permitiram ao regime durar mais de quatro décadas.",
-    "imageUrl": "https://img.wook.pt/images/salazar-e-o-poder-fernando-rosas/MXwxNDQyMDgzMnwxMDgzNjI5N3wxNzI1OTIzNjAwMDAw/502x",
-    "link": "https://www.wook.pt/livro/salazar-e-o-poder-fernando-rosas/14420832",
-    "priority": 4,
-    "expiryDate": null,
-    "createdAt": "2026-07-10T12:01:00Z",
-    "status": "queue",
-    "layout_preference": "template_2"
+    "status": "queue"
   },
   "q4": {
-    "id": "ai_highlight_1784152901_7",
+    "id": "ai_highlight_1784153376_7",
     "type": "highlight",
     "category": "Destaque",
-    "title": "Relatório da Economia Portuguesa 2022",
+    "title": "Relatório da Economia Portuguesa 2023",
     "authorOrMeta": "Fundação Francisco Manuel dos Santos",
-    "description": "Análise detalhada da economia portuguesa em 2022, com perspetivas para o futuro.",
-    "imageUrl": "https://www.ffms.pt/wp-content/uploads/2022/02/relatorio-da-economia-portuguesa-2022.jpg",
-    "link": "https://www.ffms.pt/relatorio-da-economia-portuguesa-2022/",
+    "description": "Análise detalhada da economia portuguesa em 2023, com dados e previsões.",
+    "imageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=200",
+    "link": "https://ffms.pt/relatorio-da-economia-portuguesa-2023/",
     "priority": 8,
     "expiryDate": null,
-    "createdAt": "2026-07-15T22:01:41.122050Z",
-    "status": "queue",
-    "layout_preference": "template_2"
+    "createdAt": "2026-07-15T22:09:36.855420Z",
+    "status": "queue"
   }
 }
