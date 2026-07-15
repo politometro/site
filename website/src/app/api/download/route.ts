@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
+import pdfIndex from "./pdf_index.json";
 
 // Helper to determine the specific folder name under data/ for a category
 function getCategoryFolder(category: string): string {
@@ -26,67 +25,70 @@ function getCategoryFolder(category: string): string {
   return "";
 }
 
-// Shared memory helper to recursively scan data directory
-function findPdf(dir: string, party: string, category: string, year: number | null): string | null {
-  if (!fs.existsSync(dir)) return null;
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
+// Scans the static PDF index array instead of the local filesystem
+function findPdf(pdfList: string[], party: string, category: string, year: number | null): string | null {
+  for (const entry of pdfList) {
+    const entryLower = entry.toLowerCase();
 
-  for (const entry of entries) {
-    const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      const found = findPdf(fullPath, party, category, year);
-      if (found) return found;
-    } else if (entry.isFile() && entry.name.toLowerCase().endsWith(".pdf")) {
-      const nameLower = entry.name.toLowerCase();
+    // Check if this file belongs to the requested category folder
+    const folderName = getCategoryFolder(category)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, ""); // strip diacritics
 
-      // Check year match
-      if (year) {
-        const yearStr = String(year);
-        const shortYear = yearStr.slice(2);
-        // Exclude if it doesn't mention the year
-        if (!nameLower.includes(yearStr) && !nameLower.includes(shortYear)) {
-          continue;
-        }
+    const normalizedEntry = entryLower.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    if (folderName && !normalizedEntry.includes("/" + folderName + "/")) {
+      continue;
+    }
+
+    const filename = entry.split("/").pop() || "";
+    const nameLower = filename.toLowerCase();
+
+    // Check year match
+    if (year) {
+      const yearStr = String(year);
+      const shortYear = yearStr.slice(2);
+      if (!nameLower.includes(yearStr) && !nameLower.includes(shortYear)) {
+        continue;
       }
+    }
 
-      // Check party match
-      const partyLower = party.toLowerCase();
-      let isMatch = false;
+    // Check party match
+    const partyLower = party.toLowerCase();
+    let isMatch = false;
 
-      // Handle common abbreviations and aliases
-      if (partyLower === "psd" && (nameLower.includes("psd") || nameLower.includes("ppd"))) {
+    if (partyLower === "psd" && (nameLower.includes("psd") || nameLower.includes("ppd"))) {
+      isMatch = true;
+    } else if (partyLower.includes("cdu") && (nameLower.includes("cdu") || nameLower.includes("pcp") || nameLower.includes("pev"))) {
+      isMatch = true;
+    } else if (partyLower.includes("adn") && (nameLower.includes("adn") || nameLower.includes("pdr"))) {
+      isMatch = true;
+    } else if (partyLower.includes("mpt") && (nameLower.includes("mpt") || nameLower.includes("alternativa 21") || nameLower.includes("alternativa21"))) {
+      isMatch = true;
+    } else if ((partyLower === "partido liberal social" || partyLower === "pls") && (nameLower.includes("pls") || nameLower.includes("liberal social"))) {
+      isMatch = true;
+    } else if (nameLower.includes(partyLower)) {
+      isMatch = true;
+    }
+
+    if (!isMatch) {
+      if (nameLower.includes("ad") && (partyLower.includes("psd") || partyLower.includes("cds") || partyLower.includes("ppm") || partyLower.includes("ad"))) {
         isMatch = true;
-      } else if (partyLower.includes("cdu") && (nameLower.includes("cdu") || nameLower.includes("pcp") || nameLower.includes("pev"))) {
-        isMatch = true;
-      } else if (partyLower.includes("adn") && (nameLower.includes("adn") || nameLower.includes("pdr"))) {
-        isMatch = true;
-      } else if (partyLower.includes("mpt") && (nameLower.includes("mpt") || nameLower.includes("alternativa 21") || nameLower.includes("alternativa21"))) {
-        isMatch = true;
-      } else if ((partyLower === "partido liberal social" || partyLower === "pls") && (nameLower.includes("pls") || nameLower.includes("liberal social"))) {
-        isMatch = true;
-      } else if (nameLower.includes(partyLower)) {
+      } else if (nameLower.includes("paf") && (partyLower.includes("psd") || partyLower.includes("cds") || partyLower.includes("paf"))) {
         isMatch = true;
       }
+    }
 
-      // Coalition check fallbacks
-      if (!isMatch) {
-        if (nameLower.includes("ad") && (partyLower.includes("psd") || partyLower.includes("cds") || partyLower.includes("ppm") || partyLower.includes("ad"))) {
-          isMatch = true;
-        } else if (nameLower.includes("paf") && (partyLower.includes("psd") || partyLower.includes("cds") || partyLower.includes("paf"))) {
-          isMatch = true;
-        }
-      }
-
-      if (isMatch) {
-        return fullPath;
-      }
+    if (isMatch) {
+      return entry;
     }
   }
   return null;
 }
 
-// Shared logic: resolve the PDF path from query params
-function resolvePdfPath(req: NextRequest): { error?: string; status?: number; matchedPath?: string } {
+// Shared logic: resolve the PDF path from query params using static index
+function resolvePdfPath(req: NextRequest): { error?: string; status?: number; matchedRelPath?: string } {
   const { searchParams } = new URL(req.url);
   const party = searchParams.get("party");
   const col = searchParams.get("col");
@@ -95,7 +97,6 @@ function resolvePdfPath(req: NextRequest): { error?: string; status?: number; ma
     return { error: "Parâmetros em falta (party, col).", status: 400 };
   }
 
-  // Determine category and year
   let category = col;
   let year: number | null = null;
 
@@ -110,35 +111,27 @@ function resolvePdfPath(req: NextRequest): { error?: string; status?: number; ma
     year = 1999;
   }
 
-  // data/ folder is inside the website project root
-  const dataDir = path.join(process.cwd(), "data");
+  const matchedRelPath = findPdf(pdfIndex, party, category, year);
 
-  const catFolder = getCategoryFolder(category);
-  const searchPath = catFolder ? path.join(dataDir, catFolder) : dataDir;
-
-  const matchedPath = findPdf(searchPath, party, category, year);
-
-  if (!matchedPath || !fs.existsSync(matchedPath)) {
+  if (!matchedRelPath) {
     return { error: `Ficheiro PDF não encontrado para: ${party} (${col})`, status: 404 };
   }
 
-  return { matchedPath };
+  return { matchedRelPath };
 }
 
 // HEAD handler: fast existence check without sending the file body.
-// Used by the frontend to verify a PDF exists before triggering the download.
+// Checks if the file is present in our pre-indexed list.
 export async function HEAD(req: NextRequest) {
   try {
     const result = resolvePdfPath(req);
     if (result.error) {
       return new Response(null, { status: result.status || 404 });
     }
-    const fileSize = fs.statSync(result.matchedPath!).size;
     return new Response(null, {
       status: 200,
       headers: {
-        "Content-Type": "application/pdf",
-        "Content-Length": String(fileSize),
+        "Content-Type": "application/pdf"
       },
     });
   } catch {
@@ -146,7 +139,7 @@ export async function HEAD(req: NextRequest) {
   }
 }
 
-// GET handler: serve the actual PDF file
+// GET handler: redirects the user to the raw GitHub user content URL
 export async function GET(req: NextRequest) {
   try {
     const result = resolvePdfPath(req);
@@ -154,27 +147,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: result.error }, { status: result.status || 404 });
     }
 
-    // Read the file buffer
-    const fileBuffer = fs.readFileSync(result.matchedPath!);
-    const filename = path.basename(result.matchedPath!);
+    const repo = process.env.GITHUB_REPO || "politometro/site";
+    const branch = process.env.GITHUB_BRANCH || "main";
+    const githubUrl = `https://raw.githubusercontent.com/${repo}/${branch}/${result.matchedRelPath}`;
 
-    // Return the PDF response with headers forcing instant attachment download
-    // Use ASCII-safe filename for basic header, and RFC 5987 filename* for Unicode
-    const encodedFilename = encodeURIComponent(filename).replace(/'/g, "%27");
-    // ASCII fallback: strip diacritics for browsers that don't support filename*
-    const asciiFilename = filename
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^\x20-\x7E]/g, "_");
-    return new Response(fileBuffer, {
-      headers: {
-        "Content-Type": "application/pdf",
-        "Content-Disposition": `attachment; filename="${asciiFilename}"; filename*=UTF-8''${encodedFilename}`,
-        "Content-Length": String(fileBuffer.length),
-        "X-Content-Type-Options": "nosniff",
-        "Cache-Control": "no-cache",
-      },
-    });
+    return NextResponse.redirect(githubUrl, 302);
   } catch (err: any) {
     console.error("Erro no download de PDF:", err);
     return NextResponse.json(
