@@ -408,6 +408,8 @@ class LinkCorrectionView(discord.ui.View):
             
         # 2. Build query
         query = item["title"]
+        if item.get("type") == "podcast":
+            query = f"episódio {query}"
         if item.get("authorOrMeta"):
             # Clean author type indicators
             clean_author = re.sub(r'^(Filme|S[eé]rie|Document[aá]rio|Podcast)\s*/\s*', '', item["authorOrMeta"]).strip()

@@ -78,9 +78,10 @@ Instruções específicas por tipo:
 {watchlist_desc}
 Ou podes sugerir outros podcasts portugueses conceituados de atualidade e política (como "O Princípio da Incerteza", "Expresso da Meia-Noite", "Fora do Baralho", "A Noite da Má Língua", etc.).
 3. Filmes/Documentários (movie): Documentários ou filmes históricos sobre o 25 de Abril, o PREC, figuras históricas portuguesas ou documentários políticos/sociais.
-4. Destaques (highlight): Artigos de investigação, relatórios económicos de referência (como da Fundação Francisco Manuel dos Santos) ou ensaios.
+4. Destaques (highlight): Artigos de investigação jornalística de grande impacto, debates políticos de grande relevância (como episódios especiais de Sem Moderação, Linhas Vermelhas, Expresso da Meia-Noite) ou ensaios de atualidade política e social. Evita sugerir relatórios económicos anuais técnicos, estatísticos ou secos (como relatórios da economia portuguesa de anos anteriores).
 
 Regras estritas:
+- NUNCA sugiras relatórios de economia anuais, dados estatísticos frios ou relatórios técnicos secos como destaques (como relatórios da economia de anos passados).
 - NÃO deves sugerir nenhum dos seguintes títulos que já foram sugeridos/publicados anteriormente:
 {json.dumps(seen_titles[:60], ensure_ascii=False)}
 - Todo o conteúdo (títulos, metadados e descrições) deve ser em Português de Portugal (pt-PT) rigoroso e formal.

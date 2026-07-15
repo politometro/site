@@ -16,12 +16,36 @@ import os
 import sys
 import json
 import datetime
+import re
+import urllib.parse
 from PIL import Image, ImageDraw, ImageFont
 import requests
 
 # Import cover fetcher
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cover_fetcher import fetch_cover_for_item, generate_placeholder, _cache_key
+
+def search_duckduckgo_link(query):
+    """Search DuckDuckGo HTML for a query and return the first result URL."""
+    url = "https://html.duckduckgo.com/html/"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+    }
+    try:
+        r = requests.post(url, data={"q": query}, headers=headers, timeout=10)
+        redirects = re.findall(r'href="([^"]+uddg=[^"]+)"', r.text)
+        for rl in redirects:
+            match = re.search(r'uddg=([^&"]+)', rl)
+            if match:
+                decoded = urllib.parse.unquote(match.group(1))
+                if "duckduckgo.com" not in decoded:
+                    return decoded
+        direct = re.findall(r'class="result__url"\s+href="([^"]+)"', r.text)
+        if direct:
+            return direct[0]
+    except Exception as e:
+        print(f"Error searching DDG: {e}")
+    return None
 
 # --- PATHS ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -175,6 +199,47 @@ def get_recommendations_with_valid_covers(queue):
     # Assign
     for idx, item in enumerate(selected_others):
         selected[f"q{idx+1}"] = item
+
+    # Auto-resolve podcast episode links to avoid using generic show pages
+    for qkey in ["q1", "q2", "q3", "q4"]:
+        item = selected.get(qkey)
+        if item and item.get("type") == "podcast":
+            title = item["title"]
+            author = item.get("authorOrMeta", "")
+            clean_author = re.sub(r'^(Filme|S[eé]rie|Document[aá]rio|Podcast)\s*/\s*', '', author).strip()
+            query = f"episódio {title} {clean_author}"
+            
+            print(f"[Link Resolver] Attempting to automatically resolve specific episode link for podcast '{title}'...")
+            
+            # 1. Try iTunes Search API specifically for episode entity
+            resolved = False
+            try:
+                itunes_url = f"https://itunes.apple.com/search?term={urllib.parse.quote(query)}&media=podcast&entity=podcastEpisode&limit=1"
+                r = requests.get(itunes_url, timeout=5)
+                if r.ok:
+                    results = r.json().get("results", [])
+                    if results:
+                        ep_link = results[0].get("trackViewUrl")
+                        if ep_link:
+                            print(f"  -> Automatically resolved podcast episode link via iTunes: {ep_link}")
+                            item["link"] = ep_link
+                            resolved = True
+            except Exception as e:
+                print(f"  -> iTunes episode check failed: {e}")
+                
+            # 2. Fallback: DuckDuckGo search
+            if not resolved:
+                try:
+                    found_url = search_duckduckgo_link(query)
+                    if found_url:
+                        print(f"  -> Automatically resolved podcast episode link via DDG: {found_url}")
+                        item["link"] = found_url
+                        resolved = True
+                except Exception as e:
+                    print(f"  -> DDG episode check failed: {e}")
+                    
+            if not resolved:
+                print(f"  -> Could not resolve specific episode URL for '{title}'. Keeping original link.")
         
     return selected, covers
 
