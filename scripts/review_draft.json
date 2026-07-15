@@ -1,0 +1,59 @@
+{
+  "is_test": true,
+  "q1": {
+    "id": "podcast_3",
+    "type": "podcast",
+    "category": "Podcast",
+    "title": "O Princípio da Incerteza: Orçamento do Estado",
+    "authorOrMeta": "CNN Portugal",
+    "description": "Episódio que analisa as negociações e as linhas vermelhas dos partidos para a viabilização do próximo Orçamento do Estado.",
+    "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts116/v4/7c/4a/01/7c4a01c4-54c2-9e90-c0b7-9fa41ab312cd/mza_16694665426364024345.jpg/600x600bb.jpg",
+    "link": "https://tvi.iol.pt/cnn/programa/o-principio-da-incerteza",
+    "priority": 5,
+    "expiryDate": "2026-10-15T00:00:00Z",
+    "createdAt": "2026-07-10T12:12:00Z",
+    "status": "queue"
+  },
+  "q2": {
+    "id": "documentary_1",
+    "type": "documentary",
+    "category": "Documentário",
+    "title": "Privacidade Hackeada",
+    "authorOrMeta": "Jehane Noujaim / Karim Amer",
+    "description": "Um documentário revelador sobre o escândalo da Cambridge Analytica, detalhando como os dados pessoais de milhões de utilizadores do Facebook foram explorados para influenciar eleições.",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/62/The_Great_Hack_poster.jpg",
+    "link": "https://www.imdb.com/title/tt4736550/",
+    "priority": 5,
+    "expiryDate": null,
+    "createdAt": "2026-07-10T12:30:00Z",
+    "status": "queue"
+  },
+  "q3": {
+    "id": "book_2",
+    "type": "book",
+    "category": "Livro",
+    "title": "Salazar e o Poder",
+    "authorOrMeta": "Fernando Rosas",
+    "description": "Uma análise profunda sobre o funcionamento da ditadura salazarista, investigando os mecanismos que permitiram ao regime durar mais de quatro décadas.",
+    "imageUrl": "https://img.wook.pt/images/salazar-e-o-poder-fernando-rosas/MXwxNDQyMDgzMnwxMDgzNjI5N3wxNzI1OTIzNjAwMDAw/502x",
+    "link": "https://www.wook.pt/livro/salazar-e-o-poder-fernando-rosas/14420832",
+    "priority": 4,
+    "expiryDate": null,
+    "createdAt": "2026-07-10T12:01:00Z",
+    "status": "queue"
+  },
+  "q4": {
+    "id": "ai_highlight_1784152901_7",
+    "type": "highlight",
+    "category": "Destaque",
+    "title": "Relatório da Economia Portuguesa 2022",
+    "authorOrMeta": "Fundação Francisco Manuel dos Santos",
+    "description": "Análise detalhada da economia portuguesa em 2022, com perspetivas para o futuro.",
+    "imageUrl": "https://www.ffms.pt/wp-content/uploads/2022/02/relatorio-da-economia-portuguesa-2022.jpg",
+    "link": "https://www.ffms.pt/relatorio-da-economia-portuguesa-2022/",
+    "priority": 8,
+    "expiryDate": null,
+    "createdAt": "2026-07-15T22:01:41.122050Z",
+    "status": "queue"
+  }
+}
