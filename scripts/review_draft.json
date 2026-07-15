@@ -12,7 +12,8 @@
     "priority": 5,
     "expiryDate": "2026-10-15T00:00:00Z",
     "createdAt": "2026-07-10T12:12:00Z",
-    "status": "queue"
+    "status": "queue",
+    "layout_preference": "template_2"
   },
   "q2": {
     "id": "documentary_1",
@@ -26,7 +27,8 @@
     "priority": 5,
     "expiryDate": null,
     "createdAt": "2026-07-10T12:30:00Z",
-    "status": "queue"
+    "status": "queue",
+    "layout_preference": "template_2"
   },
   "q3": {
     "id": "book_2",
@@ -40,7 +42,8 @@
     "priority": 4,
     "expiryDate": null,
     "createdAt": "2026-07-10T12:01:00Z",
-    "status": "queue"
+    "status": "queue",
+    "layout_preference": "template_2"
   },
   "q4": {
     "id": "ai_highlight_1784152901_7",
@@ -54,6 +57,7 @@
     "priority": 8,
     "expiryDate": null,
     "createdAt": "2026-07-15T22:01:41.122050Z",
-    "status": "queue"
+    "status": "queue",
+    "layout_preference": "template_2"
   }
 }
