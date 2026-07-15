@@ -203,6 +203,7 @@ def generate_production_post():
     parser = argparse.ArgumentParser()
     parser.add_argument("--review", action="store_true", help="Generate draft post for review without modifying database")
     parser.add_argument("--commit", action="store_true", help="Commit the currently approved review draft to database")
+    parser.add_argument("--test", action="store_true", help="Mark the generated draft as a test run")
     args = parser.parse_args()
 
     DRAFT_FILE = os.path.join(SCRIPT_DIR, "review_draft.json")
@@ -212,24 +213,69 @@ def generate_production_post():
             print("ERROR: No draft file found to commit.")
             sys.exit(1)
         with open(DRAFT_FILE, "r", encoding="utf-8") as f:
-            selected = json.load(f)
+            draft_data = json.load(f)
+            
+        is_test = draft_data.get("is_test", False)
+        
         with open(REC_FILE, "r", encoding="utf-8") as f:
             data = json.load(f)
+            
         queue = data.get("queue", [])
         history = data.get("history", [])
         
-        selected_ids = [item["id"] for item in selected.values()]
-        updated_queue = []
-        for item in queue:
-            if item["id"] in selected_ids:
-                item["status"] = "published"
-                history.append(item)
+        # Extract quadrants from draft_data
+        quadrants = {k: v for k, v in draft_data.items() if k in ["q1", "q2", "q3", "q4"]}
+        selected_ids = [item["id"] for item in quadrants.values() if item and isinstance(item, dict) and "id" in item]
+        
+        import datetime
+        now = datetime.datetime.now(datetime.timezone.utc)
+        
+        # Clean up older expired test entries from history
+        clean_history = []
+        for item in history:
+            if item.get("is_test"):
+                expiry = item.get("expires_at")
+                if expiry:
+                    try:
+                        exp_dt = datetime.datetime.fromisoformat(expiry.replace("Z", "+00:00"))
+                        if exp_dt > now:
+                            clean_history.append(item)
+                    except Exception:
+                        pass # Ignore parsing error, keep it just in case
             else:
-                updated_queue.append(item)
-        data["queue"] = updated_queue
+                clean_history.append(item)
+        history = clean_history
+        
+        if is_test:
+            print("Running in TEST mode: recommendations will NOT be removed from queue, but copied to history temporarily for 15 minutes.")
+            expires_at = (now + datetime.timedelta(minutes=15)).isoformat()
+            
+            for q_item in queue:
+                if q_item["id"] in selected_ids:
+                    copied_item = dict(q_item)
+                    copied_item["status"] = "published"
+                    copied_item["is_test"] = True
+                    copied_item["expires_at"] = expires_at
+                    copied_item["createdAt"] = now.isoformat()
+                    history.append(copied_item)
+            # queue remains unmodified
+        else:
+            updated_queue = []
+            for item in queue:
+                if item["id"] in selected_ids:
+                    item["status"] = "published"
+                    item["createdAt"] = now.isoformat()
+                    history.append(item)
+                else:
+                    updated_queue.append(item)
+            queue = updated_queue
+            
+        data["queue"] = queue
         data["history"] = history
+        
         with open(REC_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
+            
         print("[OK] Committed draft to recommendations.json database successfully.")
         try:
             os.remove(DRAFT_FILE)
@@ -394,8 +440,15 @@ Trazemos-te a nossa seleção semanal de conteúdos essenciais para compreendere
     print(f"[OK] Production Instagram caption saved to: {OUTPUT_CAPTION_PATH}")
     
     if args.review:
+        draft_data = {
+            "is_test": args.test,
+            "q1": selected["q1"],
+            "q2": selected["q2"],
+            "q3": selected["q3"],
+            "q4": selected["q4"]
+        }
         with open(DRAFT_FILE, "w", encoding="utf-8") as f:
-            json.dump(selected, f, indent=2, ensure_ascii=False)
+            json.dump(draft_data, f, indent=2, ensure_ascii=False)
         print("[OK] Review draft saved. Database recommendations.json remains unchanged.")
         return
     

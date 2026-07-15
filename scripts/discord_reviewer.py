@@ -168,7 +168,8 @@ class RejectionReasonSelect(discord.ui.Select):
         options = [
             discord.SelectOption(label="Imagem mal formatada", value="bad_image", description="Alternar layout (template) e redesenhar.", emoji="🖼️"),
             discord.SelectOption(label="Capas erradas (Nova Capa)", value="wrong_covers", description="Substituir capa de um quadrante por nova imagem.", emoji="📚"),
-            discord.SelectOption(label="Texto com erros", value="typo_text", description="Fornecer texto de legenda corrigido.", emoji="✍️"),
+            discord.SelectOption(label="Erros na legenda", value="typo_text", description="Fornecer texto de legenda corrigido.", emoji="✍️"),
+            discord.SelectOption(label="Erros de escrita na imagem", value="typo_image_text", description="Corrigir erros no texto desenhado na imagem.", emoji="📝"),
             discord.SelectOption(label="Más recomendações (Regerar)", value="bad_recs", description="Descartar estes itens e buscar novos candidatos.", emoji="👎")
         ]
         super().__init__(placeholder="Selecione o motivo da rejeição...", options=options)
@@ -187,14 +188,16 @@ class RejectionReasonSelect(discord.ui.Select):
                 await interaction.followup.send(f"❌ Não foi possível aceder ao rascunho do post no GitHub: {draft_sha}", ephemeral=True)
                 return
             
-            selected = json.loads(draft_content.decode("utf-8"))
-            for qkey, item in selected.items():
-                curr_layout = item.get("layout_preference", "template_1")
-                new_layout = "template_2" if curr_layout == "template_1" else ("template_3" if curr_layout == "template_2" else "template_1")
-                item["layout_preference"] = new_layout
+            draft_data = json.loads(draft_content.decode("utf-8"))
+            quadrants = {k: v for k, v in draft_data.items() if k in ["q1", "q2", "q3", "q4"]}
+            for qkey, item in quadrants.items():
+                if isinstance(item, dict):
+                    curr_layout = item.get("layout_preference", "template_1")
+                    new_layout = "template_2" if curr_layout == "template_1" else ("template_3" if curr_layout == "template_2" else "template_1")
+                    item["layout_preference"] = new_layout
 
             # Save draft changes back to GitHub
-            new_draft_bytes = json.dumps(selected, indent=2, ensure_ascii=False).encode("utf-8")
+            new_draft_bytes = json.dumps(draft_data, indent=2, ensure_ascii=False).encode("utf-8")
             res_draft = update_github_file("scripts/review_draft.json", new_draft_bytes, "Cycle layout preference [bot]", sha=draft_sha)
             if res_draft is not True:
                 await interaction.followup.send(f"❌ Erro ao atualizar layout no GitHub: {res_draft}", ephemeral=True)
@@ -227,6 +230,16 @@ class RejectionReasonSelect(discord.ui.Select):
                 ephemeral=True
             )
 
+        elif reason == "typo_image_text":
+            await interaction.response.send_message(
+                "📝 **Para corrigir erros de escrita na imagem:**\n"
+                "1. Acede ao teu GitHub e abre o ficheiro `website/public/recommendations.json`.\n"
+                "2. Edita o `title`, `authorOrMeta` ou `description` da recomendação correspondente.\n"
+                "3. Efetua o commit das alterações no GitHub.\n"
+                "4. Volta aqui ao Discord e corre `!check` novamente para regenerar a imagem com as correções!",
+                ephemeral=True
+            )
+
         elif reason == "bad_recs":
             await interaction.response.defer(ephemeral=True)
             # Fetch draft from GitHub
@@ -235,8 +248,9 @@ class RejectionReasonSelect(discord.ui.Select):
                 await interaction.followup.send(f"❌ Erro ao ler rascunho no GitHub: {draft_sha}", ephemeral=True)
                 return
             
-            selected = json.loads(draft_content.decode("utf-8"))
-            selected_ids = [item["id"] for item in selected.values()]
+            draft_data = json.loads(draft_content.decode("utf-8"))
+            quadrants = {k: v for k, v in draft_data.items() if k in ["q1", "q2", "q3", "q4"]}
+            selected_ids = [item["id"] for item in quadrants.values() if item and isinstance(item, dict) and "id" in item]
 
             # Fetch recommendations.json from GitHub
             rec_content, rec_sha = get_github_file("website/public/recommendations.json")

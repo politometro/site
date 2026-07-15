@@ -44,9 +44,19 @@ export async function GET(req: NextRequest) {
         const data = await res.json();
         const content = Buffer.from(data.content, "base64").toString("utf-8");
         const parsed = parseRecommendations(content);
+        
+        const now = new Date().getTime();
+        const activeHistory = parsed.history.filter((item: any) => {
+          if (item.is_test && item.expires_at) {
+            const expTime = new Date(item.expires_at).getTime();
+            return expTime > now;
+          }
+          return true;
+        });
+
         return NextResponse.json({
           queue: parsed.queue,
-          history: parsed.history,
+          history: activeHistory,
           sha: data.sha,
           source: "github"
         });
@@ -58,9 +68,19 @@ export async function GET(req: NextRequest) {
     if (fs.existsSync(localPath)) {
       const content = fs.readFileSync(localPath, "utf-8");
       const parsed = parseRecommendations(content);
+      
+      const now = new Date().getTime();
+      const activeHistory = parsed.history.filter((item: any) => {
+        if (item.is_test && item.expires_at) {
+          const expTime = new Date(item.expires_at).getTime();
+          return expTime > now;
+        }
+        return true;
+      });
+
       return NextResponse.json({
         queue: parsed.queue,
-        history: parsed.history,
+        history: activeHistory,
         sha: null,
         source: "local"
       });

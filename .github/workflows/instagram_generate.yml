@@ -36,7 +36,11 @@ jobs:
 
       - name: Generate Post Image & Caption
         run: |
-          python scripts/generate_post.py --review
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            python scripts/generate_post.py --review --test
+          else
+            python scripts/generate_post.py --review
+          fi
         env:
           GOOGLE_CSE_API_KEY: ${{ secrets.GOOGLE_CSE_API_KEY }}
           GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
