@@ -86,18 +86,22 @@ Regras estritas:
 {json.dumps(seen_titles[:60], ensure_ascii=False)}
 - Todo o conteúdo (títulos, metadados e descrições) deve ser em Português de Portugal (pt-PT) rigoroso e formal.
 - A descrição deve ser curta, apelativa e resumir em 1 ou 2 frases o porquê de ser interessante.
-- Devolve links de referência reais e funcionais (ex: link do Wook para livros, link oficial do podcast ou link do IMDB para filmes).
+- NÃO incluas links. Os links serão automaticamente resolvidos pelo nosso sistema de pesquisa. Coloca uma string vazia no campo "link".
+- NÃO incluas URLs de imagem. As capas serão automaticamente descarregadas. Coloca uma string vazia no campo "imageUrl".
+- Para podcasts, o título deve ser o NOME DO EPISÓDIO ESPECÍFICO que estás a recomendar (não o nome do podcast). O nome do podcast deve ir no campo authorOrMeta no formato "Podcast / Nome do Podcast".
+- Para livros, o campo authorOrMeta deve conter APENAS o nome do autor (ex: "Rui Ramos", "José Mattoso").
+- Para filmes, o campo authorOrMeta deve conter o realizador.
 
 Devolve APENAS um array JSON puro (sem formatação markdown ```json, sem texto antes ou depois) com o seguinte formato de objeto:
 [
   {{
     "type": "book | podcast | movie | highlight",
     "category": "Livro | Podcast | Filme | Destaque",
-    "title": "Título exato do item",
-    "authorOrMeta": "Autor do livro, criador do podcast, realizador do filme ou editor da fonte",
+    "title": "Título exato do item (para podcasts: nome do episódio)",
+    "authorOrMeta": "Autor / Nome do Podcast / Realizador / Editor",
     "description": "Descrição sucinta de 1-2 frases em pt-PT.",
-    "link": "URL de referência real",
-    "imageUrl": "URL de imagem sugerida (opcional, senão usa-se placeholder)",
+    "link": "",
+    "imageUrl": "",
     "priority": 3
   }}
 ]"""
@@ -197,7 +201,7 @@ Devolve APENAS um array JSON puro (sem formatação markdown ```json, sem texto 
                 "title": title.strip(),
                 "authorOrMeta": item.get("authorOrMeta", "Vários").strip(),
                 "description": item.get("description", "").strip(),
-                "imageUrl": item.get("imageUrl") or ("https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=200" if itype == "book" else "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=200"),
+                "imageUrl": item.get("imageUrl", "").strip(),
                 "link": item.get("link", "").strip(),
                 "priority": int(item.get("priority", 3)),
                 "expiryDate": None,

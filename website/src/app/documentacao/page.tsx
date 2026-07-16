@@ -262,6 +262,22 @@ export default function DocumentationPage() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [extraStats, setExtraStats] = useState({ budgetsCount: 28, constitutionCount: 1 });
 
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isFilterOpen) return;
+    const handleOutsideClick = () => setIsFilterOpen(false);
+    window.addEventListener("click", handleOutsideClick);
+    return () => window.removeEventListener("click", handleOutsideClick);
+  }, [isFilterOpen]);
+
+  const filterOptions = [
+    { value: "all", label: "Todas as Eleições" },
+    { value: "legislativas", label: "Legislativas & Princípios" },
+    { value: "europeias", label: "Europeias" },
+    { value: "regioes", label: "Regionais (Madeira/Açores)" }
+  ];
+
   const rows = docsData.rows as Row[];
 
   // Download handler: does a fast HEAD check to verify the PDF exists,
@@ -501,17 +517,36 @@ export default function DocumentationPage() {
             />
           </div>
 
-          <div className={styles.filterGroup}>
-            <select
-              className={styles.filterSelect}
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-            >
-              <option value="all">Todas as Eleições</option>
-              <option value="legislativas">Legislativas & Princípios</option>
-              <option value="europeias">Europeias</option>
-              <option value="regioes">Regionais (Madeira/Açores)</option>
-            </select>
+          <div className={styles.filterGroup} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.customDropdownContainer}>
+              <button
+                type="button"
+                className={`${styles.filterSelect} ${styles.dropdownToggle}`}
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+              >
+                <span>{filterOptions.find(o => o.value === categoryFilter)?.label}</span>
+                <span className={`${styles.dropdownChevron} ${isFilterOpen ? styles.chevronOpen : ""}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </span>
+              </button>
+              
+              {isFilterOpen && (
+                <div className={`${styles.dropdownMenu} glass`}>
+                  {filterOptions.map((opt) => (
+                    <div
+                      key={opt.value}
+                      className={`${styles.dropdownOption} ${categoryFilter === opt.value ? styles.activeOption : ""}`}
+                      onClick={() => {
+                        setCategoryFilter(opt.value);
+                        setIsFilterOpen(false);
+                      }}
+                    >
+                      {opt.label}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           <div className={styles.legend}>

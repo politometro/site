@@ -140,48 +140,25 @@ def get_recommendations_with_valid_covers(queue):
     # 1. First, select the "highlight" (Recomendacao da semana)
     highlight_candidates = [i for i in active_items if i["type"] == "highlight"]
     selected_highlight = None
+    if highlight_candidates:
+        selected_highlight = highlight_candidates[0]
+        print(f"  -> Selected highlight '{selected_highlight['title']}'")
     
-    for item in highlight_candidates:
-        print(f"Checking cover for [HIGHLIGHT] '{item['title']}'...")
-        cover_img = fetch_cover_for_item(item, allow_placeholder=False)
-        if cover_img:
-            selected_highlight = item
-            covers["q4"] = cover_img
-            print(f"  -> SUCCESS! Selected highlight '{item['title']}'")
-            break
-        else:
-            print(f"  -> FAILED to find cover for '{item['title']}', skipping...")
-            
-    if not selected_highlight and highlight_candidates:
-        fallback_item = highlight_candidates[0]
-        print(f"  -> WARNING: No real cover found for highlight candidates. Using placeholder.")
-        selected_highlight = fallback_item
-        covers["q4"] = generate_placeholder(fallback_item['title'])
-        
     selected["q4"] = selected_highlight
 
     # 2. Select the other 3 positions dynamically from other types (no two books, no two podcasts, etc.)
     other_candidates = [i for i in active_items if i["type"] != "highlight"]
-    
     selected_others = []
     seen_types = set()
     
     for item in other_candidates:
-        print(f"Checking cover for [{item['type'].upper()}] '{item['title']}'...")
         if item["type"] in seen_types:
-            print(f"  -> Skipping '{item['title']}' because we already selected type '{item['type']}'")
             continue
-            
-        cover_img = fetch_cover_for_item(item, allow_placeholder=False)
-        if cover_img:
-            selected_others.append(item)
-            covers[f"q{len(selected_others)}"] = cover_img
-            seen_types.add(item["type"])
-            print(f"  -> SUCCESS! Selected '{item['title']}' for position q{len(selected_others)}")
-            if len(selected_others) == 3:
-                break
-        else:
-            print(f"  -> FAILED to find cover for '{item['title']}', skipping...")
+        selected_others.append(item)
+        seen_types.add(item["type"])
+        print(f"  -> Selected '{item['title']}' (type: {item['type']})")
+        if len(selected_others) == 3:
+            break
             
     # Fallback if less than 3 distinct types found
     if len(selected_others) < 3:
@@ -190,15 +167,19 @@ def get_recommendations_with_valid_covers(queue):
             if t not in seen_types and len(selected_others) < 3:
                 type_items = [i for i in other_candidates if i["type"] == t]
                 if type_items:
-                    fallback_item = type_items[0]
-                    print(f"  -> WARNING: Using placeholder for '{fallback_item['title']}' (type: {t})")
-                    selected_others.append(fallback_item)
-                    covers[f"q{len(selected_others)}"] = generate_placeholder(fallback_item['title'])
+                    selected_others.append(type_items[0])
                     seen_types.add(t)
+                    print(f"  -> Fallback Selected '{type_items[0]['title']}' (type: {t})")
 
-    # Assign
+    # Assign to positions q1, q2, q3
     for idx, item in enumerate(selected_others):
         selected[f"q{idx+1}"] = item
+
+    # Initialize covers dictionary (using cache or generating placeholders initially)
+    for qkey in ["q1", "q2", "q3", "q4"]:
+        item = selected.get(qkey)
+        if item:
+            covers[qkey] = fetch_cover_for_item(item, allow_placeholder=True)
 
     # Auto-resolve correct links and covers using Playwright browser automation
     try:
@@ -220,12 +201,11 @@ def get_recommendations_with_valid_covers(queue):
                 if old_link != bres["link"]:
                     print(f"  [{qkey.upper()}] Link updated: {old_link} -> {bres['link']}")
             
-            # Re-fetch cover from cache if browser resolver saved one
-            if bres.get("cover_bytes"):
-                new_cover = fetch_cover_for_item(item, allow_placeholder=False)
-                if new_cover:
-                    covers[qkey] = new_cover
-                    print(f"  [{qkey.upper()}] Cover updated from browser resolver")
+            # Re-fetch cover from cache (which now has the resolved cover image)
+            new_cover = fetch_cover_for_item(item, allow_placeholder=False)
+            if new_cover:
+                covers[qkey] = new_cover
+                print(f"  [{qkey.upper()}] Cover updated from browser resolver cache")
     except ImportError:
         print("[Link Resolver] browser_resolver not available, falling back to DuckDuckGo...")
         # Fallback to simple DuckDuckGo search

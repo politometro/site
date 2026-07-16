@@ -30,6 +30,23 @@ export default function SuggestionsPage() {
   const [title, setTitle] = useState("");
   const [link, setLink] = useState("");
 
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleOutsideClick = () => setIsOpen(false);
+    window.addEventListener("click", handleOutsideClick);
+    return () => window.removeEventListener("click", handleOutsideClick);
+  }, [isOpen]);
+
+  const dropdownOptions = [
+    { value: "book", label: "📚 Livro recomendado" },
+    { value: "podcast", label: "🎙️ Podcast / Canal" },
+    { value: "movie", label: "🎬 Filme / Série" },
+    { value: "highlight", label: "📰 Destaque / Artigo" },
+    { value: "project", label: "💡 Sugestão para o Projeto (Politómetro)" }
+  ];
+
   // Check admin role on mount (localhost check)
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -278,20 +295,38 @@ export default function SuggestionsPage() {
             <h2>Adicionar Sugestão</h2>
             
             <form onSubmit={handleAddRecommendation} className={styles.form}>
-              <div className={styles.inputGroup}>
+              <div className={styles.inputGroup} onClick={(e) => e.stopPropagation()}>
                 <label className={styles.inputLabel}>Tipo</label>
-                <select 
-                  className={styles.select}
-                  value={type}
-                  onChange={(e) => setType(e.target.value as any)}
-                  disabled={isLoading}
-                >
-                  <option value="book">📚 Livro recomendado</option>
-                  <option value="podcast">🎙️ Podcast / Canal</option>
-                  <option value="movie">🎬 Filme / Série</option>
-                  <option value="highlight">📰 Destaque / Artigo</option>
-                  <option value="project">💡 Sugestão para o Projeto (Politómetro)</option>
-                </select>
+                <div className={styles.customDropdownContainer}>
+                  <button
+                    type="button"
+                    className={`${styles.select} ${styles.dropdownToggle}`}
+                    onClick={() => setIsOpen(!isOpen)}
+                    disabled={isLoading}
+                  >
+                    <span>{dropdownOptions.find(o => o.value === type)?.label}</span>
+                    <span className={`${styles.dropdownChevron} ${isOpen ? styles.chevronOpen : ""}`}>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </span>
+                  </button>
+                  
+                  {isOpen && (
+                    <div className={`${styles.dropdownMenu} glass`}>
+                      {dropdownOptions.map((opt) => (
+                        <div
+                          key={opt.value}
+                          className={`${styles.dropdownOption} ${type === opt.value ? styles.activeOption : ""}`}
+                          onClick={() => {
+                            setType(opt.value as any);
+                            setIsOpen(false);
+                          }}
+                        >
+                          {opt.label}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className={styles.inputGroup}>
