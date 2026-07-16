@@ -517,6 +517,21 @@ export default function DocumentationPage() {
             />
           </div>
 
+          <div className={styles.legend}>
+            <div className={styles.legendItem}>
+              <span className={`${styles.dot} styles.dotGreen`} style={{ background: "var(--color-secondary)" }} />
+              <span>Programa Disponível</span>
+            </div>
+            <div className={styles.legendItem}>
+              <span className={`${styles.dot} styles.dotGray`} style={{ background: "#6c757d" }} />
+              <span>Primeira Participação / Criado</span>
+            </div>
+            <div className={styles.legendItem}>
+              <span style={{ color: "var(--text-muted)", fontWeight: "bold", paddingLeft: "0.25rem" }}>---</span>
+              <span style={{ marginLeft: "0.25rem" }}>Não disponível / Não participou</span>
+            </div>
+          </div>
+
           <div className={styles.filterGroup} onClick={(e) => e.stopPropagation()}>
             <div className={styles.customDropdownContainer}>
               <button
@@ -531,7 +546,7 @@ export default function DocumentationPage() {
               </button>
               
               {isFilterOpen && (
-                <div className={`${styles.dropdownMenu} glass`}>
+                <div className={styles.dropdownMenu}>
                   {filterOptions.map((opt) => (
                     <div
                       key={opt.value}
@@ -546,21 +561,6 @@ export default function DocumentationPage() {
                   ))}
                 </div>
               )}
-            </div>
-          </div>
-
-          <div className={styles.legend}>
-            <div className={styles.legendItem}>
-              <span className={`${styles.dot} styles.dotGreen`} style={{ background: "var(--color-secondary)" }} />
-              <span>Programa Disponível</span>
-            </div>
-            <div className={styles.legendItem}>
-              <span className={`${styles.dot} styles.dotGray`} style={{ background: "#6c757d" }} />
-              <span>Primeira Participação / Criado</span>
-            </div>
-            <div className={styles.legendItem}>
-              <span style={{ color: "var(--text-muted)", fontWeight: "bold", paddingLeft: "0.25rem" }}>---</span>
-              <span style={{ marginLeft: "0.25rem" }}>Não disponível / Não participou</span>
             </div>
           </div>
         </div>

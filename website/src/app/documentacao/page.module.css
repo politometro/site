@@ -510,14 +510,14 @@
 .dropdownMenu {
   position: absolute;
   top: calc(100% + 6px);
-  left: 0;
-  right: 0;
+  right: 0; /* Align to the right edge of the button */
+  min-width: 220px;
+  width: 100%;
+  max-width: 320px;
   z-index: 100;
   border-radius: var(--radius-md);
   padding: 0.5rem;
-  background: var(--bg-surface);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #ffffff; /* Solid white background to prevent background bleed-through */
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-lg);
   max-height: 250px;

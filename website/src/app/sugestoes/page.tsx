@@ -311,7 +311,7 @@ export default function SuggestionsPage() {
                   </button>
                   
                   {isOpen && (
-                    <div className={`${styles.dropdownMenu} glass`}>
+                    <div className={styles.dropdownMenu}>
                       {dropdownOptions.map((opt) => (
                         <div
                           key={opt.value}
