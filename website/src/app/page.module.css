@@ -139,7 +139,6 @@
 .userBubble {
   background: var(--color-primary);
   color: #fff;
-  border-bottom-right-radius: 2px;
   box-shadow: 0 4px 15px rgba(10, 49, 74, 0.15);
 }
 
@@ -147,7 +146,6 @@
   background: var(--bg-surface);
   border: 1px solid var(--border-color);
   color: var(--text-primary);
-  border-bottom-left-radius: 2px;
   box-shadow: var(--shadow-sm);
 }
 
