@@ -1,0 +1,59 @@
+{
+  "is_test": true,
+  "q1": {
+    "id": "ai_book_1784238183_0",
+    "type": "book",
+    "category": "Livro",
+    "title": "História de Portugal",
+    "authorOrMeta": "José Mattoso",
+    "description": "Uma visão abrangente da história portuguesa, desde a pré-história até aos dias de hoje.",
+    "imageUrl": "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?q=80&w=200",
+    "link": "https://www.wook.pt/livros/historia-de-portugal-9789722326743",
+    "priority": 3,
+    "expiryDate": null,
+    "createdAt": "2026-07-16T21:43:03.881511Z",
+    "status": "queue"
+  },
+  "q2": {
+    "id": "ai_podcast_1784238183_2",
+    "type": "podcast",
+    "category": "Podcast",
+    "title": "Linhas Vermelhas - O Futuro da União Europeia",
+    "authorOrMeta": "SIC Notícias",
+    "description": "Debate sobre o futuro da União Europeia e o papel de Portugal.",
+    "imageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=200",
+    "link": "https://sicnoticias.pt/programas/linhas-vermelhas",
+    "priority": 3,
+    "expiryDate": null,
+    "createdAt": "2026-07-16T21:43:03.881511Z",
+    "status": "queue"
+  },
+  "q3": {
+    "id": "ai_movie_1784238183_5",
+    "type": "movie",
+    "category": "Filme",
+    "title": "Capitães de Abril",
+    "authorOrMeta": "Maria de Medeiros",
+    "description": "Drama histórico sobre o 25 de Abril de 1974.",
+    "imageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=200",
+    "link": "https://www.imdb.com/title/tt0243044/",
+    "priority": 3,
+    "expiryDate": null,
+    "createdAt": "2026-07-16T21:43:03.881511Z",
+    "status": "queue"
+  },
+  "q4": {
+    "id": "ai_highlight_1784238183_7",
+    "type": "highlight",
+    "category": "Destaque",
+    "title": "A Crise da Habitação em Portugal",
+    "authorOrMeta": "Expresso",
+    "description": "Investigação sobre a crise da habitação em Portugal e suas consequências.",
+    "imageUrl": "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=200",
+    "link": "https://expresso.pt",
+    "priority": 3,
+    "expiryDate": null,
+    "createdAt": "2026-07-16T21:43:03.881511Z",
+    "status": "queue"
+  }
+}
