@@ -131,7 +131,7 @@ def get_recommendations_with_valid_covers(queue):
                 pass
         return s
     
-    active_items = [i for i in queue if i.get("status") not in ["published", "skip"] and score(i) >= 0]
+    active_items = [i for i in queue if i.get("status") not in ["published", "skip", "pending_approval"] and score(i) >= 0]
     active_items.sort(key=lambda x: score(x), reverse=True)
     
     selected = {}

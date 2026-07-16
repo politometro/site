@@ -13,6 +13,7 @@ interface Recommendation {
   description: string;
   imageUrl: string;
   createdAt: string;
+  status?: string;
 }
 
 export default function SuggestionsPage() {
@@ -176,7 +177,8 @@ export default function SuggestionsPage() {
         authorOrMeta: enrichedMeta.authorOrMeta,
         description: enrichedMeta.description,
         imageUrl: finalImg,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        status: "pending_approval"
       };
 
       // Place in the queue: prepend to show latest first

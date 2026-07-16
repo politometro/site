@@ -592,11 +592,125 @@ class PostReviewView(discord.ui.View):
             ephemeral=True
         )
 
+# ===================== RECOMMENDATION APPROVAL VIEW =====================
+class RecommendationApprovalView(discord.ui.View):
+    """Persistent view for approving/rejecting individual AI-generated recommendations."""
+    def __init__(self):
+        super().__init__(timeout=None)
+
+    @discord.ui.button(label="Aprovar", style=discord.ButtonStyle.success, custom_id="rec_approve", emoji="\u2705")
+    async def approve_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer(ephemeral=True)
+        
+        # Extract item_id from the message embed footer
+        item_id = None
+        if interaction.message and interaction.message.embeds:
+            footer = interaction.message.embeds[0].footer
+            if footer and footer.text:
+                # Footer format: "ID: ai_book_1234_0 | Gerado por IA"
+                parts = footer.text.split("|")[0].strip()
+                if parts.startswith("ID:"):
+                    item_id = parts[3:].strip()
+        
+        if not item_id:
+            await interaction.followup.send("Erro: Nao foi possivel identificar a recomendacao.", ephemeral=True)
+            return
+        
+        # Fetch recommendations.json from GitHub
+        rec_content, rec_sha = get_github_file("website/public/recommendations.json")
+        if not rec_content:
+            await interaction.followup.send(f"Erro ao obter recommendations.json: {rec_sha}", ephemeral=True)
+            return
+        
+        rec_data = json.loads(rec_content.decode("utf-8"))
+        
+        # Find and update the item
+        updated = False
+        item_title = ""
+        for item in rec_data.get("queue", []):
+            if item.get("id") == item_id:
+                item["status"] = "queue"
+                item_title = item.get("title", item_id)
+                updated = True
+                break
+        
+        if not updated:
+            await interaction.followup.send(f"Item `{item_id}` nao encontrado na fila.", ephemeral=True)
+            return
+        
+        # Save back to GitHub
+        new_rec_bytes = json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8")
+        res = update_github_file("website/public/recommendations.json", new_rec_bytes, f"Approve recommendation: {item_title} [bot]", sha=rec_sha)
+        
+        if res is True:
+            # Update the embed to show approval
+            embed = interaction.message.embeds[0]
+            embed.color = 0x2ECC71  # green
+            embed.set_footer(text=f"APROVADO por {interaction.user.display_name} | ID: {item_id}")
+            await interaction.message.edit(embed=embed, view=None)
+            await interaction.followup.send(f"Recomendacao **{item_title}** aprovada e adicionada a fila!", ephemeral=True)
+        else:
+            await interaction.followup.send(f"Erro ao guardar no GitHub: {res}", ephemeral=True)
+
+    @discord.ui.button(label="Rejeitar", style=discord.ButtonStyle.danger, custom_id="rec_reject", emoji="\u274C")
+    async def reject_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await interaction.response.defer(ephemeral=True)
+        
+        # Extract item_id from the message embed footer
+        item_id = None
+        if interaction.message and interaction.message.embeds:
+            footer = interaction.message.embeds[0].footer
+            if footer and footer.text:
+                parts = footer.text.split("|")[0].strip()
+                if parts.startswith("ID:"):
+                    item_id = parts[3:].strip()
+        
+        if not item_id:
+            await interaction.followup.send("Erro: Nao foi possivel identificar a recomendacao.", ephemeral=True)
+            return
+        
+        # Fetch recommendations.json from GitHub
+        rec_content, rec_sha = get_github_file("website/public/recommendations.json")
+        if not rec_content:
+            await interaction.followup.send(f"Erro ao obter recommendations.json: {rec_sha}", ephemeral=True)
+            return
+        
+        rec_data = json.loads(rec_content.decode("utf-8"))
+        
+        # Find and update the item
+        updated = False
+        item_title = ""
+        for item in rec_data.get("queue", []):
+            if item.get("id") == item_id:
+                item["status"] = "skip"
+                item_title = item.get("title", item_id)
+                updated = True
+                break
+        
+        if not updated:
+            await interaction.followup.send(f"Item `{item_id}` nao encontrado na fila.", ephemeral=True)
+            return
+        
+        # Save back to GitHub
+        new_rec_bytes = json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8")
+        res = update_github_file("website/public/recommendations.json", new_rec_bytes, f"Reject recommendation: {item_title} [bot]", sha=rec_sha)
+        
+        if res is True:
+            # Update the embed to show rejection
+            embed = interaction.message.embeds[0]
+            embed.color = 0xE74C3C  # red
+            embed.set_footer(text=f"REJEITADO por {interaction.user.display_name} | ID: {item_id}")
+            await interaction.message.edit(embed=embed, view=None)
+            await interaction.followup.send(f"Recomendacao **{item_title}** rejeitada e ignorada.", ephemeral=True)
+        else:
+            await interaction.followup.send(f"Erro ao guardar no GitHub: {res}", ephemeral=True)
+
 # ===================== BOT EVENTS & COMMANDS =====================
 @bot.event
 async def on_ready():
     bot.add_view(PostReviewView())
-    print(f"✅ Bot de Revisão Politómetro ligado como {bot.user}!")
+    bot.add_view(RecommendationApprovalView())
+    print(f"Bot de Revisao Politometro ligado como {bot.user}!")
 
 @bot.command(name="check")
 async def check_queue(ctx):

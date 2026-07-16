@@ -96,11 +96,20 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const { queue, history, sha } = await req.json();
+
+    // Process new suggestions to notify Discord and mark as sent
+    const queueList = queue || [];
+    const newItems = queueList.filter((item: any) => item.status === "pending_approval");
+    for (const item of newItems) {
+      await notifyDiscord(item);
+      item.status = "pending_sent";
+    }
+
     const token = process.env.GITHUB_TOKEN;
     const repo = process.env.GITHUB_REPO;
     const branch = process.env.GITHUB_BRANCH || "main";
 
-    const payload = { queue: queue || [], history: history || [] };
+    const payload = { queue: queueList, history: history || [] };
 
     // 1. If GitHub credentials exist on the server, push to GitHub
     if (token && repo && !token.includes("your_actual")) {
@@ -151,5 +160,94 @@ export async function POST(req: NextRequest) {
   } catch (err: any) {
     console.error("Error saving suggestions:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
+async function notifyDiscord(item: any) {
+  const token = process.env.DISCORD_BOT_TOKEN;
+  const channelId = process.env.DISCORD_REVIEW_CHANNEL_ID;
+  if (!token || !channelId) {
+    console.warn("[suggestions API] DISCORD_BOT_TOKEN or DISCORD_REVIEW_CHANNEL_ID is missing.");
+    return;
+  }
+
+  const typeEmojis: Record<string, string> = {
+    book: "📚",
+    podcast: "🎙️",
+    movie: "🎬",
+    highlight: "📰",
+    project: "💡"
+  };
+
+  const typeColors: Record<string, number> = {
+    book: 0x2E86AB,
+    podcast: 0x8338EC,
+    movie: 0xE63946,
+    highlight: 0xF77F00,
+    project: 0x0099ff
+  };
+
+  const emoji = typeEmojis[item.type] || "📌";
+  const color = typeColors[item.type] || 0x0a314a;
+
+  const embed: any = {
+    title: `${emoji} Sugestão: ${item.title || "Sem título"}`,
+    description: item.description || "Sem descrição",
+    color: color,
+    fields: [
+      { name: "Tipo", value: item.category || item.type, inline: true },
+      { name: "Autor/Sugerido Por", value: item.authorOrMeta || "Desconhecido", inline: true },
+      { name: "Data", value: new Date(item.createdAt || Date.now()).toLocaleDateString("pt-PT"), inline: true }
+    ],
+    footer: { text: `ID: ${item.id} | Sugerido por Utilizador` }
+  };
+
+  if (item.link) {
+    embed.fields.push({ name: "Link", value: item.link, inline: false });
+  }
+
+  if (item.imageUrl && item.imageUrl.startsWith("http")) {
+    embed.thumbnail = { url: item.imageUrl };
+  }
+
+  const components = [
+    {
+      type: 1, // Action Row
+      components: [
+        {
+          type: 2, // Button
+          style: 3, // Success (green)
+          label: "Aprovar",
+          emoji: { name: "✅" },
+          custom_id: "rec_approve"
+        },
+        {
+          type: 2, // Button
+          style: 4, // Danger (red)
+          label: "Rejeitar",
+          emoji: { name: "❌" },
+          custom_id: "rec_reject"
+        }
+      ]
+    }
+  ];
+
+  try {
+    const res = await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bot ${token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ embeds: [embed], components })
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("[suggestions API] Failed to send Discord notification:", res.status, errText);
+    } else {
+      console.log("[suggestions API] Sent Discord notification successfully.");
+    }
+  } catch (e) {
+    console.error("[suggestions API] Error sending Discord notification:", e);
   }
 }
