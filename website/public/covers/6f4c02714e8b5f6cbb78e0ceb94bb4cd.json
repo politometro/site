@@ -1,0 +1,20 @@
+{
+  "cacheVersion": 2,
+  "type": "book",
+  "title": "Vacances avec Salazar. by Christine Garnier",
+  "titleNormalized": "vacances avec salazar by christine garnier",
+  "canonicalLink": "https://openlibrary.org/works/OL6139749W/Vacances_avec_Salazar",
+  "entityId": "https://openlibrary.org/works/OL6139749W/Vacances_avec_Salazar",
+  "source": "provided-link",
+  "score": 0.93,
+  "coverHash": "464e8d44e4b8c9c6d665f8081cd1b98d8328746587892fd45ff35451ea164c55",
+  "coverSourceUrl": "https://ia801606.us.archive.org/view_archive.php?archive=/19/items/olcovers625/olcovers625-L.zip&file=6256978-L.jpg",
+  "coverSourceMime": "image/jpeg",
+  "width": 457,
+  "height": 500,
+  "verifiedAt": "2026-07-17T22:56:00.955Z",
+  "resolvedTitle": "Vacances avec Salazar. by Christine Garnier",
+  "resolvedAuthor": "Open Library",
+  "sourcePublishedAt": null,
+  "expiryDate": null
+}
