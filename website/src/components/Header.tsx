@@ -66,6 +66,12 @@ export default function Header() {
           >
             Recomendações
           </Link>
+          <Link
+            href="/noticias"
+            className={`${styles.navLink} ${pathname === "/noticias" ? styles.active : ""}`}
+          >
+            Notícias
+          </Link>
           <Link 
             href="/documentacao" 
             className={`${styles.navLink} ${pathname === "/documentacao" ? styles.active : ""}`}
@@ -121,6 +127,13 @@ export default function Header() {
             onClick={() => setIsOpen(false)}
           >
             Recomendações
+          </Link>
+          <Link
+            href="/noticias"
+            className={`${styles.mobileNavLink} ${pathname === "/noticias" ? styles.mobileActive : ""}`}
+            onClick={() => setIsOpen(false)}
+          >
+            Notícias
           </Link>
           <Link 
             href="/documentacao" 
