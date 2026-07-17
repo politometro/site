@@ -1,0 +1,20 @@
+{
+  "cacheVersion": 2,
+  "type": "book",
+  "title": "Vacances avec Salazar",
+  "titleNormalized": "vacances avec salazar",
+  "canonicalLink": "https://openlibrary.org/works/OL6139749W",
+  "entityId": "9789728645113",
+  "source": "openlibrary",
+  "score": 0.892,
+  "coverHash": "464e8d44e4b8c9c6d665f8081cd1b98d8328746587892fd45ff35451ea164c55",
+  "coverSourceUrl": "https://ia801606.us.archive.org/view_archive.php?archive=/19/items/olcovers625/olcovers625-L.zip&file=6256978-L.jpg",
+  "coverSourceMime": "image/jpeg",
+  "width": 457,
+  "height": 500,
+  "verifiedAt": "2026-07-17T22:55:11.178Z",
+  "resolvedTitle": "Vacances avec Salazar",
+  "resolvedAuthor": "Christine Garnier",
+  "sourcePublishedAt": "1952-01-01T00:00:00.000Z",
+  "expiryDate": null
+}
