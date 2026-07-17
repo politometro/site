@@ -1393,7 +1393,7 @@ async def ask_application_command(
 
 @bot.tree.command(
     name="recomendar",
-    description="Submete uma recomendação para validação e aprovação no Discord.",
+    description="Submete uma recomendação para validação e aprovação.",
 )
 @app_commands.describe(
     tipo="Tipo de conteúdo",
