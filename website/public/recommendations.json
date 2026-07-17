@@ -1,4 +1,45 @@
 {
-  "queue": [],
+  "queue": [
+    {
+      "id": "web_book_cd3a9188-210d-47fe-8e80-81d56d99d5f1",
+      "type": "book",
+      "category": "Livro",
+      "title": "Vacances avec Salazar",
+      "link": "https://openlibrary.org/works/OL6139749W",
+      "authorOrMeta": "Christine Garnier",
+      "description": "O livro \"Vacances avec Salazar\" foi escrito por Christine Garnier e publicado originalmente em 1952.",
+      "imageUrl": "/covers/7786c255352e482134eb8b409fbd3358.jpg",
+      "sourcePublishedAt": "1952-01-01T00:00:00.000Z",
+      "expiryDate": null,
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "provider": "openlibrary",
+        "confidence": 0.892,
+        "checkedAt": "2026-07-17T22:55:10.563Z",
+        "canonicalUrl": "https://openlibrary.org/works/OL6139749W",
+        "externalId": "9789728645113",
+        "entityId": "9789728645113",
+        "sourceTitle": "Vacances avec Salazar",
+        "titleScore": 0.873,
+        "matchedFields": [
+          "title",
+          "authors",
+          "work-id",
+          "cover"
+        ],
+        "warnings": [],
+        "source": "openlibrary",
+        "score": 0.892,
+        "coverHash": "464e8d44e4b8c9c6d665f8081cd1b98d8328746587892fd45ff35451ea164c55",
+        "verifiedAt": "2026-07-17T22:55:11.178Z"
+      },
+      "sourceImageUrl": "https://ia801606.us.archive.org/view_archive.php?archive=/19/items/olcovers625/olcovers625-L.zip&file=6256978-L.jpg",
+      "priority": 3,
+      "createdAt": "2026-07-17T22:55:12.800Z",
+      "status": "pending_approval",
+      "origin": "website"
+    }
+  ],
   "history": []
 }
