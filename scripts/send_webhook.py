@@ -11,11 +11,11 @@ if not WEBHOOK_URL:
 # Determine paths
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
-IMAGE_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.png")
+IMAGE_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.jpg")
 CAPTION_PATH = os.path.join(ROOT_DIR, "website", "public", "current_caption.txt")
 
 if not os.path.exists(IMAGE_PATH) or not os.path.exists(CAPTION_PATH):
-    print("❌ ERRO: Ficheiros current_post.png ou current_caption.txt não encontrados!")
+    print("❌ ERRO: Ficheiros current_post.jpg ou current_caption.txt não encontrados!")
     exit(1)
 
 # Read caption content
@@ -32,7 +32,7 @@ try:
     print("🚀 A enviar imagem e legenda para o Discord via Webhook...")
     with open(IMAGE_PATH, "rb") as img_file:
         files = {
-            "file": ("current_post.png", img_file, "image/png")
+            "file": ("current_post.jpg", img_file, "image/jpeg")
         }
         r = requests.post(WEBHOOK_URL, data=payload, files=files, timeout=30)
         

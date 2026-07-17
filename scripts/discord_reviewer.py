@@ -1,6 +1,8 @@
 import os
 import json
+import datetime
 import discord
+from discord import app_commands
 from discord.ext import commands
 import urllib.request
 import urllib.parse
@@ -19,6 +21,51 @@ WEBSITE_URL = os.environ.get("WEBSITE_URL", "http://localhost:3000")
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "")  # owner/repo
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 
+
+def _configured_ids(name):
+    values = os.environ.get(name, "")
+    return {
+        value.strip()
+        for value in values.split(",")
+        if value.strip().isdigit()
+    }
+
+
+APPROVER_USER_IDS = _configured_ids("DISCORD_APPROVER_USER_IDS")
+APPROVER_ROLE_IDS = _configured_ids("DISCORD_APPROVER_ROLE_IDS")
+
+
+def _is_authorized_reviewer(user):
+    """Allow configured reviewers or server managers; deny anonymous DMs."""
+    if str(getattr(user, "id", "")) in APPROVER_USER_IDS:
+        return True
+    roles = getattr(user, "roles", []) or []
+    if any(str(getattr(role, "id", "")) in APPROVER_ROLE_IDS for role in roles):
+        return True
+    permissions = getattr(user, "guild_permissions", None)
+    return bool(
+        permissions
+        and (
+            getattr(permissions, "administrator", False)
+            or getattr(permissions, "manage_guild", False)
+        )
+    )
+
+
+def _is_expired_recommendation(item):
+    value = item.get("expiryDate")
+    if not value:
+        return False
+    try:
+        expiry = datetime.datetime.fromisoformat(
+            str(value).replace("Z", "+00:00")
+        )
+    except (TypeError, ValueError):
+        return True
+    if expiry.tzinfo is None:
+        expiry = expiry.replace(tzinfo=datetime.timezone.utc)
+    return expiry <= datetime.datetime.now(datetime.timezone.utc)
+
 # Import _cache_key helper
 import hashlib
 import re
@@ -31,12 +78,24 @@ def _cache_key(title, media_type):
 # Global states to track user inputs
 waiting_for_text = False
 waiting_for_image_quadrant = None  # None or dict
+waiting_for_link_query = None
+waiting_for_link_manual = None
+waiting_for_cover_query = None
 
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
 bot = commands.Bot(command_prefix="!", intents=intents)
+_application_commands_synced = False
+_persistent_views_registered = False
+
+RECOMMENDATION_TYPE_CHOICES = [
+    app_commands.Choice(name="Livro", value="book"),
+    app_commands.Choice(name="Podcast", value="podcast"),
+    app_commands.Choice(name="Filme ou documentário", value="movie"),
+    app_commands.Choice(name="Investigação ou destaque", value="highlight"),
+]
 
 # ===================== GITHUB API HELPERS =====================
 def get_github_file(file_path):
@@ -161,6 +220,62 @@ def query_politometro_chat(query, user_id="unknown"):
         return full_text
     except Exception as e:
         return f"❌ Ocorreu um erro ao ligar à API do Politómetro: {e}"
+
+
+def _discord_chunks(value, limit=2000):
+    """Split a response on paragraphs without exceeding Discord's limit."""
+    text = str(value or "").strip()
+    if not text:
+        return ["Não foi possível obter uma resposta."]
+    chunks = []
+    current = ""
+    for paragraph in text.splitlines() or [text]:
+        candidate = f"{current}\n{paragraph}".strip()
+        if len(candidate) <= limit:
+            current = candidate
+            continue
+        if current:
+            chunks.append(current)
+        while len(paragraph) > limit:
+            chunks.append(paragraph[:limit])
+            paragraph = paragraph[limit:]
+        current = paragraph
+    if current:
+        chunks.append(current)
+    return chunks
+
+
+def submit_discord_recommendation(media_type, title, link, user_id):
+    """Use the website's strict resolver and durable Discord approval outbox."""
+    endpoint = f"{WEBSITE_URL.rstrip('/')}/api/suggestions"
+    payload = {
+        "action": "append",
+        "item": {
+            "type": media_type,
+            "title": str(title or "").strip(),
+            "link": str(link or "").strip(),
+        },
+    }
+    response = requests.post(
+        endpoint,
+        json=payload,
+        headers={
+            "Content-Type": "application/json",
+            "x-client-id": f"discord-recommendation:{user_id}",
+        },
+        timeout=45,
+    )
+    try:
+        body = response.json()
+    except ValueError:
+        body = {}
+    if not response.ok:
+        detail = body.get("error") if isinstance(body, dict) else None
+        raise RuntimeError(
+            detail
+            or f"O servidor recusou a recomendação (HTTP {response.status_code})."
+        )
+    return body if isinstance(body, dict) else {}
 
 # ===================== DUCKDUCKGO SEARCH HELPER =====================
 def search_duckduckgo_link(query):
@@ -563,34 +678,524 @@ class CoverCorrectionView(discord.ui.View):
             ephemeral=True
         )
 
+def _review_identity_from_message(message):
+    """Return the immutable draft id/hash embedded in this review card."""
+    if not message or not message.embeds:
+        return None, None
+    footer = message.embeds[0].footer
+    text = footer.text if footer else ""
+    match = re.search(r"Rascunho:\s*([^|]+)\|\s*Hash:\s*([0-9a-f]+)", text)
+    if not match:
+        return None, None
+    return match.group(1).strip(), match.group(2).strip()
+
+
+def _approve_current_draft(expected_draft_id, expected_hash_prefix, user):
+    """Atomically bind an approval to the exact draft represented by a card."""
+    draft_content, draft_sha = get_github_file("scripts/review_draft.json")
+    if not draft_content:
+        return f"Erro ao obter o rascunho atual: {draft_sha}"
+
+    try:
+        draft = json.loads(draft_content.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return f"Rascunho inválido: {exc}"
+
+    draft_id = draft.get("draft_id")
+    content_hash = draft.get("content_hash", "")
+    if draft_id != expected_draft_id or not content_hash.startswith(expected_hash_prefix):
+        return (
+            "Este cartão pertence a um rascunho antigo. Usa o cartão de revisão "
+            "mais recente para evitar publicar a proposta errada."
+        )
+    if draft.get("is_test"):
+        return "Este é um rascunho de teste e não pode ser publicado."
+
+    existing = draft.get("approval") or {}
+    if existing.get("approved"):
+        if (
+            existing.get("draft_id") == draft_id
+            and existing.get("content_hash") == content_hash
+        ):
+            return True
+        return "O rascunho contém uma aprovação inconsistente."
+
+    draft["approval"] = {
+        "approved": True,
+        "draft_id": draft_id,
+        "content_hash": content_hash,
+        "approved_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "approved_by_id": str(user.id),
+        "approved_by_name": user.display_name,
+    }
+    encoded = json.dumps(draft, indent=2, ensure_ascii=False).encode("utf-8")
+    return update_github_file(
+        "scripts/review_draft.json",
+        encoded,
+        f"Approve weekly draft {draft_id} [bot]",
+        sha=draft_sha,
+    )
+
+
+def _reject_current_draft(expected_draft_id, expected_hash_prefix, user):
+    """Reject the exact card and let the automated resolver replace all four items."""
+    draft_content, _ = get_github_file("scripts/review_draft.json")
+    if not draft_content:
+        return "Não foi possível obter o rascunho atual."
+    try:
+        draft = json.loads(draft_content.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return f"Rascunho inválido: {exc}"
+
+    draft_id = draft.get("draft_id")
+    content_hash = str(draft.get("content_hash") or "")
+    if draft_id != expected_draft_id or not content_hash.startswith(
+        expected_hash_prefix
+    ):
+        return "Este cartão já não corresponde ao rascunho atual."
+
+    selected_ids = {
+        item.get("id")
+        for qkey in ("q1", "q2", "q3", "q4")
+        for item in [draft.get(qkey)]
+        if isinstance(item, dict) and item.get("id")
+    }
+    rec_content, rec_sha = get_github_file(
+        "website/public/recommendations.json"
+    )
+    if not rec_content:
+        return f"Não foi possível obter a fila: {rec_sha}"
+    try:
+        rec_data = json.loads(rec_content.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return f"Fila inválida: {exc}"
+
+    rejected = 0
+    now = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    for item in rec_data.get("queue", []):
+        if item.get("id") in selected_ids and item.get("status") == "queue":
+            item["status"] = "skip"
+            item["rejectedAt"] = now
+            item["rejectedBy"] = str(user.id)
+            rejected += 1
+    if rejected != len(selected_ids):
+        return "A fila mudou; gera uma proposta nova antes de rejeitar."
+
+    encoded = json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8")
+    return update_github_file(
+        "website/public/recommendations.json",
+        encoded,
+        f"Reject weekly draft {draft_id} and replace automatically [bot]",
+        sha=rec_sha,
+    )
+
+
 class PostReviewView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
 
     @discord.ui.button(label="Aprovar", style=discord.ButtonStyle.green, custom_id="approve_post", emoji="✅")
     async def approve_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.defer()
-        
+        await interaction.response.defer(ephemeral=True)
+        if not _is_authorized_reviewer(interaction.user):
+            await interaction.followup.send(
+                "Não tens permissão para aprovar publicações.",
+                ephemeral=True,
+            )
+            return
+
+        draft_id, hash_prefix = _review_identity_from_message(interaction.message)
+        if not draft_id or not hash_prefix:
+            await interaction.followup.send(
+                "Este cartão é antigo e não contém a identidade segura do rascunho. "
+                "Gera uma nova proposta com `!check`.",
+                ephemeral=True,
+            )
+            return
+
+        approval = _approve_current_draft(
+            draft_id, hash_prefix, interaction.user
+        )
+        if approval is not True:
+            await interaction.followup.send(f"❌ {approval}", ephemeral=True)
+            return
+
         res = trigger_github_workflow("instagram_publish.yml")
         if res is True:
-            await interaction.followup.edit_message(
-                message_id=interaction.message.id,
+            await interaction.message.edit(
                 content=f"✅ Post **Aprovado** por {interaction.user.mention}! A iniciar publicação no Instagram e gravação na base de dados via GitHub Actions...",
                 embed=None,
                 view=None
+            )
+            await interaction.followup.send(
+                f"Rascunho `{draft_id}` aprovado e enviado para publicação.",
+                ephemeral=True,
             )
         else:
             await interaction.followup.send(f"❌ Erro ao acionar workflow de publicação: {res}", ephemeral=True)
 
     @discord.ui.button(label="Rejeitar", style=discord.ButtonStyle.red, custom_id="reject_post", emoji="❌")
     async def reject_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        reject_view = discord.ui.View()
-        reject_view.add_item(RejectionReasonSelect(interaction.message.id))
-        await interaction.response.send_message(
-            content="Qual é o problema com este post?",
-            view=reject_view,
-            ephemeral=True
+        await interaction.response.defer(ephemeral=True)
+        if not _is_authorized_reviewer(interaction.user):
+            await interaction.followup.send(
+                "Não tens permissão para rejeitar publicações.",
+                ephemeral=True,
+            )
+            return
+        draft_id, hash_prefix = _review_identity_from_message(
+            interaction.message
         )
+        if not draft_id or not hash_prefix:
+            await interaction.followup.send(
+                "Este cartão é antigo; gera uma nova proposta.",
+                ephemeral=True,
+            )
+            return
+        rejected = _reject_current_draft(
+            draft_id, hash_prefix, interaction.user
+        )
+        if rejected is not True:
+            await interaction.followup.send(f"❌ {rejected}", ephemeral=True)
+            return
+        regeneration = trigger_github_workflow("instagram_generate.yml")
+        if regeneration is not True:
+            await interaction.followup.send(
+                f"❌ Itens rejeitados, mas a regeneração falhou: {regeneration}",
+                ephemeral=True,
+            )
+            return
+        await interaction.message.edit(
+            content=(
+                f"❌ Proposta rejeitada por {interaction.user.mention}. "
+                "A substituição automática foi iniciada."
+            ),
+            embed=None,
+            view=None,
+        )
+        await interaction.followup.send(
+            "A gerar quatro substituições verificadas, sem edição manual.",
+            ephemeral=True,
+        )
+
+def _recommendation_external_id(item):
+    verification = item.get("verification") or {}
+    return str(
+        item.get("externalId")
+        or verification.get("externalId")
+        or verification.get("entityId")
+        or ""
+    )
+
+
+def _podcast_collection_id(item):
+    external_id = _recommendation_external_id(item)
+    match = re.search(r"(?:apple:podcast:|apple-podcast:)(\d+)$", external_id)
+    return match.group(1) if match else ""
+
+
+def _is_whole_podcast(item):
+    return item.get("type") == "podcast" and bool(
+        _podcast_collection_id(item)
+    )
+
+
+def _apple_podcast_metadata(collection_id):
+    if not collection_id:
+        return {}
+    try:
+        response = requests.get(
+            "https://itunes.apple.com/lookup",
+            params={
+                "id": collection_id,
+                "media": "podcast",
+                "entity": "podcast",
+                "country": "PT",
+            },
+            timeout=20,
+        )
+        response.raise_for_status()
+        results = response.json().get("results") or []
+        return next(
+            (
+                result
+                for result in results
+                if str(result.get("collectionId") or result.get("trackId") or "")
+                == str(collection_id)
+            ),
+            results[0] if results else {},
+        )
+    except (requests.RequestException, ValueError, AttributeError):
+        return {}
+
+
+def _watchlist_entry(item):
+    collection_id = _podcast_collection_id(item)
+    if not collection_id:
+        raise RuntimeError(
+            "A recomendação não representa um podcast completo do Apple Podcasts."
+        )
+    metadata = _apple_podcast_metadata(collection_id)
+    title = str(
+        metadata.get("collectionName")
+        or metadata.get("trackName")
+        or item.get("title")
+        or ""
+    ).strip()
+    author = str(metadata.get("artistName") or "").strip()
+    if not author:
+        stored_author = str(item.get("authorOrMeta") or "").strip()
+        parts = [part.strip() for part in stored_author.split(" / ") if part.strip()]
+        author = parts[-1] if len(parts) > 1 else stored_author
+    source_image = str(
+        metadata.get("artworkUrl600")
+        or metadata.get("artworkUrl100")
+        or item.get("sourceImageUrl")
+        or ""
+    ).strip()
+    source_link = str(
+        metadata.get("collectionViewUrl")
+        or metadata.get("trackViewUrl")
+        or item.get("link")
+        or ""
+    ).strip()
+    return {
+        "name": title,
+        "author": author,
+        "description": str(item.get("description") or "").strip(),
+        "imageUrl": source_image if source_image.startswith("http") else "",
+        "link": source_link,
+        "appleCollectionId": str(collection_id),
+        "feedUrl": str(metadata.get("feedUrl") or "").strip(),
+        "addedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "origin": "discord-approved-recommendation",
+    }
+
+
+def add_podcast_to_watchlist(item):
+    """Add a verified whole podcast to the persistent watchlist, idempotently."""
+    watchlist_content, watchlist_sha = get_github_file(
+        "website/public/watchlist.json"
+    )
+    if not watchlist_content:
+        return f"Erro ao obter watchlist.json: {watchlist_sha}"
+    try:
+        watchlist = json.loads(watchlist_content.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return f"watchlist.json inválido: {exc}"
+    if not isinstance(watchlist, dict):
+        return "watchlist.json não contém um objeto."
+    podcasts = watchlist.setdefault("podcasts", [])
+    if not isinstance(podcasts, list):
+        return "A lista de podcasts da watchlist é inválida."
+
+    try:
+        entry = _watchlist_entry(item)
+    except RuntimeError as exc:
+        return str(exc)
+    collection_id = entry["appleCollectionId"]
+    normalized_name = re.sub(r"\W+", "", entry["name"].casefold())
+    for existing in podcasts:
+        if not isinstance(existing, dict):
+            continue
+        same_id = str(existing.get("appleCollectionId") or "") == collection_id
+        existing_name = re.sub(
+            r"\W+", "", str(existing.get("name") or "").casefold()
+        )
+        if same_id or (normalized_name and existing_name == normalized_name):
+            return {
+                "status": "already_watched",
+                "entry": existing,
+            }
+
+    podcasts.append(entry)
+    encoded = json.dumps(
+        watchlist, indent=2, ensure_ascii=False
+    ).encode("utf-8")
+    result = update_github_file(
+        "website/public/watchlist.json",
+        encoded,
+        f"Watch approved podcast: {entry['name']} [bot]",
+        sha=watchlist_sha,
+    )
+    if result is not True:
+        return result
+    return {"status": "added", "entry": entry}
+
+
+def approve_recommendation(item_id, user, mode="queue"):
+    """Approve one recommendation or convert a whole podcast into a watch."""
+    if mode not in {"queue", "watch", "both"}:
+        return {"ok": False, "error": "Modo de aprovação inválido."}
+    rec_content, rec_sha = get_github_file(
+        "website/public/recommendations.json"
+    )
+    if not rec_content:
+        return {
+            "ok": False,
+            "error": f"Erro ao obter recommendations.json: {rec_sha}",
+        }
+    try:
+        rec_data = json.loads(rec_content.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return {"ok": False, "error": f"recommendations.json inválido: {exc}"}
+
+    item = next(
+        (
+            candidate
+            for candidate in rec_data.get("queue", [])
+            if candidate.get("id") == item_id
+        ),
+        None,
+    )
+    if not item:
+        return {"ok": False, "error": f"Item `{item_id}` não encontrado na fila."}
+    if item.get("status") not in {"pending_approval", "pending_sent"}:
+        return {
+            "ok": False,
+            "error": "Este cartão já foi processado ou pertence a um estado antigo.",
+        }
+
+    verification = item.get("verification") or {}
+    verified = bool(
+        item.get("resolutionStatus") == "verified"
+        and verification.get("status") == "verified"
+        and verification.get("entityId")
+        and verification.get("coverHash")
+        and str(item.get("link") or "").startswith(("http://", "https://"))
+        and str(item.get("imageUrl") or "").startswith("/covers/")
+    )
+    if not verified:
+        return {
+            "ok": False,
+            "error": (
+                "Esta sugestão ainda não tem identidade, link e imagem "
+                "verificados."
+            ),
+        }
+    whole_podcast = _is_whole_podcast(item)
+    if mode in {"watch", "both"} and not whole_podcast:
+        return {
+            "ok": False,
+            "error": "A opção de observação exige um podcast completo.",
+        }
+    if mode in {"queue", "both"} and _is_expired_recommendation(item):
+        return {
+            "ok": False,
+            "error": (
+                "Esta recomendação já expirou. Podes acompanhar o podcast, "
+                "mas não recomendar agora este conteúdo desatualizado."
+            ),
+        }
+
+    watch_result = None
+    if mode in {"watch", "both"}:
+        watch_result = add_podcast_to_watchlist(item)
+        if not isinstance(watch_result, dict):
+            return {"ok": False, "error": str(watch_result)}
+
+    item["status"] = "queue" if mode in {"queue", "both"} else "watching"
+    item["approvalMode"] = mode
+    item["approvedAt"] = datetime.datetime.now(
+        datetime.timezone.utc
+    ).isoformat()
+    item["approvedBy"] = str(getattr(user, "id", ""))
+    if watch_result:
+        item["watchlistStatus"] = watch_result["status"]
+        item["watchlistCollectionId"] = _podcast_collection_id(item)
+
+    title = str(item.get("title") or item_id)
+    encoded = json.dumps(
+        rec_data, indent=2, ensure_ascii=False
+    ).encode("utf-8")
+    result = update_github_file(
+        "website/public/recommendations.json",
+        encoded,
+        f"Approve recommendation ({mode}): {title} [bot]",
+        sha=rec_sha,
+    )
+    if result is not True:
+        return {"ok": False, "error": str(result)}
+    return {
+        "ok": True,
+        "title": title,
+        "mode": mode,
+        "watchlist": watch_result,
+    }
+
+
+class PodcastApprovalChoiceView(discord.ui.View):
+    def __init__(self, item_id, review_message=None):
+        super().__init__(timeout=180)
+        self.item_id = item_id
+        self.review_message = review_message
+
+    async def _apply(self, interaction, mode):
+        if not _is_authorized_reviewer(interaction.user):
+            await interaction.response.send_message(
+                "Não tens permissão para aprovar recomendações.",
+                ephemeral=True,
+            )
+            return
+        await interaction.response.defer(ephemeral=True)
+        result = await asyncio.to_thread(
+            approve_recommendation,
+            self.item_id,
+            interaction.user,
+            mode,
+        )
+        if not result.get("ok"):
+            await interaction.followup.send(
+                f"❌ {result.get('error')}", ephemeral=True
+            )
+            return
+        messages = {
+            "queue": "Podcast aprovado como recomendação única.",
+            "watch": (
+                "Podcast adicionado à observação; os episódios recentes "
+                "passam a ser considerados automaticamente."
+            ),
+            "both": (
+                "Podcast aprovado agora e também adicionado à observação "
+                "para episódios futuros."
+            ),
+        }
+        await interaction.followup.send(
+            f"✅ **{result['title']}** — {messages[mode]}",
+            ephemeral=True,
+        )
+        if self.review_message and self.review_message.embeds:
+            embed = self.review_message.embeds[0]
+            embed.color = 0x2ECC71
+            embed.set_footer(
+                text=(
+                    f"APROVADO ({mode}) por "
+                    f"{interaction.user.display_name} | ID: {self.item_id}"
+                )
+            )
+            try:
+                await self.review_message.edit(embed=embed, view=None)
+            except discord.HTTPException:
+                pass
+        for child in self.children:
+            child.disabled = True
+        try:
+            await interaction.message.edit(view=self)
+        except discord.HTTPException:
+            pass
+
+    @discord.ui.button(label="Aprovar só o podcast", style=discord.ButtonStyle.success)
+    async def approve_once(self, interaction, button):
+        await self._apply(interaction, "queue")
+
+    @discord.ui.button(label="Acompanhar episódios", style=discord.ButtonStyle.primary)
+    async def watch_episodes(self, interaction, button):
+        await self._apply(interaction, "watch")
+
+    @discord.ui.button(label="Aprovar e acompanhar", style=discord.ButtonStyle.secondary)
+    async def approve_and_watch(self, interaction, button):
+        await self._apply(interaction, "both")
+
 
 # ===================== RECOMMENDATION APPROVAL VIEW =====================
 class RecommendationApprovalView(discord.ui.View):
@@ -601,6 +1206,12 @@ class RecommendationApprovalView(discord.ui.View):
     @discord.ui.button(label="Aprovar", style=discord.ButtonStyle.success, custom_id="rec_approve", emoji="\u2705")
     async def approve_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer(ephemeral=True)
+        if not _is_authorized_reviewer(interaction.user):
+            await interaction.followup.send(
+                "Não tens permissão para aprovar recomendações.",
+                ephemeral=True,
+            )
+            return
         
         # Extract item_id from the message embed footer
         item_id = None
@@ -616,45 +1227,85 @@ class RecommendationApprovalView(discord.ui.View):
             await interaction.followup.send("Erro: Nao foi possivel identificar a recomendacao.", ephemeral=True)
             return
         
-        # Fetch recommendations.json from GitHub
-        rec_content, rec_sha = get_github_file("website/public/recommendations.json")
+        rec_content, rec_sha = get_github_file(
+            "website/public/recommendations.json"
+        )
         if not rec_content:
-            await interaction.followup.send(f"Erro ao obter recommendations.json: {rec_sha}", ephemeral=True)
+            await interaction.followup.send(
+                f"Erro ao obter recommendations.json: {rec_sha}",
+                ephemeral=True,
+            )
             return
-        
-        rec_data = json.loads(rec_content.decode("utf-8"))
-        
-        # Find and update the item
-        updated = False
-        item_title = ""
-        for item in rec_data.get("queue", []):
-            if item.get("id") == item_id:
-                item["status"] = "queue"
-                item_title = item.get("title", item_id)
-                updated = True
-                break
-        
-        if not updated:
-            await interaction.followup.send(f"Item `{item_id}` nao encontrado na fila.", ephemeral=True)
+        try:
+            rec_data = json.loads(rec_content.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            await interaction.followup.send(
+                f"recommendations.json inválido: {exc}", ephemeral=True
+            )
             return
-        
-        # Save back to GitHub
-        new_rec_bytes = json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8")
-        res = update_github_file("website/public/recommendations.json", new_rec_bytes, f"Approve recommendation: {item_title} [bot]", sha=rec_sha)
-        
-        if res is True:
-            # Update the embed to show approval
-            embed = interaction.message.embeds[0]
-            embed.color = 0x2ECC71  # green
-            embed.set_footer(text=f"APROVADO por {interaction.user.display_name} | ID: {item_id}")
-            await interaction.message.edit(embed=embed, view=None)
-            await interaction.followup.send(f"Recomendacao **{item_title}** aprovada e adicionada a fila!", ephemeral=True)
-        else:
-            await interaction.followup.send(f"Erro ao guardar no GitHub: {res}", ephemeral=True)
+        item = next(
+            (
+                candidate
+                for candidate in rec_data.get("queue", [])
+                if candidate.get("id") == item_id
+            ),
+            None,
+        )
+        if not item:
+            await interaction.followup.send(
+                f"Item `{item_id}` não encontrado na fila.", ephemeral=True
+            )
+            return
+        if _is_whole_podcast(item):
+            await interaction.followup.send(
+                (
+                    "Este cartão representa um **podcast completo**. "
+                    "Escolhe como deve ser usado:"
+                ),
+                view=PodcastApprovalChoiceView(
+                    item_id, review_message=interaction.message
+                ),
+                ephemeral=True,
+            )
+            return
+
+        result = await asyncio.to_thread(
+            approve_recommendation,
+            item_id,
+            interaction.user,
+            "queue",
+        )
+        if not result.get("ok"):
+            await interaction.followup.send(
+                f"❌ {result.get('error')}", ephemeral=True
+            )
+            return
+        embed = interaction.message.embeds[0]
+        embed.color = 0x2ECC71
+        embed.set_footer(
+            text=(
+                f"APROVADO por {interaction.user.display_name} | "
+                f"ID: {item_id}"
+            )
+        )
+        await interaction.message.edit(embed=embed, view=None)
+        await interaction.followup.send(
+            (
+                f"Recomendação **{result['title']}** aprovada e "
+                "adicionada à fila."
+            ),
+            ephemeral=True,
+        )
 
     @discord.ui.button(label="Rejeitar", style=discord.ButtonStyle.danger, custom_id="rec_reject", emoji="\u274C")
     async def reject_button(self, interaction: discord.Interaction, button: discord.ui.Button):
         await interaction.response.defer(ephemeral=True)
+        if not _is_authorized_reviewer(interaction.user):
+            await interaction.followup.send(
+                "Não tens permissão para rejeitar recomendações.",
+                ephemeral=True,
+            )
+            return
         
         # Extract item_id from the message embed footer
         item_id = None
@@ -682,6 +1333,15 @@ class RecommendationApprovalView(discord.ui.View):
         item_title = ""
         for item in rec_data.get("queue", []):
             if item.get("id") == item_id:
+                if item.get("status") not in {
+                    "pending_approval",
+                    "pending_sent",
+                }:
+                    await interaction.followup.send(
+                        "Este cartão já foi processado ou pertence a um estado antigo.",
+                        ephemeral=True,
+                    )
+                    return
                 item["status"] = "skip"
                 item_title = item.get("title", item_id)
                 updated = True
@@ -705,15 +1365,114 @@ class RecommendationApprovalView(discord.ui.View):
         else:
             await interaction.followup.send(f"Erro ao guardar no GitHub: {res}", ephemeral=True)
 
+# ===================== DISCORD APPLICATION COMMANDS =====================
+@bot.tree.command(
+    name="perguntar",
+    description="Faz uma pergunta ao Politómetro sobre política e programas eleitorais.",
+)
+@app_commands.describe(pergunta="A pergunta a enviar ao Politómetro")
+async def ask_application_command(
+    interaction: discord.Interaction,
+    pergunta: str,
+):
+    query = pergunta.strip()
+    if not query:
+        await interaction.response.send_message(
+            "Escreve uma pergunta.", ephemeral=True
+        )
+        return
+    await interaction.response.defer(thinking=True)
+    response_text = await asyncio.to_thread(
+        query_politometro_chat,
+        query,
+        str(interaction.user.id),
+    )
+    for chunk in _discord_chunks(response_text):
+        await interaction.followup.send(chunk)
+
+
+@bot.tree.command(
+    name="recomendar",
+    description="Submete uma recomendação para validação e aprovação no Discord.",
+)
+@app_commands.describe(
+    tipo="Tipo de conteúdo",
+    titulo="Título exato do conteúdo",
+    link="Link direto para o conteúdo; recomendado sempre que exista",
+)
+@app_commands.choices(tipo=RECOMMENDATION_TYPE_CHOICES)
+async def recommend_application_command(
+    interaction: discord.Interaction,
+    tipo: app_commands.Choice[str],
+    titulo: str,
+    link: str = "",
+):
+    clean_title = titulo.strip()
+    clean_link = link.strip()
+    if len(clean_title) < 3:
+        await interaction.response.send_message(
+            "O título deve ter pelo menos três caracteres.",
+            ephemeral=True,
+        )
+        return
+    if clean_link and not clean_link.startswith(("http://", "https://")):
+        await interaction.response.send_message(
+            "O link deve começar por `https://` ou `http://`.",
+            ephemeral=True,
+        )
+        return
+    await interaction.response.defer(thinking=True, ephemeral=True)
+    try:
+        result = await asyncio.to_thread(
+            submit_discord_recommendation,
+            tipo.value,
+            clean_title,
+            clean_link,
+            str(interaction.user.id),
+        )
+    except (RuntimeError, requests.RequestException) as exc:
+        await interaction.followup.send(f"❌ {exc}", ephemeral=True)
+        return
+    item = result.get("item") if isinstance(result, dict) else None
+    resolved_title = (
+        str(item.get("title") or clean_title)
+        if isinstance(item, dict)
+        else clean_title
+    )
+    await interaction.followup.send(
+        (
+            f"✅ **{resolved_title}** foi validado e enviado para aprovação. "
+            "Se for um podcast completo, a aprovação apresentará opções para "
+            "recomendá-lo uma vez, acompanhar episódios, ou fazer ambos."
+        ),
+        ephemeral=True,
+    )
+
+
 # ===================== BOT EVENTS & COMMANDS =====================
 @bot.event
 async def on_ready():
-    bot.add_view(PostReviewView())
-    bot.add_view(RecommendationApprovalView())
+    global _application_commands_synced, _persistent_views_registered
+    if not _persistent_views_registered:
+        bot.add_view(PostReviewView())
+        bot.add_view(RecommendationApprovalView())
+        _persistent_views_registered = True
+    if not _application_commands_synced:
+        try:
+            synced = await bot.tree.sync()
+            _application_commands_synced = True
+            print(
+                f"Comandos de aplicação sincronizados: {len(synced)}."
+            )
+        except discord.HTTPException as exc:
+            print(f"Falha ao sincronizar comandos de aplicação: {exc}")
     print(f"Bot de Revisao Politometro ligado como {bot.user}!")
 
 @bot.command(name="check")
 async def check_queue(ctx):
+    if not _is_authorized_reviewer(ctx.author):
+        await ctx.reply("Não tens permissão para iniciar esta geração.")
+        return
     is_dm = isinstance(ctx.channel, discord.DMChannel)
     if not is_dm and ctx.channel.id != CHANNEL_ID:
         return

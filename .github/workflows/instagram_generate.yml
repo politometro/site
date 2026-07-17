@@ -10,41 +10,91 @@ on:
         description: 'Discord Channel/User ID to send the preview'
         required: false
         default: ''
+      test_mode:
+        description: 'Generate a non-publishable test draft'
+        required: false
+        type: boolean
+        default: false
+      recovery_mode:
+        description: 'Internal bounded recovery; skips if the cycle is already handled'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: politometro-content-writer
+  cancel-in-progress: false
 
 jobs:
   generate:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: '3.10'
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install Pillow requests discord.py python-dotenv playwright
+          pip install -r scripts/requirements.txt
 
-      - name: Install Playwright Browser
+      - name: Guard Bounded Recovery
+        id: recovery_guard
+        env:
+          RECOVERY_MODE: ${{ github.event.inputs.recovery_mode || 'false' }}
+          EVENT_NAME: ${{ github.event_name }}
         run: |
-          playwright install chromium --with-deps
+          if [ "$RECOVERY_MODE" = "true" ] || [ "$EVENT_NAME" = "schedule" ]; then
+            if python scripts/recover_weekly_generation.py --needs-generation; then
+              echo "run_generation=true" >> "$GITHUB_OUTPUT"
+              echo "late_skip=false" >> "$GITHUB_OUTPUT"
+            else
+              status=$?
+              echo "run_generation=false" >> "$GITHUB_OUTPUT"
+              if [ "$status" -eq 4 ]; then
+                echo "late_skip=true" >> "$GITHUB_OUTPUT"
+              else
+                echo "late_skip=false" >> "$GITHUB_OUTPUT"
+              fi
+            fi
+          else
+            echo "run_generation=true" >> "$GITHUB_OUTPUT"
+            echo "late_skip=false" >> "$GITHUB_OUTPUT"
+          fi
 
-      - name: Auto Populate Recommendations using AI
+      - name: Populate Grounded Recommendations
+        if: ${{ steps.recovery_guard.outputs.run_generation == 'true' }}
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GOOGLE_CSE_API_KEY: ${{ secrets.GOOGLE_CSE_API_KEY }}
+          GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
         run: |
-          python scripts/auto_populate_ai.py
+          for attempt in 1 2; do
+            python scripts/auto_populate_ai.py && break
+            if [ "$attempt" -eq 2 ]; then
+              exit 1
+            fi
+            echo "Temporary source failure; retrying once in 45 seconds..."
+            sleep 45
+          done
 
       - name: Generate PDF File Index
+        if: ${{ steps.recovery_guard.outputs.run_generation == 'true' }}
         run: |
           python scripts/generate_pdf_index.py
 
       - name: Generate Post Image & Caption
+        if: ${{ steps.recovery_guard.outputs.run_generation == 'true' }}
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          if [ "${{ inputs.test_mode }}" = "true" ]; then
             python scripts/generate_post.py --review --test
           else
             python scripts/generate_post.py --review
@@ -55,16 +105,79 @@ jobs:
           IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
 
       - name: Commit and Push Generated Post (Review Mode)
+        if: ${{ steps.recovery_guard.outputs.run_generation == 'true' }}
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add website/public/current_post.png website/public/current_caption.txt scripts/review_draft.json website/public/covers/ website/src/app/api/download/pdf_index.json website/public/recommendations.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Generate weekly post draft for review [skip ci]" && git push)
+          git add -A website/public/current_post.jpg website/public/current_caption.txt scripts/review_draft.json website/public/covers/ website/src/app/api/download/pdf_index.json website/public/recommendations.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Generate weekly post draft for review [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 10
+            done
+          fi
 
       - name: Send Review Card to Discord
+        if: ${{ steps.recovery_guard.outputs.run_generation == 'true' }}
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_REVIEW_CHANNEL_ID: ${{ github.event.inputs.channel_id || secrets.DISCORD_REVIEW_CHANNEL_ID }}
           PING_EVERYONE: ${{ github.event_name == 'schedule' }}
         run: |
           python scripts/send_to_discord.py
+
+      - name: Persist Discord Delivery Receipt
+        if: ${{ steps.recovery_guard.outputs.run_generation == 'true' }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add scripts/review_notification.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Discord review delivery [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 10
+            done
+          fi
+
+      - name: Alert When Scheduled Run Started Too Late
+        if: ${{ steps.recovery_guard.outputs.late_skip == 'true' }}
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_REVIEW_CHANNEL_ID: ${{ secrets.DISCORD_REVIEW_CHANNEL_ID }}
+          GITHUB_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          FAILURE_KIND: late_generation
+        run: |
+          python scripts/notify_generation_failure.py
+
+  notify_failure:
+    needs: generate
+    if: ${{ always() && needs.generate.result == 'failure' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Install Alert Dependency
+        run: pip install requests==2.31.0
+
+      - name: Notify Discord
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_REVIEW_CHANNEL_ID: ${{ github.event.inputs.channel_id || secrets.DISCORD_REVIEW_CHANNEL_ID }}
+          GITHUB_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python scripts/notify_generation_failure.py

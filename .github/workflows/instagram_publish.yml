@@ -1,54 +1,152 @@
 name: Publish Weekly Instagram Post
 
 on:
-  schedule:
-    # Runs every Sunday at 09:00 UTC (approximately 10:00 Lisbon local time)
-    - cron: '0 9 * * 0'
-  workflow_dispatch: # Allows manual trigger at any time from GitHub UI
+  # Publication is triggered only after the Discord bot writes an approval
+  # bound to the current draft id and content hash.
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: politometro-content-writer
+  cancel-in-progress: false
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v6
         with:
           python-version: '3.10'
 
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install Pillow requests
+          pip install -r scripts/requirements.txt
 
-      - name: Commit Approved Recommendations to Database
+      - name: Verify Approved Draft Is Still Current
         run: |
-          python scripts/generate_post.py --commit
+          python scripts/generate_post.py --verify-approved
 
-      - name: Commit and Push Updated Database
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add website/public/recommendations.json
-          git add scripts/review_draft.json || true
-          
-          # Stash any other unstaged or untracked changes to keep the directory clean for rebase
-          git stash --keep-index --include-untracked || true
-          
-          git diff --quiet && git diff --staged --quiet || (
-            git commit -m "Commit approved recommendations DB [skip ci]"
-            git pull --rebase origin main
-            git push
-          )
-
-      - name: Post to Instagram
+      - name: Prepare Instagram Container
         env:
           INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
           FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
+          META_GRAPH_API_VERSION: v25.0
         run: |
-          # Give GitHub raw servers a brief moment to update cache for the raw image URL
-          sleep 15
-          python scripts/post_instagram.py
+          python scripts/post_instagram.py --prepare
+
+      - name: Persist Prepared Container Receipt
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add scripts/instagram_publication.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record prepared Instagram container [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 10
+            done
+          fi
+
+      - name: Mark Instagram Publication In Progress
+        env:
+          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
+          FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          META_GRAPH_API_VERSION: v25.0
+        run: |
+          python scripts/post_instagram.py --mark-publishing
+
+      - name: Persist Publishing Marker
+        run: |
+          git add scripts/instagram_publication.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Mark Instagram publication in progress [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 10
+            done
+          fi
+
+      - name: Publish or Reconcile Prepared Container
+        env:
+          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
+          FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          META_GRAPH_API_VERSION: v25.0
+        run: |
+          python scripts/post_instagram.py --publish
+
+      - name: Persist Confirmed Instagram Publication
+        run: |
+          git add scripts/instagram_publication.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record confirmed Instagram publication [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 10
+            done
+          fi
+
+      - name: Finalize Confirmed Recommendations in Database
+        run: |
+          python scripts/generate_post.py --commit
+
+      - name: Commit and Push Finalized Database
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add -A website/public/recommendations.json scripts/review_draft.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Finalize confirmed Instagram recommendations [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 10
+            done
+          fi
+
+  notify_failure:
+    needs: publish
+    if: ${{ always() && needs.publish.result == 'failure' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Install Alert Dependency
+        run: pip install requests==2.31.0
+
+      - name: Notify Discord
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_REVIEW_CHANNEL_ID: ${{ secrets.DISCORD_REVIEW_CHANNEL_ID }}
+          GITHUB_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          FAILURE_KIND: publish
+        run: |
+          python scripts/notify_generation_failure.py

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import styles from "./page.module.css";
 
@@ -14,6 +14,7 @@ interface Recommendation {
   description: string;
   imageUrl: string;
   createdAt: string;
+  publishedAt?: string;
 }
 
 export default function RecommendationsPage() {
@@ -23,29 +24,34 @@ export default function RecommendationsPage() {
   const ITEMS_PER_PAGE = 20;
 
   useEffect(() => {
-    loadRecommendations();
-  }, []);
-
-  const loadRecommendations = async () => {
-    setIsLoading(true);
-    try {
-      const res = await fetch("/api/suggestions", { cache: "no-store" });
-      if (res.ok) {
-        const data = await res.json();
-        // We show items in the history (already published content recommendations)
+    let cancelled = false;
+    fetch("/api/suggestions", { cache: "no-store" })
+      .then(async (res) => {
+        if (!res.ok) return null;
+        return res.json();
+      })
+      .then((data) => {
+        if (cancelled || !data) return;
         const filteredHistory = (data.history || []).filter(
-          (item: Recommendation) => item.type !== "project"
+          (item: Recommendation) => item.type !== "project",
         );
-        // Sort history by date descending so the newest published ones appear first
-        filteredHistory.sort((a: Recommendation, b: Recommendation) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+        filteredHistory.sort(
+          (a: Recommendation, b: Recommendation) =>
+            new Date(b.publishedAt ?? b.createdAt).getTime() -
+            new Date(a.publishedAt ?? a.createdAt).getTime(),
+        );
         setQueue(filteredHistory);
-      }
-    } catch (err) {
-      console.error("Erro ao carregar recomendações:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      })
+      .catch((err) => {
+        console.error("Erro ao carregar recomendações:", err);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const getTypeEmoji = (t: Recommendation["type"]) => {
     switch (t) {
@@ -80,7 +86,7 @@ export default function RecommendationsPage() {
     if (totalPages <= 1) return null;
 
     let startPage = Math.max(1, currentPage - 1);
-    let endPage = Math.min(totalPages, startPage + 9);
+    const endPage = Math.min(totalPages, startPage + 9);
 
     if (endPage - startPage < 9) {
       startPage = Math.max(1, endPage - 9);
@@ -164,6 +170,8 @@ export default function RecommendationsPage() {
                     <div key={item.id} className={styles.card}>
                       {item.imageUrl && (
                         <div className={styles.coverImageWrapper}>
+                          {/* The stored cover can be an archived external URL; keep a plain img. */}
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={item.imageUrl} alt={item.title} className={styles.coverImage} />
                         </div>
                       )}
@@ -174,7 +182,9 @@ export default function RecommendationsPage() {
                             {getTypeEmoji(item.type)} {item.category || item.type}
                           </span>
                           <span className={styles.date}>
-                            {new Date(item.createdAt).toLocaleDateString("pt-PT")}
+                            {new Date(
+                              item.publishedAt ?? item.createdAt,
+                            ).toLocaleDateString("pt-PT")}
                           </span>
                         </div>
                         

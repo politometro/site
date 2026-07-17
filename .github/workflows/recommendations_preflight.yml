@@ -1,0 +1,97 @@
+name: Maintain Verified Recommendation Pool
+
+on:
+  schedule:
+    # The reserve is refreshed daily and expired recurring content is replaced;
+    # it is not assumed that a podcast episode stays current for weeks.
+    - cron: '20 4 * * *'
+    # Two bounded same-evening recovery checks; the script dispatches only
+    # when no valid Discord delivery receipt exists for this weekly cycle.
+    - cron: '20,40 19 * * 6'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: politometro-content-writer
+  cancel-in-progress: false
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r scripts/requirements.txt
+
+      - name: Refill and Verify Pool
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GOOGLE_CSE_API_KEY: ${{ secrets.GOOGLE_CSE_API_KEY }}
+          GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
+        run: |
+          python scripts/auto_populate_ai.py
+
+      - name: Commit Verified Pool
+        if: ${{ always() }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add -A website/public/recommendations.json website/public/covers/
+          if ! git diff --cached --quiet; then
+            git commit -m "Maintain verified recommendation pool [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 10
+            done
+          fi
+
+      - name: Recover Missing Weekly Proposal
+        if: ${{ success() && github.event_name == 'schedule' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python scripts/recover_weekly_generation.py
+
+      - name: Retry Pending Discord Suggestions
+        if: ${{ always() }}
+        continue-on-error: true
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_REVIEW_CHANNEL_ID: ${{ secrets.DISCORD_REVIEW_CHANNEL_ID }}
+          WEBSITE_URL: ${{ vars.WEBSITE_URL }}
+        run: |
+          python scripts/retry_pending_discord.py
+
+      - name: Commit Discord Outbox Checkpoints
+        if: ${{ always() }}
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add website/public/recommendations.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Checkpoint Discord suggestion delivery [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 10
+            done
+          fi

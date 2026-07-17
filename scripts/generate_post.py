@@ -17,43 +17,33 @@ import sys
 import json
 import datetime
 import re
-import urllib.parse
-from PIL import Image, ImageDraw, ImageFont
+import copy
+import hashlib
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 import requests
 
-# Import cover fetcher
+# Import the single, source-grounded resolver.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from cover_fetcher import fetch_cover_for_item, generate_placeholder, _cache_key
-
-def search_duckduckgo_link(query):
-    """Search DuckDuckGo HTML for a query and return the first result URL."""
-    url = "https://html.duckduckgo.com/html/"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
-    }
-    try:
-        r = requests.post(url, data={"q": query}, headers=headers, timeout=10)
-        redirects = re.findall(r'href="([^"]+uddg=[^"]+)"', r.text)
-        for rl in redirects:
-            match = re.search(r'uddg=([^&"]+)', rl)
-            if match:
-                decoded = urllib.parse.unquote(match.group(1))
-                if "duckduckgo.com" not in decoded:
-                    return decoded
-        direct = re.findall(r'class="result__url"\s+href="([^"]+)"', r.text)
-        if direct:
-            return direct[0]
-    except Exception as e:
-        print(f"Error searching DDG: {e}")
-    return None
+from cover_fetcher import load_cover_for_item
+from recommendation_resolver import (
+    ResolutionError,
+    _probe_link_available,
+    resolve_recommendation,
+)
 
 # --- PATHS ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 TEMPLATE_PATH = os.path.join(SCRIPT_DIR, "post_template.jpg")
 REC_FILE = os.path.join(ROOT_DIR, "website", "public", "recommendations.json")
-OUTPUT_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.png")
+OUTPUT_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.jpg")
 OUTPUT_CAPTION_PATH = os.path.join(ROOT_DIR, "website", "public", "current_caption.txt")
+PUBLICATION_RECEIPT_PATH = os.path.join(
+    SCRIPT_DIR, "instagram_publication.json"
+)
+MAX_DRAFT_AGE_HOURS = 72
+MIN_REVIEW_VALIDITY_HOURS = 24
+MIN_PUBLICATION_VALIDITY_HOURS = 6
 
 FONT_DIR = os.path.join(SCRIPT_DIR, "fonts")
 FONT_BOLD = os.path.join(FONT_DIR, "Oswald-Bold.ttf")
@@ -112,8 +102,8 @@ def apply_rounded_corners(img, radius):
     output.putalpha(mask)
     return output
 
-# --- SELECTION & FALLBACK LOGIC ---
-def get_recommendations_with_valid_covers(queue):
+# --- LEGACY SELECTION (kept temporarily for backwards-readable history) ---
+def _legacy_get_recommendations_with_valid_covers(queue):
     now = datetime.datetime.now(datetime.timezone.utc)
     
     def score(item):
@@ -253,6 +243,136 @@ def get_recommendations_with_valid_covers(queue):
         
     return selected, covers
 
+
+# --- SOURCE-GROUNDED SELECTION & QUALITY GATE ---
+REQUIRED_TYPES = {
+    "q1": "book",
+    "q2": "podcast",
+    "q3": "movie",
+    "q4": "highlight",
+}
+
+TYPE_EMOJIS = {
+    "book": "📚",
+    "podcast": "🎙️",
+    "movie": "🎬",
+    "documentary": "🎥",
+    "series": "📺",
+    "highlight": "💡",
+}
+
+
+def _item_score(item, now):
+    """Return the editorial priority score, or -1 for an expired item."""
+    score = item.get("priority", 3)
+    time_sensitive = item.get("type") in {"podcast", "highlight"}
+    if time_sensitive and item.get("sourcePublishedAt"):
+        try:
+            published = datetime.datetime.fromisoformat(
+                item["sourcePublishedAt"].replace("Z", "+00:00")
+            )
+            score += published.timestamp() / 86400
+        except (AttributeError, TypeError, ValueError):
+            pass
+    expiry = item.get("expiryDate")
+    if expiry:
+        try:
+            exp = datetime.datetime.fromisoformat(expiry.replace("Z", "+00:00"))
+            remaining = exp - now
+            if remaining <= datetime.timedelta(0):
+                return -1
+            if (
+                time_sensitive
+                and remaining
+                < datetime.timedelta(hours=MIN_REVIEW_VALIDITY_HOURS)
+            ):
+                return -1
+            delta = remaining.days
+            if delta < 14 and not time_sensitive:
+                score += 10
+        except (TypeError, ValueError):
+            pass
+    return score
+
+
+def _cover_hash(item, cover):
+    verification = item.get("verification") or {}
+    cached_hash = verification.get("coverHash")
+    if cached_hash:
+        return cached_hash
+    return hashlib.sha256(cover.convert("RGB").tobytes()).hexdigest()
+
+
+def get_recommendations_with_valid_covers(queue):
+    """
+    Resolve identity, canonical link and cover as one atomic unit.
+
+    Only explicitly approved `queue` entries can be selected. Ambiguous
+    entities and invalid/generic images are skipped in favour of the next
+    candidate. There is deliberately no production placeholder.
+    """
+    now = datetime.datetime.now(datetime.timezone.utc)
+    active_items = [
+        item
+        for item in queue
+        if item.get("status") == "queue" and _item_score(item, now) >= 0
+    ]
+    active_items.sort(key=lambda item: _item_score(item, now), reverse=True)
+
+    selected = {}
+    covers = {}
+    seen_cover_hashes = set()
+
+    for qkey, required_type in REQUIRED_TYPES.items():
+        candidates = [
+            item for item in active_items if item.get("type") == required_type
+        ]
+        failures = []
+
+        for queue_item in candidates:
+            try:
+                # Saturday's card is built from a fresh source resolution. It
+                # is still pre-approval, so refreshing the cache is safe.
+                resolved = resolve_recommendation(copy.deepcopy(queue_item), force=True)
+                if resolved.get("resolutionStatus") != "verified":
+                    raise ValueError("o resolvedor não confirmou a entidade")
+                if not resolved.get("link"):
+                    raise ValueError("link canónico em falta")
+                _revalidate_reviewed_source(qkey, resolved)
+
+                cover = load_cover_for_item(resolved)
+                if cover is None:
+                    raise ValueError("capa raster verificada em falta")
+
+                image_hash = _cover_hash(resolved, cover)
+                if image_hash in seen_cover_hashes:
+                    raise ValueError("imagem duplicada de outra recomendação")
+
+                # Persist the exact canonical object that is reviewed.
+                queue_item.clear()
+                queue_item.update(resolved)
+                selected[qkey] = queue_item
+                covers[qkey] = cover
+                seen_cover_hashes.add(image_hash)
+                print(
+                    f"  -> {qkey.upper()} verified: '{resolved['title']}' "
+                    f"({resolved.get('verification', {}).get('source', 'source')})"
+                )
+                break
+            except (ResolutionError, OSError, ValueError) as exc:
+                failure = f"{queue_item.get('title', '<sem título>')}: {exc}"
+                failures.append(failure)
+                print(f"  [REJECTED] {failure}")
+
+        if qkey not in selected:
+            details = "; ".join(failures) if failures else "nenhum candidato aprovado na fila"
+            raise RuntimeError(
+                f"Não existe uma recomendação {required_type!r} totalmente "
+                f"verificada para {qkey}. {details}"
+            )
+
+    return selected, covers
+
 # --- TEXT WRAPPING ---
 def wrap_text(draw, text, font, max_width):
     words = text.split()
@@ -272,18 +392,304 @@ def wrap_text(draw, text, font, max_width):
         lines.append(" ".join(current))
     return lines
 
+
+def _ellipsize(value, max_chars):
+    text = re.sub(r"\s+", " ", str(value or "")).strip()
+    if len(text) <= max_chars:
+        return text
+    shortened = text[: max_chars - 1].rsplit(" ", 1)[0].rstrip(" ,;:")
+    return shortened + "…"
+
+
+def _sha256_file(path):
+    digest = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _draft_content_hash(
+    quadrants, post_sha256, caption_sha256, is_test=False
+):
+    payload = {
+        "quadrants": {key: quadrants[key] for key in sorted(REQUIRED_TYPES)},
+        "post_sha256": post_sha256,
+        "caption_sha256": caption_sha256,
+        "is_test": bool(is_test),
+    }
+    encoded = json.dumps(
+        payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _parse_utc_datetime(value):
+    if not value:
+        return None
+    try:
+        parsed = datetime.datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=datetime.timezone.utc)
+    return parsed.astimezone(datetime.timezone.utc)
+
+
+def _validate_publish_item(qkey, item, now=None):
+    expected_type = REQUIRED_TYPES[qkey]
+    now = now or datetime.datetime.now(datetime.timezone.utc)
+    if not isinstance(item, dict) or item.get("type") != expected_type:
+        raise RuntimeError(f"{qkey} não contém um item do tipo {expected_type}")
+    if item.get("status") != "queue":
+        raise RuntimeError(f"{qkey} já não está aprovado na fila")
+    if item.get("resolutionStatus") != "verified":
+        raise RuntimeError(f"{qkey} não tem resolução verificada")
+    verification = item.get("verification") or {}
+    if (
+        verification.get("status") != "verified"
+        or not verification.get("entityId")
+        or not verification.get("coverHash")
+    ):
+        raise RuntimeError(f"{qkey} tem evidência de verificação inválida")
+    if not item.get("link"):
+        raise RuntimeError(f"{qkey} não tem link canónico")
+    if not str(item.get("imageUrl") or "").startswith("/covers/"):
+        raise RuntimeError(f"{qkey} não tem uma capa local verificada")
+    if not str(item.get("description") or "").strip():
+        raise RuntimeError(f"{qkey} não tem uma descrição fundamentada")
+    source_published = _parse_utc_datetime(item.get("sourcePublishedAt"))
+    expiry = _parse_utc_datetime(item.get("expiryDate"))
+    if item.get("type") in {"podcast", "highlight"} and (
+        not source_published
+        or not expiry
+        or expiry <= source_published
+    ):
+        raise RuntimeError(
+            f"{qkey} não tem um prazo temporal verificável"
+        )
+    if expiry and expiry <= now:
+        raise RuntimeError(
+            f"{qkey} expirou em {expiry.isoformat()}; gera uma proposta atualizada"
+        )
+    if (
+        item.get("type") in {"podcast", "highlight"}
+        and expiry
+        and expiry
+        < now + datetime.timedelta(hours=MIN_PUBLICATION_VALIDITY_HOURS)
+    ):
+        raise RuntimeError(
+            f"{qkey} tem menos de {MIN_PUBLICATION_VALIDITY_HOURS} horas "
+            "de validade; gera uma proposta atualizada"
+        )
+    if load_cover_for_item(item) is None:
+        raise RuntimeError(f"{qkey} não tem uma imagem raster válida")
+
+
+def _revalidate_reviewed_source(qkey, item):
+    """Check live link availability without mutating the approved cover cache."""
+    link = str(item.get("link") or "")
+    if not link or not _probe_link_available(link):
+        raise RuntimeError(
+            f"{qkey} falhou a revalidação segura da fonte; "
+            "o URL não devolveu uma página pública HTTP 200/206"
+        )
+
+
+def commit_approved_draft(
+    draft_file,
+    receipt_file=PUBLICATION_RECEIPT_PATH,
+    require_publication_receipt=True,
+    dry_run=False,
+):
+    """Validate/finalize exactly the reviewed canonical objects."""
+    if not os.path.exists(draft_file):
+        raise RuntimeError("Não existe um rascunho para publicar.")
+
+    with open(draft_file, "r", encoding="utf-8") as handle:
+        draft = json.load(handle)
+
+    if draft.get("is_test"):
+        raise RuntimeError("Um rascunho de teste nunca pode ser publicado.")
+
+    draft_id = draft.get("draft_id")
+    content_hash = draft.get("content_hash")
+    approval = draft.get("approval") or {}
+    if not draft_id or not content_hash:
+        raise RuntimeError("O rascunho não possui identidade/hash de conteúdo.")
+    if not approval.get("approved"):
+        raise RuntimeError("O rascunho ainda não foi aprovado no Discord.")
+    if approval.get("draft_id") != draft_id or approval.get("content_hash") != content_hash:
+        raise RuntimeError("A aprovação não corresponde a este rascunho.")
+
+    now = datetime.datetime.now(datetime.timezone.utc)
+    created_at = _parse_utc_datetime(draft.get("created_at"))
+    if not created_at:
+        raise RuntimeError("O rascunho não tem uma data de criação válida.")
+    max_age_hours = int(
+        os.environ.get("MAX_DRAFT_AGE_HOURS", MAX_DRAFT_AGE_HOURS)
+    )
+    if now - created_at > datetime.timedelta(hours=max_age_hours):
+        raise RuntimeError(
+            "O rascunho aprovado está demasiado antigo; gera uma nova proposta."
+        )
+
+    if not os.path.exists(OUTPUT_PATH) or not os.path.exists(OUTPUT_CAPTION_PATH):
+        raise RuntimeError("Os artefactos revistos do post estão em falta.")
+
+    post_sha = _sha256_file(OUTPUT_PATH)
+    caption_sha = _sha256_file(OUTPUT_CAPTION_PATH)
+    if post_sha != draft.get("post_sha256") or caption_sha != draft.get("caption_sha256"):
+        raise RuntimeError("A imagem ou legenda mudou depois da aprovação.")
+
+    quadrants = {key: draft.get(key) for key in REQUIRED_TYPES}
+    for qkey, item in quadrants.items():
+        _validate_publish_item(qkey, item, now=now)
+    expected_hash = _draft_content_hash(
+        quadrants,
+        post_sha,
+        caption_sha,
+        is_test=draft.get("is_test", False),
+    )
+    if expected_hash != content_hash:
+        raise RuntimeError("O conteúdo do rascunho não corresponde ao hash aprovado.")
+
+    with open(REC_FILE, "r", encoding="utf-8") as handle:
+        current_data = json.load(handle)
+    current_queue = current_data.get("queue", [])
+    current_by_id = {item.get("id"): item for item in current_queue}
+    selected_ids = {item["id"] for item in quadrants.values()}
+    missing_ids = selected_ids.difference(current_by_id)
+    if missing_ids:
+        raise RuntimeError(
+            "A fila mudou depois da revisão; itens em falta: "
+            + ", ".join(sorted(missing_ids))
+        )
+    for qkey, reviewed in quadrants.items():
+        current = current_by_id[reviewed["id"]]
+        for field in (
+            "type",
+            "status",
+            "resolutionStatus",
+            "externalId",
+            "link",
+            "imageUrl",
+            "sourcePublishedAt",
+            "expiryDate",
+        ):
+            if current.get(field) != reviewed.get(field):
+                raise RuntimeError(
+                    f"{qkey} foi alterado ou substituído depois da revisão"
+                )
+        current_verification = current.get("verification") or {}
+        reviewed_verification = reviewed.get("verification") or {}
+        for field in ("entityId", "coverHash"):
+            if current_verification.get(field) != reviewed_verification.get(field):
+                raise RuntimeError(
+                    f"{qkey} já não corresponde à entidade/imagem revista"
+                )
+
+    if dry_run:
+        for qkey, item in quadrants.items():
+            _revalidate_reviewed_source(qkey, item)
+        return draft, quadrants
+
+    receipt = {}
+    if require_publication_receipt:
+        if not os.path.exists(receipt_file):
+            raise RuntimeError("O Instagram ainda não confirmou esta publicação.")
+        with open(receipt_file, "r", encoding="utf-8") as handle:
+            receipt = json.load(handle)
+        if (
+            receipt.get("draft_id") != draft_id
+            or receipt.get("content_hash") != content_hash
+            or not receipt.get("post_id")
+        ):
+            raise RuntimeError(
+                "O recibo do Instagram não corresponde ao rascunho aprovado."
+            )
+
+    with open(REC_FILE, "r", encoding="utf-8") as handle:
+        data = json.load(handle)
+    queue = data.get("queue", [])
+    history = data.get("history", [])
+
+    queued_by_id = {item.get("id"): item for item in queue}
+    selected_ids = {item["id"] for item in quadrants.values()}
+    missing_ids = selected_ids.difference(queued_by_id)
+    if missing_ids:
+        raise RuntimeError(
+            "A fila mudou depois da revisão; itens em falta: "
+            + ", ".join(sorted(missing_ids))
+        )
+
+    published_at = now.isoformat()
+    history_ids = {item.get("id") for item in history}
+    for qkey in REQUIRED_TYPES:
+        reviewed_item = copy.deepcopy(quadrants[qkey])
+        reviewed_item["status"] = "published"
+        reviewed_item["publishedAt"] = published_at
+        reviewed_item["publishedDraftId"] = draft_id
+        if receipt.get("post_id"):
+            reviewed_item["instagramPostId"] = receipt["post_id"]
+        if reviewed_item["id"] not in history_ids:
+            history.append(reviewed_item)
+            history_ids.add(reviewed_item["id"])
+
+    data["queue"] = [item for item in queue if item.get("id") not in selected_ids]
+    data["history"] = history
+    with open(REC_FILE, "w", encoding="utf-8") as handle:
+        json.dump(data, handle, indent=2, ensure_ascii=False)
+
+    os.remove(draft_file)
+    print(
+        f"[OK] Draft {draft_id} aprovado e gravado integralmente no histórico."
+    )
+
+
 # --- MAIN ---
 def generate_production_post():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--review", action="store_true", help="Generate draft post for review without modifying database")
     parser.add_argument("--commit", action="store_true", help="Commit the currently approved review draft to database")
+    parser.add_argument("--verify-approved", action="store_true", help="Validate an approved draft without changing state")
     parser.add_argument("--test", action="store_true", help="Mark the generated draft as a test run")
     args = parser.parse_args()
 
     DRAFT_FILE = os.path.join(SCRIPT_DIR, "review_draft.json")
 
     if args.commit:
+        try:
+            commit_approved_draft(DRAFT_FILE)
+        except (OSError, ValueError, RuntimeError) as exc:
+            print(f"ERROR: {exc}")
+            sys.exit(1)
+        return
+
+    if args.verify_approved:
+        try:
+            draft, _ = commit_approved_draft(
+                DRAFT_FILE,
+                require_publication_receipt=False,
+                dry_run=True,
+            )
+            print(f"[OK] Draft {draft['draft_id']} aprovado e ainda válido.")
+        except (OSError, ValueError, RuntimeError) as exc:
+            print(f"ERROR: {exc}")
+            sys.exit(1)
+        return
+
+    if not args.review:
+        print(
+            "ERROR: A geração autónoma exige --review; a publicação só ocorre "
+            "depois da aprovação no Discord."
+        )
+        sys.exit(1)
+
+    # Kept unreachable for one release so old draft behaviour is easy to audit
+    # against the new guarded commit above.
+    if False and args.commit:
         if not os.path.exists(DRAFT_FILE):
             print("ERROR: No draft file found to commit.")
             sys.exit(1)
@@ -414,8 +820,15 @@ def generate_production_post():
         item = selected[qkey]
         config = QUADRANTS_CONFIG[qkey]
         
-        # Draw category label
-        draw.text(config["label_pos"], item["category"], fill=TEXT_COLOR, font=label_font)
+        # Draw category label (older site submissions did not include it).
+        category = item.get("category") or {
+            "book": "Livro",
+            "podcast": "Podcast",
+            "movie": "Filme",
+            "highlight": "Destaque",
+        }.get(item.get("type"), "Recomendação")
+        item["category"] = category
+        draw.text(config["label_pos"], category, fill=TEXT_COLOR, font=label_font)
         
         # Wrap title
         tx, ty = config["title_pos"]
@@ -444,6 +857,9 @@ def generate_production_post():
         item = selected[qkey]
         if item["type"] == "podcast":
             cover_dims[qkey] = (192, 192)
+        elif item["type"] == "highlight":
+            # Editorial/YouTube thumbnails are normally landscape.
+            cover_dims[qkey] = (160, 90)
         else:
             cover_dims[qkey] = (160, 220)
 
@@ -486,8 +902,13 @@ def generate_production_post():
         cover_y = cover_y_map[qkey]
         cx = config["cover_x"]
         
-        # Resize and apply rounded corners
-        cover_resized = cover.resize((cover_w, cover_h), Image.Resampling.LANCZOS)
+        # Crop to the target aspect ratio without stretching the source image.
+        cover_resized = ImageOps.fit(
+            cover.convert("RGB"),
+            (cover_w, cover_h),
+            method=Image.Resampling.LANCZOS,
+            centering=(0.5, 0.5),
+        )
         cover_rounded = apply_rounded_corners(cover_resized, radius=18)
         
         template.alpha_composite(cover_rounded, (cx, cover_y))
@@ -511,46 +932,86 @@ def generate_production_post():
             dy += spacing
             
     # Save image
-    output = template.convert("RGB")
-    output.save(OUTPUT_PATH, "PNG", quality=95)
+    output = ImageOps.fit(
+        template.convert("RGB"),
+        (1080, 1350),
+        method=Image.Resampling.LANCZOS,
+        centering=(0.5, 0.5),
+    )
+    output.save(
+        OUTPUT_PATH,
+        "JPEG",
+        quality=95,
+        optimize=True,
+        progressive=True,
+    )
     print(f"\n[OK] Production post image saved to: {OUTPUT_PATH}")
     
-    # 5. Generate Instagram Caption dynamically
-    caption = f"""📢 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO 🇵🇹
-    
-Trazemos-te a nossa seleção semanal de conteúdos essenciais para compreenderes a política, a história e a economia de Portugal e do mundo.
+    # 5. Generate the caption from the actual item types.
+    caption_sections = []
+    for qkey in REQUIRED_TYPES:
+        item = selected[qkey]
+        emoji = TYPE_EMOJIS.get(item["type"], "🔎")
+        title = _ellipsize(item["title"], 110)
+        author = _ellipsize(item.get("authorOrMeta", ""), 80)
+        description = _ellipsize(item["description"], 150)
+        author_suffix = f" ({author})" if author else ""
+        caption_sections.append(
+            f"{emoji} {item['category'].upper()}: {title}{author_suffix}\n"
+            f"👉 {description}"
+        )
 
-🎙️ {selected['q1']['category'].upper()}: {selected['q1']['title']} ({selected['q1']['authorOrMeta']})
-👉 {selected['q1']['description']}
-
-📚 {selected['q2']['category'].upper()}: {selected['q2']['title']} ({selected['q2']['authorOrMeta']})
-👉 {selected['q2']['description']}
-
-🎬 {selected['q3']['category'].upper()}: {selected['q3']['title']} ({selected['q3']['authorOrMeta']})
-👉 {selected['q3']['description']}
-
-💡 {selected['q4']['category'].upper()}: {selected['q4']['title']} ({selected['q4']['authorOrMeta']})
-👉 {selected['q4']['description']}
-
----
-#politometro #portugal #politica #recomendaçoes #livros #podcasts #filmes #documentarios #escrutinio #democracia #cultura
-"""
+    caption = (
+        "📢 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO 🇵🇹\n\n"
+        "Trazemos-te a nossa seleção semanal de conteúdos essenciais para "
+        "compreenderes a política, a história e a economia de Portugal e do mundo.\n\n"
+        + "\n\n".join(caption_sections)
+        + "\n\n---\n"
+        "#politometro #portugal #politica #recomendações #livros #podcasts "
+        "#filmes #documentarios #escrutinio #democracia #cultura\n"
+    )
+    if len(caption) > 1800:
+        raise RuntimeError(
+            f"A legenda excede o limite editorial seguro ({len(caption)} caracteres)."
+        )
     
     with open(OUTPUT_CAPTION_PATH, "w", encoding="utf-8") as f:
         f.write(caption)
     print(f"[OK] Production Instagram caption saved to: {OUTPUT_CAPTION_PATH}")
     
     if args.review:
+        # Persist canonical links/metadata so the queue shown on the website is
+        # identical to the draft that reaches Discord.
+        data["queue"] = queue
+        data["history"] = history
+        with open(REC_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+
+        quadrants = {qkey: selected[qkey] for qkey in REQUIRED_TYPES}
+        post_sha = _sha256_file(OUTPUT_PATH)
+        caption_sha = _sha256_file(OUTPUT_CAPTION_PATH)
+        content_hash = _draft_content_hash(
+            quadrants,
+            post_sha,
+            caption_sha,
+            is_test=args.test,
+        )
         draft_data = {
+            "schema_version": 2,
+            "draft_id": f"draft_{content_hash[:20]}",
+            "content_hash": content_hash,
+            "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "is_test": args.test,
-            "q1": selected["q1"],
-            "q2": selected["q2"],
-            "q3": selected["q3"],
-            "q4": selected["q4"]
+            "post_sha256": post_sha,
+            "caption_sha256": caption_sha,
+            "approval": {"approved": False},
+            **quadrants,
         }
         with open(DRAFT_FILE, "w", encoding="utf-8") as f:
             json.dump(draft_data, f, indent=2, ensure_ascii=False)
-        print("[OK] Review draft saved. Database recommendations.json remains unchanged.")
+        print(
+            f"[OK] Review draft {draft_data['draft_id']} saved with immutable hashes."
+        )
         return
     
     # 6. Update database recommendations.json (Production actions)
