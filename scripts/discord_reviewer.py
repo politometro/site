@@ -10,6 +10,8 @@ import tempfile
 import requests
 import asyncio
 import base64
+import threading
+import time
 from dotenv import load_dotenv
 
 # Load environment variables if available
@@ -20,6 +22,9 @@ CHANNEL_ID = int(os.environ.get("DISCORD_REVIEW_CHANNEL_ID", "0"))
 WEBSITE_URL = os.environ.get("WEBSITE_URL", "http://localhost:3000")
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "")  # owner/repo
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
+DISCORD_SUBMISSION_SECRET = os.environ.get(
+    "DISCORD_SUBMISSION_SECRET", ""
+).strip()
 
 
 def _configured_ids(name):
@@ -92,10 +97,71 @@ _persistent_views_registered = False
 
 RECOMMENDATION_TYPE_CHOICES = [
     app_commands.Choice(name="Livro", value="book"),
-    app_commands.Choice(name="Podcast", value="podcast"),
-    app_commands.Choice(name="Filme ou documentário", value="movie"),
-    app_commands.Choice(name="Investigação ou destaque", value="highlight"),
+    app_commands.Choice(name="Podcast / Canal", value="podcast"),
+    app_commands.Choice(name="Filme / Série", value="movie"),
+    app_commands.Choice(name="Destaque / Artigo", value="highlight"),
+    app_commands.Choice(
+        name="Sugestão para o Projeto (Politómetro)",
+        value="project",
+    ),
 ]
+
+DISCORD_RECOMMENDATION_LIMIT = max(
+    1, int(os.environ.get("DISCORD_RECOMMENDATION_LIMIT", "5"))
+)
+DISCORD_RECOMMENDATION_WINDOW_SECONDS = max(
+    60, int(os.environ.get("DISCORD_RECOMMENDATION_WINDOW_SECONDS", "1800"))
+)
+DISCORD_RECOMMENDATION_BLOCK_SECONDS = max(
+    300, int(os.environ.get("DISCORD_RECOMMENDATION_BLOCK_SECONDS", "21600"))
+)
+_discord_recommendation_limits = {}
+_discord_recommendation_limits_lock = threading.Lock()
+
+
+def _check_discord_recommendation_rate_limit(user_id, now=None):
+    """Limit submissions by Discord account; Discord does not expose user IPs."""
+    current = float(time.time() if now is None else now)
+    key = str(user_id)
+    with _discord_recommendation_limits_lock:
+        if len(_discord_recommendation_limits) > 2000:
+            stale = [
+                candidate
+                for candidate, bucket in _discord_recommendation_limits.items()
+                if max(bucket["reset_at"], bucket["blocked_until"]) <= current
+            ]
+            for candidate in stale:
+                _discord_recommendation_limits.pop(candidate, None)
+
+        bucket = _discord_recommendation_limits.get(key)
+        if bucket and bucket["blocked_until"] > current:
+            return {
+                "allowed": False,
+                "retry_after_seconds": max(
+                    1, int(bucket["blocked_until"] - current)
+                ),
+            }
+
+        if not bucket or bucket["reset_at"] <= current:
+            _discord_recommendation_limits[key] = {
+                "count": 1,
+                "reset_at": current
+                + DISCORD_RECOMMENDATION_WINDOW_SECONDS,
+                "blocked_until": 0.0,
+            }
+            return {"allowed": True, "retry_after_seconds": 0}
+
+        if bucket["count"] >= DISCORD_RECOMMENDATION_LIMIT:
+            bucket["blocked_until"] = (
+                current + DISCORD_RECOMMENDATION_BLOCK_SECONDS
+            )
+            return {
+                "allowed": False,
+                "retry_after_seconds": DISCORD_RECOMMENDATION_BLOCK_SECONDS,
+            }
+
+        bucket["count"] += 1
+        return {"allowed": True, "retry_after_seconds": 0}
 
 # ===================== GITHUB API HELPERS =====================
 def get_github_file(file_path):
@@ -262,6 +328,14 @@ def submit_discord_recommendation(media_type, title, link, user_id):
         headers={
             "Content-Type": "application/json",
             "x-client-id": f"discord-recommendation:{user_id}",
+            **(
+                {
+                    "x-discord-submission-secret":
+                        DISCORD_SUBMISSION_SECRET
+                }
+                if DISCORD_SUBMISSION_SECRET
+                else {}
+            ),
         },
         timeout=45,
     )
@@ -276,6 +350,39 @@ def submit_discord_recommendation(media_type, title, link, user_id):
             or f"O servidor recusou a recomendação (HTTP {response.status_code})."
         )
     return body if isinstance(body, dict) else {}
+
+
+def public_recommendation_error(error):
+    """Return helpful copy without exposing service or storage internals."""
+    original = str(error or "").strip()
+    message = original.lower()
+    if "prazo de relevância" in message or "expir" in message:
+        return (
+            "Este conteúdo já não é suficientemente recente para ser "
+            "recomendado. Escolhe uma publicação mais atual e tenta novamente."
+        )
+    if "já existe" in message or "histórico" in message:
+        return (
+            "Esta sugestão já foi recebida anteriormente. "
+            "Obrigado pela contribuição."
+        )
+    if "demasiad" in message or "limite" in message:
+        return (
+            "Recebemos várias sugestões num curto espaço de tempo. "
+            "Aguarda um pouco antes de tentares novamente."
+        )
+    if (
+        "link indicado" in message
+        or "link fornecido" in message
+        or "apenas pelo título" in message
+    ):
+        return original
+    if "tipo de recomendação" in message:
+        return "Seleciona um tipo de conteúdo válido e tenta novamente."
+    return (
+        "Não foi possível concluir a submissão neste momento. "
+        "Confirma os dados e tenta novamente dentro de alguns minutos."
+    )
 
 # ===================== DUCKDUCKGO SEARCH HELPER =====================
 def search_duckduckgo_link(query):
@@ -1421,6 +1528,22 @@ async def recommend_application_command(
             ephemeral=True,
         )
         return
+    rate_limit = _check_discord_recommendation_rate_limit(
+        str(interaction.user.id)
+    )
+    if not rate_limit["allowed"]:
+        retry_minutes = max(
+            1,
+            (rate_limit["retry_after_seconds"] + 59) // 60,
+        )
+        await interaction.response.send_message(
+            (
+                "Foram submetidas demasiadas recomendações por esta conta. "
+                f"Tenta novamente dentro de cerca de {retry_minutes} minutos."
+            ),
+            ephemeral=True,
+        )
+        return
     await interaction.response.defer(thinking=True, ephemeral=True)
     try:
         result = await asyncio.to_thread(
@@ -1431,7 +1554,10 @@ async def recommend_application_command(
             str(interaction.user.id),
         )
     except (RuntimeError, requests.RequestException) as exc:
-        await interaction.followup.send(f"❌ {exc}", ephemeral=True)
+        await interaction.followup.send(
+            f"❌ {public_recommendation_error(exc)}",
+            ephemeral=True,
+        )
         return
     item = result.get("item") if isinstance(result, dict) else None
     resolved_title = (
@@ -1441,9 +1567,8 @@ async def recommend_application_command(
     )
     await interaction.followup.send(
         (
-            f"✅ **{resolved_title}** foi validado e enviado para aprovação. "
-            "Se for um podcast completo, a aprovação apresentará opções para "
-            "recomendá-lo uma vez, acompanhar episódios, ou fazer ambos."
+            f"✅ Obrigado. A sugestão **{resolved_title}** foi recebida "
+            "com sucesso e será analisada."
         ),
         ephemeral=True,
     )

@@ -18,7 +18,13 @@ interface EnrichPayload {
 
 export async function POST(req: NextRequest) {
   try {
-    const rateLimit = checkRecommendationRateLimit(req, "suggestions-enrich");
+    const rateLimit = checkRecommendationRateLimit(
+      req,
+      "suggestions-enrich",
+      8,
+      30 * 60_000,
+      2 * 60 * 60_000,
+    );
     if (!rateLimit.allowed) {
       return NextResponse.json(
         { error: "Demasiados pedidos de validação. Tenta novamente mais tarde." },

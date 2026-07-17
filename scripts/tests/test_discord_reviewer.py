@@ -36,10 +36,38 @@ def whole_podcast():
 
 
 class DiscordApplicationTests(unittest.TestCase):
+    def setUp(self):
+        discord_reviewer._discord_recommendation_limits.clear()
+
     def test_application_exposes_question_and_recommendation_commands(self):
         names = {command.name for command in discord_reviewer.bot.tree.get_commands()}
         self.assertIn("perguntar", names)
         self.assertIn("recomendar", names)
+
+    def test_recommendation_command_exposes_same_five_types_as_website(self):
+        choices = {
+            choice.value
+            for choice in discord_reviewer.RECOMMENDATION_TYPE_CHOICES
+        }
+        self.assertEqual(
+            choices,
+            {"book", "podcast", "movie", "highlight", "project"},
+        )
+
+    def test_public_recommendation_errors_hide_service_internals(self):
+        message = discord_reviewer.public_recommendation_error(
+            "O servidor recusou a recomendação (HTTP 503)."
+        )
+        self.assertNotIn("HTTP", message)
+        self.assertNotIn("servidor", message.lower())
+        self.assertIn("tenta novamente", message.lower())
+
+    def test_expired_recommendation_error_suggests_recent_content(self):
+        message = discord_reviewer.public_recommendation_error(
+            "A fonte foi identificada, mas o prazo de relevância terminou."
+        )
+        self.assertIn("mais atual", message.lower())
+        self.assertNotIn("fonte foi identificada", message.lower())
 
     def test_whole_podcast_is_distinguished_from_episode(self):
         show = whole_podcast()
@@ -158,6 +186,49 @@ class DiscordApplicationTests(unittest.TestCase):
         self.assertEqual(result["collectionId"], 12345)
         self.assertEqual(result["feedUrl"], "https://example.com/feed.xml")
         self.assertEqual(get_mock.call_args.args[0], "https://itunes.apple.com/lookup")
+
+    def test_discord_recommendation_rate_limit_blocks_repeated_submissions(self):
+        with mock.patch.object(
+            discord_reviewer, "DISCORD_RECOMMENDATION_LIMIT", 2
+        ):
+            first = discord_reviewer._check_discord_recommendation_rate_limit(
+                "42", now=1000
+            )
+            second = discord_reviewer._check_discord_recommendation_rate_limit(
+                "42", now=1001
+            )
+            blocked = discord_reviewer._check_discord_recommendation_rate_limit(
+                "42", now=1002
+            )
+
+        self.assertTrue(first["allowed"])
+        self.assertTrue(second["allowed"])
+        self.assertFalse(blocked["allowed"])
+        self.assertGreater(blocked["retry_after_seconds"], 0)
+        still_blocked = (
+            discord_reviewer._check_discord_recommendation_rate_limit(
+                "42",
+                now=1000
+                + discord_reviewer.DISCORD_RECOMMENDATION_WINDOW_SECONDS
+                + 1,
+            )
+        )
+        self.assertFalse(still_blocked["allowed"])
+
+    def test_discord_recommendation_rate_limit_is_per_account(self):
+        with mock.patch.object(
+            discord_reviewer, "DISCORD_RECOMMENDATION_LIMIT", 1
+        ):
+            self.assertTrue(
+                discord_reviewer._check_discord_recommendation_rate_limit(
+                    "first", now=1000
+                )["allowed"]
+            )
+            self.assertTrue(
+                discord_reviewer._check_discord_recommendation_rate_limit(
+                    "second", now=1001
+                )["allowed"]
+            )
 
 
 if __name__ == "__main__":

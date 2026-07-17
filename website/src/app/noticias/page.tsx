@@ -169,7 +169,10 @@ export default function NewsPage() {
                 <h2>{item.title}</h2>
                 <p>{item.description}</p>
                 <span className={styles.cardLink}>
-                  Ler na fonte original <span aria-hidden="true">↗</span>
+                  <span className={styles.cardLinkText}>
+                    Ler na fonte original
+                  </span>
+                  <span aria-hidden="true">↗</span>
                 </span>
               </article>
             );

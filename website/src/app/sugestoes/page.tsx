@@ -14,7 +14,7 @@ const dropdownOptions: Array<{
   icon: string;
   label: string;
 }> = [
-  { value: "book", icon: "📚", label: "Livro recomendado" },
+  { value: "book", icon: "📚", label: "Livro" },
   { value: "podcast", icon: "🎙️", label: "Podcast / Canal" },
   { value: "movie", icon: "🎬", label: "Filme / Série" },
   { value: "highlight", icon: "📰", label: "Destaque / Artigo" },
@@ -68,6 +68,35 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+function publicSubmissionError(error: unknown): string {
+  const original = errorMessage(error);
+  const message = original.toLowerCase();
+  if (message.includes("prazo de relevância") || message.includes("expir")) {
+    return "Este conteúdo já não é suficientemente recente para ser recomendado. Escolhe uma publicação mais atual e tenta novamente.";
+  }
+  if (message.includes("já existe") || message.includes("histórico")) {
+    return "Esta sugestão já foi recebida anteriormente. Obrigado pela contribuição.";
+  }
+  if (
+    message.includes("demasiad") ||
+    message.includes("limite") ||
+    message.includes("muitas sugestões")
+  ) {
+    return "Recebemos várias sugestões num curto espaço de tempo. Aguarda um pouco antes de tentares novamente.";
+  }
+  if (
+    message.includes("link indicado") ||
+    message.includes("link fornecido") ||
+    message.includes("apenas pelo título")
+  ) {
+    return original;
+  }
+  if (message.includes("tipo de recomendação")) {
+    return "Seleciona um tipo de conteúdo válido e tenta novamente.";
+  }
+  return "Não foi possível concluir a submissão neste momento. Confirma os dados e tenta novamente dentro de alguns minutos.";
+}
+
 export default function SuggestionsPage() {
   const [type, setType] = useState<RecommendationType>("book");
   const [title, setTitle] = useState("");
@@ -97,7 +126,7 @@ export default function SuggestionsPage() {
     if (!title.trim()) return;
 
     setIsLoading(true);
-    setFormStatus("A validar o título, o link e a imagem na fonte original…");
+    setFormStatus("A verificar a sugestão…");
     try {
       const enrichResponse = await fetch("/api/suggestions/enrich", {
         method: "POST",
@@ -119,12 +148,12 @@ export default function SuggestionsPage() {
           warning ||
             payloadError(
               enrichPayload,
-              "Não foi encontrada uma correspondência suficientemente segura.",
+              "Não conseguimos confirmar esta sugestão. Revê o título ou adiciona o link direto para o conteúdo.",
             ),
         );
       }
 
-      setFormStatus("Fonte confirmada. A enviar para aprovação…");
+      setFormStatus("A concluir a submissão…");
       const appendResponse = await fetch("/api/suggestions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -147,16 +176,11 @@ export default function SuggestionsPage() {
       setTitle("");
       setLink("");
       setFormStatus(
-        appendPayload.notificationSent === true
-          ? `“${resolved.title}” foi recebida e enviada para aprovação.`
-          : payloadError(
-              appendPayload,
-              `“${resolved.title}” foi recebida e será encaminhada para aprovação.`,
-            ),
+        `“${resolved.title}” foi recebida com sucesso e será analisada. Obrigado pela contribuição.`,
       );
     } catch (error: unknown) {
       console.error(error);
-      setFormStatus(`Não foi possível adicionar: ${errorMessage(error)}`);
+      setFormStatus(publicSubmissionError(error));
     } finally {
       setIsLoading(false);
     }

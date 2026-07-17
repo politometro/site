@@ -1970,7 +1970,7 @@ export async function resolveRecommendation(
     if (!candidate) {
       return unresolved(
         input,
-        "O link fornecido não corresponde de forma segura ao título, tipo e imagem da recomendação. Corrige o link ou remove-o para permitir uma pesquisa automática.",
+        "Não foi possível validar a recomendação com o link indicado. Confirma se o endereço corresponde exatamente ao título e ao tipo selecionado ou remove o link para tentarmos localizar a fonte adequada.",
         "provided-link",
       );
     }
@@ -2010,7 +2010,7 @@ export async function resolveRecommendation(
     };
     return unresolved(
       input,
-      `Não foi possível confirmar esta recomendação em ${providerHint[input.type]}. Confirma o título ou fornece um link direto para o conteúdo.`,
+      "Não foi possível identificar esta recomendação com segurança apenas pelo título. Revê o título ou adiciona o link direto para a página oficial do conteúdo.",
       providerHint[input.type],
     );
   }

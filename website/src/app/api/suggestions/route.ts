@@ -57,6 +57,7 @@ const STORAGE_RELATIVE_PATH = "website/public/recommendations.json";
 const MAX_REQUEST_BYTES = 1_000_000;
 const MAX_RECORDS_PER_LIST = 1_000;
 const MAX_STORAGE_RETRIES = 3;
+const DISCORD_RETRY_EVENT = "deliver-pending-suggestions";
 
 class ApiError extends Error {
   constructor(
@@ -152,6 +153,46 @@ function githubConfig(): GitHubConfig | null {
 
 function githubContentsUrl(config: GitHubConfig, includeRef: boolean): string {
   return githubFileUrl(config, STORAGE_RELATIVE_PATH, includeRef);
+}
+
+async function dispatchDiscordRetryWorkflow(): Promise<boolean> {
+  const config = githubConfig();
+  if (!config) {
+    console.warn(
+      "[suggestions API] Recuperação imediata indisponível: GitHub não configurado.",
+    );
+    return false;
+  }
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/${config.repo}/dispatches`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${config.token}`,
+          Accept: "application/vnd.github+json",
+          "X-GitHub-Api-Version": "2022-11-28",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          event_type: DISCORD_RETRY_EVENT,
+          client_payload: { branch: config.branch },
+        }),
+        cache: "no-store",
+      },
+    );
+    if (response.ok) return true;
+    console.error(
+      `[suggestions API] Não foi possível iniciar a recuperação imediata (HTTP ${response.status}).`,
+      sanitizeText(await response.text(), 500),
+    );
+  } catch (error: unknown) {
+    console.error(
+      "[suggestions API] Falha ao iniciar a recuperação imediata:",
+      error,
+    );
+  }
+  return false;
 }
 
 function githubFileUrl(
@@ -986,15 +1027,19 @@ async function appendSuggestion(payload: AppendPayload) {
           ...current,
           notificationStatus: "pending_retry",
           notificationAttempts: attempts,
-          nextNotificationAttemptAt: new Date(
-            Date.now() + 6 * 60 * 60 * 1_000,
-          ).toISOString(),
+          nextNotificationAttemptAt: new Date().toISOString(),
         };
         database.queue[index] = updated;
         return { item: updated, changed: true };
       });
       finalItem = retryState.result.item;
       finalSha = retryState.sha;
+      const retryQueued = await dispatchDiscordRetryWorkflow();
+      if (!retryQueued) {
+        console.warn(
+          "[suggestions API] A sugestão ficou na fila durável para a próxima recuperação.",
+        );
+      }
     } catch (error: unknown) {
       console.error(
         "[suggestions API] Não foi possível gravar o estado de retry do Discord:",
@@ -1011,12 +1056,6 @@ async function appendSuggestion(payload: AppendPayload) {
       source: persisted.source,
       notificationSent,
       statusPersisted,
-      warning:
-        notificationSent && !statusPersisted
-          ? "A notificação foi enviada, mas o estado permaneceu pending_approval."
-          : !notificationSent
-            ? "A sugestão ficou guardada, mas o Discord não confirmou a notificação."
-            : undefined,
     },
     { status: notificationSent && statusPersisted ? 201 : 202 },
   );
@@ -1064,10 +1103,13 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     assertRequestSize(req);
+    const fullReplaceAuthorized = isFullReplaceAuthorized(req);
     const rateLimit = checkRecommendationRateLimit(
       req,
       "suggestions-write",
-      isFullReplaceAuthorized(req) ? 30 : 8,
+      fullReplaceAuthorized ? 30 : 5,
+      fullReplaceAuthorized ? 10 * 60_000 : 30 * 60_000,
+      fullReplaceAuthorized ? 10 * 60_000 : 6 * 60 * 60_000,
     );
     if (!rateLimit.allowed) {
       return NextResponse.json(
