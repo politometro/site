@@ -325,6 +325,55 @@ class RecoveryWindowTests(unittest.TestCase):
 
 
 class PostQualityGateTests(unittest.TestCase):
+    def test_caption_uses_template_and_content_specific_hashtags(self):
+        selected = {
+            "q1": verified_item("book", "Historia de Portugal"),
+            "q2": verified_item("podcast", "Economia sem filtros"),
+            "q3": verified_item("movie", "Capitaes de Abril"),
+            "q4": verified_item("highlight", "Investigacao submarinos"),
+        }
+        selected["q1"]["title"] = "Portugal: Uma História"
+        selected["q1"]["description"] = "Uma viagem pela história de Portugal."
+        selected["q2"]["title"] = "A Crise Económica em Portugal"
+        selected["q2"]["description"] = "Um episódio sobre economia e inflação."
+        selected["q3"]["title"] = "Capitães de Abril"
+        selected["q3"]["description"] = "Um filme histórico sobre o 25 de Abril."
+        selected["q4"]["title"] = "Investigação ao Caso dos Submarinos"
+        selected["q4"]["description"] = "Jornalismo de investigação."
+
+        caption = generate_post.build_caption(selected)
+
+        self.assertTrue(
+            caption.startswith("📣 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO")
+        )
+        self.assertIn("@_.davstrango._", caption)
+        self.assertIn("@luisflmaximo", caption)
+        self.assertIn(
+            "Desenvolvido por @_.davstrango._ e @luisflmaximo no âmbito do projeto @politiza.te",
+            caption,
+        )
+        self.assertIn("Qual destes vais espreitar primeiro?", caption)
+        self.assertIn("#PortugalUmaHistoria", caption)
+        self.assertIn("#CapitaesDeAbril", caption)
+        self.assertIn("#InvestigacaoCasoSubmarinos", caption)
+        self.assertIn("#Economia", caption)
+        self.assertIn("#25deAbril", caption)
+        self.assertNotIn("#documentarios", caption.lower())
+        self.assertNotIn("escrutínio", caption.lower())
+        self.assertNotIn("#escrutinio", caption.lower())
+        self.assertNotIn("👉", caption)
+
+    def test_caption_omits_topics_not_present_in_recommendations(self):
+        selected = {
+            qkey: verified_item(media_type, "conteudo")
+            for qkey, media_type in generate_post.REQUIRED_TYPES.items()
+        }
+        caption = generate_post.build_caption(selected)
+
+        self.assertNotIn("#Portugal", caption)
+        self.assertNotIn("#Democracia", caption)
+        self.assertNotIn("#Ambiente", caption)
+
     def test_pending_items_are_never_selected(self):
         queue = []
         for media_type in generate_post.REQUIRED_TYPES.values():

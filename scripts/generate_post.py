@@ -19,6 +19,7 @@ import datetime
 import re
 import copy
 import hashlib
+import unicodedata
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 import requests
 
@@ -253,13 +254,150 @@ REQUIRED_TYPES = {
 }
 
 TYPE_EMOJIS = {
-    "book": "📚",
+    "book": "📖",
     "podcast": "🎙️",
-    "movie": "🎬",
+    "movie": "🎞️",
     "documentary": "🎥",
     "series": "📺",
-    "highlight": "💡",
+    "highlight": "📰",
 }
+
+TOPIC_EMOJIS = (
+    (("investigacao", "corrupcao", "escandalo", "caso judicial"), "🔎"),
+    (("eleicoes", "eleicao", "voto", "democracia"), "🗳️"),
+    (("economia", "economica", "financas", "inflacao", "crise"), "📊"),
+    (("historia", "historico", "revolucao", "25 de abril"), "🏛️"),
+    (("justica", "tribunal", "lei", "constitucional"), "⚖️"),
+    (("europa", "europeia", "internacional", "mundo"), "🌍"),
+    (("ambiente", "clima", "energia", "sustentabilidade"), "🌱"),
+    (("educacao", "escola", "universidade"), "🎓"),
+    (("saude", "sns", "hospital"), "🏥"),
+    (("tecnologia", "digital", "inteligencia artificial"), "💻"),
+)
+
+TOPIC_HASHTAGS = (
+    (("portugal", "portugues", "portuguesa"), "Portugal"),
+    (("25 de abril", "revolucao dos cravos"), "25deAbril"),
+    (("democracia", "eleicoes", "eleicao", "voto"), "Democracia"),
+    (("economia", "economica", "financas", "inflacao"), "Economia"),
+    (("historia", "historico", "historica"), "Historia"),
+    (("justica", "tribunal", "constitucional"), "Justica"),
+    (("investigacao", "jornalismo de investigacao"), "Jornalismo"),
+    (("europa", "europeia", "uniao europeia"), "Europa"),
+    (("ambiente", "clima", "sustentabilidade"), "Ambiente"),
+    (("educacao", "escola", "universidade"), "Educacao"),
+    (("saude", "sns", "hospital"), "Saude"),
+)
+
+HASHTAG_STOPWORDS = {
+    "a", "ao", "aos", "as", "com", "da", "das", "de", "do", "dos", "e",
+    "em", "na", "nas", "no", "nos", "o", "os", "para", "por", "sobre",
+    "um", "uma",
+}
+
+
+def _plain_text(value):
+    normalized = unicodedata.normalize("NFKD", str(value or ""))
+    return "".join(
+        character for character in normalized
+        if not unicodedata.combining(character)
+    ).lower()
+
+
+def _recommendation_text(item):
+    return _plain_text(
+        " ".join(
+            str(item.get(field) or "")
+            for field in ("title", "authorOrMeta", "description", "category")
+        )
+    )
+
+
+def _recommendation_emoji(item):
+    searchable = _recommendation_text(item)
+    for keywords, emoji in TOPIC_EMOJIS:
+        if any(keyword in searchable for keyword in keywords):
+            return emoji
+    return TYPE_EMOJIS.get(item.get("type"), "🔎")
+
+
+def _title_hashtag(title):
+    words = re.findall(r"[a-zA-Z0-9]+", _plain_text(title))
+    meaningful = list(words)
+    while meaningful and meaningful[0] in HASHTAG_STOPWORDS:
+        meaningful.pop(0)
+    if not meaningful:
+        return ""
+    full_hashtag = "".join(word[:1].upper() + word[1:] for word in meaningful)
+    if len(full_hashtag) <= 28:
+        return full_hashtag
+    compact_words = [
+        word for word in meaningful if word not in HASHTAG_STOPWORDS
+    ]
+    compact_hashtag = "".join(
+        word[:1].upper() + word[1:] for word in compact_words
+    )
+    if len(compact_hashtag) <= 28:
+        return compact_hashtag
+    hashtag = ""
+    for word in compact_words:
+        candidate = hashtag + word[:1].upper() + word[1:]
+        if len(candidate) > 28:
+            break
+        hashtag = candidate
+    return hashtag
+
+
+def _caption_hashtags(selected):
+    hashtags = ["Politometro"]
+    all_text = " ".join(_recommendation_text(item) for item in selected.values())
+    for qkey in REQUIRED_TYPES:
+        item = selected[qkey]
+        title_tag = _title_hashtag(item.get("title"))
+        if title_tag:
+            hashtags.append(title_tag)
+    for keywords, hashtag in TOPIC_HASHTAGS:
+        if any(keyword in all_text for keyword in keywords):
+            hashtags.append(hashtag)
+
+    unique = []
+    seen = set()
+    for hashtag in hashtags:
+        key = hashtag.casefold()
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(f"#{hashtag}")
+    return " ".join(unique[:10])
+
+
+def build_caption(selected):
+    sections = []
+    for qkey in REQUIRED_TYPES:
+        item = selected[qkey]
+        emoji = _recommendation_emoji(item)
+        title = _ellipsize(item["title"], 110)
+        author = _ellipsize(item.get("authorOrMeta", ""), 80)
+        description = _ellipsize(item["description"], 220)
+        author_suffix = f" ({author})" if author else ""
+        sections.append(
+            f"{emoji} {item['category'].upper()}: {title}{author_suffix}\n"
+            f"{description}"
+        )
+
+    return (
+        "📣 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO\n\n"
+        "Trazemos-te a nossa seleção semanal de conteúdos essenciais para "
+        "compreenderes a política, a história e a economia de Portugal e do mundo.\n\n"
+        "Desenvolvido por @_.davstrango._ e @luisflmaximo no âmbito do projeto "
+        "@politiza.te.\n\n"
+        + "\n\n".join(sections)
+        + "\n\nQual destes vais espreitar primeiro? Diz-nos nos comentários e "
+        "aproveita para deixar as tuas próprias sugestões para a próxima semana! 👇\n\n"
+        "—\n"
+        + _caption_hashtags(selected)
+        + "\n"
+    )
 
 
 def _item_score(item, now):
@@ -947,29 +1085,8 @@ def generate_production_post():
     )
     print(f"\n[OK] Production post image saved to: {OUTPUT_PATH}")
     
-    # 5. Generate the caption from the actual item types.
-    caption_sections = []
-    for qkey in REQUIRED_TYPES:
-        item = selected[qkey]
-        emoji = TYPE_EMOJIS.get(item["type"], "🔎")
-        title = _ellipsize(item["title"], 110)
-        author = _ellipsize(item.get("authorOrMeta", ""), 80)
-        description = _ellipsize(item["description"], 150)
-        author_suffix = f" ({author})" if author else ""
-        caption_sections.append(
-            f"{emoji} {item['category'].upper()}: {title}{author_suffix}\n"
-            f"👉 {description}"
-        )
-
-    caption = (
-        "📢 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO 🇵🇹\n\n"
-        "Trazemos-te a nossa seleção semanal de conteúdos essenciais para "
-        "compreenderes a política, a história e a economia de Portugal e do mundo.\n\n"
-        + "\n\n".join(caption_sections)
-        + "\n\n---\n"
-        "#politometro #portugal #politica #recomendações #livros #podcasts "
-        "#filmes #documentarios #escrutinio #democracia #cultura\n"
-    )
+    # 5. Generate the caption from the exact recommendations in this draft.
+    caption = build_caption(selected)
     if len(caption) > 1800:
         raise RuntimeError(
             f"A legenda excede o limite editorial seguro ({len(caption)} caracteres)."
