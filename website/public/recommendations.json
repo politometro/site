@@ -38,7 +38,10 @@
       "priority": 3,
       "createdAt": "2026-07-17T22:56:02.561Z",
       "status": "pending_approval",
-      "origin": "website"
+      "origin": "website",
+      "notificationStatus": "pending_retry",
+      "notificationAttempts": 1,
+      "nextNotificationAttemptAt": "2026-07-18T04:56:03.504Z"
     },
     {
       "id": "web_book_cd3a9188-210d-47fe-8e80-81d56d99d5f1",
