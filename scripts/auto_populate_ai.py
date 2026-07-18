@@ -46,6 +46,89 @@ CATEGORIES = {
     "highlight": "Destaque",
 }
 
+# A last-resort catalogue reserve is intentionally made of stable, well-known
+# entities. It is still passed through the same live resolver, and history
+# prevents a previously used work from returning.
+CATALOGUE_FALLBACK_CANDIDATES = (
+    {"type": "book", "title": "1984", "authorOrMeta": "George Orwell"},
+    {
+        "type": "book",
+        "title": "The Road to Serfdom",
+        "authorOrMeta": "Friedrich Hayek",
+    },
+    {
+        "type": "book",
+        "title": "Why Nations Fail",
+        "authorOrMeta": "Daron Acemoglu",
+    },
+    {
+        "type": "book",
+        "title": "The Origins of Totalitarianism",
+        "authorOrMeta": "Hannah Arendt",
+    },
+    {"type": "book", "title": "Animal Farm", "authorOrMeta": "George Orwell"},
+    {
+        "type": "book",
+        "title": "Democracy in America",
+        "authorOrMeta": "Alexis de Tocqueville",
+    },
+    {
+        "type": "book",
+        "title": "The Open Society and Its Enemies",
+        "authorOrMeta": "Karl Popper",
+    },
+    {
+        "type": "book",
+        "title": "Capital in the Twenty-First Century",
+        "authorOrMeta": "Thomas Piketty",
+    },
+    {
+        "type": "book",
+        "title": "How Democracies Die",
+        "authorOrMeta": "Steven Levitsky",
+    },
+    {
+        "type": "movie",
+        "title": "The Great Dictator",
+        "authorOrMeta": "Charlie Chaplin",
+    },
+    {
+        "type": "movie",
+        "title": "Dr. Strangelove",
+        "authorOrMeta": "Stanley Kubrick",
+    },
+    {
+        "type": "movie",
+        "title": "The Lives of Others",
+        "authorOrMeta": "Florian Henckel von Donnersmarck",
+    },
+    {
+        "type": "movie",
+        "title": "V for Vendetta",
+        "authorOrMeta": "James McTeigue",
+    },
+    {
+        "type": "movie",
+        "title": "All the President's Men",
+        "authorOrMeta": "Alan J. Pakula",
+    },
+    {
+        "type": "movie",
+        "title": "The Death of Stalin",
+        "authorOrMeta": "Armando Iannucci",
+    },
+    {
+        "type": "movie",
+        "title": "Good Night, and Good Luck.",
+        "authorOrMeta": "George Clooney",
+    },
+    {
+        "type": "movie",
+        "title": "The Post",
+        "authorOrMeta": "Steven Spielberg",
+    },
+)
+
 TRUSTED_HIGHLIGHT_DOMAINS = (
     "expresso.pt",
     "publico.pt",
@@ -61,6 +144,13 @@ TRUSTED_HIGHLIGHT_DOMAINS = (
     "tsf.pt",
     "youtube.com",
     "youtu.be",
+)
+
+DEFAULT_HIGHLIGHT_RSS_FEEDS = (
+    "https://feeds.feedburner.com/PublicoRSS",
+    "https://www.rtp.pt/noticias/rss",
+    "https://www.rtp.pt/noticias/rss/pais",
+    "https://observador.pt/feed/",
 )
 
 HEADERS = {
@@ -203,6 +293,16 @@ def _rss_image(item, channel, fallback):
             )
             if candidate.startswith("http"):
                 return candidate
+    for parent in (item, channel):
+        for child in parent.iter():
+            text = child.text or ""
+            match = re.search(
+                r"<img[^>]+src=[\"']([^\"']+)",
+                html.unescape(text),
+                flags=re.IGNORECASE,
+            )
+            if match and match.group(1).startswith("http"):
+                return match.group(1)
     return fallback
 
 
@@ -405,6 +505,19 @@ def discover_podcast_candidates(watchlist, seen_titles, seen_ids, limit):
                         "createdAt": _utc_now(),
                         "status": "queue",
                         "sourceHint": "podcast-rss",
+                        "_discovery": {
+                            "kind": "rss",
+                            "feedUrl": apple["feedUrl"],
+                            "guid": str(guid),
+                            "imageUrl": _rss_image(
+                                episode, channel, fallback_image
+                            ),
+                            "show": str(
+                                show.get("name")
+                                or apple.get("collectionName")
+                                or ""
+                            ),
+                        },
                     }
                 )
                 # One episode from each show keeps the pool diverse.
@@ -549,13 +662,148 @@ def discover_highlight_candidates(api_key, engine_id, seen_links, limit):
     return candidates
 
 
+def discover_rss_highlight_candidates(seen_links, limit):
+    """Discover recent articles without depending on a search API key."""
+    candidates = []
+    emitted_links = set()
+    now = datetime.datetime.now(datetime.timezone.utc)
+    topic_markers = (
+        "política",
+        "governo",
+        "parlamento",
+        "presidente",
+        "eleições",
+        "partido",
+        "democracia",
+        "economia",
+        "justiça",
+        "corrupção",
+        "investigação",
+        "reportagem",
+        "entrevista",
+        "análise",
+        "explicador",
+        "sociedade",
+        "educação",
+        "saúde",
+        "habitação",
+        "união europeia",
+    )
+    for feed_url in DEFAULT_HIGHLIGHT_RSS_FEEDS:
+        try:
+            response = requests.get(
+                feed_url, headers=HEADERS, timeout=REQUEST_TIMEOUT
+            )
+            response.raise_for_status()
+            root = ET.fromstring(response.content)
+        except (requests.RequestException, ET.ParseError, ValueError) as exc:
+            print(f"  [RSS/highlight] {feed_url}: {exc}")
+            continue
+        channel = next(
+            (
+                node
+                for node in root.iter()
+                if node.tag.rsplit("}", 1)[-1].lower()
+                in {"channel", "feed"}
+            ),
+            root,
+        )
+        entries = [
+            node
+            for node in channel.iter()
+            if node.tag.rsplit("}", 1)[-1].lower() in {"item", "entry"}
+        ]
+        entries.sort(
+            key=lambda entry: _rss_date(entry)
+            or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc),
+            reverse=True,
+        )
+        for entry in entries[:30]:
+            title = _clean_source_text(_rss_text(entry, "title"), 180)
+            link = _rss_text(entry, "link")
+            published_at = _rss_date(entry)
+            if (
+                not title
+                or not link.startswith("http")
+                or link in seen_links
+                or link in emitted_links
+                or not published_at
+                or published_at > now + datetime.timedelta(minutes=10)
+                or published_at < now - datetime.timedelta(days=14)
+            ):
+                continue
+            hostname = (urlparse(link).hostname or "").lower()
+            if not any(
+                hostname == domain or hostname.endswith("." + domain)
+                for domain in TRUSTED_HIGHLIGHT_DOMAINS
+            ):
+                continue
+            if (
+                re.match(r"^\s*\d{1,2}h(?:[.:]|\s)", title, re.IGNORECASE)
+                or "/noticiario/" in urlparse(link).path.lower()
+            ):
+                # Hourly bulletins are valid news links but not substantial
+                # enough for the weekly highlight quadrant.
+                continue
+            expiry_at = published_at + datetime.timedelta(days=30)
+            description = _clean_source_text(
+                _rss_text(entry, "description")
+                or _rss_text(entry, "summary")
+            )
+            searchable = _normalise(f"{title} {description}")
+            topic_score = sum(
+                _normalise(marker) in searchable for marker in topic_markers
+            )
+            if topic_score == 0:
+                continue
+            image_url = _rss_image(entry, channel, "")
+            candidates.append(
+                {
+                    "id": _new_id("rss_highlight", link),
+                    "type": "highlight",
+                    "category": "Destaque",
+                    "title": title,
+                    "authorOrMeta": _publisher_from_link(link),
+                    "description": description,
+                    "imageUrl": image_url,
+                    "link": link,
+                    "externalId": link,
+                    "priority": 4,
+                    "sourcePublishedAt": _iso_datetime(published_at),
+                    "expiryDate": _iso_datetime(expiry_at),
+                    "createdAt": _utc_now(),
+                    "status": "queue",
+                    "sourceHint": "trusted-rss",
+                    "_discovery": {
+                        "kind": "rss-highlight",
+                        "feedUrl": feed_url,
+                        "guid": _rss_text(entry, "guid") or link,
+                        "imageUrl": image_url,
+                    },
+                    "_topicScore": topic_score,
+                }
+            )
+            emitted_links.add(link)
+    candidates.sort(
+        key=lambda item: (
+            int(item.get("_topicScore", 0)),
+            _parse_datetime(item.get("sourcePublishedAt"))
+            or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc),
+        ),
+        reverse=True,
+    )
+    for candidate in candidates:
+        candidate.pop("_topicScore", None)
+    return candidates[:limit]
+
+
 def _groq_catalogue_candidates(api_key, excluded_titles, attempt):
     """Ask the model for catalogue leads, never for unverified final records."""
     if not api_key:
         return []
     exclusions = sorted(excluded_titles)[-200:]
     system_prompt = f"""
-És um curador de catálogo especializado em cultura política e história de Portugal.
+És um curador de catálogo especializado em cultura política e história.
 Fornece candidatos que depois serão confirmados por catálogos externos. É proibido
 inventar, traduzir livremente, fundir ou aproximar títulos.
 
@@ -564,10 +812,13 @@ Gera 20 candidatos:
 - 10 filmes, documentários ou séries reais.
 
 Regras:
-- usa o título oficial exato da edição/obra em português;
+- para livros, escolhe obras bem catalogadas no Open Library, com ISBN e capa,
+  e usa o título original exato que consta desse catálogo;
+- para filmes, escolhe obras com IMDb ID, realizador e imagem (P18) no Wikidata;
 - usa o autor ou realizador exato;
 - escolhe apenas obras cuja existência tens a certeza de conseguir confirmar;
-- privilegia política, história, economia e sociedade portuguesas;
+- privilegia política, democracia, história, economia e sociedade, incluindo
+  Portugal quando a obra estiver bem catalogada;
 - não repitas estes títulos normalizados: {json.dumps(exclusions, ensure_ascii=False)};
 - não incluas podcasts, artigos, links nem imagens;
 - a descrição deve ter uma frase curta, sem datas ou factos incertos.
@@ -1029,6 +1280,16 @@ def auto_populate():
     highlight_candidates = discover_highlight_candidates(
         cse_key, cse_id, seen_links, max(highlight_budget * 4, 8)
     )
+    if len(highlight_candidates) < max(highlight_budget * 2, 4):
+        rss_candidates = discover_rss_highlight_candidates(
+            seen_links
+            | {
+                candidate.get("link", "")
+                for candidate in highlight_candidates
+            },
+            max(highlight_budget * 4, 8),
+        )
+        highlight_candidates.extend(rss_candidates)
     highlights_added = 0
     for candidate in highlight_candidates:
         if highlights_added >= highlight_budget:
@@ -1077,6 +1338,25 @@ def auto_populate():
                 continue
             rejected_titles.add(normalised_title)
             changed |= _add_if_verified(candidate, queue, identities, needed)
+
+    if needed["book"] > 0 or needed["movie"] > 0:
+        print(
+            "  [CATALOGUE] A completar falhas da IA com a reserva "
+            "estável, sujeita à mesma verificação."
+        )
+        for raw in CATALOGUE_FALLBACK_CANDIDATES:
+            if needed["book"] <= 0 and needed["movie"] <= 0:
+                break
+            candidate = _canonical_candidate(raw)
+            if not candidate:
+                continue
+            normalised_title = _normalise(candidate["title"])
+            if normalised_title in rejected_titles:
+                continue
+            rejected_titles.add(normalised_title)
+            changed |= _add_if_verified(
+                candidate, queue, identities, needed
+            )
 
     data["queue"] = queue
     data["history"] = history

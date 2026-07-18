@@ -1521,6 +1521,14 @@ def _parse_feed(body: bytes, feed_url: str) -> list[dict[str, Any]]:
         published = _element_text(node, {"pubdate", "published", "updated", "date"})
         published_at = _normalise_datetime(published)
         image = _element_image(node) or feed_image
+        if not image and description:
+            image_match = re.search(
+                r"<img[^>]+src=[\"']([^\"']+)",
+                html.unescape(description),
+                flags=re.IGNORECASE,
+            )
+            if image_match:
+                image = image_match.group(1).strip()
         if not title or not link:
             continue
         link = urllib.parse.urljoin(feed_url, link)
@@ -1821,6 +1829,27 @@ def _wikidata_entity(entity_id: str) -> Mapping[str, Any]:
     return entity
 
 
+def _wikidata_matching_title(
+    entity: Mapping[str, Any], expected: str
+) -> tuple[str, float, float]:
+    """Use the closest Wikidata label/alias, regardless of search language."""
+    candidates: list[str] = []
+    for language in ("pt", "pt-br", "en", "es", "fr"):
+        label = entity.get("labels", {}).get(language, {}).get("value")
+        if label:
+            candidates.append(str(label))
+        for alias in entity.get("aliases", {}).get(language, []):
+            value = alias.get("value") if isinstance(alias, Mapping) else ""
+            if value:
+                candidates.append(str(value))
+    best = ("", 0.0, 0.0)
+    for candidate in dict.fromkeys(candidates):
+        combined, sequence, _ = _title_metrics(expected, candidate)
+        if (combined, sequence) > (best[1], best[2]):
+            best = (candidate, combined, sequence)
+    return best
+
+
 def _wikidata_labels(entity_ids: Sequence[str]) -> list[str]:
     if not entity_ids:
         return []
@@ -1882,14 +1911,13 @@ def _wikidata_confirms_imdb(
     title: str, imdb_id: str, director_expected: str
 ) -> tuple[str, list[str], float] | None:
     for search_result in _wikidata_search(title):
-        label = str(search_result.get("label", ""))
-        combined, sequence, _ = _title_metrics(title, label)
-        if combined < 0.84 or sequence < 0.78:
-            continue
         entity_id = str(search_result.get("id", ""))
         try:
             entity = _wikidata_entity(entity_id)
         except RecommendationResolutionError:
+            continue
+        label, combined, sequence = _wikidata_matching_title(entity, title)
+        if combined < 0.84 or sequence < 0.78:
             continue
         if _claim_string(entity, "P345") != imdb_id:
             continue
@@ -1969,15 +1997,14 @@ def _resolve_movie(item: Mapping[str, Any]) -> EntityResolution:
             )
         ):
             continue
-        label = str(search_result.get("label", ""))
-        combined, sequence, _ = _title_metrics(title, label)
-        if combined < 0.86 or sequence < 0.80:
-            continue
         entity_id = str(search_result.get("id", ""))
         try:
             entity = _wikidata_entity(entity_id)
         except RecommendationResolutionError as exc:
             failures.append(exc.code)
+            continue
+        label, combined, sequence = _wikidata_matching_title(entity, title)
+        if combined < 0.86 or sequence < 0.80:
             continue
         imdb_id = _claim_string(entity, "P345")
         if not re.fullmatch(r"tt\d+", imdb_id):
@@ -2157,6 +2184,13 @@ def _validate_highlight_page(
 
 
 def _resolve_highlight(item: Mapping[str, Any]) -> EntityResolution:
+    discovery = item.get("_discovery")
+    if (
+        isinstance(discovery, Mapping)
+        and discovery.get("kind") == "rss-highlight"
+    ):
+        return _resolve_highlight_rss_discovery(item, discovery)
+
     supplied_link = str(item.get("link", "")).strip()
     if supplied_link:
         return _validate_highlight_page(item, supplied_link)
@@ -2184,6 +2218,72 @@ def _resolve_highlight(item: Mapping[str, Any]) -> EntityResolution:
         "Nenhum artigo/vídeo autorizado corresponde exatamente ao destaque.",
         item=item,
         details={"failures": failures, "cseConfigured": bool(os.environ.get("GOOGLE_CSE_API_KEY"))},
+    )
+
+
+def _resolve_highlight_rss_discovery(
+    item: Mapping[str, Any], discovery: Mapping[str, Any]
+) -> EntityResolution:
+    """Bind a highlight to a current entry in a trusted publisher feed."""
+    feed_url = str(discovery.get("feedUrl", "")).strip()
+    feed_host = _hostname(feed_url)
+    if not _host_in(feed_host, TRUSTED_HIGHLIGHT_DOMAINS):
+        raise RecommendationResolutionError(
+            "DISALLOWED_SOURCE",
+            f"RSS de destaque não autorizado: {feed_host}.",
+            item=item,
+        )
+    expected_title = str(item.get("title", "")).strip()
+    expected_guid = str(discovery.get("guid", "")).strip()
+    best: tuple[float, Mapping[str, Any]] | None = None
+    for entry in _fetch_feed(feed_url):
+        combined, sequence, _ = _title_metrics(
+            expected_title, entry["title"]
+        )
+        guid_match = bool(
+            expected_guid
+            and expected_guid in {entry["guid"], entry["link"]}
+        )
+        if not guid_match and (combined < 0.92 or sequence < 0.88):
+            continue
+        link_host = _hostname(entry["link"])
+        if not _host_in(link_host, TRUSTED_HIGHLIGHT_DOMAINS):
+            continue
+        score = 1.0 if guid_match else combined
+        if not best or score > best[0]:
+            best = (score, entry)
+    if not best:
+        raise RecommendationResolutionError(
+            "HIGHLIGHT_NOT_FOUND",
+            "O artigo deixou de constar do RSS autorizado.",
+            item=item,
+        )
+    score, entry = best
+    image = entry.get("image") or str(
+        discovery.get("imageUrl", "")
+    ).strip()
+    if not image:
+        raise RecommendationResolutionError(
+            "COVER_NOT_FOUND",
+            "O RSS do artigo não fornece uma imagem editorial.",
+            item=item,
+        )
+    if not entry.get("publishedAt"):
+        raise RecommendationResolutionError(
+            "SOURCE_DATE_UNVERIFIED",
+            "O RSS do artigo não fornece uma data verificável.",
+            item=item,
+        )
+    return EntityResolution(
+        link=entry["link"],
+        image_url=image,
+        external_id=_url_external_id("article", entry["link"]),
+        source=f"news-rss:{feed_host}",
+        score=score,
+        resolved_title=entry["title"],
+        resolved_author=feed_host,
+        description=entry["description"],
+        published_at=entry["publishedAt"],
     )
 
 

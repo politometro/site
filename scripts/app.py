@@ -26,6 +26,7 @@ def keep_zerogpu_happy():
 
 # Import bot and token
 from discord_reviewer import bot, TOKEN
+from twitch_bot import run_twitch_bot_forever, twitch_configured
 
 def start_bot():
     # Wait 15 seconds to let Gradio fully initialize first
@@ -55,6 +56,11 @@ def start_bot():
 # Run the bot in a background thread
 threading.Thread(target=start_bot, daemon=True).start()
 
+if twitch_configured():
+    threading.Thread(target=run_twitch_bot_forever, daemon=True).start()
+else:
+    print("Bot de Twitch inativo: configura TWITCH_BOT_USERNAME, TWITCH_OAUTH_TOKEN e TWITCH_CHANNELS para ativar.")
+
 # Build a simple Gradio UI to keep Hugging Face happy
 with gr.Blocks() as demo:
     gr.Markdown("# 🤖 Politómetro Discord Bot")
@@ -62,6 +68,7 @@ with gr.Blocks() as demo:
     gr.Markdown("---")
     gr.Markdown("👉 Envia uma **Mensagem Privada (DM)** ao bot no Discord com o comando `!check` para iniciar a revisão.")
     gr.Markdown("👉 Podes também fazer perguntas sobre os programas políticos diretamente na DM dele!")
+    gr.Markdown("👉 Se configurares a Twitch, o bot também responde quando for mencionado no chat.")
 
 if __name__ == "__main__":
     # Launch the interface

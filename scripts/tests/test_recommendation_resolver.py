@@ -438,6 +438,42 @@ class RecommendationResolverTests(unittest.TestCase):
             resolver._apple_episode_from_result(item, result)
         )
 
+    def test_wikidata_uses_localised_entity_label_not_search_label(self):
+        entity = {
+            "labels": {
+                "pt": {"value": "Capitães de Abril"},
+                "en": {"value": "April Captains"},
+            },
+            "aliases": {},
+        }
+        label, combined, sequence = resolver._wikidata_matching_title(
+            entity, "Capitães de Abril"
+        )
+        self.assertEqual(label, "Capitães de Abril")
+        self.assertGreaterEqual(combined, 0.99)
+        self.assertGreaterEqual(sequence, 0.99)
+
+    def test_feed_parser_extracts_editorial_image_from_description(self):
+        feed = b"""<?xml version="1.0" encoding="UTF-8"?>
+        <rss version="2.0"><channel><item>
+          <title>Reportagem politica</title>
+          <link>https://www.rtp.pt/noticias/pais/reportagem_n123</link>
+          <guid>reportagem-123</guid>
+          <pubDate>Sat, 18 Jul 2026 10:00:00 +0100</pubDate>
+          <description><![CDATA[
+            <img src="https://cdn-images.rtp.pt/noticias/reportagem.jpg"/>
+            Descricao editorial.
+          ]]></description>
+        </item></channel></rss>"""
+        entries = resolver._parse_feed(
+            feed, "https://www.rtp.pt/noticias/rss"
+        )
+        self.assertEqual(len(entries), 1)
+        self.assertEqual(
+            entries[0]["image"],
+            "https://cdn-images.rtp.pt/noticias/reportagem.jpg",
+        )
+
     def test_svg_unsplash_known_placeholder_and_private_ip_are_blocked(self):
         with self.assertRaisesRegex(
             resolver.ResolutionError, "NON_RASTER_IMAGE"
