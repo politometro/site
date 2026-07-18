@@ -361,6 +361,74 @@ class RecoveryWindowTests(unittest.TestCase):
 
 
 class PostQualityGateTests(unittest.TestCase):
+    def test_review_generation_writes_timestamped_draft_end_to_end(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            rec_path = tmp_path / "recommendations.json"
+            template_path = tmp_path / "template.jpg"
+            output_path = tmp_path / "current_post.jpg"
+            caption_path = tmp_path / "current_caption.txt"
+            draft_path = tmp_path / "review_draft.json"
+
+            selected = {
+                qkey: verified_item(media_type, f"draft-{qkey}")
+                for qkey, media_type in generate_post.REQUIRED_TYPES.items()
+            }
+            rec_path.write_text(
+                json.dumps(
+                    {"queue": list(selected.values()), "history": []}
+                ),
+                encoding="utf-8",
+            )
+            Image.new("RGB", (1080, 1350), "white").save(
+                template_path, format="JPEG"
+            )
+            covers = {
+                qkey: Image.new("RGB", (400, 500), (40, 80, 120))
+                for qkey in selected
+            }
+
+            with (
+                mock.patch.object(
+                    generate_post, "SCRIPT_DIR", str(tmp_path)
+                ),
+                mock.patch.object(
+                    generate_post, "REC_FILE", str(rec_path)
+                ),
+                mock.patch.object(
+                    generate_post, "TEMPLATE_PATH", str(template_path)
+                ),
+                mock.patch.object(
+                    generate_post, "OUTPUT_PATH", str(output_path)
+                ),
+                mock.patch.object(
+                    generate_post,
+                    "OUTPUT_CAPTION_PATH",
+                    str(caption_path),
+                ),
+                mock.patch.object(generate_post, "ensure_fonts"),
+                mock.patch.object(
+                    generate_post,
+                    "get_recommendations_with_valid_covers",
+                    return_value=(selected, covers),
+                ),
+                mock.patch.object(
+                    sys, "argv", ["generate_post.py", "--review"]
+                ),
+            ):
+                generate_post.generate_production_post()
+
+            self.assertTrue(output_path.is_file())
+            self.assertTrue(caption_path.is_file())
+            self.assertTrue(draft_path.is_file())
+            draft = json.loads(draft_path.read_text(encoding="utf-8"))
+            created_at = datetime.datetime.fromisoformat(
+                draft["created_at"].replace("Z", "+00:00")
+            )
+            self.assertIsNotNone(created_at.tzinfo)
+            self.assertFalse(draft["approval"]["approved"])
+            self.assertTrue(draft["draft_id"].startswith("draft_"))
+
     def test_caption_uses_template_and_content_specific_hashtags(self):
         selected = {
             "q1": verified_item("book", "Historia de Portugal"),
