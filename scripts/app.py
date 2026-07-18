@@ -27,9 +27,11 @@ def keep_zerogpu_happy():
 # Import bot and token
 from discord_reviewer import bot, TOKEN
 from twitch_bot import (
+    get_twitch_status,
     run_twitch_bot_forever,
     twitch_configured,
     twitch_refresh_configured,
+    twitch_status_markdown,
 )
 
 def start_bot():
@@ -72,12 +74,21 @@ else:
 
 # Build a simple Gradio UI to keep Hugging Face happy
 with gr.Blocks() as demo:
-    gr.Markdown("# 🤖 Politómetro Discord Bot")
+    gr.Markdown("# 🤖 Politómetro — Bots Discord e Twitch")
     gr.Markdown("O bot está online e a correr em segundo plano na nuvem de forma gratuita!")
     gr.Markdown("---")
     gr.Markdown("👉 Envia uma **Mensagem Privada (DM)** ao bot no Discord com o comando `!check` para iniciar a revisão.")
     gr.Markdown("👉 Podes também fazer perguntas sobre os programas políticos diretamente na DM dele!")
     gr.Markdown("👉 Se configurares a Twitch, o bot também responde quando for mencionado no chat.")
+    twitch_status = gr.Markdown(twitch_status_markdown())
+    refresh_twitch_status = gr.Button(
+        "Atualizar estado da Twitch", variant="secondary"
+    )
+    refresh_twitch_status.click(
+        fn=twitch_status_markdown,
+        inputs=None,
+        outputs=twitch_status,
+    )
 
 if __name__ == "__main__":
     # Launch the interface

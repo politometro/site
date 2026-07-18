@@ -4,8 +4,9 @@ import socket
 import ssl
 import threading
 import time
+import datetime
 
-from politometro_chat import query_politometro_chat, split_text_chunks
+from politometro_chat import query_politometro_chat
 from twitch_auth import token_manager
 
 
@@ -21,7 +22,10 @@ TWITCH_MENTION_ENABLED = os.environ.get("TWITCH_MENTION_ENABLED", "1").strip().l
     "false",
     "no",
 }
-TWITCH_RESPONSE_LIMIT = max(120, int(os.environ.get("TWITCH_RESPONSE_LIMIT", "450")))
+TWITCH_RESPONSE_LIMIT = min(
+    430,
+    max(180, int(os.environ.get("TWITCH_RESPONSE_LIMIT", "430"))),
+)
 TWITCH_USER_COOLDOWN_SECONDS = max(0, int(os.environ.get("TWITCH_USER_COOLDOWN_SECONDS", "30")))
 TWITCH_GLOBAL_COOLDOWN_SECONDS = max(0, int(os.environ.get("TWITCH_GLOBAL_COOLDOWN_SECONDS", "5")))
 
@@ -32,6 +36,68 @@ _last_user_response = {}
 _last_global_response = 0.0
 _cooldown_lock = threading.Lock()
 _send_lock = threading.Lock()
+_status_lock = threading.Lock()
+_twitch_status = {
+    "state": "inactive",
+    "detail": "A configuração ainda não foi verificada.",
+    "channels": list(TWITCH_CHANNELS),
+    "last_error": "",
+    "updated_at": "",
+}
+
+
+def _set_twitch_status(state, detail="", error=""):
+    secrets = (
+        TWITCH_OAUTH_TOKEN,
+        os.environ.get("TWITCH_REFRESH_TOKEN", ""),
+        os.environ.get("TWITCH_CLIENT_SECRET", ""),
+    )
+    safe_error = str(error or "")
+    for secret in secrets:
+        if secret:
+            safe_error = safe_error.replace(secret, "***")
+    with _status_lock:
+        _twitch_status.update(
+            {
+                "state": state,
+                "detail": str(detail or ""),
+                "last_error": safe_error[:500],
+                "updated_at": datetime.datetime.now(
+                    datetime.timezone.utc
+                ).isoformat().replace("+00:00", "Z"),
+            }
+        )
+
+
+def get_twitch_status():
+    with _status_lock:
+        return dict(_twitch_status)
+
+
+def twitch_status_markdown():
+    status = get_twitch_status()
+    labels = {
+        "inactive": "⚪ Inativo",
+        "starting": "🟡 A iniciar",
+        "connecting": "🟡 A ligar",
+        "authenticating": "🟡 A autenticar",
+        "connected": "🟢 Ligado",
+        "reconnecting": "🟠 A voltar a ligar",
+        "error": "🔴 Erro",
+    }
+    channels = ", ".join(status["channels"]) or "nenhum"
+    lines = [
+        "### Estado da Twitch",
+        f"**{labels.get(status['state'], status['state'])}**",
+        f"Canais configurados: `{channels}`",
+    ]
+    if status.get("detail"):
+        lines.append(status["detail"])
+    if status.get("last_error"):
+        lines.append(f"Último erro: `{status['last_error']}`")
+    if status.get("updated_at"):
+        lines.append(f"Verificado em: `{status['updated_at']}`")
+    return "\n\n".join(lines)
 
 
 def twitch_configured():
@@ -57,6 +123,33 @@ def _send_message(sock, channel, text):
     if not clean_text:
         return
     _send(sock, f"PRIVMSG #{channel} :{clean_text}")
+
+
+def _utf8_prefix(value, max_bytes):
+    encoded = str(value or "").encode("utf-8")
+    if len(encoded) <= max_bytes:
+        return str(value or "")
+    return encoded[:max_bytes].decode("utf-8", errors="ignore")
+
+
+def format_twitch_response(response, display_name):
+    """Build exactly one IRC-safe answer, including the user mention."""
+    prefix = f"@{display_name} "
+    text = re.sub(r"\s+", " ", str(response or "")).strip()
+    text = re.sub(r"(?<!\w)[#*_`]+|[#*_`]+(?!\w)", "", text).strip()
+    available = max(
+        1,
+        TWITCH_RESPONSE_LIMIT - len(prefix.encode("utf-8")),
+    )
+    if len(text.encode("utf-8")) <= available:
+        return prefix + text
+
+    suffix = "…"
+    content_budget = max(1, available - len(suffix.encode("utf-8")))
+    shortened = _utf8_prefix(text, content_budget).rstrip()
+    if " " in shortened:
+        shortened = shortened.rsplit(" ", 1)[0].rstrip(" ,;:-")
+    return prefix + shortened + suffix
 
 
 def _parse_privmsg(raw_line):
@@ -122,22 +215,33 @@ def _answer_question(sock, channel, display_name, user, question):
         )
         return
 
-    response = query_politometro_chat(question, source="twitch-bot", user_id=user)
-    for index, chunk in enumerate(split_text_chunks(response, TWITCH_RESPONSE_LIMIT)):
-        prefix = f"@{display_name} " if index == 0 else ""
-        _send_message(sock, channel, f"{prefix}{chunk}")
-        time.sleep(1.2)
+    response = query_politometro_chat(
+        question, source="twitch-bot", user_id=user
+    )
+    _send_message(
+        sock,
+        channel,
+        format_twitch_response(response, display_name),
+    )
 
 
 def run_twitch_bot_forever():
     if not twitch_configured():
+        _set_twitch_status(
+            "inactive",
+            "Configura o nome do bot, token e pelo menos um canal.",
+        )
         print("Twitch bot nao configurado: define TWITCH_BOT_USERNAME, TWITCH_OAUTH_TOKEN e TWITCH_CHANNELS.")
         return
 
     backoff = 5
+    _set_twitch_status("starting", "A preparar a ligação segura ao chat.")
     while True:
         try:
             print(f"A iniciar bot de Twitch em: {', '.join(TWITCH_CHANNELS)}")
+            _set_twitch_status(
+                "connecting", "A estabelecer ligação com a Twitch."
+            )
             context = ssl.create_default_context()
             with socket.create_connection((IRC_HOST, IRC_PORT), timeout=30) as raw_sock:
                 with context.wrap_socket(raw_sock, server_hostname=IRC_HOST) as sock:
@@ -148,6 +252,10 @@ def run_twitch_bot_forever():
                     _send(sock, f"NICK {TWITCH_BOT_USERNAME}")
                     for channel in TWITCH_CHANNELS:
                         _send(sock, f"JOIN #{channel}")
+                    _set_twitch_status(
+                        "authenticating",
+                        "Token enviado; a aguardar confirmação da Twitch.",
+                    )
 
                     backoff = 5
                     buffer = ""
@@ -175,6 +283,27 @@ def run_twitch_bot_forever():
                             if line.startswith("PING"):
                                 _send(sock, line.replace("PING", "PONG", 1))
                                 continue
+                            if (
+                                "NOTICE * :Login authentication failed"
+                                in line
+                            ):
+                                raise RuntimeError(
+                                    "A Twitch recusou o token da conta do bot."
+                                )
+                            if re.search(
+                                rf":tmi\.twitch\.tv 001 "
+                                rf"{re.escape(TWITCH_BOT_USERNAME)}\b",
+                                line,
+                                flags=re.IGNORECASE,
+                            ):
+                                _set_twitch_status(
+                                    "connected",
+                                    "Conta autenticada e canais solicitados.",
+                                )
+                                print(
+                                    "Bot Twitch autenticado como "
+                                    f"{TWITCH_BOT_USERNAME}."
+                                )
 
                             message = _parse_privmsg(line)
                             if not message or message["user"] == TWITCH_BOT_USERNAME:
@@ -194,6 +323,11 @@ def run_twitch_bot_forever():
                                     daemon=True,
                                 ).start()
         except Exception as exc:
+            _set_twitch_status(
+                "reconnecting",
+                f"Nova tentativa automática em {backoff} segundos.",
+                error=exc,
+            )
             print(f"Twitch bot desligou-se: {exc}. Nova tentativa em {backoff}s.")
             time.sleep(backoff)
             backoff = min(backoff * 2, 120)

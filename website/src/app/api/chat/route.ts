@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
 
     // Rate limiting: 100 requests per user per day
     const clientId = req.headers.get("x-client-id") || "anonymous";
+    const isTwitchClient = clientId.toLowerCase().startsWith("twitch-bot:");
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || req.headers.get("x-real-ip") || "unknown";
     const todayStr = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
@@ -245,7 +246,14 @@ Regras Estritas de Fidelidade à Pesquisa:
 [CONTEXTO DOCUMENTAL RECUPERADO (Base de Conhecimento)]
 ${contextText || "Nenhum documento relevante encontrado."}
 
-Utiliza o contexto documental acima para fundamentar as tuas respostas. Se as passagens não contiverem a informação pedida, esclarece que não encontraste essa informação específica nos programas eleitorais consultados.`;
+Utiliza o contexto documental acima para fundamentar as tuas respostas. Se as passagens não contiverem a informação pedida, esclarece que não encontraste essa informação específica nos programas eleitorais consultados.
+
+${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
+- responde numa única mensagem, sem listas, títulos ou Markdown;
+- planeia a resposta antes de escrever e usa no máximo 250 caracteres;
+- termina sempre a ideia e a última frase; nunca deixes a resposta incompleta;
+- dá apenas a conclusão ou comparação mais importante;
+- não incluas saudações, introduções, fontes ou frases de encerramento.` : ""}`;
 
     // Call Groq API with fallback chain
     const requestedModel = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
