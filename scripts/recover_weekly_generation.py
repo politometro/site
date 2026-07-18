@@ -5,8 +5,8 @@ import datetime
 import json
 import os
 import sys
-
-import requests
+import urllib.error
+import urllib.request
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -120,29 +120,44 @@ def main():
     repository = os.environ.get("GITHUB_REPOSITORY", "").strip()
     if not token or not repository:
         raise RuntimeError("GITHUB_TOKEN/GITHUB_REPOSITORY are required.")
-    response = requests.post(
-        (
+    request = urllib.request.Request(
+        url=(
             f"https://api.github.com/repos/{repository}/actions/workflows/"
             "instagram_generate.yml/dispatches"
         ),
+        data=json.dumps(
+            {"ref": "main", "inputs": {"recovery_mode": "true"}}
+        ).encode("utf-8"),
         headers={
             "Authorization": f"Bearer {token}",
             "Accept": "application/vnd.github+json",
             "X-GitHub-Api-Version": "2022-11-28",
+            "Content-Type": "application/json",
+            "User-Agent": "politometro-weekly-recovery",
         },
-        json={"ref": "main", "inputs": {"recovery_mode": "true"}},
-        timeout=20,
+        method="POST",
     )
-    if response.status_code != 204:
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            status = response.status
+            body = response.read().decode("utf-8", errors="replace")
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
         raise RuntimeError(
-            f"Recovery dispatch failed ({response.status_code}): {response.text}"
-        )
+            f"Recovery dispatch failed ({exc.code}): {body}"
+        ) from exc
+    except urllib.error.URLError as exc:
+        raise RuntimeError(
+            f"Recovery dispatch connection failed: {exc.reason}"
+        ) from exc
+    if status != 204:
+        raise RuntimeError(f"Recovery dispatch failed ({status}): {body}")
     print("One bounded weekly generation recovery was dispatched.")
 
 
 if __name__ == "__main__":
     try:
         main()
-    except (RuntimeError, requests.RequestException) as exc:
+    except RuntimeError as exc:
         print(f"[ERROR] {exc}")
         sys.exit(1)

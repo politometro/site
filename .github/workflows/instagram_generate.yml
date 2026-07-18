@@ -2,8 +2,10 @@ name: Generate Weekly Instagram Post
 
 on:
   schedule:
-    # Runs every Saturday at 19:00 UTC (approximately 20:00 Lisbon local time)
-    - cron: '0 19 * * 6'
+    # Several off-peak attempts make the weekly proposal resilient to delayed
+    # or dropped GitHub schedule events. The state guard and shared concurrency
+    # lock ensure that only the first valid attempt generates a proposal.
+    - cron: '7,17,27,37,47 19 * * 6'
   workflow_dispatch: # Allows manual trigger at any time from GitHub UI or Discord Bot
     inputs:
       channel_id:

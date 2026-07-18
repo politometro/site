@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cover_fetcher import load_cover_for_item
 from recommendation_resolver import (
     ResolutionError,
-    _probe_link_available,
+    probe_verified_source,
     resolve_recommendation,
 )
 
@@ -452,9 +452,12 @@ def get_recommendations_with_valid_covers(queue):
 
         for queue_item in candidates:
             try:
-                # Saturday's card is built from a fresh source resolution. It
-                # is still pre-approval, so refreshing the cache is safe.
-                resolved = resolve_recommendation(copy.deepcopy(queue_item), force=True)
+                # Prefer the recent identity-bound proof already produced by
+                # population. The resolver refreshes it automatically when its
+                # TTL, link proof or local cover manifest is no longer valid.
+                resolved = resolve_recommendation(
+                    copy.deepcopy(queue_item), force=False
+                )
                 if resolved.get("resolutionStatus") != "verified":
                     raise ValueError("o resolvedor não confirmou a entidade")
                 if not resolved.get("link"):
@@ -609,8 +612,7 @@ def _validate_publish_item(qkey, item, now=None):
 
 def _revalidate_reviewed_source(qkey, item):
     """Check live link availability without mutating the approved cover cache."""
-    link = str(item.get("link") or "")
-    if not link or not _probe_link_available(link):
+    if not probe_verified_source(item):
         raise RuntimeError(
             f"{qkey} falhou a revalidação segura da fonte; "
             "o URL não devolveu uma página pública HTTP 200/206"

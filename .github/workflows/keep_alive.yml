@@ -6,13 +6,32 @@ on:
     - cron: '*/30 * * * *'
   workflow_dispatch: # Allows manual trigger
 
+permissions:
+  contents: read
+  actions: write
+
+concurrency:
+  group: politometro-content-writer
+  cancel-in-progress: false
+
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
       - name: Ping Hugging Face Space
         run: |
           # Pings your Hugging Face Space page and its direct backend domain
           curl -s https://huggingface.co/spaces/MaNmAxImO/politometro-bot > /dev/null || true
           curl -s https://manmaximo-politometro-bot.hf.space > /dev/null || true
           echo "Ping enviado com sucesso!"
+
+      - name: Recover Missing Weekly Proposal
+        if: ${{ github.event_name == 'schedule' }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          python scripts/recover_weekly_generation.py

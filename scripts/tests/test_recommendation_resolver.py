@@ -10,7 +10,7 @@ import tempfile
 import unittest
 from io import BytesIO
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from PIL import Image
 
@@ -417,6 +417,134 @@ class RecommendationResolverTests(unittest.TestCase):
                 },
                 "https://attacker.example/episode",
             )
+
+    def test_openlibrary_work_page_is_verified_through_json_catalogue(self):
+        payload = {
+            "docs": [
+                {
+                    "key": "/works/OL30827457W",
+                    "title": "1984",
+                    "author_name": ["George Orwell"],
+                    "isbn": ["9780451524935"],
+                    "cover_i": 7222246,
+                }
+            ]
+        }
+        item = {
+            "type": "book",
+            "title": "1984",
+            "authorOrMeta": "George Orwell",
+            "link": "https://openlibrary.org/works/OL30827457W/1984",
+        }
+
+        with (
+            patch.object(
+                resolver, "_get_json", return_value=("search", payload)
+            ) as get_json,
+            patch.object(
+                resolver,
+                "_page_metadata",
+                side_effect=AssertionError("Open Library HTML must not be used"),
+            ),
+        ):
+            result = resolver._validate_book_page(item, item["link"])
+
+        self.assertEqual(result.link, "https://openlibrary.org/works/OL30827457W")
+        self.assertEqual(result.external_id, "isbn:9780451524935")
+        self.assertEqual(result.source, "openlibrary")
+        self.assertIn("search.json", get_json.call_args.args[0])
+
+    def test_openlibrary_source_probe_uses_work_json_not_html(self):
+        item = {
+            "type": "book",
+            "title": "1984",
+            "link": "https://openlibrary.org/works/OL30827457W/1984",
+        }
+        with (
+            patch.object(
+                resolver,
+                "_get_json",
+                return_value=(
+                    "https://openlibrary.org/works/OL30827457W.json",
+                    {"key": "/works/OL30827457W", "title": "1984"},
+                ),
+            ) as get_json,
+            patch.object(
+                resolver,
+                "_probe_link_available",
+                side_effect=AssertionError("HTML probe must not be used"),
+            ),
+        ):
+            self.assertTrue(resolver.probe_verified_source(item))
+
+        self.assertEqual(
+            get_json.call_args.args[0],
+            "https://openlibrary.org/works/OL30827457W.json",
+        )
+
+    def test_recent_openlibrary_proof_survives_temporary_503(self):
+        item = {
+            "type": "book",
+            "title": "1984",
+            "link": "https://openlibrary.org/works/OL30827457W",
+            "verification": {
+                "status": "verified",
+                "entityId": "openlibrary:/works/OL30827457W",
+                "coverHash": "verified-cover",
+                "verifiedAt": iso_now(),
+            },
+        }
+        with (
+            patch.object(
+                resolver,
+                "_get_json",
+                side_effect=resolver.ResolutionError(
+                    "HTTP_ERROR", "HTTP 503 ao obter o catálogo."
+                ),
+            ),
+            patch.object(
+                resolver, "validate_cached_cover", return_value=True
+            ),
+        ):
+            self.assertTrue(resolver.probe_verified_source(item))
+
+    def test_http_get_retries_timeout_and_503_before_accepting_json(self):
+        temporary_failure = Mock()
+        temporary_failure.status_code = 503
+        temporary_failure.headers = {}
+        temporary_failure.close = Mock()
+
+        success = Mock()
+        success.status_code = 200
+        success.headers = {"Content-Type": "application/json"}
+        success.url = "https://openlibrary.org/works/OL30827457W.json"
+        success.iter_content.return_value = [b'{"key":"/works/OL30827457W"}']
+        success.close = Mock()
+
+        with (
+            patch.object(resolver, "_assert_safe_url"),
+            patch.object(
+                resolver.requests,
+                "get",
+                side_effect=[
+                    resolver.requests.Timeout("timed out"),
+                    temporary_failure,
+                    success,
+                ],
+            ) as request,
+            patch.object(resolver.time, "sleep"),
+        ):
+            final_url, mime, body = resolver._http_get(
+                "https://openlibrary.org/works/OL30827457W.json",
+                accept="application/json",
+                max_bytes=4096,
+                allowed_mimes=resolver.JSON_MIME_TYPES,
+            )
+
+        self.assertEqual(request.call_count, 3)
+        self.assertEqual(final_url, success.url)
+        self.assertEqual(mime, "application/json")
+        self.assertIn(b"OL30827457W", body)
 
     def test_apple_match_checks_show_and_creator_separately(self):
         result = {

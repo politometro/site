@@ -280,6 +280,26 @@ class RollingFreshnessTests(unittest.TestCase):
 
 
 class RecoveryWindowTests(unittest.TestCase):
+    def test_weekly_generation_has_redundant_independent_schedules(self):
+        repository_root = SCRIPTS_DIR.parent
+        generate_workflow = (
+            repository_root / ".github/workflows/instagram_generate.yml"
+        ).read_text(encoding="utf-8")
+        preflight_workflow = (
+            repository_root / ".github/workflows/recommendations_preflight.yml"
+        ).read_text(encoding="utf-8")
+        keep_alive_workflow = (
+            repository_root / ".github/workflows/keep_alive.yml"
+        ).read_text(encoding="utf-8")
+
+        self.assertIn("7,17,27,37,47 19 * * 6", generate_workflow)
+        self.assertIn("12,32,47 19 * * 6", preflight_workflow)
+        self.assertIn(
+            "python scripts/recover_weekly_generation.py",
+            keep_alive_workflow,
+        )
+        self.assertIn("group: politometro-content-writer", keep_alive_workflow)
+
     def test_recovery_is_bounded_and_test_draft_never_blocks_production(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
@@ -412,6 +432,7 @@ class PostQualityGateTests(unittest.TestCase):
 
         def fake_resolve(item, force=False):
             self.assertEqual(item["status"], "queue")
+            self.assertFalse(force)
             return item
 
         def fake_cover(item):

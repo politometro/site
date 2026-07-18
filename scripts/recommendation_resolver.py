@@ -25,6 +25,7 @@ import os
 import re
 import socket
 import tempfile
+import time
 import unicodedata
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -53,6 +54,8 @@ MAX_IMAGE_PIXELS = 30_000_000
 MAX_OUTPUT_DIMENSION = 2400
 VERIFICATION_TTL_HOURS = 24
 MIN_REVIEW_VALIDITY_HOURS = 24
+HTTP_ATTEMPTS = 3
+TRANSIENT_HTTP_STATUSES = {429, 500, 502, 503, 504}
 
 USER_AGENT = (
     "PolitometroResolver/2.0 "
@@ -627,13 +630,36 @@ def _http_get(
         )
         response = None
         try:
-            response = requests.get(
-                current,
-                headers={"User-Agent": USER_AGENT, "Accept": accept},
-                timeout=HTTP_TIMEOUT,
-                allow_redirects=False,
-                stream=True,
-            )
+            for attempt in range(HTTP_ATTEMPTS):
+                try:
+                    response = requests.get(
+                        current,
+                        headers={"User-Agent": USER_AGENT, "Accept": accept},
+                        timeout=HTTP_TIMEOUT,
+                        allow_redirects=False,
+                        stream=True,
+                    )
+                except requests.RequestException as exc:
+                    if attempt + 1 >= HTTP_ATTEMPTS:
+                        raise RecommendationResolutionError(
+                            "NETWORK_ERROR",
+                            f"Falha de rede ao obter {current}: {exc}",
+                        ) from exc
+                    time.sleep(0.5 * (attempt + 1))
+                    continue
+                if (
+                    response.status_code in TRANSIENT_HTTP_STATUSES
+                    and attempt + 1 < HTTP_ATTEMPTS
+                ):
+                    response.close()
+                    response = None
+                    time.sleep(0.5 * (attempt + 1))
+                    continue
+                break
+            if response is None:
+                raise RecommendationResolutionError(
+                    "NETWORK_ERROR", f"Sem resposta ao obter {current}."
+                )
             if response.status_code in {301, 302, 303, 307, 308}:
                 location = response.headers.get("Location", "").strip()
                 if not location:
@@ -684,10 +710,6 @@ def _http_get(
             return final_url, mime, b"".join(chunks)
         except RecommendationResolutionError:
             raise
-        except requests.RequestException as exc:
-            raise RecommendationResolutionError(
-                "NETWORK_ERROR", f"Falha de rede ao obter {current}: {exc}"
-            ) from exc
         finally:
             if response is not None:
                 try:
@@ -1106,6 +1128,17 @@ def _url_external_id(prefix: str, url: str) -> str:
     return f"{prefix}:url:{hashlib.sha256(url.encode('utf-8')).hexdigest()[:24]}"
 
 
+def _openlibrary_work_key(link: str) -> str:
+    parsed = urllib.parse.urlsplit(link)
+    if parsed.hostname and parsed.hostname.casefold() not in {
+        "openlibrary.org",
+        "www.openlibrary.org",
+    }:
+        return ""
+    match = re.match(r"^/works/(OL\d+W)(?:/|$)", parsed.path, flags=re.I)
+    return f"/works/{match.group(1).upper()}" if match else ""
+
+
 def _validate_book_page(item: Mapping[str, Any], link: str) -> EntityResolution:
     host = _hostname(link)
     if not _host_in(host, TRUSTED_BOOK_DOMAINS):
@@ -1113,6 +1146,14 @@ def _validate_book_page(item: Mapping[str, Any], link: str) -> EntityResolution:
             "BOOK_DOMAIN_NOT_ALLOWED",
             f"Catálogo de livros não autorizado: {host}.",
             item=item,
+        )
+    openlibrary_key = _openlibrary_work_key(link)
+    if openlibrary_key:
+        # Open Library's public HTML is occasionally protected or unavailable
+        # while its JSON catalogue remains healthy. Verify the exact work key
+        # through the catalogue API instead of parsing that HTML.
+        return _resolve_book_openlibrary(
+            item, expected_work_key=openlibrary_key
         )
     metadata = _page_metadata(link)
     expected_title = str(item.get("title", "")).strip()
@@ -1201,7 +1242,9 @@ def _google_cse_search(query: str, limit: int = 10) -> list[dict[str, Any]]:
     return results
 
 
-def _resolve_book_openlibrary(item: Mapping[str, Any]) -> EntityResolution:
+def _resolve_book_openlibrary(
+    item: Mapping[str, Any], expected_work_key: str = ""
+) -> EntityResolution:
     title = str(item.get("title", "")).strip()
     author = _strip_media_prefix(str(item.get("authorOrMeta", "")))
     params = {"title": title, "author": author, "limit": 20}
@@ -1210,6 +1253,9 @@ def _resolve_book_openlibrary(item: Mapping[str, Any]) -> EntityResolution:
     best: tuple[float, Mapping[str, Any]] | None = None
     for doc in payload.get("docs", []):
         if not isinstance(doc, Mapping):
+            continue
+        work_key = str(doc.get("key", "")).strip()
+        if expected_work_key and work_key.casefold() != expected_work_key.casefold():
             continue
         actual_title = str(doc.get("title", ""))
         combined, sequence, _ = _title_metrics(title, actual_title)
@@ -1231,7 +1277,12 @@ def _resolve_book_openlibrary(item: Mapping[str, Any]) -> EntityResolution:
     score, doc = best
     work_key = str(doc.get("key", "")).strip()
     isbns = [re.sub(r"[^0-9Xx]", "", str(v)) for v in doc.get("isbn", [])]
-    isbn = next((value.upper() for value in isbns if len(value) in {10, 13}), "")
+    isbns = [value.upper() for value in isbns if len(value) in {10, 13}]
+    existing_isbn = ""
+    external_id = str(item.get("externalId") or "")
+    if external_id.startswith("isbn:"):
+        existing_isbn = external_id.split(":", 1)[1].upper()
+    isbn = existing_isbn if existing_isbn in isbns else next(iter(isbns), "")
     cover_id = doc.get("cover_i")
     if cover_id:
         image = f"https://covers.openlibrary.org/b/id/{int(cover_id)}-L.jpg"
@@ -1254,6 +1305,61 @@ def _resolve_book_openlibrary(item: Mapping[str, Any]) -> EntityResolution:
         description="",
         isbn=isbn,
     )
+
+
+def probe_verified_source(item: Mapping[str, Any]) -> bool:
+    """Check a verified source using its most stable public endpoint."""
+
+    link = str(item.get("link") or "").strip()
+    work_key = _openlibrary_work_key(link)
+    if not work_key:
+        return _probe_link_available(link)
+    try:
+        _, payload = _get_json(
+            f"https://openlibrary.org{work_key}.json"
+        )
+    except RecommendationResolutionError as exc:
+        verification = item.get("verification")
+        verified_at = _normalise_datetime(
+            verification.get("verifiedAt")
+            if isinstance(verification, Mapping)
+            else ""
+        )
+        recent_proof = False
+        if (
+            isinstance(verification, Mapping)
+            and verification.get("status") == "verified"
+            and verification.get("entityId")
+            and verification.get("coverHash")
+            and verified_at
+        ):
+            timestamp = _dt.datetime.fromisoformat(
+                verified_at.replace("Z", "+00:00")
+            )
+            age = _dt.datetime.now(_dt.timezone.utc) - timestamp
+            recent_proof = (
+                _dt.timedelta(0)
+                <= age
+                <= _dt.timedelta(hours=VERIFICATION_TTL_HOURS)
+            )
+        transient = exc.code in {
+            "NETWORK_ERROR",
+            "BAD_JSON",
+        } or (
+            exc.code == "HTTP_ERROR"
+            and re.search(r"HTTP (?:429|5\d\d)\b", str(exc))
+        )
+        # A temporary catalogue outage must not invalidate an exact entity and
+        # local cover that were cryptographically verified earlier the same day.
+        if transient and recent_proof and validate_cached_cover(item):
+            return True
+        return False
+    if str(payload.get("key", "")).casefold() != work_key.casefold():
+        return False
+    expected_title = str(item.get("title") or "")
+    actual_title = str(payload.get("title") or "")
+    combined, sequence, _ = _title_metrics(expected_title, actual_title)
+    return combined >= 0.88 and sequence >= 0.78
 
 
 def _resolve_book(item: Mapping[str, Any]) -> EntityResolution:
@@ -2565,7 +2671,7 @@ def _already_verified(item: Mapping[str, Any]) -> dict[str, Any] | None:
             hours=MIN_REVIEW_VALIDITY_HOURS
         ):
             return None
-    if not _probe_link_available(str(item.get("link", ""))):
+    if not probe_verified_source(item):
         return None
     if validate_cached_cover(item):
         canonical_title = str(verification.get("resolvedTitle", "")).strip()
@@ -2877,6 +2983,7 @@ __all__ = [
     "discover_highlights",
     "discover_podcast_episodes",
     "load_cover_for_item",
+    "probe_verified_source",
     "resolve_recommendation",
     "validate_cached_cover",
     "_cache_key",
