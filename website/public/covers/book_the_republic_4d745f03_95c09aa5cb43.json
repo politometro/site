@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL45528036W",
+  "coverHash": "0f9c3d72eaa6d833eae0cec7640fc44c431df53b38952d0066828b27604d5628",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://covers.openlibrary.org/b/id/15223028-L.jpg",
+  "entityId": "openlibrary:/works/OL45528036W",
+  "expiryDate": null,
+  "height": 500,
+  "isbn": "",
+  "resolvedAuthor": "Plato",
+  "resolvedTitle": "The Republic",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "The Republic",
+  "titleNormalized": "the republic",
+  "type": "book",
+  "verifiedAt": "2026-07-18T10:20:46.203187Z",
+  "width": 338
+}

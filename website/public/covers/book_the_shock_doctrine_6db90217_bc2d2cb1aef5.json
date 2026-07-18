@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL6017238W",
+  "coverHash": "6186ce6ed773e345c5f489e1e26a2296cd6cde10462df8d5f4e89bd69e156b33",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://ia601909.us.archive.org/view_archive.php?archive=%2F31%2Fitems%2Fl_covers_0013%2Fl_covers_0013_74.zip&file=0013748432-L.jpg",
+  "entityId": "openlibrary:/works/OL6017238W",
+  "expiryDate": null,
+  "height": 346,
+  "isbn": "",
+  "resolvedAuthor": "Naomi Klein",
+  "resolvedTitle": "The Shock Doctrine",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "The Shock Doctrine",
+  "titleNormalized": "the shock doctrine",
+  "type": "book",
+  "verifiedAt": "2026-07-18T10:21:47.479562Z",
+  "width": 236
+}

@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0058946/",
+  "coverHash": "179792d3a9ddda06cb0bc1556fcaf437ea398800da04c4c25358b91bb89a7ec1",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Battle-of-Algiers-screenshot.jpg",
+  "entityId": "imdb:tt0058946",
+  "expiryDate": null,
+  "height": 600,
+  "isbn": "",
+  "resolvedAuthor": "Gillo Pontecorvo",
+  "resolvedTitle": "The Battle of Algiers",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "The Battle of Algiers",
+  "titleNormalized": "the battle of algiers",
+  "type": "movie",
+  "verifiedAt": "2026-07-18T10:22:01.013613Z",
+  "width": 1200
+}

@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL45038869W",
+  "coverHash": "057b1763778334c5ac73d3bf0f285ee1fb43dd54e40ada86039b90d1df085e28",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://covers.openlibrary.org/b/id/15200474-L.jpg",
+  "entityId": "openlibrary:/works/OL45038869W",
+  "expiryDate": null,
+  "height": 447,
+  "isbn": "",
+  "resolvedAuthor": "Karl Marx",
+  "resolvedTitle": "O Capital",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "O Capital",
+  "titleNormalized": "o capital",
+  "type": "book",
+  "verifiedAt": "2026-07-18T10:20:56.690963Z",
+  "width": 320
+}
