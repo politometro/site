@@ -368,6 +368,13 @@ class PostQualityGateTests(unittest.TestCase):
             "Desenvolvido por @_.davstrango._ e @luisflmaximo no âmbito do projeto @politiza.te",
             caption,
         )
+        self.assertIn("📖 LIVRO:", caption)
+        self.assertIn("🎙️ PODCAST:", caption)
+        self.assertIn("🎞️ FILME:", caption)
+        self.assertIn("📰 DESTAQUE:", caption)
+        self.assertNotIn("📊 PODCAST:", caption)
+        self.assertNotIn("🏛️ FILME:", caption)
+        self.assertNotIn("🔎 DESTAQUE:", caption)
         self.assertIn("Qual destes vais espreitar primeiro?", caption)
         self.assertIn("#PortugalUmaHistoria", caption)
         self.assertIn("#CapitaesDeAbril", caption)

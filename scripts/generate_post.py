@@ -262,19 +262,6 @@ TYPE_EMOJIS = {
     "highlight": "📰",
 }
 
-TOPIC_EMOJIS = (
-    (("investigacao", "corrupcao", "escandalo", "caso judicial"), "🔎"),
-    (("eleicoes", "eleicao", "voto", "democracia"), "🗳️"),
-    (("economia", "economica", "financas", "inflacao", "crise"), "📊"),
-    (("historia", "historico", "revolucao", "25 de abril"), "🏛️"),
-    (("justica", "tribunal", "lei", "constitucional"), "⚖️"),
-    (("europa", "europeia", "internacional", "mundo"), "🌍"),
-    (("ambiente", "clima", "energia", "sustentabilidade"), "🌱"),
-    (("educacao", "escola", "universidade"), "🎓"),
-    (("saude", "sns", "hospital"), "🏥"),
-    (("tecnologia", "digital", "inteligencia artificial"), "💻"),
-)
-
 TOPIC_HASHTAGS = (
     (("portugal", "portugues", "portuguesa"), "Portugal"),
     (("25 de abril", "revolucao dos cravos"), "25deAbril"),
@@ -314,10 +301,6 @@ def _recommendation_text(item):
 
 
 def _recommendation_emoji(item):
-    searchable = _recommendation_text(item)
-    for keywords, emoji in TOPIC_EMOJIS:
-        if any(keyword in searchable for keyword in keywords):
-            return emoji
     return TYPE_EMOJIS.get(item.get("type"), "🔎")
 
 
