@@ -1,4 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
+import { unstable_cache } from "next/cache";
 
 export type NewsSourceId =
   | "cnn"
@@ -27,6 +28,8 @@ export interface NewsItem {
 export interface NewsSourceStatus extends NewsSource {
   available: boolean;
   itemCount: number;
+  usingBackup: boolean;
+  lastSuccessfulAt?: string;
   note?: string;
 }
 
@@ -42,12 +45,24 @@ type FeedSource = NewsSource & {
   domains: string[];
 };
 
+type FeedResult = {
+  items: NewsItem[];
+  error?: string;
+};
+
+type FeedSnapshot = {
+  items: NewsItem[];
+  fetchedAt: string;
+};
+
 const FEED_SOURCES: FeedSource[] = [
   {
     id: "cnn",
     name: "CNN Portugal",
-    feedUrl: "https://cnnportugal.iol.pt/rss",
-    recentUrl: "https://cnnportugal.iol.pt/",
+    feedUrl:
+      process.env.CNN_NEWS_FEED_URL?.trim() ||
+      "https://cnnportugal.iol.pt/rss.xml",
+    recentUrl: "https://cnnportugal.iol.pt/ultimas",
     logoUrl: "https://cnnportugal.iol.pt/favicon.ico",
     domains: ["cnnportugal.iol.pt"],
   },
@@ -213,14 +228,14 @@ function itemId(sourceId: string, link: string): string {
 
 async function fetchFeed(
   source: FeedSource,
-): Promise<{ items: NewsItem[]; error?: string }> {
+): Promise<FeedResult> {
   try {
     const response = await fetch(source.feedUrl, {
       headers: {
         Accept: "application/rss+xml, application/xml, text/xml;q=0.9",
         "User-Agent": "PolitometroNews/1.0 (+https://politometro.politiza-te.pt)",
       },
-      next: { revalidate: 120 },
+      cache: "no-store",
       signal: AbortSignal.timeout(12_000),
     });
     if (!response.ok) {
@@ -267,20 +282,69 @@ async function fetchFeed(
   }
 }
 
+type CachedFeedLoader = () => Promise<FeedSnapshot>;
+
+function cachedFeedLoader(source: FeedSource): CachedFeedLoader {
+  return unstable_cache(
+    async () => {
+      const result = await fetchFeed(source);
+      if (!result.items.length) {
+        throw new Error(result.error ?? "feed_unavailable");
+      }
+      return {
+        items: result.items,
+        fetchedAt: new Date().toISOString(),
+      };
+    },
+    ["politometro-news-backup-v1", source.id],
+    { revalidate: 120 },
+  );
+}
+
+const CACHED_FEEDS = new Map<NewsSourceId, CachedFeedLoader>(
+  FEED_SOURCES.map((source) => [source.id, cachedFeedLoader(source)]),
+);
+
 export async function getLatestNews(): Promise<NewsPayload> {
-  const results = await Promise.all(FEED_SOURCES.map(fetchFeed));
-  const statuses: NewsSourceStatus[] = FEED_SOURCES.map((source, index) => ({
-    id: source.id,
-    name: source.name,
-    recentUrl: source.recentUrl,
-    logoUrl: source.logoUrl,
-    available: results[index].items.length > 0,
-    itemCount: results[index].items.length,
-    note: results[index].error,
-  }));
+  const sourceResults = await Promise.all(
+    FEED_SOURCES.map(async (source) => {
+      const backupLoader = CACHED_FEEDS.get(source.id);
+      const [liveResult, backupResult] = await Promise.all([
+        fetchFeed(source),
+        backupLoader
+          ? backupLoader().catch(() => null)
+          : Promise.resolve(null),
+      ]);
+      const liveAvailable = liveResult.items.length > 0;
+      const backup =
+        !liveAvailable && backupResult?.items.length
+          ? backupResult
+          : null;
+      const items = liveAvailable
+        ? liveResult.items
+        : (backup?.items ?? []);
+      const status: NewsSourceStatus = {
+        id: source.id,
+        name: source.name,
+        recentUrl: source.recentUrl,
+        logoUrl: source.logoUrl,
+        available: liveAvailable,
+        usingBackup: Boolean(backup),
+        itemCount: items.length,
+        lastSuccessfulAt: liveAvailable
+          ? new Date().toISOString()
+          : backup?.fetchedAt,
+        note: liveAvailable
+          ? undefined
+          : "Atualização temporariamente em pausa.",
+      };
+      return { items, status };
+    }),
+  );
+  const statuses = sourceResults.map((result) => result.status);
 
   const seen = new Set<string>();
-  const items = results
+  const items = sourceResults
     .flatMap((result) => result.items)
     .filter((item) => {
       if (seen.has(item.link)) return false;

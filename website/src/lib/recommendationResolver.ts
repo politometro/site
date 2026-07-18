@@ -314,6 +314,70 @@ function normalizeForMatch(value: string): string {
     .trim();
 }
 
+const HIGHLIGHT_EDITORIAL_MARKERS = [
+  "opiniao",
+  "editorial",
+  "cronica",
+  "analise",
+  "investigacao",
+  "grande reportagem",
+  "reportagem especial",
+  "entrevista",
+  "explicador",
+  "fact check",
+  "documentario",
+  "ensaio",
+  "debate",
+];
+
+function isEligibleHighlightCandidate(candidate: {
+  title: string;
+  description: string;
+  link: string;
+}): boolean {
+  let pathSegments: string[] = [];
+  let querySegments: string[] = [];
+  try {
+    const parsed = new URL(candidate.link);
+    pathSegments = parsed.pathname
+      .split("/")
+      .map((segment) => normalizeForMatch(decodeURIComponent(segment)))
+      .filter(Boolean);
+    querySegments = Array.from(parsed.searchParams.entries()).flatMap(
+      ([key, value]) => [normalizeForMatch(key), normalizeForMatch(value)],
+    );
+  } catch {
+    return false;
+  }
+  const titleLabel = sanitizeText(candidate.title, 400)
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLocaleLowerCase("pt-PT")
+    .trim();
+  const description = normalizeForMatch(candidate.description);
+  const strongDescriptionMarkers = [
+    "artigo de opiniao",
+    "texto de opiniao",
+    "jornalismo de investigacao",
+    "grande reportagem",
+    "reportagem especial",
+    "entrevista completa",
+    "analise aprofundada",
+  ];
+  return (
+    HIGHLIGHT_EDITORIAL_MARKERS.some(
+      (marker) =>
+        pathSegments.includes(marker) || querySegments.includes(marker),
+    ) ||
+    HIGHLIGHT_EDITORIAL_MARKERS.some((marker) =>
+      new RegExp(`^${marker.replace(/\s+/g, "\\s+")}\\s*(?::|\\||-|–|—)`).test(
+        titleLabel,
+      ),
+    ) ||
+    strongDescriptionMarkers.some((marker) => description.includes(marker))
+  );
+}
+
 function matchTokens(value: string): string[] {
   return normalizeForMatch(value)
     .split(/\s+/)
@@ -1185,7 +1249,19 @@ async function resolveFromProvidedLink(
   }
 
   if (isYouTubeUrl(normalized)) {
-    return resolveYouTube(normalized, input.title, input.type, "provided-youtube");
+    const candidate = await resolveYouTube(
+      normalized,
+      input.title,
+      input.type,
+      "provided-youtube",
+    );
+    if (
+      candidate?.type === "highlight" &&
+      !isEligibleHighlightCandidate(candidate)
+    ) {
+      return null;
+    }
+    return candidate;
   }
   if (!isLikelyDetailUrl(input.type, normalized)) return null;
 
@@ -1228,6 +1304,19 @@ async function resolveFromProvidedLink(
       author = new URL(metadata.canonicalUrl).hostname.replace(/^www\./, "");
     }
     if (!author) return null;
+    if (
+      input.type === "highlight" &&
+      !isEligibleHighlightCandidate({
+        title: metadata.title,
+        description: metadata.description,
+        link: metadata.canonicalUrl,
+      })
+    ) {
+      throw new RecommendationResolutionError(
+        "Notícias correntes não são aceites como Destaque. Indica um artigo de opinião, análise, investigação, entrevista, reportagem especial ou documentário.",
+        "news_not_allowed",
+      );
+    }
 
     const podcastExternalId =
       input.type === "podcast"
@@ -1850,7 +1939,9 @@ async function resolveHighlightWithCse(title: string): Promise<Candidate | null>
       continue;
     }
     const candidate = await candidateFromCse(result, "highlight", title);
-    if (candidate) return candidate;
+    if (candidate && isEligibleHighlightCandidate(candidate)) {
+      return candidate;
+    }
   }
   return null;
 }
@@ -2028,6 +2119,20 @@ export async function resolveRecommendation(
     return unresolved(
       input,
       "A fonte encontrada não cumpriu todos os critérios de identidade, link e imagem.",
+      candidate.provider,
+    );
+  }
+  if (
+    candidate.type === "highlight" &&
+    !isEligibleHighlightCandidate({
+      title: candidate.title,
+      description: candidate.description,
+      link: canonicalLink,
+    })
+  ) {
+    return unresolved(
+      input,
+      "Notícias correntes não são aceites como Destaque. Escolhe um artigo de opinião, análise, investigação, entrevista, reportagem especial ou documentário.",
       candidate.provider,
     );
   }

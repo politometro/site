@@ -28,6 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cover_fetcher import load_cover_for_item
 from recommendation_resolver import (
     ResolutionError,
+    is_eligible_highlight,
     probe_verified_source,
     resolve_recommendation,
 )
@@ -92,6 +93,19 @@ QUADRANTS_CONFIG = {
         "title_pos": (435, 547),
         "cover_x": 435,
     }
+}
+
+DESCRIPTION_CHAR_LIMITS = {
+    "q1": 220,
+    "q2": 150,
+    "q3": 220,
+    "q4": 145,
+}
+DESCRIPTION_LINE_LIMITS = {
+    "q1": 11,
+    "q2": 8,
+    "q3": 11,
+    "q4": 5,
 }
 
 # --- ROUNDED CORNERS HELPER ---
@@ -436,7 +450,21 @@ def get_recommendations_with_valid_covers(queue):
     active_items = [
         item
         for item in queue
-        if item.get("status") == "queue" and _item_score(item, now) >= 0
+        if item.get("status") == "queue"
+        and _item_score(item, now) >= 0
+        and (
+            item.get("type") != "highlight"
+            or is_eligible_highlight(
+                title=item.get("title"),
+                description=item.get("description"),
+                link=item.get("link"),
+                categories=(
+                    (item.get("_discovery") or {}).get("categories", [])
+                    if isinstance(item.get("_discovery"), dict)
+                    else []
+                ),
+            )
+        )
     ]
     active_items.sort(key=lambda item: _item_score(item, now), reverse=True)
 
@@ -582,6 +610,17 @@ def _validate_publish_item(qkey, item, now=None):
         raise RuntimeError(f"{qkey} não tem uma capa local verificada")
     if not str(item.get("description") or "").strip():
         raise RuntimeError(f"{qkey} não tem uma descrição fundamentada")
+    if item.get("type") == "highlight" and not is_eligible_highlight(
+        title=item.get("title"),
+        description=item.get("description"),
+        link=item.get("link"),
+        categories=(
+            (item.get("_discovery") or {}).get("categories", [])
+            if isinstance(item.get("_discovery"), dict)
+            else []
+        ),
+    ):
+        raise RuntimeError(f"{qkey} é uma notícia e não um destaque editorial")
     source_published = _parse_utc_datetime(item.get("sourcePublishedAt"))
     expiry = _parse_utc_datetime(item.get("expiryDate"))
     if item.get("type") in {"podcast", "highlight"} and (
@@ -948,12 +987,22 @@ def generate_production_post():
         else:
             desc_w = 780 - dx
             
-        desc_lines = wrap_text(draw, item["description"], desc_font, desc_w)
+        description = _ellipsize(
+            item["description"],
+            DESCRIPTION_CHAR_LIMITS[qkey],
+        )
+        desc_lines = wrap_text(draw, description, desc_font, desc_w)
         
         spacing = 18
-        max_lines = 11
+        max_lines = min(
+            DESCRIPTION_LINE_LIMITS[qkey],
+            max(1, cover_h // spacing),
+        )
+        if len(desc_lines) > max_lines:
+            desc_lines = desc_lines[:max_lines]
+            desc_lines[-1] = desc_lines[-1].rstrip(" .,…") + "…"
         text_block_h = len(desc_lines[:max_lines]) * spacing
-        dy = cover_y + (cover_h - text_block_h) // 2
+        dy = cover_y + max(0, (cover_h - text_block_h) // 2)
         
         for line in desc_lines[:max_lines]:
             draw.text((dx, dy), line, fill=TEXT_COLOR, font=desc_font)

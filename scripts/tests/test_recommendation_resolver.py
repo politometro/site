@@ -696,6 +696,74 @@ class RecommendationResolverTests(unittest.TestCase):
             "https://cdn-images.rtp.pt/noticias/reportagem.jpg",
         )
 
+    def test_highlight_policy_rejects_news_and_accepts_editorial_work(self):
+        self.assertFalse(
+            resolver.is_eligible_highlight(
+                title=(
+                    'Líder do PAN diz que oposições internas têm de '
+                    'respeitar "quem o coletivo elege"'
+                ),
+                description=(
+                    "A porta-voz comentou hoje as divergências internas."
+                ),
+                link="https://www.rtp.pt/noticias/politica/lider-do-pan_n123",
+            )
+        )
+        self.assertFalse(
+            resolver.is_eligible_highlight(
+                title="Ministério Público abre investigação ao contrato",
+                description="O inquérito foi anunciado esta manhã.",
+                link=(
+                    "https://www.rtp.pt/noticias/pais/"
+                    "ministerio-publico-abre-investigacao_n456"
+                ),
+            )
+        )
+        self.assertTrue(
+            resolver.is_eligible_highlight(
+                title="O futuro da democracia portuguesa",
+                description="Reflexão do autor sobre as instituições.",
+                link=(
+                    "https://www.publico.pt/2026/07/18/"
+                    "opiniao/futuro-democracia"
+                ),
+            )
+        )
+        self.assertTrue(
+            resolver.is_eligible_highlight(
+                title="Os contratos que ficaram por explicar",
+                description="Jornalismo de investigação aprofundado.",
+                link="https://expresso.pt/politica/contratos",
+            )
+        )
+
+    def test_highlight_page_rejects_ordinary_news_after_metadata_check(self):
+        item = {
+            "type": "highlight",
+            "title": "Líder partidário apresenta candidatura",
+            "authorOrMeta": "RTP",
+        }
+        metadata = {
+            "finalUrl": "https://www.rtp.pt/noticias/politica/candidatura_n1",
+            "canonical": "https://www.rtp.pt/noticias/politica/candidatura_n1",
+            "title": "Líder partidário apresenta candidatura",
+            "image": "https://cdn.example.org/news.jpg",
+            "description": "O anúncio foi feito esta manhã.",
+            "publishedAt": iso_now(),
+            "authors": ["RTP"],
+            "isbns": [],
+            "meta": {"article:section": "Política"},
+        }
+        with patch.object(
+            resolver, "_page_metadata", return_value=metadata
+        ):
+            with self.assertRaisesRegex(
+                resolver.ResolutionError, "NEWS_NOT_ALLOWED"
+            ):
+                resolver._validate_highlight_page(
+                    item, metadata["canonical"]
+                )
+
     def test_svg_unsplash_known_placeholder_and_private_ip_are_blocked(self):
         with self.assertRaisesRegex(
             resolver.ResolutionError, "NON_RASTER_IMAGE"

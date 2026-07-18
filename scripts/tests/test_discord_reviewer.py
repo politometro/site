@@ -44,6 +44,64 @@ class DiscordApplicationTests(unittest.TestCase):
         self.assertIn("perguntar", names)
         self.assertIn("recomendar", names)
 
+    def test_post_rejection_menu_has_all_actions_and_free_text(self):
+        menu = discord_reviewer.RejectionReasonSelect(
+            "123", "draft_123", "abc123"
+        )
+        values = {option.value for option in menu.options}
+        self.assertEqual(
+            values,
+            {
+                "bad_image",
+                "wrong_covers",
+                "typo_text",
+                "typo_image_text",
+                "bad_links",
+                "bad_recs",
+                "custom_feedback",
+            },
+        )
+
+    def test_free_text_feedback_is_bound_to_exact_draft(self):
+        draft = {
+            "draft_id": "draft_123",
+            "content_hash": "abc123fullhash",
+            "approval": {"approved": False},
+        }
+        written = {}
+
+        def fake_update(path, content, message, sha=None):
+            written[path] = json.loads(content.decode("utf-8"))
+            return True
+
+        with (
+            mock.patch.object(
+                discord_reviewer,
+                "get_github_file",
+                return_value=(
+                    json.dumps(draft).encode("utf-8"),
+                    "draft-sha",
+                ),
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "update_github_file",
+                side_effect=fake_update,
+            ),
+        ):
+            result = discord_reviewer._store_review_feedback(
+                "draft_123",
+                "abc123",
+                "Substituir a notícia por um artigo de opinião.",
+                SimpleNamespace(id=42, display_name="Revisor"),
+            )
+
+        self.assertTrue(result)
+        feedback = written["scripts/review_draft.json"]["reviewFeedback"]
+        self.assertEqual(len(feedback), 1)
+        self.assertIn("artigo de opinião", feedback[0]["text"])
+        self.assertEqual(feedback[0]["createdById"], "42")
+
     def test_recommendation_command_exposes_same_five_types_as_website(self):
         choices = {
             choice.value

@@ -456,15 +456,75 @@ async def update_recommendation_field(original_msg_id, quadrant, field_name, new
     return True
 
 # ===================== INTERACTIVE VIEWS =====================
+class ReviewFeedbackModal(discord.ui.Modal, title="Descrever a correção"):
+    correction = discord.ui.TextInput(
+        label="O que deve ser corrigido?",
+        style=discord.TextStyle.paragraph,
+        placeholder=(
+            "Ex.: O destaque é uma notícia; substitui-o por um artigo de "
+            "opinião sobre o mesmo tema."
+        ),
+        min_length=5,
+        max_length=1000,
+        required=True,
+    )
+
+    def __init__(
+        self,
+        original_msg_id,
+        expected_draft_id,
+        expected_hash_prefix,
+    ):
+        super().__init__()
+        self.original_msg_id = original_msg_id
+        self.expected_draft_id = expected_draft_id
+        self.expected_hash_prefix = expected_hash_prefix
+
+    async def on_submit(self, interaction: discord.Interaction):
+        result = _store_review_feedback(
+            self.expected_draft_id,
+            self.expected_hash_prefix,
+            str(self.correction.value),
+            interaction.user,
+        )
+        if result is not True:
+            await interaction.response.send_message(
+                f"❌ {result}", ephemeral=True
+            )
+            return
+        await interaction.response.send_message(
+            (
+                "Observação registada no rascunho. Usa a opção automática "
+                "mais adequada do menu de rejeição quando pretenderes aplicar "
+                "a correção."
+            ),
+            ephemeral=True,
+        )
+        if interaction.channel:
+            await interaction.channel.send(
+                (
+                    f"📝 **Correção solicitada por "
+                    f"{interaction.user.mention}:**\n"
+                    f"{str(self.correction.value).strip()}"
+                )
+            )
+
+
 class RejectionReasonSelect(discord.ui.Select):
-    def __init__(self, original_msg_id):
+    def __init__(
+        self,
+        original_msg_id,
+        expected_draft_id="",
+        expected_hash_prefix="",
+    ):
         options = [
             discord.SelectOption(label="Imagem mal formatada", value="bad_image", description="Alternar layout (template) e redesenhar.", emoji="🖼️"),
             discord.SelectOption(label="Capas erradas (Nova Capa)", value="wrong_covers", description="Substituir capa de um quadrante (Pesquisa ou Manual).", emoji="📚"),
             discord.SelectOption(label="Erros na legenda", value="typo_text", description="Fornecer texto de legenda corrigido.", emoji="✍️"),
             discord.SelectOption(label="Erros de escrita na imagem", value="typo_image_text", description="Corrigir erros no texto desenhado na imagem.", emoji="📝"),
             discord.SelectOption(label="Links inválidos/incorretos", value="bad_links", description="Corrigir links incorretos ou quebrados (Pesquisa ou Manual).", emoji="🔗"),
-            discord.SelectOption(label="Más recomendações (Regerar)", value="bad_recs", description="Descartar estes itens e buscar novos candidatos.", emoji="👎")
+            discord.SelectOption(label="Más recomendações (Regerar)", value="bad_recs", description="Descartar estes itens e buscar novos candidatos.", emoji="👎"),
+            discord.SelectOption(label="Descrever outra correção", value="custom_feedback", description="Registar por texto o que deve ser alterado.", emoji="💬"),
         ]
         super().__init__(
             placeholder="Selecione o(s) motivo(s) da rejeição...", 
@@ -473,11 +533,32 @@ class RejectionReasonSelect(discord.ui.Select):
             max_values=len(options)
         )
         self.original_msg_id = original_msg_id
+        self.expected_draft_id = expected_draft_id
+        self.expected_hash_prefix = expected_hash_prefix
 
     async def callback(self, interaction: discord.Interaction):
         global waiting_for_text, waiting_for_image_quadrant
         reasons = self.values
         channel = interaction.channel
+
+        if "custom_feedback" in reasons:
+            if len(reasons) > 1:
+                await interaction.response.send_message(
+                    (
+                        "Seleciona «Descrever outra correção» isoladamente "
+                        "para abrir o campo de texto."
+                    ),
+                    ephemeral=True,
+                )
+                return
+            await interaction.response.send_modal(
+                ReviewFeedbackModal(
+                    self.original_msg_id,
+                    self.expected_draft_id,
+                    self.expected_hash_prefix,
+                )
+            )
+            return
 
         await interaction.response.defer(ephemeral=True)
 
@@ -548,6 +629,52 @@ class RejectionReasonSelect(discord.ui.Select):
                 )
 
             elif reason == "bad_recs":
+                if self.expected_draft_id and self.expected_hash_prefix:
+                    rejected = _reject_current_draft(
+                        self.expected_draft_id,
+                        self.expected_hash_prefix,
+                        interaction.user,
+                    )
+                    if rejected is not True:
+                        await interaction.followup.send(
+                            f"❌ {rejected}", ephemeral=True
+                        )
+                        continue
+                    res_wf = trigger_github_workflow(
+                        "instagram_generate.yml"
+                    )
+                    if res_wf is True:
+                        try:
+                            old_msg = await channel.fetch_message(
+                                self.original_msg_id
+                            )
+                            await old_msg.edit(
+                                content=(
+                                    "❌ Proposta rejeitada. A selecionar "
+                                    "novos candidatos verificados..."
+                                ),
+                                embed=None,
+                                view=None,
+                            )
+                        except Exception:
+                            pass
+                        await interaction.followup.send(
+                            (
+                                "Recomendações rejeitadas. Está a ser gerada "
+                                "uma proposta nova."
+                            ),
+                            ephemeral=True,
+                        )
+                    else:
+                        await interaction.followup.send(
+                            (
+                                "As recomendações foram rejeitadas, mas não "
+                                f"foi possível iniciar a substituição: {res_wf}"
+                            ),
+                            ephemeral=True,
+                        )
+                    continue
+
                 draft_content, draft_sha = get_github_file("scripts/review_draft.json")
                 if not draft_content:
                     await interaction.followup.send(f"❌ Erro ao ler rascunho no GitHub: {draft_sha}", ephemeral=True)
@@ -589,6 +716,23 @@ class RejectionReasonSelect(discord.ui.Select):
                     await interaction.followup.send("Itens rejeitados! Novas recomendações estão a ser geradas no GitHub.", ephemeral=True)
                 else:
                     await interaction.followup.send(f"❌ Erro ao acionar workflow de regeneração: {res_wf}", ephemeral=True)
+
+
+class RejectionReasonView(discord.ui.View):
+    def __init__(
+        self,
+        original_msg_id,
+        expected_draft_id,
+        expected_hash_prefix,
+    ):
+        super().__init__(timeout=300)
+        self.add_item(
+            RejectionReasonSelect(
+                original_msg_id,
+                expected_draft_id,
+                expected_hash_prefix,
+            )
+        )
 
 class LinkQuadrantSelect(discord.ui.Select):
     def __init__(self, original_msg_id):
@@ -899,6 +1043,57 @@ def _reject_current_draft(expected_draft_id, expected_hash_prefix, user):
     )
 
 
+def _store_review_feedback(
+    expected_draft_id,
+    expected_hash_prefix,
+    text,
+    user,
+):
+    """Attach a reviewer-authored correction note to the exact current draft."""
+
+    clean_text = re.sub(r"\s+", " ", str(text or "")).strip()[:1000]
+    if len(clean_text) < 5:
+        return "Descreve a correção com um pouco mais de detalhe."
+    draft_content, draft_sha = get_github_file("scripts/review_draft.json")
+    if not draft_content:
+        return "Não foi possível obter o rascunho atual."
+    try:
+        draft = json.loads(draft_content.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return "O rascunho atual não pôde ser lido."
+    draft_id = draft.get("draft_id")
+    content_hash = str(draft.get("content_hash") or "")
+    if (
+        draft_id != expected_draft_id
+        or not content_hash.startswith(expected_hash_prefix)
+    ):
+        return "Este cartão já não corresponde ao rascunho atual."
+
+    feedback = draft.get("reviewFeedback")
+    if not isinstance(feedback, list):
+        feedback = []
+    feedback.append(
+        {
+            "text": clean_text,
+            "createdAt": datetime.datetime.now(
+                datetime.timezone.utc
+            ).isoformat(),
+            "createdById": str(user.id),
+            "createdByName": getattr(user, "display_name", str(user)),
+        }
+    )
+    draft["reviewFeedback"] = feedback[-20:]
+    encoded = json.dumps(
+        draft, indent=2, ensure_ascii=False
+    ).encode("utf-8")
+    return update_github_file(
+        "scripts/review_draft.json",
+        encoded,
+        f"Record review feedback for {draft_id} [bot]",
+        sha=draft_sha,
+    )
+
+
 class PostReviewView(discord.ui.View):
     def __init__(self):
         super().__init__(timeout=None)
@@ -945,9 +1140,8 @@ class PostReviewView(discord.ui.View):
 
     @discord.ui.button(label="Rejeitar", style=discord.ButtonStyle.red, custom_id="reject_post", emoji="❌")
     async def reject_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        await interaction.response.defer(ephemeral=True)
         if not _is_authorized_reviewer(interaction.user):
-            await interaction.followup.send(
+            await interaction.response.send_message(
                 "Não tens permissão para rejeitar publicações.",
                 ephemeral=True,
             )
@@ -956,34 +1150,18 @@ class PostReviewView(discord.ui.View):
             interaction.message
         )
         if not draft_id or not hash_prefix:
-            await interaction.followup.send(
+            await interaction.response.send_message(
                 "Este cartão é antigo; gera uma nova proposta.",
                 ephemeral=True,
             )
             return
-        rejected = _reject_current_draft(
-            draft_id, hash_prefix, interaction.user
-        )
-        if rejected is not True:
-            await interaction.followup.send(f"❌ {rejected}", ephemeral=True)
-            return
-        regeneration = trigger_github_workflow("instagram_generate.yml")
-        if regeneration is not True:
-            await interaction.followup.send(
-                f"❌ Itens rejeitados, mas a regeneração falhou: {regeneration}",
-                ephemeral=True,
-            )
-            return
-        await interaction.message.edit(
-            content=(
-                f"❌ Proposta rejeitada por {interaction.user.mention}. "
-                "A substituição automática foi iniciada."
+        await interaction.response.send_message(
+            "Indica o que deve ser corrigido nesta proposta:",
+            view=RejectionReasonView(
+                interaction.message.id,
+                draft_id,
+                hash_prefix,
             ),
-            embed=None,
-            view=None,
-        )
-        await interaction.followup.send(
-            "A gerar quatro substituições verificadas, sem edição manual.",
             ephemeral=True,
         )
 

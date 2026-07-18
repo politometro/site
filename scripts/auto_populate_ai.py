@@ -32,7 +32,11 @@ REC_FILE = os.path.join(ROOT_DIR, "website", "public", "recommendations.json")
 WATCHLIST_FILE = os.path.join(ROOT_DIR, "website", "public", "watchlist.json")
 
 sys.path.insert(0, SCRIPT_DIR)
-from recommendation_resolver import ResolutionError, resolve_recommendation
+from recommendation_resolver import (
+    ResolutionError,
+    is_eligible_highlight,
+    resolve_recommendation,
+)
 
 
 TARGET_PER_TYPE = 4
@@ -597,13 +601,14 @@ def _publisher_from_link(link):
 
 
 def discover_highlight_candidates(api_key, engine_id, seen_links, limit):
-    """Discover actual investigations/reportages on preferred publishers."""
+    """Discover editorial work, never ordinary news, on trusted publishers."""
     if not api_key or not engine_id:
         print("  [CSE] GOOGLE_CSE_API_KEY/GOOGLE_CSE_ID em falta.")
         return []
 
     site_clause = " OR ".join(f"site:{domain}" for domain in TRUSTED_HIGHLIGHT_DOMAINS)
     queries = (
+        f'("opinião" OR "artigo de opinião" OR editorial OR "análise aprofundada") Portugal política ({site_clause})',
         f'("investigação" OR "grande reportagem") Portugal política ({site_clause})',
         f'("documentário" OR "reportagem especial") Portugal sociedade ({site_clause})',
         f'("corrupção" OR "transparência") investigação Portugal ({site_clause})',
@@ -636,6 +641,13 @@ def discover_highlight_candidates(api_key, engine_id, seen_links, limit):
                 continue
             title = _clean_source_text(result.get("title"), max_chars=180)
             if not title:
+                continue
+            description = _clean_source_text(result.get("snippet"))
+            if not is_eligible_highlight(
+                title=title,
+                description=description,
+                link=link,
+            ):
                 continue
             pagemap = result.get("pagemap") or {}
             images = pagemap.get("cse_image") or []
@@ -670,7 +682,7 @@ def discover_highlight_candidates(api_key, engine_id, seen_links, limit):
                     "category": "Destaque",
                     "title": title,
                     "authorOrMeta": _publisher_from_link(link),
-                    "description": _clean_source_text(result.get("snippet")),
+                    "description": description,
                     "imageUrl": image_url,
                     "link": link,
                     "externalId": link,
@@ -689,7 +701,7 @@ def discover_highlight_candidates(api_key, engine_id, seen_links, limit):
 
 
 def discover_rss_highlight_candidates(seen_links, limit):
-    """Discover recent articles without depending on a search API key."""
+    """Discover recent editorial work without depending on a search API key."""
     candidates = []
     emitted_links = set()
     now = datetime.datetime.now(datetime.timezone.utc)
@@ -776,6 +788,23 @@ def discover_rss_highlight_candidates(seen_links, limit):
                 _rss_text(entry, "description")
                 or _rss_text(entry, "summary")
             )
+            categories = [
+                (
+                    node.attrib.get("term")
+                    or node.attrib.get("label")
+                    or node.text
+                    or ""
+                ).strip()
+                for node in entry.iter()
+                if node.tag.rsplit("}", 1)[-1].lower() == "category"
+            ]
+            if not is_eligible_highlight(
+                title=title,
+                description=description,
+                link=link,
+                categories=categories,
+            ):
+                continue
             searchable = _normalise(f"{title} {description}")
             topic_score = sum(
                 _normalise(marker) in searchable for marker in topic_markers
@@ -805,6 +834,7 @@ def discover_rss_highlight_candidates(seen_links, limit):
                         "feedUrl": feed_url,
                         "guid": _rss_text(entry, "guid") or link,
                         "imageUrl": image_url,
+                        "categories": categories,
                     },
                     "_topicScore": topic_score,
                 }
@@ -999,6 +1029,21 @@ def _is_publishable_record(item):
         if time_sensitive
         else True
     )
+    discovery = item.get("_discovery")
+    editorial_contract = (
+        is_eligible_highlight(
+            title=item.get("title"),
+            description=item.get("description"),
+            link=item.get("link"),
+            categories=(
+                discovery.get("categories", [])
+                if isinstance(discovery, dict)
+                else []
+            ),
+        )
+        if item.get("type") == "highlight"
+        else True
+    )
     return bool(
         item.get("status") == "queue"
         and item.get("resolutionStatus") == "verified"
@@ -1009,6 +1054,7 @@ def _is_publishable_record(item):
         and str(item.get("imageUrl") or "").startswith("/covers/")
         and bool(str(item.get("description") or "").strip())
         and temporal_contract
+        and editorial_contract
         and not _is_expired(item)
     )
 

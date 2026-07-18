@@ -27,13 +27,17 @@ def verified_item(media_type, suffix, status="queue"):
         "highlight": "Destaque",
     }
     link = f"https://example.com/{media_type}/{suffix}"
+    description = f"Descrição verificada {suffix}."
+    if media_type == "highlight":
+        link = f"https://example.com/investigacao/{suffix}"
+        description = f"Jornalismo de investigação verificado {suffix}."
     item = {
         "id": f"{media_type}_{suffix}",
         "type": media_type,
         "category": categories[media_type],
         "title": f"{categories[media_type]} {suffix}",
         "authorOrMeta": f"Autor {suffix}",
-        "description": f"Descrição verificada {suffix}.",
+        "description": description,
         "link": link,
         "imageUrl": f"/covers/{media_type}_{suffix}.jpg",
         "status": status,
@@ -101,6 +105,13 @@ class ZeroStatePopulationTests(unittest.TestCase):
                 resolved["link"] = f"https://example.com/content/{suffix}"
                 resolved["imageUrl"] = f"/covers/{suffix}.jpg"
                 resolved["description"] = "Descrição derivada da fonte."
+                if resolved["type"] == "highlight":
+                    resolved["link"] = (
+                        f"https://example.com/investigacao/{suffix}"
+                    )
+                    resolved["description"] = (
+                        "Jornalismo de investigação derivado da fonte."
+                    )
                 resolved["externalId"] = f"external-{suffix}"
                 resolved["resolutionStatus"] = "verified"
                 resolved["verification"] = {
@@ -361,6 +372,67 @@ class RecoveryWindowTests(unittest.TestCase):
 
 
 class PostQualityGateTests(unittest.TestCase):
+    def test_card_description_limits_prevent_text_from_exceeding_cover(self):
+        self.assertLess(
+            generate_post.DESCRIPTION_CHAR_LIMITS["q2"],
+            generate_post.DESCRIPTION_CHAR_LIMITS["q1"],
+        )
+        self.assertEqual(
+            generate_post.DESCRIPTION_LINE_LIMITS["q2"], 8
+        )
+        self.assertEqual(
+            generate_post.DESCRIPTION_LINE_LIMITS["q4"], 5
+        )
+        self.assertLessEqual(
+            generate_post.DESCRIPTION_LINE_LIMITS["q4"] * 18,
+            90,
+        )
+
+    def test_news_cannot_fill_highlight_quadrant(self):
+        queue = [
+            verified_item("book", "approved"),
+            verified_item("podcast", "approved"),
+            verified_item("movie", "approved"),
+            verified_item("highlight", "ordinary-news"),
+            verified_item("highlight", "opinion"),
+        ]
+        queue[3].update(
+            {
+                "title": "Líder partidário reage às notícias do dia",
+                "description": "A declaração foi feita esta manhã.",
+                "link": "https://www.rtp.pt/noticias/politica/declaracao_n1",
+            }
+        )
+        queue[4].update(
+            {
+                "title": "O futuro da democracia",
+                "description": "Reflexão do autor.",
+                "link": "https://www.publico.pt/opiniao/futuro-democracia",
+            }
+        )
+        with (
+            mock.patch.object(
+                generate_post,
+                "resolve_recommendation",
+                side_effect=lambda item, force=False: item,
+            ),
+            mock.patch.object(
+                generate_post,
+                "load_cover_for_item",
+                return_value=Image.new("RGB", (300, 300), "navy"),
+            ),
+            mock.patch.object(
+                generate_post,
+                "_revalidate_reviewed_source",
+                return_value=None,
+            ),
+        ):
+            selected, _ = generate_post.get_recommendations_with_valid_covers(
+                queue
+            )
+
+        self.assertEqual(selected["q4"]["id"], "highlight_opinion")
+
     def test_review_generation_writes_timestamped_draft_end_to_end(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)

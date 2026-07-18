@@ -11,6 +11,118 @@ import type {
 } from "@/lib/news";
 
 const ALL_SOURCES = "all";
+const NEWS_BACKUP_STORAGE_KEY = "politometro-news-backup-v1";
+
+interface StoredSourceBackup {
+  savedAt: string;
+  items: NewsItem[];
+}
+
+interface StoredNewsBackup {
+  version: 1;
+  sources: Partial<Record<NewsSourceId, StoredSourceBackup>>;
+}
+
+function readBrowserBackup(): StoredNewsBackup {
+  try {
+    const parsed = JSON.parse(
+      window.localStorage.getItem(NEWS_BACKUP_STORAGE_KEY) ?? "",
+    ) as StoredNewsBackup;
+    if (
+      parsed?.version === 1 &&
+      parsed.sources &&
+      typeof parsed.sources === "object"
+    ) {
+      return parsed;
+    }
+  } catch {
+    // A cópia local é apenas uma salvaguarda e pode ser recriada.
+  }
+  return { version: 1, sources: {} };
+}
+
+function mergeBrowserBackup(nextPayload: NewsPayload): NewsPayload {
+  const stored = readBrowserBackup();
+  const itemsBySource = new Map<NewsSourceId, NewsItem[]>();
+  for (const source of nextPayload.sources) {
+    itemsBySource.set(
+      source.id,
+      nextPayload.items.filter((item) => item.sourceId === source.id),
+    );
+  }
+
+  const sources = nextPayload.sources.map((source) => {
+    const apiItems = itemsBySource.get(source.id) ?? [];
+    if (source.available && !source.usingBackup && apiItems.length) {
+      stored.sources[source.id] = {
+        savedAt: source.lastSuccessfulAt ?? nextPayload.updatedAt,
+        items: apiItems.slice(0, 20),
+      };
+      return source;
+    }
+
+    let local = stored.sources[source.id];
+    const apiBackupTime = Date.parse(source.lastSuccessfulAt ?? "");
+    let localBackupTime = Date.parse(local?.savedAt ?? "");
+    if (
+      apiItems.length &&
+      Number.isFinite(apiBackupTime) &&
+      (!local ||
+        !Number.isFinite(localBackupTime) ||
+        apiBackupTime > localBackupTime)
+    ) {
+      local = {
+        savedAt: source.lastSuccessfulAt!,
+        items: apiItems.slice(0, 20),
+      };
+      stored.sources[source.id] = local;
+      localBackupTime = apiBackupTime;
+    }
+    if (
+      local?.items.length &&
+      (!apiItems.length ||
+        (Number.isFinite(localBackupTime) &&
+          (!Number.isFinite(apiBackupTime) ||
+            localBackupTime > apiBackupTime)))
+    ) {
+      itemsBySource.set(source.id, local.items);
+      return {
+        ...source,
+        available: false,
+        usingBackup: true,
+        itemCount: local.items.length,
+        lastSuccessfulAt: local.savedAt,
+        note: "Atualização temporariamente em pausa.",
+      };
+    }
+    return source;
+  });
+
+  try {
+    window.localStorage.setItem(
+      NEWS_BACKUP_STORAGE_KEY,
+      JSON.stringify(stored),
+    );
+  } catch {
+    // O servidor continua a disponibilizar a sua própria cópia de segurança.
+  }
+
+  const seen = new Set<string>();
+  const items = Array.from(itemsBySource.values())
+    .flat()
+    .filter((item) => {
+      if (seen.has(item.link)) return false;
+      seen.add(item.link);
+      return true;
+    })
+    .sort(
+      (left, right) =>
+        Date.parse(right.publishedAt) - Date.parse(left.publishedAt),
+    )
+    .slice(0, 100);
+
+  return { ...nextPayload, items, sources };
+}
 
 function relativeTime(value: string): string {
   const timestamp = Date.parse(value);
@@ -69,7 +181,9 @@ export default function NewsPage() {
     try {
       const response = await fetch("/api/news");
       if (!response.ok) throw new Error("news_request_failed");
-      setPayload((await response.json()) as NewsPayload);
+      setPayload(
+        mergeBrowserBackup((await response.json()) as NewsPayload),
+      );
       setError("");
     } catch {
       setError("Não foi possível atualizar as notícias neste momento.");
@@ -102,6 +216,13 @@ export default function NewsPage() {
       ),
     [payload],
   );
+  const selectedSource =
+    selected === ALL_SOURCES
+      ? undefined
+      : sourceMap.get(selected as NewsSourceId);
+  const sourceUpdatePaused = Boolean(
+    selectedSource && !selectedSource.available,
+  );
 
   return (
     <div className={styles.container}>
@@ -117,31 +238,33 @@ export default function NewsPage() {
           </div>
         </section>
 
-        <nav className={styles.filters} aria-label="Filtrar por fonte">
-          <button
-            type="button"
-            className={selected === ALL_SOURCES ? styles.activeFilter : ""}
-            onClick={() => setSelected(ALL_SOURCES)}
-          >
-            Todas
-          </button>
-          {payload?.sources.map((source) => (
+        <div className={styles.filterArea}>
+          <nav className={styles.filters} aria-label="Filtrar por fonte">
             <button
               type="button"
-              key={source.id}
-              className={selected === source.id ? styles.activeFilter : ""}
-              onClick={() => setSelected(source.id)}
+              className={selected === ALL_SOURCES ? styles.activeFilter : ""}
+              onClick={() => setSelected(ALL_SOURCES)}
             >
-              <SourceLogo source={source} />
-              {source.name}
-              {!source.available && (
-                <span className={styles.unavailableMark} title={source.note}>
-                  !
-                </span>
-              )}
+              Todas
             </button>
-          ))}
-        </nav>
+            {payload?.sources.map((source) => (
+              <button
+                type="button"
+                key={source.id}
+                className={selected === source.id ? styles.activeFilter : ""}
+                onClick={() => setSelected(source.id)}
+              >
+                <SourceLogo source={source} />
+                {source.name}
+              </button>
+            ))}
+          </nav>
+          {sourceUpdatePaused && (
+            <span className={styles.pauseNotice} role="status">
+              Atualização em pausa · retomamos em breve
+            </span>
+          )}
+        </div>
 
         {error && <p className={styles.error}>{error}</p>}
         {loading && !payload && <div className={styles.loading}>A carregar…</div>}
@@ -181,7 +304,7 @@ export default function NewsPage() {
 
         {!loading && items.length === 0 && (
           <p className={styles.empty}>
-            Esta fonte não devolveu notícias válidas neste momento.
+            Ainda não há notícias desta fonte para apresentar.
           </p>
         )}
 

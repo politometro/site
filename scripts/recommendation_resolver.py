@@ -362,6 +362,109 @@ def _normalise_text(value: Any) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+HIGHLIGHT_EDITORIAL_PATH_MARKERS = {
+    "opiniao",
+    "editorial",
+    "cronica",
+    "analise",
+    "investigacao",
+    "grande reportagem",
+    "reportagem especial",
+    "entrevista",
+    "explicador",
+    "fact check",
+    "documentario",
+    "ensaio",
+    "debate",
+}
+HIGHLIGHT_EDITORIAL_TITLE_MARKERS = {
+    "opiniao",
+    "editorial",
+    "analise",
+    "investigacao",
+    "grande reportagem",
+    "reportagem especial",
+    "entrevista",
+    "explicador",
+    "fact check",
+    "documentario",
+    "ensaio",
+    "debate",
+}
+HIGHLIGHT_EDITORIAL_DESCRIPTION_MARKERS = {
+    "artigo de opiniao",
+    "texto de opiniao",
+    "jornalismo de investigacao",
+    "grande reportagem",
+    "reportagem especial",
+    "entrevista completa",
+    "analise aprofundada",
+}
+
+
+def is_eligible_highlight(
+    *,
+    title: Any,
+    description: Any,
+    link: Any,
+    categories: Iterable[Any] | None = None,
+) -> bool:
+    """Accept editorial/long-form work and fail closed on ordinary news."""
+
+    raw_link = str(link or "").strip()
+    try:
+        parsed = urllib.parse.urlsplit(raw_link)
+    except ValueError:
+        return False
+    if parsed.scheme not in {"http", "https"}:
+        return False
+
+    path_segments = {
+        _normalise_text(urllib.parse.unquote(segment))
+        for segment in parsed.path.split("/")
+        if _normalise_text(urllib.parse.unquote(segment))
+    }
+    query_segments = {
+        _normalise_text(value)
+        for key, values in urllib.parse.parse_qs(parsed.query).items()
+        for value in (key, *values)
+        if _normalise_text(value)
+    }
+    category_segments = {
+        _normalise_text(value)
+        for value in (categories or [])
+        if _normalise_text(value)
+    }
+    title_label = unicodedata.normalize("NFKD", str(title or ""))
+    title_label = "".join(
+        ch for ch in title_label if not unicodedata.combining(ch)
+    ).casefold().strip()
+    description_evidence = _normalise_text(description)
+
+    if any(
+        marker in path_segments
+        or marker in query_segments
+        or marker in category_segments
+        for marker in HIGHLIGHT_EDITORIAL_PATH_MARKERS
+    ):
+        return True
+    title_pattern = "|".join(
+        re.escape(marker)
+        for marker in sorted(
+            HIGHLIGHT_EDITORIAL_TITLE_MARKERS, key=len, reverse=True
+        )
+    )
+    if re.match(
+        rf"^(?:{title_pattern})\s*(?::|\||-|–|—)",
+        title_label,
+    ):
+        return True
+    return any(
+        marker in description_evidence
+        for marker in HIGHLIGHT_EDITORIAL_DESCRIPTION_MARKERS
+    )
+
+
 def _text_tokens(value: Any) -> list[str]:
     return [token for token in _normalise_text(value).split() if len(token) > 1]
 
@@ -1673,6 +1776,17 @@ def _parse_feed(body: bytes, feed_url: str) -> list[dict[str, Any]]:
             node, {"description", "summary", "content", "encoded"}
         )
         published = _element_text(node, {"pubdate", "published", "updated", "date"})
+        categories = []
+        for child in node.iter():
+            if _local_name(child.tag) != "category":
+                continue
+            value = (
+                child.attrib.get("term")
+                or child.attrib.get("label")
+                or (child.text or "")
+            ).strip()
+            if value:
+                categories.append(value)
         published_at = _normalise_datetime(published)
         image = _element_image(node) or feed_image
         if not image and description:
@@ -1712,6 +1826,7 @@ def _parse_feed(body: bytes, feed_url: str) -> list[dict[str, Any]]:
                 "publishedAt": published_at,
                 "timestamp": timestamp,
                 "feedUrl": feed_url,
+                "categories": list(dict.fromkeys(categories)),
             }
         )
     return entries
@@ -2339,6 +2454,25 @@ def _validate_highlight_page(
             f"Artigo {metadata['title']!r} não corresponde ao título candidato.",
             item=item,
         )
+    categories = [
+        metadata.get("meta", {}).get(key, "")
+        for key in (
+            "article:section",
+            "section",
+            "parsely-section",
+        )
+    ]
+    if not is_eligible_highlight(
+        title=metadata["title"],
+        description=metadata["description"],
+        link=metadata["canonical"],
+        categories=categories,
+    ):
+        raise RecommendationResolutionError(
+            "NEWS_NOT_ALLOWED",
+            "Notícias correntes não são elegíveis para Destaque.",
+            item=item,
+        )
     if not metadata["image"]:
         raise RecommendationResolutionError(
             "COVER_NOT_FOUND", "Artigo sem imagem editorial.", item=item
@@ -2432,6 +2566,17 @@ def _resolve_highlight_rss_discovery(
             item=item,
         )
     score, entry = best
+    if not is_eligible_highlight(
+        title=entry["title"],
+        description=entry["description"],
+        link=entry["link"],
+        categories=entry.get("categories", []),
+    ):
+        raise RecommendationResolutionError(
+            "NEWS_NOT_ALLOWED",
+            "Notícias correntes não são elegíveis para Destaque.",
+            item=item,
+        )
     image = entry.get("image") or str(
         discovery.get("imageUrl", "")
     ).strip()
@@ -2469,6 +2614,13 @@ def _rss_discovery_candidates(feed_url: str) -> list[dict[str, Any]]:
     candidates = []
     for entry in entries:
         if not entry["image"] or not entry["publishedAt"]:
+            continue
+        if not is_eligible_highlight(
+            title=entry["title"],
+            description=entry["description"],
+            link=entry["link"],
+            categories=entry.get("categories", []),
+        ):
             continue
         candidate = {
             "type": "highlight",
@@ -2511,6 +2663,7 @@ def discover_highlights(
         for value in queries_env.split("||")
         if value.strip()
     ] or [
+        "opinião política Portugal",
         "investigação política Portugal",
         "grande reportagem sociedade Portugal",
         "debate político Portugal",
@@ -2527,6 +2680,12 @@ def discover_highlights(
                 continue
             host = _hostname(link)
             if not _host_in(host, TRUSTED_HIGHLIGHT_DOMAINS):
+                continue
+            if not is_eligible_highlight(
+                title=result["title"],
+                description=result["snippet"],
+                link=link,
+            ):
                 continue
             candidate = {
                 "type": "highlight",
@@ -3049,6 +3208,7 @@ __all__ = [
     "ResolutionError",
     "discover_highlights",
     "discover_podcast_episodes",
+    "is_eligible_highlight",
     "load_cover_for_item",
     "probe_verified_source",
     "resolve_recommendation",

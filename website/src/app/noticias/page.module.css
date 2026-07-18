@@ -29,6 +29,10 @@
   line-height: 1.65;
 }
 
+.filterArea {
+  position: relative;
+}
+
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -78,15 +82,21 @@
   font-weight: 900;
 }
 
-.unavailableMark {
-  display: inline-grid;
-  place-items: center;
-  width: 17px;
-  height: 17px;
-  border-radius: 50%;
-  background: #c07122;
-  color: white;
-  font-size: 0.68rem;
+.pauseNotice {
+  position: absolute;
+  top: 0.62rem;
+  right: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.42rem 0.68rem;
+  border: 1px solid rgba(174, 111, 37, 0.22);
+  border-radius: var(--radius-full);
+  background: rgba(255, 247, 231, 0.9);
+  color: #80521d;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .grid {
@@ -222,6 +232,13 @@
 }
 
 @media (max-width: 920px) {
+  .pauseNotice {
+    position: static;
+    width: max-content;
+    max-width: 100%;
+    margin: -0.45rem auto 1rem;
+  }
+
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
