@@ -216,7 +216,9 @@ class RecommendationResolverTests(unittest.TestCase):
             manifest_path.stat().st_mtime_ns,
         )
         with (
-            patch.object(resolver, "_probe_link_available", return_value=True),
+            patch.object(
+                resolver, "_probe_link_state", return_value="available"
+            ),
             patch.object(
                 resolver,
                 "_resolve_entity",
@@ -244,7 +246,9 @@ class RecommendationResolverTests(unittest.TestCase):
         }
         result = self.resolve_with(item, self.entity())
         with (
-            patch.object(resolver, "_probe_link_available", return_value=False),
+            patch.object(
+                resolver, "_probe_link_state", return_value="missing"
+            ),
             patch.object(
                 resolver,
                 "_resolve_entity",
@@ -272,7 +276,9 @@ class RecommendationResolverTests(unittest.TestCase):
         stale = copy.deepcopy(result)
         stale["verification"]["verifiedAt"] = iso_days_ago(3)
         with (
-            patch.object(resolver, "_probe_link_available", return_value=True),
+            patch.object(
+                resolver, "_probe_link_state", return_value="available"
+            ),
             patch.object(
                 resolver,
                 "_resolve_entity",
@@ -508,6 +514,94 @@ class RecommendationResolverTests(unittest.TestCase):
         ):
             self.assertTrue(resolver.probe_verified_source(item))
 
+    def test_imdb_source_probe_uses_wikidata_instead_of_imdb_html(self):
+        item = {
+            "type": "movie",
+            "title": "The Great Dictator",
+            "authorOrMeta": "Charlie Chaplin",
+            "link": "https://www.imdb.com/title/tt0032553/",
+            "externalId": "imdb:tt0032553",
+        }
+        confirmation = (
+            "The Great Dictator",
+            ["Charlie Chaplin"],
+            1.0,
+            {"claims": {}},
+        )
+        with (
+            patch.object(
+                resolver,
+                "_wikidata_confirms_imdb",
+                return_value=confirmation,
+            ) as wikidata,
+            patch.object(
+                resolver,
+                "_probe_link_available",
+                side_effect=AssertionError("IMDb HTML must not be probed"),
+            ),
+        ):
+            self.assertTrue(resolver.probe_verified_source(item))
+
+        wikidata.assert_called_once_with(
+            "The Great Dictator", "tt0032553", "Charlie Chaplin"
+        )
+
+    def test_supplied_imdb_movie_survives_http_202_with_wikidata_poster(self):
+        entity = {
+            "claims": {
+                "P18": [
+                    {
+                        "mainsnak": {
+                            "datavalue": {
+                                "value": "The Great Dictator poster.jpg"
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+        confirmation = (
+            "The Great Dictator",
+            ["Charlie Chaplin"],
+            1.0,
+            entity,
+        )
+        item = {
+            "type": "movie",
+            "title": "The Great Dictator",
+            "authorOrMeta": "Charlie Chaplin",
+            "link": "https://www.imdb.com/title/tt0032553/",
+        }
+
+        with (
+            patch.object(
+                resolver,
+                "_wikidata_confirms_imdb",
+                return_value=confirmation,
+            ),
+            patch.object(
+                resolver,
+                "_validate_imdb_page",
+                side_effect=resolver.ResolutionError(
+                    "HTTP_ERROR", "HTTP 202 ao obter IMDb."
+                ),
+            ),
+        ):
+            result = resolver._resolve_movie(item)
+
+        self.assertEqual(result.external_id, "imdb:tt0032553")
+        self.assertEqual(
+            result.link, "https://www.imdb.com/title/tt0032553/"
+        )
+        self.assertIn("commons.wikimedia.org", result.image_url)
+        self.assertEqual(result.resolved_author, "Charlie Chaplin")
+
+    def test_http_202_is_classified_as_temporary_source_response(self):
+        error = resolver.ResolutionError(
+            "HTTP_ERROR", "HTTP 202 ao obter https://www.imdb.com/title/x/."
+        )
+        self.assertTrue(resolver._is_transient_source_error(error))
+
     def test_http_get_retries_timeout_and_503_before_accepting_json(self):
         temporary_failure = Mock()
         temporary_failure.status_code = 503
@@ -668,6 +762,63 @@ class RecommendationResolverTests(unittest.TestCase):
                 self.assertFalse(
                     resolver._probe_link_available("https://example.com/source")
                 )
+
+    def test_generic_probe_distinguishes_protection_from_deleted_link(self):
+        class FakeResponse:
+            def __init__(self, status_code):
+                self.status_code = status_code
+                self.headers = {}
+                self.url = "https://example.com/article"
+
+            def close(self):
+                return None
+
+        with (
+            patch.object(resolver, "_assert_safe_url"),
+            patch.object(
+                resolver.requests, "get", return_value=FakeResponse(403)
+            ),
+        ):
+            self.assertEqual(
+                resolver._probe_link_state("https://example.com/article"),
+                "transient",
+            )
+        with (
+            patch.object(resolver, "_assert_safe_url"),
+            patch.object(
+                resolver.requests, "get", return_value=FakeResponse(404)
+            ),
+        ):
+            self.assertEqual(
+                resolver._probe_link_state("https://example.com/article"),
+                "missing",
+            )
+
+    def test_recent_generic_proof_survives_protection_but_not_404(self):
+        item = {
+            "type": "highlight",
+            "title": "Investigação",
+            "link": "https://example.com/article",
+            "verification": {
+                "status": "verified",
+                "entityId": "article:123",
+                "coverHash": "verified-cover",
+                "verifiedAt": iso_now(),
+            },
+        }
+        with (
+            patch.object(
+                resolver, "_probe_link_state", return_value="transient"
+            ),
+            patch.object(
+                resolver, "validate_cached_cover", return_value=True
+            ),
+        ):
+            self.assertTrue(resolver.probe_verified_source(item))
+        with patch.object(
+            resolver, "_probe_link_state", return_value="missing"
+        ):
+            self.assertFalse(resolver.probe_verified_source(item))
 
     def test_raster_normalisation_outputs_verified_jpeg(self):
         png = BytesIO()

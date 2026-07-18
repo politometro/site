@@ -721,15 +721,15 @@ def _http_get(
     )
 
 
-def _probe_link_available(url: str) -> bool:
-    """Read-only, redirect-safe availability probe; never touches cache files."""
+def _probe_link_state(url: str) -> str:
+    """Return available, missing or transient without touching cache files."""
 
     current = url
     for _ in range(MAX_REDIRECTS + 1):
         try:
             _assert_safe_url(current)
         except RecommendationResolutionError:
-            return False
+            return "missing"
         response = None
         try:
             response = requests.get(
@@ -746,27 +746,49 @@ def _probe_link_available(url: str) -> bool:
             if response.status_code in {301, 302, 303, 307, 308}:
                 location = response.headers.get("Location", "").strip()
                 if not location:
-                    return False
+                    return "missing"
                 current = urllib.parse.urljoin(current, location)
                 continue
+            if response.status_code in {
+                202,
+                401,
+                403,
+                408,
+                425,
+                429,
+                500,
+                502,
+                503,
+                504,
+            }:
+                return "transient"
             if response.status_code not in {200, 206}:
-                return False
+                return "missing"
             final_url = getattr(response, "url", None) or current
             _assert_safe_url(final_url)
             mime = response.headers.get("Content-Type", "").split(";", 1)[0].casefold()
-            return mime in HTML_MIME_TYPES or mime in {
+            valid_mime = mime in HTML_MIME_TYPES or mime in {
                 "application/json",
                 "text/plain",
             }
-        except (requests.RequestException, RecommendationResolutionError):
-            return False
+            return "available" if valid_mime else "missing"
+        except requests.RequestException:
+            return "transient"
+        except RecommendationResolutionError:
+            return "missing"
         finally:
             if response is not None:
                 try:
                     response.close()
                 except Exception:
                     pass
-    return False
+    return "missing"
+
+
+def _probe_link_available(url: str) -> bool:
+    """Backward-compatible boolean availability probe."""
+
+    return _probe_link_state(url) == "available"
 
 
 def _get_json(url: str) -> tuple[str, dict[str, Any]]:
@@ -1307,59 +1329,85 @@ def _resolve_book_openlibrary(
     )
 
 
+def _has_recent_verified_cache(item: Mapping[str, Any]) -> bool:
+    verification = item.get("verification")
+    if not isinstance(verification, Mapping):
+        return False
+    verified_at = _normalise_datetime(verification.get("verifiedAt"))
+    if (
+        verification.get("status") != "verified"
+        or not verification.get("entityId")
+        or not verification.get("coverHash")
+        or not verified_at
+    ):
+        return False
+    timestamp = _dt.datetime.fromisoformat(
+        verified_at.replace("Z", "+00:00")
+    )
+    age = _dt.datetime.now(_dt.timezone.utc) - timestamp
+    return (
+        _dt.timedelta(0)
+        <= age
+        <= _dt.timedelta(hours=VERIFICATION_TTL_HOURS)
+        and validate_cached_cover(item)
+    )
+
+
+def _is_transient_source_error(exc: RecommendationResolutionError) -> bool:
+    return exc.code in {"NETWORK_ERROR", "BAD_JSON"} or (
+        exc.code == "HTTP_ERROR"
+        and bool(re.search(r"HTTP (?:202|429|5\d\d)\b", str(exc)))
+    )
+
+
 def probe_verified_source(item: Mapping[str, Any]) -> bool:
     """Check a verified source using its most stable public endpoint."""
 
     link = str(item.get("link") or "").strip()
     work_key = _openlibrary_work_key(link)
-    if not work_key:
-        return _probe_link_available(link)
-    try:
-        _, payload = _get_json(
-            f"https://openlibrary.org{work_key}.json"
-        )
-    except RecommendationResolutionError as exc:
-        verification = item.get("verification")
-        verified_at = _normalise_datetime(
-            verification.get("verifiedAt")
-            if isinstance(verification, Mapping)
-            else ""
-        )
-        recent_proof = False
-        if (
-            isinstance(verification, Mapping)
-            and verification.get("status") == "verified"
-            and verification.get("entityId")
-            and verification.get("coverHash")
-            and verified_at
-        ):
-            timestamp = _dt.datetime.fromisoformat(
-                verified_at.replace("Z", "+00:00")
+    if work_key:
+        try:
+            _, payload = _get_json(
+                f"https://openlibrary.org{work_key}.json"
             )
-            age = _dt.datetime.now(_dt.timezone.utc) - timestamp
-            recent_proof = (
-                _dt.timedelta(0)
-                <= age
-                <= _dt.timedelta(hours=VERIFICATION_TTL_HOURS)
+        except RecommendationResolutionError as exc:
+            # A temporary catalogue outage must not invalidate an exact entity
+            # and local cover verified earlier the same day.
+            return (
+                _is_transient_source_error(exc)
+                and _has_recent_verified_cache(item)
             )
-        transient = exc.code in {
-            "NETWORK_ERROR",
-            "BAD_JSON",
-        } or (
-            exc.code == "HTTP_ERROR"
-            and re.search(r"HTTP (?:429|5\d\d)\b", str(exc))
-        )
-        # A temporary catalogue outage must not invalidate an exact entity and
-        # local cover that were cryptographically verified earlier the same day.
-        if transient and recent_proof and validate_cached_cover(item):
-            return True
-        return False
-    if str(payload.get("key", "")).casefold() != work_key.casefold():
-        return False
-    expected_title = str(item.get("title") or "")
-    actual_title = str(payload.get("title") or "")
-    combined, sequence, _ = _title_metrics(expected_title, actual_title)
-    return combined >= 0.88 and sequence >= 0.78
+        if str(payload.get("key", "")).casefold() != work_key.casefold():
+            return False
+        expected_title = str(item.get("title") or "")
+        actual_title = str(payload.get("title") or "")
+        combined, sequence, _ = _title_metrics(expected_title, actual_title)
+        return combined >= 0.88 and sequence >= 0.78
+
+    imdb_id = _imdb_id_from_url(link)
+    if imdb_id:
+        expected_external_id = str(item.get("externalId") or "")
+        if expected_external_id and expected_external_id != f"imdb:{imdb_id}":
+            return False
+        try:
+            confirmation = _wikidata_confirms_imdb(
+                str(item.get("title") or ""),
+                imdb_id,
+                _strip_media_prefix(str(item.get("authorOrMeta") or "")),
+            )
+        except RecommendationResolutionError as exc:
+            return (
+                _is_transient_source_error(exc)
+                and _has_recent_verified_cache(item)
+            )
+        return confirmation is not None
+
+    state = _probe_link_state(link)
+    if state == "available":
+        return True
+    if state == "transient":
+        return _has_recent_verified_cache(item)
+    return False
 
 
 def _resolve_book(item: Mapping[str, Any]) -> EntityResolution:
@@ -2015,12 +2063,15 @@ def _validate_imdb_page(
 
 def _wikidata_confirms_imdb(
     title: str, imdb_id: str, director_expected: str
-) -> tuple[str, list[str], float] | None:
+) -> tuple[str, list[str], float, Mapping[str, Any]] | None:
+    transient_errors: list[RecommendationResolutionError] = []
     for search_result in _wikidata_search(title):
         entity_id = str(search_result.get("id", ""))
         try:
             entity = _wikidata_entity(entity_id)
-        except RecommendationResolutionError:
+        except RecommendationResolutionError as exc:
+            if _is_transient_source_error(exc):
+                transient_errors.append(exc)
             continue
         label, combined, sequence = _wikidata_matching_title(entity, title)
         if combined < 0.84 or sequence < 0.78:
@@ -2034,7 +2085,9 @@ def _wikidata_confirms_imdb(
             and _author_score(director_expected, directors) < 0.58
         ):
             continue
-        return label, directors, combined
+        return label, directors, combined, entity
+    if transient_errors:
+        raise transient_errors[-1]
     return None
 
 
@@ -2055,9 +2108,6 @@ def _resolve_movie(item: Mapping[str, Any]) -> EntityResolution:
                 item=item,
             )
         canonical_imdb = f"https://www.imdb.com/title/{imdb_id}/"
-        metadata, imdb_score = _validate_imdb_page(
-            item, canonical_imdb, imdb_id
-        )
         director_expected = _strip_media_prefix(
             str(item.get("authorOrMeta", ""))
         )
@@ -2070,20 +2120,37 @@ def _resolve_movie(item: Mapping[str, Any]) -> EntityResolution:
                 "Wikidata não confirma o par título/IMDb/realizador.",
                 item=item,
             )
-        canonical_title, directors, wikidata_score = confirmation
-        if not metadata["image"]:
+        canonical_title, directors, wikidata_score, entity = confirmation
+        metadata: dict[str, Any] = {}
+        imdb_score = wikidata_score
+        try:
+            metadata, imdb_score = _validate_imdb_page(
+                item, canonical_imdb, imdb_id
+            )
+        except RecommendationResolutionError:
+            # IMDb commonly answers automated, otherwise valid requests with
+            # HTTP 202. Wikidata already proves title, director and IMDb ID.
+            pass
+        image = str(metadata.get("image", ""))
+        if not image:
+            commons_filename = _claim_string(entity, "P18")
+            if commons_filename:
+                image = _commons_image_url(commons_filename)
+        if not image:
             raise RecommendationResolutionError(
-                "COVER_NOT_FOUND", "IMDb sem poster raster.", item=item
+                "COVER_NOT_FOUND",
+                "Wikidata/IMDb não disponibilizam um poster verificável.",
+                item=item,
             )
         return EntityResolution(
             link=canonical_imdb,
-            image_url=metadata["image"],
+            image_url=image,
             external_id=f"imdb:{imdb_id}",
             source="wikidata+imdb",
             score=(imdb_score * 0.5) + (wikidata_score * 0.5),
-            resolved_title=canonical_title or metadata["title"],
+            resolved_title=canonical_title or str(metadata.get("title", "")),
             resolved_author=", ".join(directors),
-            description=metadata["description"],
+            description=str(metadata.get("description", "")),
         )
 
     title = str(item.get("title", "")).strip()
