@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL16568759W",
+  "coverHash": "fbfa86af86684b71dd834888cf802bbaf08466e56e21c6ea16a507e3abe49e48",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://covers.openlibrary.org/b/id/7253519-L.jpg",
+  "entityId": "openlibrary:/works/OL16568759W",
+  "expiryDate": null,
+  "height": 456,
+  "isbn": "",
+  "resolvedAuthor": "Daron Acemoglu, James A. Robinson",
+  "resolvedTitle": "Why Nations Fail",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "Why Nations Fail",
+  "titleNormalized": "why nations fail",
+  "type": "book",
+  "verifiedAt": "2026-07-18T21:28:54.530703Z",
+  "width": 300
+}

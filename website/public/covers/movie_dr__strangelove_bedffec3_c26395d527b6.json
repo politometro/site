@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0057012/",
+  "coverHash": "7d62bb79dbfadccafcfd162d6d897ed96ac930c016fddeabd09597d2cd8e6cf6",
+  "coverSourceMime": "image/png",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Dr._Strangelove_-_General_Buck_Turgidson.png/1280px-Dr._Strangelove_-_General_Buck_Turgidson.png",
+  "entityId": "imdb:tt0057012",
+  "expiryDate": null,
+  "height": 768,
+  "isbn": "",
+  "resolvedAuthor": "Stanley Kubrick",
+  "resolvedTitle": "Dr. Strangelove",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Dr. Strangelove",
+  "titleNormalized": "dr strangelove",
+  "type": "movie",
+  "verifiedAt": "2026-07-18T21:28:58.836508Z",
+  "width": 1280
+}

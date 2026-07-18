@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0434409/",
+  "coverHash": "1d8b3ad5396081f3b516ae0646395586738122de78f2499e6a498b573d15d637",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/V_for_Vendetta_film.jpg/1280px-V_for_Vendetta_film.jpg",
+  "entityId": "imdb:tt0434409",
+  "expiryDate": null,
+  "height": 960,
+  "isbn": "",
+  "resolvedAuthor": "James McTeigue",
+  "resolvedTitle": "V for Vendetta",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "V for Vendetta",
+  "titleNormalized": "v for vendetta",
+  "type": "movie",
+  "verifiedAt": "2026-07-18T21:29:00.066098Z",
+  "width": 1280
+}
