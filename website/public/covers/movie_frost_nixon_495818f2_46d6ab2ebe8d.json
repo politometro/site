@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0870111/",
+  "coverHash": "a3d125a8537ecb28dffff17ee99fca4473234350fda71fc2896e92b5a97ed13b",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/e/ef/Frost-Nixon-Actors.jpg",
+  "entityId": "imdb:tt0870111",
+  "expiryDate": null,
+  "height": 172,
+  "isbn": "",
+  "resolvedAuthor": "Ron Howard",
+  "resolvedTitle": "Frost/Nixon",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Frost/Nixon",
+  "titleNormalized": "frost nixon",
+  "type": "movie",
+  "verifiedAt": "2026-07-18T21:34:46.228082Z",
+  "width": 227
+}

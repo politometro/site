@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL1168007W",
+  "coverHash": "a5651813831697703797327eb6cffa933b63d9e632f89f1d81e37f99a3e5c41e",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://ia801701.us.archive.org/view_archive.php?archive=%2F4%2Fitems%2Fl_covers_0011%2Fl_covers_0011_26.zip&file=0011261770-L.jpg",
+  "entityId": "openlibrary:/works/OL1168007W",
+  "expiryDate": null,
+  "height": 500,
+  "isbn": "",
+  "resolvedAuthor": "George Orwell",
+  "resolvedTitle": "Animal Farm",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "Animal Farm",
+  "titleNormalized": "animal farm",
+  "type": "book",
+  "verifiedAt": "2026-07-18T21:34:45.096900Z",
+  "width": 330
+}
