@@ -53,6 +53,22 @@ def verified_item(media_type, suffix, status="queue"):
 
 
 class ZeroStatePopulationTests(unittest.TestCase):
+    def test_verified_catalogue_has_a_multiweek_margin_per_type(self):
+        candidates = auto_populate_ai.VERIFIED_CATALOGUE_CANDIDATES
+        for media_type in ("book", "movie"):
+            relevant = [
+                item for item in candidates if item["type"] == media_type
+            ]
+            self.assertGreaterEqual(len(relevant), 12)
+            identities = {
+                (
+                    auto_populate_ai._normalise(item["title"]),
+                    auto_populate_ai._normalise(item["authorOrMeta"]),
+                )
+                for item in relevant
+            }
+            self.assertEqual(len(identities), len(relevant))
+
     def test_empty_database_is_filled_only_with_verified_entities(self):
         with tempfile.TemporaryDirectory() as tmp:
             rec_path = Path(tmp) / "recommendations.json"

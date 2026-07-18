@@ -4,7 +4,9 @@ import os
 import requests
 
 
-WEBSITE_URL = os.environ.get("WEBSITE_URL", "http://localhost:3000")
+WEBSITE_URL = os.environ.get(
+    "WEBSITE_URL", "https://politometro.vercel.app/"
+)
 
 
 def query_politometro_chat(query, source="bot", user_id="unknown", timeout=35):

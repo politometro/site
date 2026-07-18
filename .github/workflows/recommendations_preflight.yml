@@ -44,6 +44,15 @@ jobs:
         run: |
           python scripts/auto_populate_ai.py
 
+      - name: Alert Rejected Approved Recommendations
+        if: ${{ always() }}
+        continue-on-error: true
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_REVIEW_CHANNEL_ID: ${{ secrets.DISCORD_REVIEW_CHANNEL_ID }}
+        run: |
+          python scripts/notify_rejected_approvals.py
+
       - name: Commit Verified Pool
         if: ${{ always() }}
         run: |

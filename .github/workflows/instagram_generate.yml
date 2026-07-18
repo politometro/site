@@ -86,6 +86,15 @@ jobs:
             sleep 45
           done
 
+      - name: Alert Rejected Approved Recommendations
+        if: ${{ always() && steps.recovery_guard.outputs.run_generation == 'true' }}
+        continue-on-error: true
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_REVIEW_CHANNEL_ID: ${{ secrets.DISCORD_REVIEW_CHANNEL_ID }}
+        run: |
+          python scripts/notify_rejected_approvals.py
+
       - name: Generate PDF File Index
         if: ${{ steps.recovery_guard.outputs.run_generation == 'true' }}
         run: |

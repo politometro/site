@@ -26,7 +26,11 @@ def keep_zerogpu_happy():
 
 # Import bot and token
 from discord_reviewer import bot, TOKEN
-from twitch_bot import run_twitch_bot_forever, twitch_configured
+from twitch_bot import (
+    run_twitch_bot_forever,
+    twitch_configured,
+    twitch_refresh_configured,
+)
 
 def start_bot():
     # Wait 15 seconds to let Gradio fully initialize first
@@ -57,6 +61,11 @@ def start_bot():
 threading.Thread(target=start_bot, daemon=True).start()
 
 if twitch_configured():
+    if not twitch_refresh_configured():
+        print(
+            "Renovação Twitch incompleta: adiciona TWITCH_REFRESH_TOKEN, "
+            "TWITCH_CLIENT_ID e TWITCH_CLIENT_SECRET como Secrets."
+        )
     threading.Thread(target=run_twitch_bot_forever, daemon=True).start()
 else:
     print("Bot de Twitch inativo: configura TWITCH_BOT_USERNAME, TWITCH_OAUTH_TOKEN e TWITCH_CHANNELS para ativar.")

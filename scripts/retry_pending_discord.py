@@ -221,7 +221,9 @@ def _message_payload(item):
     source_image = str(item.get("sourceImageUrl") or "")
     image_url = source_image if source_image.startswith("https://") else ""
     if not image_url and str(item.get("imageUrl") or "").startswith("/"):
-        website_url = os.environ.get("WEBSITE_URL", "").strip()
+        website_url = os.environ.get(
+            "WEBSITE_URL", "https://politometro.vercel.app/"
+        ).strip()
         if website_url:
             image_url = urljoin(website_url.rstrip("/") + "/", item["imageUrl"])
     if image_url and media_type != "project":

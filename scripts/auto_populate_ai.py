@@ -46,10 +46,10 @@ CATEGORIES = {
     "highlight": "Destaque",
 }
 
-# A last-resort catalogue reserve is intentionally made of stable, well-known
-# entities. It is still passed through the same live resolver, and history
-# prevents a previously used work from returning.
-CATALOGUE_FALLBACK_CANDIDATES = (
+# This catalogue reserve is made of stable, well-known entities that have
+# passed the live resolver. They are still revalidated on every insertion, and
+# history prevents a previously used work from returning.
+VERIFIED_CATALOGUE_CANDIDATES = (
     {"type": "book", "title": "1984", "authorOrMeta": "George Orwell"},
     {
         "type": "book",
@@ -79,13 +79,25 @@ CATALOGUE_FALLBACK_CANDIDATES = (
     },
     {
         "type": "book",
-        "title": "Capital in the Twenty-First Century",
-        "authorOrMeta": "Thomas Piketty",
+        "title": "How Democracies Die",
+        "authorOrMeta": "Steven Levitsky",
     },
     {
         "type": "book",
-        "title": "How Democracies Die",
-        "authorOrMeta": "Steven Levitsky",
+        "title": "The Shock Doctrine",
+        "authorOrMeta": "Naomi Klein",
+    },
+    {"type": "book", "title": "The Republic", "authorOrMeta": "Plato"},
+    {"type": "book", "title": "Capital", "authorOrMeta": "Karl Marx"},
+    {
+        "type": "book",
+        "title": "On Liberty",
+        "authorOrMeta": "John Stuart Mill",
+    },
+    {
+        "type": "book",
+        "title": "The Prince",
+        "authorOrMeta": "Niccolò Machiavelli",
     },
     {
         "type": "movie",
@@ -99,18 +111,8 @@ CATALOGUE_FALLBACK_CANDIDATES = (
     },
     {
         "type": "movie",
-        "title": "The Lives of Others",
-        "authorOrMeta": "Florian Henckel von Donnersmarck",
-    },
-    {
-        "type": "movie",
         "title": "V for Vendetta",
         "authorOrMeta": "James McTeigue",
-    },
-    {
-        "type": "movie",
-        "title": "All the President's Men",
-        "authorOrMeta": "Alan J. Pakula",
     },
     {
         "type": "movie",
@@ -119,13 +121,37 @@ CATALOGUE_FALLBACK_CANDIDATES = (
     },
     {
         "type": "movie",
-        "title": "Good Night, and Good Luck.",
-        "authorOrMeta": "George Clooney",
+        "title": "Frost/Nixon",
+        "authorOrMeta": "Ron Howard",
     },
     {
         "type": "movie",
-        "title": "The Post",
-        "authorOrMeta": "Steven Spielberg",
+        "title": "The Manchurian Candidate",
+        "authorOrMeta": "John Frankenheimer",
+    },
+    {
+        "type": "movie",
+        "title": "The Battle of Algiers",
+        "authorOrMeta": "Gillo Pontecorvo",
+    },
+    {"type": "movie", "title": "Milk", "authorOrMeta": "Gus Van Sant"},
+    {
+        "type": "movie",
+        "title": "Darkest Hour",
+        "authorOrMeta": "Joe Wright",
+    },
+    {"type": "movie", "title": "Malcolm X", "authorOrMeta": "Spike Lee"},
+    {"type": "movie", "title": "Selma", "authorOrMeta": "Ava DuVernay"},
+    {"type": "movie", "title": "Nixon", "authorOrMeta": "Oliver Stone"},
+    {
+        "type": "movie",
+        "title": "The Last King of Scotland",
+        "authorOrMeta": "Kevin Macdonald",
+    },
+    {
+        "type": "movie",
+        "title": "Argentina, 1985",
+        "authorOrMeta": "Santiago Mitre",
     },
 )
 
@@ -1321,9 +1347,35 @@ def auto_populate():
         for key in seen_titles
         if key.startswith(("book:", "movie:"))
     }
+    if needed["book"] > 0 or needed["movie"] > 0:
+        print(
+            "  [CATALOGUE] A completar a fila com obras previamente "
+            "comprovadas, novamente sujeitas à verificação ao vivo."
+        )
+        for raw in VERIFIED_CATALOGUE_CANDIDATES:
+            if needed["book"] <= 0 and needed["movie"] <= 0:
+                break
+            candidate = _canonical_candidate(raw)
+            if not candidate:
+                continue
+            normalised_title = _normalise(candidate["title"])
+            if normalised_title in rejected_titles:
+                continue
+            rejected_titles.add(normalised_title)
+            changed |= _add_if_verified(
+                candidate, queue, identities, needed
+            )
+
+    # The model is a discovery fallback only. This keeps autonomous runs fast
+    # and quiet while preserving the ability to extend the pool after the
+    # verified reserve has genuinely been consumed.
     for attempt in range(1, 4):
         if needed["book"] <= 0 and needed["movie"] <= 0:
             break
+        print(
+            f"  [AI DISCOVERY] Reserva insuficiente; tentativa {attempt} "
+            "de encontrar novas obras verificáveis."
+        )
         raw_candidates = _groq_catalogue_candidates(
             groq_key, rejected_titles, attempt
         )
@@ -1338,25 +1390,6 @@ def auto_populate():
                 continue
             rejected_titles.add(normalised_title)
             changed |= _add_if_verified(candidate, queue, identities, needed)
-
-    if needed["book"] > 0 or needed["movie"] > 0:
-        print(
-            "  [CATALOGUE] A completar falhas da IA com a reserva "
-            "estável, sujeita à mesma verificação."
-        )
-        for raw in CATALOGUE_FALLBACK_CANDIDATES:
-            if needed["book"] <= 0 and needed["movie"] <= 0:
-                break
-            candidate = _canonical_candidate(raw)
-            if not candidate:
-                continue
-            normalised_title = _normalise(candidate["title"])
-            if normalised_title in rejected_titles:
-                continue
-            rejected_titles.add(normalised_title)
-            changed |= _add_if_verified(
-                candidate, queue, identities, needed
-            )
 
     data["queue"] = queue
     data["history"] = history

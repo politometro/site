@@ -6,6 +6,7 @@ import threading
 import time
 
 from politometro_chat import query_politometro_chat, split_text_chunks
+from twitch_auth import token_manager
 
 
 TWITCH_BOT_USERNAME = os.environ.get("TWITCH_BOT_USERNAME", "").strip().lower()
@@ -37,8 +38,12 @@ def twitch_configured():
     return bool(TWITCH_BOT_USERNAME and TWITCH_OAUTH_TOKEN and TWITCH_CHANNELS)
 
 
+def twitch_refresh_configured():
+    return token_manager.refresh_configured
+
+
 def _oauth_token():
-    token = TWITCH_OAUTH_TOKEN
+    token = token_manager.get_access_token()
     return token if token.startswith("oauth:") else f"oauth:{token}"
 
 
@@ -138,7 +143,8 @@ def run_twitch_bot_forever():
                 with context.wrap_socket(raw_sock, server_hostname=IRC_HOST) as sock:
                     sock.settimeout(300)
                     _send(sock, "CAP REQ :twitch.tv/tags twitch.tv/commands")
-                    _send(sock, f"PASS {_oauth_token()}")
+                    connection_token = _oauth_token()
+                    _send(sock, f"PASS {connection_token}")
                     _send(sock, f"NICK {TWITCH_BOT_USERNAME}")
                     for channel in TWITCH_CHANNELS:
                         _send(sock, f"JOIN #{channel}")
@@ -150,6 +156,18 @@ def run_twitch_bot_forever():
                         if not data:
                             raise ConnectionError("Ligacao Twitch encerrada.")
                         buffer += data.decode("utf-8", errors="replace")
+                        if (
+                            time.monotonic() - token_manager.last_validated
+                            >= 3600
+                        ):
+                            current_token = token_manager.get_access_token(
+                                force_validate=True
+                            )
+                            if f"oauth:{current_token}" != connection_token:
+                                raise ConnectionError(
+                                    "Token Twitch renovado; a restabelecer "
+                                    "a ligação autenticada."
+                                )
                         while "\r\n" in buffer:
                             line, buffer = buffer.split("\r\n", 1)
                             if not line:

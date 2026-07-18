@@ -19,7 +19,9 @@ load_dotenv()
 
 TOKEN = os.environ.get("DISCORD_BOT_TOKEN", "")
 CHANNEL_ID = int(os.environ.get("DISCORD_REVIEW_CHANNEL_ID", "0"))
-WEBSITE_URL = os.environ.get("WEBSITE_URL", "http://localhost:3000")
+WEBSITE_URL = os.environ.get(
+    "WEBSITE_URL", "https://politometro.vercel.app/"
+)
 GITHUB_REPO = os.environ.get("GITHUB_REPO", "")  # owner/repo
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN", "")
 DISCORD_SUBMISSION_SECRET = os.environ.get(

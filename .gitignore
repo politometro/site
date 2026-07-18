@@ -8,3 +8,4 @@ node_modules/
 *.log
 __pycache__/
 *.py[cod]
+.twitch_token_state.json
