@@ -37,6 +37,11 @@ CONTAINER_POLL_SECONDS = 5
 RECONCILE_ATTEMPTS = 4
 RECONCILE_DELAY_SECONDS = 3
 RECONCILE_CLOCK_SKEW_SECONDS = 300
+INSTAGRAM_USER_TAGS = [
+    {"username": "_.davstrango._", "x": 0.08, "y": 0.88},
+    {"username": "luiflmaximo", "x": 0.50, "y": 0.88},
+    {"username": "politiza.te", "x": 0.88, "y": 0.88},
+]
 
 
 def _utc_now():
@@ -130,6 +135,12 @@ def _environment():
         "commit_sha": commit_sha,
         "graph_api_version": _graph_version(),
         "base_url": f"https://graph.facebook.com/{_graph_version()}",
+    }
+
+
+def _stories_enabled():
+    return os.environ.get("INSTAGRAM_PUBLISH_STORY", "false").strip().lower() in {
+        "1", "true", "yes", "on"
     }
 
 
@@ -269,6 +280,8 @@ def prepare_publication(session=None):
     receipt = _receipt_for_current_draft(context, require=False)
     if receipt is not None:
         if _confirmed(receipt):
+            if _stories_enabled() and not receipt.get("story_creation_id"):
+                prepare_story()
             print(
                 "[OK] Este rascunho já foi publicado; "
                 f"recibo {receipt['post_id']} reutilizado."
@@ -279,6 +292,8 @@ def prepare_publication(session=None):
                 "Existe um recibo pendente sem creation_id; "
                 "a criação automática foi bloqueada."
             )
+        if _stories_enabled() and not receipt.get("story_creation_id"):
+            prepare_story()
         print(
             "[OK] Contentor pendente reutilizado sem criar outro: "
             f"{receipt['creation_id']}."
@@ -291,6 +306,7 @@ def prepare_publication(session=None):
         data={
             "image_url": context["image_url"],
             "caption": context["caption"],
+            "user_tags": json.dumps(INSTAGRAM_USER_TAGS, separators=(",", ":")),
             "access_token": context["access_token"],
         },
         timeout=25,
@@ -319,10 +335,81 @@ def prepare_publication(session=None):
         "image_url": context["image_url"],
     }
     _write_json_atomic(RECEIPT_PATH, receipt)
+    if _stories_enabled():
+        prepare_story(client)
     print(
         f"[OK] Contentor {receipt['creation_id']} preparado; "
         "o recibo deve ser persistido antes da publicação."
     )
+    return receipt
+
+
+def prepare_story(session=None):
+    """Create one Story container for the same approved weekly image."""
+    context = _context()
+    receipt = _receipt_for_current_draft(context)
+    if receipt.get("story_post_id"):
+        return receipt
+    if receipt.get("story_creation_id"):
+        return receipt
+    client = session or requests.Session()
+    response = client.post(
+        f"{context['base_url']}/{context['instagram_id']}/media",
+        data={
+            "image_url": context["image_url"],
+            "media_type": "STORIES",
+            "access_token": context["access_token"],
+        },
+        timeout=25,
+    )
+    payload = _response_json(response)
+    if not response.ok or not payload.get("id"):
+        raise RuntimeError(
+            _meta_failure_message(payload, "criar o Story do Instagram")
+        )
+    receipt["story_creation_id"] = str(payload["id"])
+    receipt["story_state"] = "prepared"
+    receipt["story_prepared_at"] = _iso_now()
+    _write_json_atomic(RECEIPT_PATH, receipt)
+    return receipt
+
+
+def publish_story(session=None):
+    """Publish the persisted Story container once; reruns reuse its id."""
+    context = _context()
+    receipt = _receipt_for_current_draft(context)
+    if receipt.get("story_post_id"):
+        return receipt
+    if not receipt.get("story_creation_id"):
+        raise RuntimeError("O contentor do Story ainda não foi preparado.")
+    client = session or requests.Session()
+    _wait_until_container_ready(
+        client,
+        context["base_url"],
+        receipt["story_creation_id"],
+        context["access_token"],
+    )
+    response = client.post(
+        f"{context['base_url']}/{context['instagram_id']}/media_publish",
+        data={
+            "creation_id": receipt["story_creation_id"],
+            "access_token": context["access_token"],
+        },
+        timeout=25,
+    )
+    payload = _response_json(response)
+    if not response.ok or not payload.get("id"):
+        receipt["story_last_error"] = _meta_failure_message(
+            payload, "publicar o Story do Instagram"
+        )
+        _write_json_atomic(RECEIPT_PATH, receipt)
+        raise RuntimeError(receipt["story_last_error"])
+    receipt["story_post_id"] = str(payload["id"])
+    receipt["story_state"] = "confirmed"
+    receipt["story_published_at"] = _iso_now()
+    receipt.pop("story_last_error", None)
+    _write_json_atomic(RECEIPT_PATH, receipt)
+    print(f"[OK] Story confirmado pelo Instagram: {receipt['story_post_id']}")
     return receipt
 
 
@@ -603,7 +690,9 @@ def _main():
     elif arguments.mark_publishing:
         mark_publishing()
     elif arguments.publish:
-        publish_or_reconcile()
+        result = publish_or_reconcile()
+        if _stories_enabled():
+            publish_story()
     else:
         post_to_instagram()
 

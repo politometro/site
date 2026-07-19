@@ -200,6 +200,19 @@ class InstagramIdempotencyTests(unittest.TestCase):
         self.assertEqual(session.create_calls, 0)
         self.assertEqual(session.publish_calls, 0)
 
+    def test_feed_container_includes_requested_user_tags(self):
+        session = FakeMetaSession()
+        post_instagram.prepare_publication(session)
+        self.assertEqual(session.create_calls, 1)
+
+    def test_story_container_is_opt_in_and_reuses_receipt(self):
+        session = FakeMetaSession()
+        with mock.patch.dict(os.environ, {"INSTAGRAM_PUBLISH_STORY": "true"}):
+            post_instagram.prepare_publication(session)
+            self.assertEqual(self.receipt()["story_creation_id"], "container-2")
+            post_instagram.prepare_story(session)
+            self.assertEqual(session.create_calls, 2)
+
     def test_oauth_200_error_explains_the_required_account_authorization(self):
         message = post_instagram._meta_failure_message(
             {

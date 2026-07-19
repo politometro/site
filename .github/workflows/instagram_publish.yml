@@ -92,6 +92,7 @@ jobs:
           FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           META_GRAPH_API_VERSION: v25.0
+          INSTAGRAM_PUBLISH_STORY: 'true'
         run: |
           python scripts/post_instagram.py --prepare
 
@@ -140,6 +141,7 @@ jobs:
           FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           META_GRAPH_API_VERSION: v25.0
+          INSTAGRAM_PUBLISH_STORY: 'true'
         run: |
           python scripts/post_instagram.py --publish
 
