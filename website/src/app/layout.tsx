@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Footer from "@/components/Footer";
+import AnalyticsGate from "@/components/AnalyticsGate";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://politometro.vercel.app"),
@@ -63,7 +63,7 @@ export default function RootLayout({
           </div>
           <Footer />
         </div>
-        <Analytics />
+        <AnalyticsGate />
       </body>
     </html>
   );
