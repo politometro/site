@@ -29,7 +29,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/twitter-card.jpg",
+        url: "/twitter-card-v2.jpg",
         width: 1200,
         height: 630,
         alt: "Politómetro - O teu voto. A tua voz. A tua informação.",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Politómetro - Análise de Programas Eleitorais Portugueses",
     description: "Pesquise e compare as propostas dos partidos com fontes oficiais citadas e neutralidade absoluta.",
-    images: ["/twitter-card.jpg"],
+    images: ["/twitter-card-v2.jpg"],
   },
   robots: {
     index: true,
