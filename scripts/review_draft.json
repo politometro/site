@@ -7,7 +7,12 @@
   "post_sha256": "5d40e407f0d97751ba7a0b5f8ad7d102fdf32aa3709c6ad366b6c1c334bb3af1",
   "caption_sha256": "9f8e8d07c022bfca422b59724a3df5f98a02fe0b92c47a5049044f1cb883d5b4",
   "approval": {
-    "approved": false
+    "approved": true,
+    "draft_id": "draft_6e661844c0fe0027b42e",
+    "content_hash": "6e661844c0fe0027b42ea181209680fe744b7c801d7a09340f9c0c1d41296eef",
+    "approved_at": "2026-07-19T01:00:47.534848+00:00",
+    "approved_by_id": "948240528632324107",
+    "approved_by_name": "_.4migas._"
   },
   "q1": {
     "id": "ai_book_d073a196ba9c422b",
