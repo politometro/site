@@ -135,6 +135,30 @@ class PublicationScheduleTests(unittest.TestCase):
             )[0]
         )
 
+    def test_manual_override_can_publish_outside_window_without_bypassing_approval(self):
+        draft = approved_draft("2026-07-18T20:00:00+00:00")
+        outside_window = datetime.datetime(
+            2026, 7, 19, 10, 30, tzinfo=datetime.timezone.utc
+        )
+
+        normal = publication_schedule.publication_decision(
+            draft, now=outside_window
+        )
+        forced = publication_schedule.publication_decision(
+            draft, now=outside_window, force_now=True
+        )
+
+        self.assertFalse(normal[0])
+        self.assertTrue(forced[0])
+
+        unapproved = json.loads(json.dumps(draft))
+        unapproved["approval"]["approved"] = False
+        self.assertFalse(
+            publication_schedule.publication_decision(
+                unapproved, now=outside_window, force_now=True
+            )[0]
+        )
+
     def test_github_output_skips_cleanly_when_there_is_no_approval(self):
         with tempfile.TemporaryDirectory() as temporary:
             output = Path(temporary) / "github-output.txt"
@@ -178,6 +202,8 @@ class PublicationScheduleTests(unittest.TestCase):
         self.assertIn("cron: '7 10 * * 0'", workflow)
         self.assertIn("cron: '17 10 * * 0'", workflow)
         self.assertIn("timezone: 'Europe/Lisbon'", workflow)
+        self.assertIn("publish_now:", workflow)
+        self.assertIn("FORCE_PUBLISH_NOW:", workflow)
         self.assertIn(
             "github.event.schedule == '17 10 * * 0'",
             workflow,

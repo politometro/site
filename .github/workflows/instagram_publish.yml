@@ -12,6 +12,12 @@ on:
       timezone: 'Europe/Lisbon'
   # A manual retry is safe: the same local-time and draft guard still applies.
   workflow_dispatch:
+    inputs:
+      publish_now:
+        description: 'Publicar agora o rascunho já aprovado (uso pontual)'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -39,6 +45,8 @@ jobs:
 
       - name: Check Approved Publication Window
         id: guard
+        env:
+          FORCE_PUBLISH_NOW: ${{ inputs.publish_now || 'false' }}
         run: python scripts/publication_schedule.py --github-output
 
   publish:

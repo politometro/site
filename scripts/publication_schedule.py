@@ -72,7 +72,7 @@ def scheduled_for_draft(draft):
     return target_local.astimezone(datetime.timezone.utc).isoformat()
 
 
-def publication_decision(draft, receipt=None, *, now=None):
+def publication_decision(draft, receipt=None, *, now=None, force_now=False):
     """Return ``(should_publish, reason, scheduled_for)`` for one run."""
     if not isinstance(draft, dict) or not draft:
         return False, "Não existe um rascunho semanal para publicar.", None
@@ -111,6 +111,25 @@ def publication_decision(draft, receipt=None, *, now=None):
     if current.tzinfo is None:
         current = current.replace(tzinfo=datetime.timezone.utc)
     current_local = current.astimezone(PUBLICATION_TIMEZONE)
+    if force_now:
+        if receipt:
+            same_draft = (
+                receipt.get("draft_id") == draft_id
+                and receipt.get("content_hash") == content_hash
+            )
+            if same_draft and receipt.get("post_id"):
+                return False, "Este rascunho já foi publicado.", scheduled_for
+            if not same_draft and not receipt.get("post_id"):
+                return (
+                    False,
+                    "Existe outra publicação ainda pendente.",
+                    scheduled_for,
+                )
+        return (
+            True,
+            "Override manual autorizado para publicar agora.",
+            scheduled_for,
+        )
     if current_local.date() != target_local.date():
         return (
             False,
@@ -145,11 +164,12 @@ def publication_decision(draft, receipt=None, *, now=None):
     return True, "Rascunho aprovado e dentro da janela das 10:00.", scheduled_for
 
 
-def current_publication_decision(*, now=None):
+def current_publication_decision(*, now=None, force_now=False):
     return publication_decision(
         _load_optional(DRAFT_PATH),
         _load_optional(RECEIPT_PATH),
         now=now,
+        force_now=force_now,
     )
 
 
@@ -174,7 +194,10 @@ def main():
     )
     args = parser.parse_args()
 
-    should_publish, reason, scheduled_for = current_publication_decision()
+    force_now = os.environ.get("FORCE_PUBLISH_NOW", "").strip().lower() == "true"
+    should_publish, reason, scheduled_for = current_publication_decision(
+        force_now=force_now
+    )
     target = scheduled_for.isoformat() if scheduled_for else "indisponível"
     print(f"{reason} Horário previsto: {target}.")
     if args.github_output:
