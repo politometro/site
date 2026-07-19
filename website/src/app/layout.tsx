@@ -23,13 +23,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Politómetro - Análise de Programas Eleitorais Portugueses",
     description: "Explore e compare as propostas dos partidos políticos de forma imparcial com fontes oficiais citadas.",
-    url: "https://politometro.politiza-te.pt",
+    url: "https://politometro.vercel.app",
     siteName: "Politómetro",
     locale: "pt_PT",
     type: "website",
     images: [
       {
-        url: "/banner.jpg",
+        url: "/twitter-card.jpg",
         width: 1200,
         height: 630,
         alt: "Politómetro - O teu voto. A tua voz. A tua informação.",
@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Politómetro - Análise de Programas Eleitorais Portugueses",
     description: "Pesquise e compare as propostas dos partidos com fontes oficiais citadas e neutralidade absoluta.",
-    images: ["/banner.jpg"],
+    images: ["/twitter-card.jpg"],
   },
   robots: {
     index: true,
