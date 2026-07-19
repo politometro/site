@@ -42,6 +42,13 @@ from recommendation_resolver import (
 TARGET_PER_TYPE = 4
 MIN_TIME_SENSITIVE_VALIDITY_HOURS = 24
 REQUEST_TIMEOUT = 20
+PODCAST_DESCRIPTION_VERSION = 1
+PODCAST_DESCRIPTION_MIN_CHARS = 70
+PODCAST_DESCRIPTION_MAX_CHARS = 138
+PODCAST_SUMMARY_MODELS = (
+    "llama-3.3-70b-versatile",
+    "llama-3.1-8b-instant",
+)
 ALLOWED_TYPES = ("book", "podcast", "movie", "highlight")
 CATEGORIES = {
     "book": "Livro",
@@ -159,6 +166,119 @@ VERIFIED_CATALOGUE_CANDIDATES = (
     },
 )
 
+CATALOGUE_DESCRIPTIONS = {
+    ("book", "1984"): (
+        "Distopia sobre vigilância, propaganda e controlo político numa sociedade "
+        "onde até a linguagem é usada para limitar o pensamento."
+    ),
+    ("book", "The Road to Serfdom"): (
+        "Ensaio clássico sobre liberdade económica, planeamento estatal e os riscos "
+        "políticos da concentração de poder."
+    ),
+    ("book", "Why Nations Fail"): (
+        "Análise sobre instituições políticas e económicas, e sobre porque alguns "
+        "países prosperam enquanto outros ficam presos à desigualdade."
+    ),
+    ("book", "The Origins of Totalitarianism"): (
+        "Estudo sobre antissemitismo, imperialismo e regimes totalitários no século XX."
+    ),
+    ("book", "Animal Farm"): (
+        "Fábula política sobre revolução, poder e a forma como ideais libertadores "
+        "podem ser capturados por novas elites."
+    ),
+    ("book", "Democracy in America"): (
+        "Observação fundamental sobre democracia, igualdade, costumes cívicos e "
+        "instituições nos Estados Unidos."
+    ),
+    ("book", "The Open Society and Its Enemies"): (
+        "Defesa da sociedade aberta contra projetos políticos fechados, autoritários "
+        "e hostis ao pluralismo."
+    ),
+    ("book", "How Democracies Die"): (
+        "Explica como democracias podem degradar-se por dentro através de normas "
+        "quebradas, polarização e abuso institucional."
+    ),
+    ("book", "The Shock Doctrine"): (
+        "Investigação sobre crises políticas e económicas usadas para impor reformas "
+        "radicais com pouco escrutínio democrático."
+    ),
+    ("book", "The Republic"): (
+        "Diálogo filosófico sobre justiça, educação, poder e a organização ideal da cidade."
+    ),
+    ("book", "Capital"): (
+        "Crítica da economia política centrada no trabalho, no capital e nas dinâmicas "
+        "de exploração do capitalismo."
+    ),
+    ("book", "On Liberty"): (
+        "Defesa influente da liberdade individual, do debate público e dos limites do "
+        "poder social e estatal."
+    ),
+    ("book", "The Prince"): (
+        "Tratado sobre poder, estratégia e sobrevivência política, ainda útil para "
+        "ler decisões de liderança."
+    ),
+    ("movie", "The Great Dictator"): (
+        "Sátira política ao fascismo e ao culto do líder, com humor e crítica moral "
+        "ao autoritarismo."
+    ),
+    ("movie", "Dr. Strangelove"): (
+        "Comédia negra sobre guerra nuclear, paranoia militar e decisões absurdas "
+        "em tempos de tensão geopolítica."
+    ),
+    ("movie", "V for Vendetta"): (
+        "Distopia sobre resistência civil, medo, propaganda e poder do Estado sobre "
+        "as liberdades individuais."
+    ),
+    ("movie", "The Death of Stalin"): (
+        "Sátira sobre sucessão política, medo e luta pelo poder no círculo dirigente soviético."
+    ),
+    ("movie", "Frost/Nixon"): (
+        "Drama político sobre entrevistas que expõem responsabilidade, poder mediático "
+        "e memória pública."
+    ),
+    ("movie", "The Manchurian Candidate"): (
+        "Thriller sobre manipulação política, conspiração e medo ideológico durante "
+        "a Guerra Fria."
+    ),
+    ("movie", "The Battle of Algiers"): (
+        "Retrato duro de colonialismo, resistência, repressão e guerra urbana pela independência."
+    ),
+    ("movie", "Milk"): (
+        "Biografia política de Harvey Milk e da mobilização pelos direitos LGBT nos Estados Unidos."
+    ),
+    ("movie", "Darkest Hour"): (
+        "Drama sobre liderança, pressão parlamentar e decisões críticas no início "
+        "da Segunda Guerra Mundial."
+    ),
+    ("movie", "Malcolm X"): (
+        "Biografia sobre identidade, racismo, mobilização política e transformação "
+        "do pensamento de Malcolm X."
+    ),
+    ("movie", "Selma"): (
+        "Retrato da campanha pelo direito de voto e da luta pelos direitos civis nos EUA."
+    ),
+    ("movie", "Nixon"): (
+        "Drama político sobre poder presidencial, ambição, paranoia e queda institucional."
+    ),
+    ("movie", "The Last King of Scotland"): (
+        "Drama sobre ditadura, cumplicidade e violência política no Uganda de Idi Amin."
+    ),
+    ("movie", "Argentina, 1985"): (
+        "Drama judicial sobre memória, justiça e responsabilização após a ditadura argentina."
+    ),
+}
+
+VERIFIED_CATALOGUE_CANDIDATES = tuple(
+    {
+        **candidate,
+        "description": CATALOGUE_DESCRIPTIONS.get(
+            (candidate["type"], candidate["title"]),
+            candidate.get("description", ""),
+        ),
+    }
+    for candidate in VERIFIED_CATALOGUE_CANDIDATES
+)
+
 TRUSTED_HIGHLIGHT_DOMAINS = (
     "expresso.pt",
     "publico.pt",
@@ -214,8 +334,376 @@ def _clean_source_text(value, max_chars=360):
     value = re.sub(r"\s+", " ", value).strip()
     if len(value) <= max_chars:
         return value
-    shortened = value[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:")
-    return shortened + "…"
+    shortened = value[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:.!?")
+    return shortened
+
+
+_PODCAST_DESCRIPTION_STOPWORDS = {
+    "a",
+    "ao",
+    "aos",
+    "as",
+    "agora",
+    "ainda",
+    "ano",
+    "com",
+    "como",
+    "da",
+    "das",
+    "de",
+    "do",
+    "dos",
+    "e",
+    "em",
+    "entre",
+    "esta",
+    "este",
+    "foi",
+    "há",
+    "mais",
+    "mas",
+    "muitas",
+    "muitos",
+    "na",
+    "nas",
+    "no",
+    "nos",
+    "o",
+    "os",
+    "outros",
+    "ou",
+    "para",
+    "pela",
+    "pelo",
+    "por",
+    "que",
+    "já",
+    "não",
+    "se",
+    "sem",
+    "ser",
+    "sobre",
+    "um",
+    "uma",
+}
+
+
+def _clean_podcast_source_text(value):
+    """Remove player boilerplate while preserving the publisher's evidence."""
+    text = _clean_source_text(value, max_chars=600)
+    boilerplate_patterns = (
+        r"\s*see\s+omnystudio\.com/listener.*$",
+        r"\s*for\s+privacy\s+information.*$",
+        r"\s*consulte\s+a\s+pol[ií]tica\s+de\s+privacidade.*$",
+    )
+    for pattern in boilerplate_patterns:
+        text = re.sub(pattern, "", text, flags=re.IGNORECASE)
+    return re.sub(r"\s+", " ", text).strip(" \t\r\n-")
+
+
+def _podcast_description_tokens(value):
+    return {
+        token
+        for token in _normalise(value).split()
+        if len(token) >= 3 and token not in _PODCAST_DESCRIPTION_STOPWORDS
+    }
+
+
+def _podcast_description_is_valid(description, title, source_description):
+    text = re.sub(r"\s+", " ", str(description or "")).strip()
+    if not (
+        PODCAST_DESCRIPTION_MIN_CHARS
+        <= len(text)
+        <= PODCAST_DESCRIPTION_MAX_CHARS
+    ):
+        return False
+    if len(text.split()) < 10 or "…" in text or "..." in text:
+        return False
+    if text[-1:] not in ".!?":
+        return False
+
+    normalised = _normalise(text)
+    if not normalised.startswith("analise sobre "):
+        return False
+    poor_patterns = (
+        r"\bsee omnystudio\b",
+        r"\bprivacy information\b",
+        r"\bna noite em que (?:este|o) programa\b",
+        r"\b(?:hoje|amanha|ontem)\b",
+        r"\b(?:neste|nesse) (?:episodio|programa)\b",
+        r"\b(?:ouve|escuta|subscreve|nao percas|saiba mais)\b",
+    )
+    if any(re.search(pattern, normalised) for pattern in poor_patterns):
+        return False
+    if re.match(r"^com .+\bmoderacao de\b", normalised):
+        return False
+
+    evidence = f"{title} {source_description}"
+    evidence_numbers = set(re.findall(r"\b\d+(?:[.,]\d+)?\b", evidence))
+    summary_numbers = set(re.findall(r"\b\d+(?:[.,]\d+)?\b", text))
+    if not summary_numbers.issubset(evidence_numbers):
+        return False
+
+    summary_tokens = _podcast_description_tokens(text)
+    evidence_tokens = _podcast_description_tokens(evidence)
+    shared = summary_tokens & evidence_tokens
+    minimum_shared = min(4, max(2, len(summary_tokens) // 4))
+    if len(_podcast_description_tokens(title)) == 1:
+        minimum_shared = 1
+    if len(shared) < minimum_shared:
+        return False
+
+    # A useful card must add concrete information from the source rather than
+    # merely paraphrasing the episode title.
+    title_tokens = _podcast_description_tokens(title)
+    source_tokens = _podcast_description_tokens(source_description)
+    source_details = (summary_tokens & source_tokens) - title_tokens
+    return len(source_details) >= 3
+
+
+def _podcast_sentence_candidates(source_description):
+    source = _clean_podcast_source_text(source_description)
+    source = re.sub(
+        r"\b(?:mas\s+)?na noite em que (?:este|o) programa "
+        r"(?:é|foi) emitido,?\s*",
+        "",
+        source,
+        flags=re.IGNORECASE,
+    )
+    candidates = []
+    for raw in re.split(r"(?<=[.!?])\s+", source):
+        sentence = re.sub(
+            r"^(?:mas|contudo|porém|entretanto)\s*,?\s*",
+            "",
+            raw.strip(),
+            flags=re.IGNORECASE,
+        )
+        sentence = re.sub(r"\s+", " ", sentence).strip()
+        if len(sentence) < 25:
+            continue
+        sentence = sentence[:1].upper() + sentence[1:]
+        if sentence[-1:] not in ".!?":
+            sentence += "."
+        if "…" not in sentence and "..." not in sentence:
+            candidates.append(sentence)
+    return candidates
+
+
+def _extractive_podcast_description(title, source_description):
+    """Build a grounded, complete fallback without inventing any facts."""
+    title_tokens = _podcast_description_tokens(title)
+    ranked = []
+    for index, sentence in enumerate(
+        _podcast_sentence_candidates(source_description)
+    ):
+        sentence_tokens = _podcast_description_tokens(sentence)
+        overlap = len(title_tokens & sentence_tokens)
+        information = min(len(sentence_tokens), 12)
+        ranked.append((overlap * 5 + information, -index, index, sentence))
+
+    selected = []
+    total = 0
+    for _, _, index, sentence in sorted(ranked, reverse=True):
+        extra = len(sentence) + (1 if selected else 0)
+        if total + extra <= PODCAST_DESCRIPTION_MAX_CHARS:
+            selected.append((index, sentence))
+            total += extra
+        if total >= PODCAST_DESCRIPTION_MIN_CHARS:
+            break
+    if selected:
+        details = " ".join(
+            sentence for _, sentence in sorted(selected, key=lambda entry: entry[0])
+        )
+        summary = f"Análise sobre {details[:1].lower() + details[1:]}"
+        if _podcast_description_is_valid(summary, title, source_description):
+            return summary
+
+    participant_match = re.search(
+        r"\bCom\s+(.+?)\.\s*Moderaç[aã]o\s+de\s+(.+?)(?:\.|$)",
+        _clean_podcast_source_text(source_description),
+        flags=re.IGNORECASE,
+    )
+    if participant_match:
+        participants = participant_match.group(1).strip(" ,;:.")
+        moderator = participant_match.group(2).strip(" ,;:.")
+        summary = (
+            f"Análise sobre {str(title or '').strip().rstrip(' .!?').lower()}, "
+            f"com {participants}, moderado por {moderator}."
+        )
+        if len(summary) <= PODCAST_DESCRIPTION_MAX_CHARS and (
+            _podcast_description_is_valid(
+                summary, title, source_description
+            )
+        ):
+            return summary
+
+    clean_title = re.sub(r'^[“"«]+|[”"»]+$', "", str(title or "").strip())
+    clean_title = clean_title.rstrip(" .!?")
+    if clean_title:
+        summary = f"Análise sobre os temas e questões de {clean_title.lower()}."
+        if len(summary) < PODCAST_DESCRIPTION_MIN_CHARS:
+            summary = (
+                "Análise sobre as principais questões políticas e sociais "
+                f"relacionadas com {clean_title.lower()}."
+            )
+        if len(summary) > PODCAST_DESCRIPTION_MAX_CHARS:
+            shortened = summary[:PODCAST_DESCRIPTION_MAX_CHARS].rsplit(" ", 1)[0]
+            summary = shortened.rstrip(" ,;:.!?") + "."
+        return summary
+    return "Análise sobre os principais temas políticos e sociais apresentados pela fonte."
+
+
+def _request_podcast_editorial_description(
+    api_key,
+    *,
+    title,
+    show,
+    source_description,
+):
+    if not api_key:
+        return ""
+    system_prompt = (
+        "És editor do Politómetro. Mantém o título original fora da resposta. "
+        "Escreve uma única frase informativa em português de Portugal, entre "
+        "70 e 138 caracteres, que revele detalhes concretos do conteúdo que "
+        "não estejam já explícitos no título — acontecimentos, argumentos, "
+        "consequências ou questões debatidas. Usa apenas factos presentes no "
+        "resumo da fonte. Não reformules nem resumas apenas o título. Não "
+        "acrescentes contexto, nomes, números ou conclusões. Não uses "
+        "A frase tem de começar por \"Análise sobre\". Não uses reticências, "
+        "apelos, linguagem promocional, \"neste episódio\", "
+        "\"este programa\", \"hoje\", \"ontem\" ou \"amanhã\", nem listes "
+        "apenas participantes. Devolve apenas JSON com a chave description."
+    )
+    evidence = {
+        "title": str(title or "").strip(),
+        "podcast": str(show or "").strip(),
+        "sourceDescription": _clean_podcast_source_text(source_description),
+    }
+    for model in PODCAST_SUMMARY_MODELS:
+        try:
+            response = requests.post(
+                "https://api.groq.com/openai/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                json={
+                    "model": model,
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {
+                            "role": "user",
+                            "content": json.dumps(evidence, ensure_ascii=False),
+                        },
+                    ],
+                    "temperature": 0.05,
+                    "response_format": {"type": "json_object"},
+                },
+                timeout=35,
+            )
+            if not response.ok:
+                print(
+                    f"  [PODCAST COPY/{model}] HTTP {response.status_code}"
+                )
+                continue
+            content = response.json()["choices"][0]["message"]["content"]
+            parsed = json.loads(content)
+            description = _clean_source_text(
+                parsed.get("description"), PODCAST_DESCRIPTION_MAX_CHARS
+            )
+            if _podcast_description_is_valid(
+                description, title, source_description
+            ):
+                return description
+            print(
+                f"  [PODCAST COPY/{model}] "
+                "Descrição rejeitada pelo controlo editorial."
+            )
+        except (
+            requests.RequestException,
+            KeyError,
+            TypeError,
+            ValueError,
+            json.JSONDecodeError,
+        ) as exc:
+            print(f"  [PODCAST COPY/{model}] {exc}")
+    return ""
+
+
+def _editorialize_podcast_item(item, api_key):
+    if (
+        item.get("type") != "podcast"
+        or item.get("status") != "queue"
+        or item.get("resolutionStatus") != "verified"
+    ):
+        return False
+    verification = item.get("verification")
+    if not isinstance(verification, dict):
+        return False
+
+    source_description = _clean_podcast_source_text(
+        verification.get("sourceDescription") or item.get("description")
+    )
+    title = str(item.get("title") or "").strip()
+    if not source_description or not title:
+        return False
+    source_hash = hashlib.sha256(
+        json.dumps(
+            {"title": title, "sourceDescription": source_description},
+            ensure_ascii=False,
+            sort_keys=True,
+        ).encode("utf-8")
+    ).hexdigest()
+
+    existing = str(verification.get("editorialDescription") or "").strip()
+    if (
+        verification.get("editorialDescriptionVersion")
+        == PODCAST_DESCRIPTION_VERSION
+        and verification.get("editorialSourceHash") == source_hash
+        and _podcast_description_is_valid(existing, title, source_description)
+    ):
+        changed = item.get("description") != existing
+        item["description"] = existing
+        return changed
+
+    generated = _request_podcast_editorial_description(
+        api_key,
+        title=title,
+        show=item.get("sourceSeriesTitle") or item.get("authorOrMeta"),
+        source_description=source_description,
+    )
+    description = generated or _extractive_podcast_description(
+        title, source_description
+    )
+    metadata_changed = any(
+        verification.get(key) != value
+        for key, value in (
+            ("editorialDescription", description),
+            ("editorialDescriptionVersion", PODCAST_DESCRIPTION_VERSION),
+            ("editorialSourceHash", source_hash),
+            (
+                "editorialDescriptionProvider",
+                "groq" if generated else "extractive",
+            ),
+        )
+    )
+    changed = item.get("description") != description
+    item["description"] = description
+    verification["editorialDescription"] = description
+    verification["editorialDescriptionVersion"] = PODCAST_DESCRIPTION_VERSION
+    verification["editorialSourceHash"] = source_hash
+    verification["editorialDescriptionProvider"] = (
+        "groq" if generated else "extractive"
+    )
+    return changed or metadata_changed
+
+
+def _refresh_podcast_editorial_descriptions(queue, api_key):
+    changed = False
+    for item in queue:
+        changed |= _editorialize_podcast_item(item, api_key)
+    return changed
 
 
 def _utc_now():
@@ -937,9 +1425,7 @@ def _canonical_candidate(raw):
         "category": CATEGORIES[media_type],
         "title": title,
         "authorOrMeta": author,
-        # The model is only a catalogue lead; the resolver must replace this
-        # with text derived from confirmed source metadata.
-        "description": "",
+        "description": _clean_source_text(raw.get("description")),
         "imageUrl": "",
         "link": "",
         "priority": 3,
@@ -1287,6 +1773,7 @@ def auto_populate():
     data = _load_database()
     queue = data.get("queue", [])
     history = data.get("history", [])
+    groq_key = os.environ.get("GROQ_API_KEY", "")
     changed = _prune_expired_queue(queue)
     changed |= _refresh_verified_queue(queue)
     changed |= _quarantine_unverified_queue(queue)
@@ -1334,6 +1821,7 @@ def auto_populate():
         changed |= _upsert_latest_podcast(
             candidate, queue, history, needed
         )
+    changed |= _refresh_podcast_editorial_descriptions(queue, groq_key)
     changed |= _trim_time_sensitive_pool(queue, "podcast")
 
     cse_key = os.environ.get("GOOGLE_CSE_API_KEY", "")
@@ -1377,7 +1865,6 @@ def auto_populate():
         highlights_added += int(added)
     changed |= _trim_time_sensitive_pool(queue, "highlight")
 
-    groq_key = os.environ.get("GROQ_API_KEY", "")
     all_identities = _identity_sets(
         queue + history, include_cover_hashes=False
     )

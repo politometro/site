@@ -6,7 +6,8 @@ the 3 general slots, and no duplication with the weekly highlight.
 Features:
 - Cover dimensions are tied to the item TYPE, not the quadrant:
   * Podcasts are always rendered at 192x192 (square)
-  * Books, Movies, and Highlights are always rendered at 160x220 (vertical)
+  * Books and Movies are rendered at 160x220 (vertical)
+  * Highlights and Podcasts are rendered at 192x192 (square)
 - Top row covers align perfectly by the bottom (using dynamic heights based on item types).
 - Spacing checks for 2-line title descenders to prevent overlaps.
 - Descriptions vertically centered next to the covers.
@@ -37,6 +38,7 @@ from recommendation_resolver import (
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 TEMPLATE_PATH = os.path.join(SCRIPT_DIR, "post_template.jpg")
+TEMPLATE_CANVAS_SIZE = (819, 1024)
 REC_FILE = os.path.join(ROOT_DIR, "website", "public", "recommendations.json")
 OUTPUT_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.jpg")
 OUTPUT_CAPTION_PATH = os.path.join(ROOT_DIR, "website", "public", "current_caption.txt")
@@ -97,7 +99,7 @@ QUADRANTS_CONFIG = {
 
 DESCRIPTION_CHAR_LIMITS = {
     "q1": 220,
-    "q2": 150,
+    "q2": 138,
     "q3": 220,
     "q4": 145,
 }
@@ -105,7 +107,7 @@ DESCRIPTION_LINE_LIMITS = {
     "q1": 11,
     "q2": 8,
     "q3": 11,
-    "q4": 5,
+    "q4": 8,
 }
 
 # --- ROUNDED CORNERS HELPER ---
@@ -375,7 +377,7 @@ def build_caption(selected):
         emoji = _recommendation_emoji(item)
         title = _ellipsize(item["title"], 110)
         author = _ellipsize(item.get("authorOrMeta", ""), 80)
-        description = _ellipsize(item["description"], 220)
+        description = _compact_text(item["description"], 220)
         author_suffix = f" ({author})" if author else ""
         sections.append(
             f"{emoji} {item['category'].upper()}: {title}{author_suffix}\n"
@@ -551,6 +553,101 @@ def _ellipsize(value, max_chars):
         return text
     shortened = text[: max_chars - 1].rsplit(" ", 1)[0].rstrip(" ,;:")
     return shortened + "…"
+
+def _compact_text(value, max_chars):
+    """Shorten text at natural boundaries without adding ellipses."""
+    text = re.sub(r"\s+", " ", str(value or "")).strip()
+    if len(text) <= max_chars:
+        return text
+
+    sentence_matches = list(re.finditer(r"[.!?](?:\s|$)", text))
+    best_complete = ""
+    for match in sentence_matches:
+        candidate = text[: match.end()].strip()
+        if len(candidate) <= max_chars:
+            best_complete = candidate
+        else:
+            break
+    if best_complete:
+        return best_complete
+
+    shortened = text[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:.!?")
+    return shortened or text[:max_chars].rstrip(" ,;:.!?")
+
+
+def _fit_text_lines(
+    draw,
+    text,
+    font_path,
+    start_size,
+    min_size,
+    max_width,
+    max_lines,
+):
+    compact = str(text or "").strip()
+    for size in range(start_size, min_size - 1, -1):
+        try:
+            font = ImageFont.truetype(font_path, size)
+        except Exception:
+            font = ImageFont.load_default()
+        lines = wrap_text(draw, compact, font, max_width)
+        if len(lines) <= max_lines:
+            return font, lines, max(16, size + 3)
+
+    try:
+        font = ImageFont.truetype(font_path, min_size)
+    except Exception:
+        font = ImageFont.load_default()
+    lines = wrap_text(draw, compact, font, max_width)
+    if len(lines) > max_lines:
+        sentence_ends = [
+            match.end()
+            for match in re.finditer(r"[.!?](?:\s|$)", compact)
+            if match.end() < len(compact)
+        ]
+        for sentence_end in reversed(sentence_ends):
+            complete = compact[:sentence_end].strip()
+            complete_lines = wrap_text(draw, complete, font, max_width)
+            if len(complete_lines) <= max_lines:
+                return font, complete_lines, max(15, min_size + 3)
+
+        words = compact.rstrip(" .!?").split()
+        while words:
+            candidate = " ".join(words).rstrip(" ,;:.!?")
+            while words and words[-1].casefold() in {
+                "a",
+                "as",
+                "com",
+                "da",
+                "das",
+                "de",
+                "do",
+                "dos",
+                "e",
+                "em",
+                "na",
+                "nas",
+                "no",
+                "nos",
+                "o",
+                "os",
+                "ou",
+                "para",
+                "por",
+                "que",
+            }:
+                words.pop()
+                candidate = " ".join(words).rstrip(" ,;:.!?")
+            candidate = candidate + "." if candidate else ""
+            candidate_lines = wrap_text(draw, candidate, font, max_width)
+            if candidate and len(candidate_lines) <= max_lines:
+                lines = candidate_lines
+                break
+            if not words:
+                lines = []
+                break
+            words.pop()
+    return font, lines, max(15, min_size + 3)
 
 
 def _sha256_file(path):
@@ -864,8 +961,15 @@ def generate_production_post():
         print(f"ERROR: Missing quadrants: {missing}")
         sys.exit(1)
     
-    # Load clean template
-    template = Image.open(TEMPLATE_PATH).convert("RGBA")
+    # Normalise full-resolution template assets to the coordinate canvas used
+    # below. This keeps the supplied 4:5 artwork intact and the layout stable.
+    with Image.open(TEMPLATE_PATH) as template_source:
+        template = ImageOps.fit(
+            template_source.convert("RGBA"),
+            TEMPLATE_CANVAS_SIZE,
+            method=Image.Resampling.LANCZOS,
+            centering=(0.5, 0.5),
+        )
     draw = ImageDraw.Draw(template)
     
     # Load fonts
@@ -899,22 +1003,23 @@ def generate_production_post():
         
         # Wrap title
         tx, ty = config["title_pos"]
-        lines = wrap_text(draw, item["title"], title_font, 350)
-        if len(lines) > 2:
-            lines = lines[:2]
-            # Truncate the second line to add '...'
-            words = lines[1].split()
-            if len(words) > 1:
-                lines[1] = " ".join(words[:-1]) + "..."
-            else:
-                lines[1] += "..."
+        title_max_lines = 3 if qkey == "q2" else 2
+        fitted_title_font, lines, title_spacing = _fit_text_lines(
+            draw,
+            item["title"],
+            FONT_BOLD,
+            32,
+            24,
+            350,
+            title_max_lines,
+        )
         title_lines_map[qkey] = lines
         
         # Draw title
         curr_y = ty
         for line in lines:
-            draw.text((tx, curr_y), line, fill=TEXT_COLOR, font=title_font)
-            curr_y += 34
+            draw.text((tx, curr_y), line, fill=TEXT_COLOR, font=fitted_title_font)
+            curr_y += title_spacing
         
         title_bottoms[qkey] = curr_y
 
@@ -925,8 +1030,9 @@ def generate_production_post():
         if item["type"] == "podcast":
             cover_dims[qkey] = (192, 192)
         elif item["type"] == "highlight":
-            # Editorial/YouTube thumbnails are normally landscape.
-            cover_dims[qkey] = (160, 90)
+            # Highlights use the same square format as podcasts so editorial
+            # thumbnails do not become visually tiny in the grid.
+            cover_dims[qkey] = (192, 192)
         else:
             cover_dims[qkey] = (160, 220)
 
@@ -987,7 +1093,7 @@ def generate_production_post():
         else:
             desc_w = 780 - dx
             
-        description = _ellipsize(
+        description = _compact_text(
             item["description"],
             DESCRIPTION_CHAR_LIMITS[qkey],
         )
@@ -998,14 +1104,20 @@ def generate_production_post():
             DESCRIPTION_LINE_LIMITS[qkey],
             max(1, cover_h // spacing),
         )
-        if len(desc_lines) > max_lines:
-            desc_lines = desc_lines[:max_lines]
-            desc_lines[-1] = desc_lines[-1].rstrip(" .,…") + "…"
+        fitted_font, desc_lines, spacing = _fit_text_lines(
+            draw,
+            description,
+            FONT_DESC_BOLD,
+            15,
+            11,
+            desc_w,
+            max_lines,
+        )
         text_block_h = len(desc_lines[:max_lines]) * spacing
         dy = cover_y + max(0, (cover_h - text_block_h) // 2)
         
         for line in desc_lines[:max_lines]:
-            draw.text((dx, dy), line, fill=TEXT_COLOR, font=desc_font)
+            draw.text((dx, dy), line, fill=TEXT_COLOR, font=fitted_font)
             dy += spacing
             
     # Save image

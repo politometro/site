@@ -583,6 +583,43 @@ def _clean_description(value: str, max_chars: int = 360) -> str:
         return shortened[: sentence_end + 1].strip()
     return shortened[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:") + "…"
 
+def _has_content_description(
+    description: str,
+    media_type: str,
+    title: str = "",
+    author: str = "",
+) -> bool:
+    text = _normalise_text(description)
+    if len(text) < 35:
+        return False
+    words = text.split()
+    if len(words) < 5:
+        return False
+
+    title_text = _normalise_text(title)
+    author_text = _normalise_text(author)
+    generic_patterns = (
+        r"^livro .+ de .+$",
+        r"^livro .+ confirmado em catalogo bibliografico$",
+        r"^filme .+ realizado por .+$",
+        r"^filme .+ confirmado por wikidata e imdb$",
+    )
+    if media_type in {"book", "movie"} and any(
+        re.match(pattern, text) for pattern in generic_patterns
+    ):
+        return False
+
+    if title_text and author_text:
+        contentless = text.replace(title_text, "").replace(author_text, "")
+        contentless = re.sub(
+            r"\b(livro|filme|de|por|realizado|realizada|autor|autora)\b",
+            " ",
+            contentless,
+        )
+        if len(contentless.split()) < 4:
+            return False
+    return True
+
 
 def _host_matches(host: str, domain: str) -> bool:
     host = host.casefold().rstrip(".")
@@ -2907,11 +2944,32 @@ def _already_verified(item: Mapping[str, Any]) -> dict[str, Any] | None:
         ).strip()
         if not canonical_title or not grounded_description:
             return None
+        if item.get("sourceHint") == "ai-catalogue-candidate" and not _has_content_description(
+            grounded_description,
+            str(item.get("type") or ""),
+            canonical_title,
+            canonical_author,
+        ):
+            return None
         cached = dict(item)
         cached["title"] = canonical_title
         if canonical_author:
             cached["authorOrMeta"] = canonical_author
-        cached["description"] = grounded_description
+        editorial_description = str(
+            verification.get("editorialDescription", "")
+        ).strip()
+        if (
+            item.get("type") == "podcast"
+            and _has_content_description(
+                editorial_description,
+                "podcast",
+                canonical_title,
+                canonical_author,
+            )
+        ):
+            cached["description"] = editorial_description
+        else:
+            cached["description"] = grounded_description
         return cached
     return None
 
@@ -3064,13 +3122,36 @@ def resolve_recommendation(
             )
 
     source_description = _clean_description(entity.description)
-    factual_description = source_description or _factual_description(
+    item_description = _clean_description(str(item.get("description", "")))
+    if not _has_content_description(
+        source_description,
         resolved_type,
         canonical_title,
         canonical_author,
-        source_published_at,
-        entity.source,
-    )
+    ):
+        source_description = ""
+    if not _has_content_description(
+        item_description,
+        resolved_type,
+        title,
+        str(item.get("authorOrMeta", "")),
+    ):
+        item_description = ""
+    factual_description = source_description or item_description
+    if not factual_description:
+        if item.get("sourceHint") == "ai-catalogue-candidate":
+            raise RecommendationResolutionError(
+                "SOURCE_DESCRIPTION_MISSING",
+                "A fonte verificou o título e a imagem, mas não trouxe uma descrição útil.",
+                item=item,
+            )
+        factual_description = _factual_description(
+            resolved_type,
+            canonical_title,
+            canonical_author,
+            source_published_at,
+            entity.source,
+        )
     key = _cache_key(canonical_title, resolved_type, identity)
     image_path = os.path.join(CACHE_DIR, key + ".jpg")
     public_image_url = f"/covers/{key}.jpg"

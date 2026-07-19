@@ -84,7 +84,7 @@
       "category": "Podcast",
       "title": "Exames nacionais: de “tropeção em tropeção”, o que há ainda para correr mal?",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Os exames nacionais, este ano, andam de “tropeção em tropeção”. Mas na noite em que este programa é emitido finalmente chegaram às escolas as notas finais. Contudo, muitas ainda não foram afixadas. Há alunos que já sabem que notas tiveram, outros que o saberão amanhã e outros só daqui lá mais para a frente, ainda com prazo indefinido.",
+      "description": "Análise sobre a chegada tardia das notas às escolas, os resultados ainda por afixar e a falta de prazo definido para muitos alunos.",
       "imageUrl": "/covers/podcast_exames_nacionais__de__trope__o_em_trope__o___o_que_h_9d2f6ca2_8770f61ce997.jpg",
       "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/exames-nacionais-de-trope-o-em-trope-o-o-que-h-ainda-para-correr-mal",
       "externalId": "de9a42ff-f2e5-471b-95f4-b48a018abf8c",
@@ -114,7 +114,11 @@
         "resolvedTitle": "Exames nacionais: de “tropeção em tropeção”, o que há ainda para correr mal?",
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-07-18T04:55:00Z",
-        "sourceDescription": "Os exames nacionais, este ano, andam de “tropeção em tropeção”. Mas na noite em que este programa é emitido finalmente chegaram às escolas as notas finais. Contudo, muitas ainda não foram afixadas. Há alunos que já sabem que notas tiveram, outros que o saberão amanhã e outros só daqui lá mais para a frente, ainda com prazo indefinido."
+        "sourceDescription": "Os exames nacionais, este ano, andam de “tropeção em tropeção”. Mas na noite em que este programa é emitido finalmente chegaram às escolas as notas finais. Contudo, muitas ainda não foram afixadas. Há alunos que já sabem que notas tiveram, outros que o saberão amanhã e outros só daqui lá mais para a frente, ainda com prazo indefinido.",
+        "editorialDescription": "Análise sobre a chegada tardia das notas às escolas, os resultados ainda por afixar e a falta de prazo definido para muitos alunos.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "c3225246c9b08f61e65524c7625ebeb5573f2b77506c5b8c4702849fc85e80d3",
+        "editorialDescriptionProvider": "curated"
       }
     },
     {
@@ -329,7 +333,7 @@
       "category": "Livro",
       "title": "1984",
       "authorOrMeta": "George Orwell, Amélie Audiberti",
-      "description": "Livro “1984”, de George Orwell, Amélie Audiberti.",
+      "description": "Distopia sobre vigilância, propaganda e controlo político numa sociedade onde até a linguagem é usada para limitar o pensamento.",
       "imageUrl": "/covers/book_1984_be93b067_9f64ca6ac4cb.jpg",
       "link": "https://openlibrary.org/works/OL30827457W",
       "priority": 3,
@@ -348,7 +352,7 @@
         "verifiedAt": "2026-07-18T23:33:04.910093Z",
         "resolvedTitle": "1984",
         "resolvedAuthor": "George Orwell, Amélie Audiberti",
-        "sourceDescription": "Livro “1984”, de George Orwell, Amélie Audiberti."
+        "sourceDescription": "Distopia sobre vigilância, propaganda e controlo político numa sociedade onde até a linguagem é usada para limitar o pensamento."
       }
     },
     {
@@ -357,7 +361,7 @@
       "category": "Livro",
       "title": "The Road to Serfdom",
       "authorOrMeta": "Friedrich A. von Hayek",
-      "description": "Livro “The Road to Serfdom”, de Friedrich A. von Hayek.",
+      "description": "Ensaio clássico sobre liberdade económica, planeamento estatal e os riscos políticos da concentração de poder.",
       "imageUrl": "/covers/book_the_road_to_serfdom_e44aaaff_0144fd1dc34d.jpg",
       "link": "https://openlibrary.org/works/OL1165001W",
       "priority": 3,
@@ -376,7 +380,7 @@
         "verifiedAt": "2026-07-18T23:33:06.750672Z",
         "resolvedTitle": "The Road to Serfdom",
         "resolvedAuthor": "Friedrich A. von Hayek",
-        "sourceDescription": "Livro “The Road to Serfdom”, de Friedrich A. von Hayek."
+        "sourceDescription": "Ensaio clássico sobre liberdade económica, planeamento estatal e os riscos políticos da concentração de poder."
       }
     },
     {
@@ -385,7 +389,7 @@
       "category": "Livro",
       "title": "Why Nations Fail",
       "authorOrMeta": "Daron Acemoglu, James A. Robinson",
-      "description": "Livro “Why Nations Fail”, de Daron Acemoglu, James A. Robinson.",
+      "description": "Análise sobre instituições políticas e económicas, e sobre porque alguns países prosperam enquanto outros ficam presos à desigualdade.",
       "imageUrl": "/covers/book_why_nations_fail_52e8c8d9_7205e766c77d.jpg",
       "link": "https://openlibrary.org/works/OL16568759W",
       "priority": 3,
@@ -404,7 +408,7 @@
         "verifiedAt": "2026-07-18T23:33:07.741406Z",
         "resolvedTitle": "Why Nations Fail",
         "resolvedAuthor": "Daron Acemoglu, James A. Robinson",
-        "sourceDescription": "Livro “Why Nations Fail”, de Daron Acemoglu, James A. Robinson."
+        "sourceDescription": "Análise sobre instituições políticas e económicas, e sobre porque alguns países prosperam enquanto outros ficam presos à desigualdade."
       }
     },
     {
@@ -413,7 +417,7 @@
       "category": "Livro",
       "title": "The Origins of Totalitarianism",
       "authorOrMeta": "Hannah Arendt",
-      "description": "Livro “The Origins of Totalitarianism”, de Hannah Arendt.",
+      "description": "Estudo sobre antissemitismo, imperialismo e regimes totalitários no século XX.",
       "imageUrl": "/covers/book_the_origins_of_totalitarianism_e0c8438c_3508ede75f5b.jpg",
       "link": "https://openlibrary.org/works/OL10460640W",
       "priority": 3,
@@ -432,7 +436,7 @@
         "verifiedAt": "2026-07-18T23:33:09.266628Z",
         "resolvedTitle": "The Origins of Totalitarianism",
         "resolvedAuthor": "Hannah Arendt",
-        "sourceDescription": "Livro “The Origins of Totalitarianism”, de Hannah Arendt."
+        "sourceDescription": "Estudo sobre antissemitismo, imperialismo e regimes totalitários no século XX."
       }
     },
     {
@@ -441,7 +445,7 @@
       "category": "Filme",
       "title": "The great dictator",
       "authorOrMeta": "Charlie Chaplin",
-      "description": "Filme “The great dictator”, realizado por Charlie Chaplin.",
+      "description": "Sátira política ao fascismo e ao culto do líder, com humor e crítica moral ao autoritarismo.",
       "imageUrl": "/covers/movie_the_great_dictator_82d2ef46_76b656d113c9.jpg",
       "link": "https://www.imdb.com/title/tt0032553/",
       "priority": 3,
@@ -460,7 +464,7 @@
         "verifiedAt": "2026-07-18T23:33:10.655244Z",
         "resolvedTitle": "The great dictator",
         "resolvedAuthor": "Charlie Chaplin",
-        "sourceDescription": "Filme “The great dictator”, realizado por Charlie Chaplin."
+        "sourceDescription": "Sátira política ao fascismo e ao culto do líder, com humor e crítica moral ao autoritarismo."
       }
     },
     {
@@ -469,7 +473,7 @@
       "category": "Filme",
       "title": "Dr. Strangelove",
       "authorOrMeta": "Stanley Kubrick",
-      "description": "Filme “Dr. Strangelove”, realizado por Stanley Kubrick.",
+      "description": "Comédia negra sobre guerra nuclear, paranoia militar e decisões absurdas em tempos de tensão geopolítica.",
       "imageUrl": "/covers/movie_dr__strangelove_bedffec3_c26395d527b6.jpg",
       "link": "https://www.imdb.com/title/tt0057012/",
       "priority": 3,
@@ -488,7 +492,7 @@
         "verifiedAt": "2026-07-18T23:33:11.862443Z",
         "resolvedTitle": "Dr. Strangelove",
         "resolvedAuthor": "Stanley Kubrick",
-        "sourceDescription": "Filme “Dr. Strangelove”, realizado por Stanley Kubrick."
+        "sourceDescription": "Comédia negra sobre guerra nuclear, paranoia militar e decisões absurdas em tempos de tensão geopolítica."
       }
     },
     {
@@ -497,7 +501,7 @@
       "category": "Filme",
       "title": "V for Vendetta",
       "authorOrMeta": "James McTeigue",
-      "description": "Filme “V for Vendetta”, realizado por James McTeigue.",
+      "description": "Distopia sobre resistência civil, medo, propaganda e poder do Estado sobre as liberdades individuais.",
       "imageUrl": "/covers/movie_v_for_vendetta_57cc8806_867a19d944dd.jpg",
       "link": "https://www.imdb.com/title/tt0434409/",
       "priority": 3,
@@ -516,7 +520,7 @@
         "verifiedAt": "2026-07-18T23:33:13.069598Z",
         "resolvedTitle": "V for Vendetta",
         "resolvedAuthor": "James McTeigue",
-        "sourceDescription": "Filme “V for Vendetta”, realizado por James McTeigue."
+        "sourceDescription": "Distopia sobre resistência civil, medo, propaganda e poder do Estado sobre as liberdades individuais."
       }
     },
     {
@@ -525,7 +529,7 @@
       "category": "Filme",
       "title": "The Death of Stalin",
       "authorOrMeta": "Armando Iannucci",
-      "description": "Filme “The Death of Stalin”, realizado por Armando Iannucci.",
+      "description": "Sátira sobre sucessão política, medo e luta pelo poder no círculo dirigente soviético.",
       "imageUrl": "/covers/movie_the_death_of_stalin_59ad13e1_f238b2d61f79.jpg",
       "link": "https://www.imdb.com/title/tt4686844/",
       "priority": 3,
@@ -544,7 +548,7 @@
         "verifiedAt": "2026-07-18T23:33:14.280457Z",
         "resolvedTitle": "The Death of Stalin",
         "resolvedAuthor": "Armando Iannucci",
-        "sourceDescription": "Filme “The Death of Stalin”, realizado por Armando Iannucci."
+        "sourceDescription": "Sátira sobre sucessão política, medo e luta pelo poder no círculo dirigente soviético."
       }
     }
   ],

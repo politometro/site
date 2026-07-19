@@ -113,13 +113,16 @@ class RecommendationResolverTests(unittest.TestCase):
         self.assertNotEqual(first, second)
         self.assertTrue(first.startswith(resolver._cache_key("Obra Homónima", "book")))
 
-    def test_atomic_resolution_replaces_ai_copy_with_canonical_facts(self):
+    def test_atomic_resolution_keeps_content_copy_when_source_has_no_synopsis(self):
         item = {
             "id": "candidate-1",
             "type": "book",
             "title": "Título Inventado pela IA",
             "authorOrMeta": "Autor Inventado",
-            "description": "Lead promocional inventado.",
+            "description": (
+                "Uma leitura sobre propaganda, vigilância e controlo político "
+                "numa sociedade autoritária."
+            ),
             "link": "",
             "imageUrl": "",
         }
@@ -134,9 +137,8 @@ class RecommendationResolverTests(unittest.TestCase):
         self.assertEqual(result["resolutionStatus"], "verified")
         self.assertEqual(result["title"], "Título Canónico")
         self.assertEqual(result["authorOrMeta"], "Autor Real")
-        self.assertEqual(
-            result["description"], "Livro “Título Canónico”, de Autor Real."
-        )
+        self.assertIn("propaganda", result["description"])
+        self.assertIn("controlo", result["description"])
         self.assertTrue(result["imageUrl"].startswith("/covers/"))
         self.assertTrue(resolver.validate_cached_cover(result))
         self.assertEqual(
@@ -167,6 +169,52 @@ class RecommendationResolverTests(unittest.TestCase):
             "Sinopse factual fornecida pela fonte verificada.",
         )
         self.assertNotIn("Groq", result["description"])
+
+    def test_cached_podcast_preserves_editorial_copy_and_source_evidence(self):
+        now = dt.datetime.now(dt.timezone.utc)
+        source_description = (
+            "As notas finais chegaram às escolas, mas muitas ainda não foram "
+            "afixadas e vários alunos continuam sem prazo definido."
+        )
+        editorial_description = (
+            "O episódio analisa falhas na divulgação das notas dos exames "
+            "nacionais e a incerteza ainda vivida pelos alunos."
+        )
+        item = {
+            "type": "podcast",
+            "title": "Exames nacionais e notas em atraso",
+            "authorOrMeta": "Expresso da Meia-Noite",
+            "description": source_description,
+            "link": "https://example.org/podcast/episode",
+            "imageUrl": "/covers/podcast.jpg",
+            "sourcePublishedAt": (
+                now - dt.timedelta(hours=4)
+            ).isoformat(),
+            "expiryDate": (now + dt.timedelta(days=3)).isoformat(),
+            "verification": {
+                "status": "verified",
+                "entityId": "episode:123",
+                "coverHash": "cover-hash",
+                "verifiedAt": iso_now(),
+                "resolvedTitle": "Exames nacionais e notas em atraso",
+                "resolvedAuthor": "Expresso da Meia-Noite",
+                "sourceDescription": source_description,
+                "editorialDescription": editorial_description,
+            },
+        }
+
+        with (
+            patch.object(resolver, "validate_cached_cover", return_value=True),
+            patch.object(resolver, "probe_verified_source", return_value=True),
+        ):
+            cached = resolver._already_verified(item)
+
+        self.assertIsNotNone(cached)
+        self.assertEqual(cached["description"], editorial_description)
+        self.assertEqual(
+            cached["verification"]["sourceDescription"],
+            source_description,
+        )
 
     def test_unmanifested_legacy_file_never_skips_entity_resolution(self):
         item = {

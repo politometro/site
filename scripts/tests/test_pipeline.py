@@ -372,6 +372,22 @@ class RecoveryWindowTests(unittest.TestCase):
 
 
 class PostQualityGateTests(unittest.TestCase):
+    def test_compact_text_keeps_largest_complete_prefix_without_ellipsis(self):
+        text = (
+            "Primeira frase informativa. "
+            "Segunda frase com contexto adicional. "
+            "Terceira frase demasiado longa para o espaço disponível."
+        )
+
+        compact = generate_post._compact_text(text, 72)
+
+        self.assertEqual(
+            compact,
+            "Primeira frase informativa. Segunda frase com contexto adicional.",
+        )
+        self.assertNotIn("…", compact)
+        self.assertNotIn("...", compact)
+
     def test_card_description_limits_prevent_text_from_exceeding_cover(self):
         self.assertLess(
             generate_post.DESCRIPTION_CHAR_LIMITS["q2"],
@@ -381,11 +397,11 @@ class PostQualityGateTests(unittest.TestCase):
             generate_post.DESCRIPTION_LINE_LIMITS["q2"], 8
         )
         self.assertEqual(
-            generate_post.DESCRIPTION_LINE_LIMITS["q4"], 5
+            generate_post.DESCRIPTION_LINE_LIMITS["q4"], 8
         )
         self.assertLessEqual(
             generate_post.DESCRIPTION_LINE_LIMITS["q4"] * 18,
-            90,
+            192,
         )
 
     def test_news_cannot_fill_highlight_quadrant(self):
@@ -432,6 +448,148 @@ class PostQualityGateTests(unittest.TestCase):
             )
 
         self.assertEqual(selected["q4"]["id"], "highlight_opinion")
+
+
+class PodcastEditorialDescriptionTests(unittest.TestCase):
+    title = (
+        "Exames nacionais: de “tropeção em tropeção”, "
+        "o que há ainda para correr mal?"
+    )
+    source_description = (
+        "Os exames nacionais, este ano, andam de “tropeção em tropeção”. "
+        "Mas na noite em que este programa é emitido finalmente chegaram às "
+        "escolas as notas finais. Contudo, muitas ainda não foram afixadas. "
+        "Há alunos que já sabem que notas tiveram, outros que o saberão amanhã "
+        "e outros só mais tarde, ainda com prazo indefinido."
+    )
+    editorial_description = (
+        "Análise sobre a chegada tardia das notas às escolas, os resultados "
+        "ainda por afixar e a falta de prazo definido para muitos alunos."
+    )
+
+    def test_groq_copy_is_grounded_and_cached_separately_from_source(self):
+        item = verified_item("podcast", "editorial")
+        item.update(
+            {
+                "title": self.title,
+                "sourceSeriesTitle": "Expresso da Meia-Noite",
+                "description": self.source_description,
+                "sourceHint": "podcast-rss",
+            }
+        )
+        item["verification"]["sourceDescription"] = self.source_description
+        response = mock.Mock()
+        response.ok = True
+        response.json.return_value = {
+            "choices": [
+                {
+                    "message": {
+                        "content": json.dumps(
+                            {
+                                "title": (
+                                    "Falhas e atrasos nos exames nacionais"
+                                ),
+                                "description": self.editorial_description,
+                            },
+                            ensure_ascii=False,
+                        )
+                    }
+                }
+            ]
+        }
+
+        with mock.patch.object(
+            auto_populate_ai.requests, "post", return_value=response
+        ) as post:
+            changed = auto_populate_ai._editorialize_podcast_item(
+                item, "groq-test-key"
+            )
+
+        self.assertTrue(changed)
+        self.assertEqual(item["description"], self.editorial_description)
+        self.assertEqual(
+            item["verification"]["sourceDescription"],
+            self.source_description,
+        )
+        self.assertEqual(
+            item["verification"]["editorialDescription"],
+            self.editorial_description,
+        )
+        self.assertEqual(
+            item["verification"]["editorialDescriptionVersion"],
+            auto_populate_ai.PODCAST_DESCRIPTION_VERSION,
+        )
+        post.assert_called_once()
+
+        with mock.patch.object(auto_populate_ai.requests, "post") as repeated:
+            self.assertFalse(
+                auto_populate_ai._editorialize_podcast_item(
+                    item, "groq-test-key"
+                )
+            )
+        repeated.assert_not_called()
+
+    def test_promotional_model_copy_uses_complete_extractive_fallback(self):
+        response = mock.Mock()
+        response.ok = True
+        response.json.return_value = {
+            "choices": [
+                {
+                    "message": {
+                        "content": json.dumps(
+                            {
+                                "description": (
+                                    "Neste episódio, ouve tudo agora..."
+                                )
+                            }
+                        )
+                    }
+                }
+            ]
+        }
+        with mock.patch.object(
+            auto_populate_ai.requests, "post", return_value=response
+        ):
+            generated = (
+                auto_populate_ai._request_podcast_editorial_description(
+                    "groq-test-key",
+                    title=self.title,
+                    show="Expresso da Meia-Noite",
+                    source_description=self.source_description,
+                )
+            )
+
+        self.assertEqual(generated, "")
+        fallback = auto_populate_ai._extractive_podcast_description(
+            self.title, self.source_description
+        )
+        self.assertTrue(
+            auto_populate_ai._podcast_description_is_valid(
+                fallback, self.title, self.source_description
+            )
+        )
+        self.assertIn("notas", fallback.casefold())
+        self.assertNotIn("…", fallback)
+        self.assertNotIn("...", fallback)
+
+    def test_participant_only_feed_gets_a_complete_title_grounded_fallback(self):
+        title = "Eleições"
+        source = (
+            "Com Ana Silva e João Costa. Moderação de Maria Sousa. "
+            "See omnystudio.com/listener for privacy information."
+        )
+
+        fallback = auto_populate_ai._extractive_podcast_description(
+            title, source
+        )
+
+        self.assertTrue(
+            auto_populate_ai._podcast_description_is_valid(
+                fallback, title, source
+            )
+        )
+        self.assertIn("eleições", fallback.casefold())
+        self.assertNotIn("moderação", fallback.casefold())
 
     def test_review_generation_writes_timestamped_draft_end_to_end(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -545,6 +703,24 @@ class PostQualityGateTests(unittest.TestCase):
         self.assertNotIn("escrutínio", caption.lower())
         self.assertNotIn("#escrutinio", caption.lower())
         self.assertNotIn("👉", caption)
+
+    def test_caption_preserves_canonical_podcast_title(self):
+        selected = {
+            qkey: verified_item(media_type, "conteudo")
+            for qkey, media_type in generate_post.REQUIRED_TYPES.items()
+        }
+        selected["q2"]["title"] = (
+            "Exames nacionais: de “tropeção em tropeção”, "
+            "o que há ainda para correr mal?"
+        )
+
+        caption = generate_post.build_caption(selected)
+
+        self.assertIn(
+            "🎙️ PODCAST: Exames nacionais: de “tropeção em tropeção”, "
+            "o que há ainda para correr mal?",
+            caption,
+        )
 
     def test_caption_omits_topics_not_present_in_recommendations(self):
         selected = {
