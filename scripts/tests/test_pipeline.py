@@ -659,7 +659,7 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             self.assertFalse(draft["approval"]["approved"])
             self.assertTrue(draft["draft_id"].startswith("draft_"))
 
-    def test_caption_uses_template_and_content_specific_hashtags(self):
+    def test_caption_uses_template_and_fixed_human_hashtags(self):
         selected = {
             "q1": verified_item("book", "Historia de Portugal"),
             "q2": verified_item("podcast", "Economia sem filtros"),
@@ -694,11 +694,16 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
         self.assertNotIn("🏛️ FILME:", caption)
         self.assertNotIn("🔎 DESTAQUE:", caption)
         self.assertIn("Qual destes vais espreitar primeiro?", caption)
-        self.assertIn("#PortugalUmaHistoria", caption)
-        self.assertIn("#CapitaesDeAbril", caption)
-        self.assertIn("#InvestigacaoCasoSubmarinos", caption)
-        self.assertIn("#Economia", caption)
-        self.assertIn("#25deAbril", caption)
+        self.assertIn(
+            "#Portugal #PolitizaTe #Recomendacoes #Sugestoes "
+            "#Politometro #Politica #Livro #Podcast #Filme",
+            caption,
+        )
+        self.assertNotIn("#PortugalUmaHistoria", caption)
+        self.assertNotIn("#CapitaesDeAbril", caption)
+        self.assertNotIn("#InvestigacaoCasoSubmarinos", caption)
+        self.assertNotIn("#Economia", caption)
+        self.assertNotIn("#25deAbril", caption)
         self.assertNotIn("#documentarios", caption.lower())
         self.assertNotIn("escrutínio", caption.lower())
         self.assertNotIn("#escrutinio", caption.lower())
@@ -722,16 +727,41 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             caption,
         )
 
-    def test_caption_omits_topics_not_present_in_recommendations(self):
+    def test_caption_does_not_infer_topic_hashtags(self):
         selected = {
             qkey: verified_item(media_type, "conteudo")
             for qkey, media_type in generate_post.REQUIRED_TYPES.items()
         }
         caption = generate_post.build_caption(selected)
 
-        self.assertNotIn("#Portugal", caption)
+        self.assertIn("#Portugal", caption)
+        self.assertIn("#PolitizaTe", caption)
+        self.assertIn("#Recomendacoes", caption)
+        self.assertIn("#Sugestoes", caption)
+        self.assertIn("#Politometro", caption)
+        self.assertIn("#Politica", caption)
+        self.assertIn("#Livro", caption)
+        self.assertIn("#Podcast", caption)
+        self.assertIn("#Filme", caption)
+        self.assertNotIn("#Destaque", caption)
         self.assertNotIn("#Democracia", caption)
         self.assertNotIn("#Ambiente", caption)
+        self.assertNotIn("#Economia", caption)
+
+    def test_caption_uses_the_specific_recommendation_category_hashtag(self):
+        selected = {
+            qkey: verified_item(media_type, "conteudo")
+            for qkey, media_type in generate_post.REQUIRED_TYPES.items()
+        }
+        selected["q3"]["category"] = "Série"
+        selected["q4"]["category"] = "Artigo de Opinião"
+
+        caption = generate_post.build_caption(selected)
+
+        self.assertIn("#Serie", caption)
+        self.assertIn("#ArtigoDeOpiniao", caption)
+        self.assertNotIn("#Filme", caption)
+        self.assertNotIn("#Destaque", caption)
 
     def test_pending_items_are_never_selected(self):
         queue = []

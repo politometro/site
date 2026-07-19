@@ -20,7 +20,6 @@ import datetime
 import re
 import copy
 import hashlib
-import unicodedata
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 import requests
 
@@ -278,96 +277,56 @@ TYPE_EMOJIS = {
     "highlight": "📰",
 }
 
-TOPIC_HASHTAGS = (
-    (("portugal", "portugues", "portuguesa"), "Portugal"),
-    (("25 de abril", "revolucao dos cravos"), "25deAbril"),
-    (("democracia", "eleicoes", "eleicao", "voto"), "Democracia"),
-    (("economia", "economica", "financas", "inflacao"), "Economia"),
-    (("historia", "historico", "historica"), "Historia"),
-    (("justica", "tribunal", "constitucional"), "Justica"),
-    (("investigacao", "jornalismo de investigacao"), "Jornalismo"),
-    (("europa", "europeia", "uniao europeia"), "Europa"),
-    (("ambiente", "clima", "sustentabilidade"), "Ambiente"),
-    (("educacao", "escola", "universidade"), "Educacao"),
-    (("saude", "sns", "hospital"), "Saude"),
+CAPTION_HASHTAGS = (
+    "#Portugal",
+    "#PolitizaTe",
+    "#Recomendacoes",
+    "#Sugestoes",
+    "#Politometro",
+    "#Politica",
 )
 
-HASHTAG_STOPWORDS = {
-    "a", "ao", "aos", "as", "com", "da", "das", "de", "do", "dos", "e",
-    "em", "na", "nas", "no", "nos", "o", "os", "para", "por", "sobre",
-    "um", "uma",
+TYPE_HASHTAGS = {
+    "book": "#Livro",
+    "podcast": "#Podcast",
+    "movie": "#Filme",
+    "documentary": "#Documentario",
+    "series": "#Serie",
 }
 
-
-def _plain_text(value):
-    normalized = unicodedata.normalize("NFKD", str(value or ""))
-    return "".join(
-        character for character in normalized
-        if not unicodedata.combining(character)
-    ).lower()
-
-
-def _recommendation_text(item):
-    return _plain_text(
-        " ".join(
-            str(item.get(field) or "")
-            for field in ("title", "authorOrMeta", "description", "category")
-        )
-    )
+CATEGORY_HASHTAGS = {
+    "livro": "#Livro",
+    "podcast": "#Podcast",
+    "filme": "#Filme",
+    "série": "#Serie",
+    "serie": "#Serie",
+    "documentário": "#Documentario",
+    "documentario": "#Documentario",
+    "investigação": "#Investigacao",
+    "investigacao": "#Investigacao",
+    "artigo": "#Artigo",
+    "artigo de opinião": "#ArtigoDeOpiniao",
+    "artigo de opiniao": "#ArtigoDeOpiniao",
+}
 
 
 def _recommendation_emoji(item):
     return TYPE_EMOJIS.get(item.get("type"), "🔎")
 
 
-def _title_hashtag(title):
-    words = re.findall(r"[a-zA-Z0-9]+", _plain_text(title))
-    meaningful = list(words)
-    while meaningful and meaningful[0] in HASHTAG_STOPWORDS:
-        meaningful.pop(0)
-    if not meaningful:
-        return ""
-    full_hashtag = "".join(word[:1].upper() + word[1:] for word in meaningful)
-    if len(full_hashtag) <= 28:
-        return full_hashtag
-    compact_words = [
-        word for word in meaningful if word not in HASHTAG_STOPWORDS
-    ]
-    compact_hashtag = "".join(
-        word[:1].upper() + word[1:] for word in compact_words
-    )
-    if len(compact_hashtag) <= 28:
-        return compact_hashtag
-    hashtag = ""
-    for word in compact_words:
-        candidate = hashtag + word[:1].upper() + word[1:]
-        if len(candidate) > 28:
-            break
-        hashtag = candidate
-    return hashtag
-
-
 def _caption_hashtags(selected):
-    hashtags = ["Politometro"]
-    all_text = " ".join(_recommendation_text(item) for item in selected.values())
+    hashtags = list(CAPTION_HASHTAGS)
     for qkey in REQUIRED_TYPES:
-        item = selected[qkey]
-        title_tag = _title_hashtag(item.get("title"))
-        if title_tag:
-            hashtags.append(title_tag)
-    for keywords, hashtag in TOPIC_HASHTAGS:
-        if any(keyword in all_text for keyword in keywords):
-            hashtags.append(hashtag)
-
-    unique = []
-    seen = set()
-    for hashtag in hashtags:
-        key = hashtag.casefold()
-        if key in seen:
+        item = selected.get(qkey)
+        if not item:
             continue
-        seen.add(key)
-        unique.append(f"#{hashtag}")
-    return " ".join(unique[:10])
+        category = str(item.get("category") or "").strip().casefold()
+        hashtag = CATEGORY_HASHTAGS.get(category)
+        if not hashtag:
+            hashtag = TYPE_HASHTAGS.get(item.get("type"))
+        if hashtag and hashtag not in hashtags:
+            hashtags.append(hashtag)
+    return " ".join(hashtags)
 
 
 def build_caption(selected):
