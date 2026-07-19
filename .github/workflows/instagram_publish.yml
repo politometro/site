@@ -18,6 +18,11 @@ on:
         required: false
         type: boolean
         default: false
+  # Permite que um agendador externo (por exemplo, cron-job.org) faça uma
+  # segunda tentativa às 10:00. O mesmo guard e a mesma concurrency impedem
+  # qualquer publicação duplicada.
+  repository_dispatch:
+    types: [weekly-publish]
 
 permissions:
   contents: write

@@ -204,6 +204,8 @@ class PublicationScheduleTests(unittest.TestCase):
         self.assertIn("timezone: 'Europe/Lisbon'", workflow)
         self.assertIn("publish_now:", workflow)
         self.assertIn("FORCE_PUBLISH_NOW:", workflow)
+        self.assertIn("repository_dispatch:", workflow)
+        self.assertIn("types: [weekly-publish]", workflow)
         self.assertIn(
             "github.event.schedule == '17 10 * * 0'",
             workflow,
