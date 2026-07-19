@@ -206,6 +206,63 @@ def _response_json(response):
     return payload if isinstance(payload, dict) else {}
 
 
+def _meta_failure_message(payload, action):
+    """Translate Meta API failures without exposing internal account IDs."""
+    error = payload.get("error") if isinstance(payload, dict) else {}
+    error = error if isinstance(error, dict) else {}
+    code = error.get("code")
+    message = str(error.get("message") or "").strip()
+    if code == 200 and "cannot call api for app" in message.casefold():
+        return (
+            "A Meta recusou a autorização da aplicação para esta conta "
+            "(OAuth 200). Não é um erro da imagem nem da legenda. Confirma que "
+            "FACEBOOK_ACCESS_TOKEN é o token válido da Página ligada a esta "
+            "conta profissional, gerado pela mesma aplicação Meta, e que essa "
+            "conta tem as permissões instagram_basic, "
+            "instagram_content_publish, pages_show_list e "
+            "pages_read_engagement."
+        )
+    if code == 190:
+        return (
+            "O token de acesso da Meta expirou ou foi revogado (OAuth 190). "
+            "Gera um novo token duradouro da Página ligada ao Instagram e "
+            "atualiza FACEBOOK_ACCESS_TOKEN nos GitHub Secrets."
+        )
+    detail = f" Código Meta: {code}." if code is not None else ""
+    public_message = f" {message}" if message else ""
+    return f"A Meta não conseguiu {action}.{detail}{public_message}".strip()
+
+
+def validate_meta_access(session=None):
+    """Check read access to the configured professional Instagram account."""
+    context = _context()
+    client = session or requests.Session()
+    response = client.get(
+        f"{context['base_url']}/{context['instagram_id']}",
+        params={
+            "fields": "id,username",
+            "access_token": context["access_token"],
+        },
+        timeout=25,
+    )
+    payload = _response_json(response)
+    if (
+        not response.ok
+        or str(payload.get("id") or "") != context["instagram_id"]
+    ):
+        raise RuntimeError(
+            _meta_failure_message(
+                payload,
+                "validar o acesso à conta profissional do Instagram",
+            )
+        )
+    print(
+        "[OK] A Meta confirmou o acesso à conta profissional "
+        f"@{payload.get('username') or context['instagram_id']}."
+    )
+    return payload
+
+
 def prepare_publication(session=None):
     """Create and persist exactly one container for the approved draft."""
     context = _context()
@@ -241,7 +298,10 @@ def prepare_publication(session=None):
     create_payload = _response_json(create_response)
     if not create_response.ok or not create_payload.get("id"):
         raise RuntimeError(
-            f"Falha ao criar o contentor do Instagram: {create_payload}"
+            _meta_failure_message(
+                create_payload,
+                "criar o contentor do Instagram",
+            )
         )
 
     receipt = {
@@ -490,8 +550,10 @@ def publish_or_reconcile(session=None):
         publish_payload = _response_json(publish_response)
         if not publish_response.ok or not publish_payload.get("id"):
             raise RuntimeError(
-                "Falha ao publicar o contentor no Instagram: "
-                f"{publish_payload}"
+                _meta_failure_message(
+                    publish_payload,
+                    "publicar o contentor no Instagram",
+                )
             )
     except (RuntimeError, requests.RequestException) as publish_error:
         receipt["last_error"] = str(publish_error)
@@ -529,11 +591,14 @@ def post_to_instagram():
 def _main():
     parser = argparse.ArgumentParser()
     phase = parser.add_mutually_exclusive_group()
+    phase.add_argument("--check-access", action="store_true")
     phase.add_argument("--prepare", action="store_true")
     phase.add_argument("--mark-publishing", action="store_true")
     phase.add_argument("--publish", action="store_true")
     arguments = parser.parse_args()
-    if arguments.prepare:
+    if arguments.check_access:
+        validate_meta_access()
+    elif arguments.prepare:
         prepare_publication()
     elif arguments.mark_publishing:
         mark_publishing()

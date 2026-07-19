@@ -13,6 +13,10 @@ import base64
 import threading
 import time
 from dotenv import load_dotenv
+from publication_schedule import (
+    PUBLICATION_TIMEZONE_NAME,
+    scheduled_for_draft,
+)
 
 # Load environment variables if available
 load_dotenv()
@@ -973,6 +977,13 @@ def _approve_current_draft(expected_draft_id, expected_hash_prefix, user):
             return True
         return "O rascunho contém uma aprovação inconsistente."
 
+    scheduled_for = scheduled_for_draft(draft)
+    if not scheduled_for:
+        return (
+            "Não foi possível determinar o domingo desta proposta. "
+            "Gera uma nova proposta e tenta novamente."
+        )
+
     draft["approval"] = {
         "approved": True,
         "draft_id": draft_id,
@@ -980,6 +991,8 @@ def _approve_current_draft(expected_draft_id, expected_hash_prefix, user):
         "approved_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "approved_by_id": str(user.id),
         "approved_by_name": user.display_name,
+        "scheduled_for": scheduled_for,
+        "scheduled_timezone": PUBLICATION_TIMEZONE_NAME,
     }
     encoded = json.dumps(draft, indent=2, ensure_ascii=False).encode("utf-8")
     return update_github_file(
@@ -1124,19 +1137,19 @@ class PostReviewView(discord.ui.View):
             await interaction.followup.send(f"❌ {approval}", ephemeral=True)
             return
 
-        res = trigger_github_workflow("instagram_publish.yml")
-        if res is True:
-            await interaction.message.edit(
-                content=f"✅ Post **Aprovado** por {interaction.user.mention}! A iniciar publicação no Instagram e gravação na base de dados via GitHub Actions...",
-                embed=None,
-                view=None
-            )
-            await interaction.followup.send(
-                f"Rascunho `{draft_id}` aprovado e enviado para publicação.",
-                ephemeral=True,
-            )
-        else:
-            await interaction.followup.send(f"❌ Erro ao acionar workflow de publicação: {res}", ephemeral=True)
+        await interaction.message.edit(
+            content=(
+                f"✅ Post **Aprovado** por {interaction.user.mention}! "
+                "Publicação agendada para domingo às 10:00 "
+                "(hora de Lisboa)."
+            ),
+            embed=None,
+            view=None,
+        )
+        await interaction.followup.send(
+            f"Rascunho `{draft_id}` aprovado e agendado para domingo às 10:00.",
+            ephemeral=True,
+        )
 
     @discord.ui.button(label="Rejeitar", style=discord.ButtonStyle.red, custom_id="reject_post", emoji="❌")
     async def reject_button(self, interaction: discord.Interaction, button: discord.ui.Button):

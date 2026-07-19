@@ -79,6 +79,10 @@ class FakeMetaSession:
     def get(self, url, params, timeout):
         if url.endswith("/account-123/media"):
             return FakeResponse({"data": list(self.recent_media)})
+        if url.endswith("/account-123"):
+            return FakeResponse(
+                {"id": "account-123", "username": "politometro"}
+            )
         if "/container-" in url:
             return FakeResponse(
                 {"status_code": "FINISHED", "status": "Ready"}
@@ -185,6 +189,37 @@ class InstagramIdempotencyTests(unittest.TestCase):
         self.assertEqual(second["creation_id"], "container-1")
         self.assertEqual(session.create_calls, 1)
         self.assertEqual(self.receipt()["state"], "prepared")
+
+    def test_meta_access_is_checked_without_creating_a_container(self):
+        session = FakeMetaSession()
+
+        result = post_instagram.validate_meta_access(session)
+
+        self.assertEqual(result["id"], "account-123")
+        self.assertEqual(result["username"], "politometro")
+        self.assertEqual(session.create_calls, 0)
+        self.assertEqual(session.publish_calls, 0)
+
+    def test_oauth_200_error_explains_the_required_account_authorization(self):
+        message = post_instagram._meta_failure_message(
+            {
+                "error": {
+                    "message": (
+                        "Cannot call API for app 1640113147677812 on behalf "
+                        "of user 122094188331404556"
+                    ),
+                    "type": "OAuthException",
+                    "code": 200,
+                }
+            },
+            "criar o contentor do Instagram",
+        )
+
+        self.assertIn("FACEBOOK_ACCESS_TOKEN", message)
+        self.assertIn("token válido da Página", message)
+        self.assertIn("instagram_content_publish", message)
+        self.assertNotIn("1640113147677812", message)
+        self.assertNotIn("122094188331404556", message)
 
     def test_failed_publish_rerun_reuses_same_pending_creation_id(self):
         failed_session = FakeMetaSession("error")

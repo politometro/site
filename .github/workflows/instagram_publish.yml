@@ -1,8 +1,16 @@
 name: Publish Weekly Instagram Post
 
 on:
-  # Publication is triggered only after the Discord bot writes an approval
-  # bound to the current draft id and content hash.
+  # The first run targets 10:00. Two bounded recovery runs protect against a
+  # delayed/dropped schedule without allowing publication later in the day.
+  schedule:
+    - cron: '0 10 * * 0'
+      timezone: 'Europe/Lisbon'
+    - cron: '7 10 * * 0'
+      timezone: 'Europe/Lisbon'
+    - cron: '17 10 * * 0'
+      timezone: 'Europe/Lisbon'
+  # A manual retry is safe: the same local-time and draft guard still applies.
   workflow_dispatch:
 
 permissions:
@@ -13,7 +21,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  publication_guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      should_publish: ${{ steps.guard.outputs.should_publish }}
+      reason: ${{ steps.guard.outputs.reason }}
+      scheduled_for: ${{ steps.guard.outputs.scheduled_for }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Check Approved Publication Window
+        id: guard
+        run: python scripts/publication_schedule.py --github-output
+
   publish:
+    needs: publication_guard
+    if: ${{ needs.publication_guard.outputs.should_publish == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -33,6 +63,15 @@ jobs:
       - name: Verify Approved Draft Is Still Current
         run: |
           python scripts/generate_post.py --verify-approved
+
+      - name: Validate Meta Access
+        env:
+          INSTAGRAM_BUSINESS_ACCOUNT_ID: ${{ secrets.INSTAGRAM_BUSINESS_ACCOUNT_ID }}
+          FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          META_GRAPH_API_VERSION: v25.0
+        run: |
+          python scripts/post_instagram.py --check-access
 
       - name: Prepare Instagram Container
         env:
@@ -127,7 +166,15 @@ jobs:
 
   notify_failure:
     needs: publish
-    if: ${{ always() && needs.publish.result == 'failure' }}
+    if: >-
+      ${{
+        always()
+        && needs.publish.result == 'failure'
+        && (
+          github.event_name == 'workflow_dispatch'
+          || github.event.schedule == '17 10 * * 0'
+        )
+      }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

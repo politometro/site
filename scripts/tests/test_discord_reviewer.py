@@ -102,6 +102,52 @@ class DiscordApplicationTests(unittest.TestCase):
         self.assertIn("artigo de opinião", feedback[0]["text"])
         self.assertEqual(feedback[0]["createdById"], "42")
 
+    def test_post_approval_records_sunday_ten_in_lisbon(self):
+        draft = {
+            "draft_id": "draft_123",
+            "content_hash": "abc123fullhash",
+            "created_at": "2026-07-18T20:00:00+00:00",
+            "is_test": False,
+            "approval": {"approved": False},
+        }
+        written = {}
+
+        def fake_update(path, content, message, sha=None):
+            written[path] = json.loads(content.decode("utf-8"))
+            return True
+
+        with (
+            mock.patch.object(
+                discord_reviewer,
+                "get_github_file",
+                return_value=(
+                    json.dumps(draft).encode("utf-8"),
+                    "draft-sha",
+                ),
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "update_github_file",
+                side_effect=fake_update,
+            ),
+        ):
+            result = discord_reviewer._approve_current_draft(
+                "draft_123",
+                "abc123",
+                SimpleNamespace(id=42, display_name="Revisor"),
+            )
+
+        self.assertTrue(result)
+        approval = written["scripts/review_draft.json"]["approval"]
+        self.assertEqual(
+            approval["scheduled_for"],
+            "2026-07-19T09:00:00+00:00",
+        )
+        self.assertEqual(
+            approval["scheduled_timezone"],
+            "Europe/Lisbon",
+        )
+
     def test_recommendation_command_exposes_same_five_types_as_website(self):
         choices = {
             choice.value
@@ -287,6 +333,49 @@ class DiscordApplicationTests(unittest.TestCase):
                     "second", now=1001
                 )["allowed"]
             )
+
+
+class PostApprovalButtonTests(unittest.IsolatedAsyncioTestCase):
+    async def test_approval_schedules_without_triggering_immediate_publication(self):
+        view = discord_reviewer.PostReviewView()
+        interaction = SimpleNamespace(
+            user=SimpleNamespace(
+                id=42,
+                mention="@revisor",
+                display_name="Revisor",
+            ),
+            response=SimpleNamespace(defer=mock.AsyncMock()),
+            followup=SimpleNamespace(send=mock.AsyncMock()),
+            message=SimpleNamespace(edit=mock.AsyncMock()),
+        )
+
+        with (
+            mock.patch.object(
+                discord_reviewer,
+                "_is_authorized_reviewer",
+                return_value=True,
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "_review_identity_from_message",
+                return_value=("draft_123", "abc123"),
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "_approve_current_draft",
+                return_value=True,
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "trigger_github_workflow",
+            ) as trigger,
+        ):
+            await view.approve_button.callback(interaction)
+
+        trigger.assert_not_called()
+        edit_content = interaction.message.edit.await_args.kwargs["content"]
+        self.assertIn("agendada", edit_content.lower())
+        self.assertIn("domingo às 10:00", edit_content)
 
 
 if __name__ == "__main__":
