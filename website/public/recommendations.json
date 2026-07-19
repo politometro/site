@@ -6,7 +6,7 @@
       "category": "Podcast",
       "title": "Que nota merece o ministro da Educação?",
       "authorOrMeta": "Linhas Vermelhas",
-      "description": "O prazo para a correção dos exames nacionais termina esta terça-feira e Fernando Alexandre garante que a nova data fixada para a divulgação das notas, a 17 de julho, vai ser cumprida. A dois dias do debate anual do Estado da Nação, que avaliação se pode fazer da gestão de todo este processo por parte do Ministério da Educação e do Governo?",
+      "description": "Análise sobre os temas e questões de que nota merece o ministro da educação.",
       "imageUrl": "/covers/podcast_que_nota_merece_o_ministro_da_educa__o__a88fc70f_13120483530c.jpg",
       "link": "https://omny.fm/shows/linhas-vermelhas/que-nota-merece-o-ministro-da-educa-o",
       "externalId": "2a40b8d3-bad6-415b-a2dc-b4860138a16d",
@@ -36,7 +36,11 @@
         "resolvedTitle": "Que nota merece o ministro da Educação?",
         "resolvedAuthor": "Linhas Vermelhas",
         "sourcePublishedAt": "2026-07-14T07:00:00Z",
-        "sourceDescription": "O prazo para a correção dos exames nacionais termina esta terça-feira e Fernando Alexandre garante que a nova data fixada para a divulgação das notas, a 17 de julho, vai ser cumprida. A dois dias do debate anual do Estado da Nação, que avaliação se pode fazer da gestão de todo este processo por parte do Ministério da Educação e do Governo?"
+        "sourceDescription": "O prazo para a correção dos exames nacionais termina esta terça-feira e Fernando Alexandre garante que a nova data fixada para a divulgação das notas, a 17 de julho, vai ser cumprida. A dois dias do debate anual do Estado da Nação, que avaliação se pode fazer da gestão de todo este processo por parte do Ministério da Educação e do Governo?",
+        "editorialDescription": "Análise sobre os temas e questões de que nota merece o ministro da educação.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "4d01a37c51f545d2052b8d94365daef4d796c0ee4d8b2730186542b6cabea63a",
+        "editorialDescriptionProvider": "extractive"
       }
     },
     {
@@ -45,7 +49,7 @@
       "category": "Podcast",
       "title": "\"Se a Europa permite a destruição da Ucrânia, isso significa que os russos farão outro tipo de intervenções\"",
       "authorOrMeta": "O Princípio da Incerteza",
-      "description": "Com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade See omnystudio.com/listener for privacy information.",
+      "description": "Análise sobre com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade.",
       "imageUrl": "/covers/podcast__se_a_europa_permite_a_destrui__o_da_ucr_nia__isso_s_c66954ff_1c92af1ae4c5.jpg",
       "link": "https://omny.fm/shows/tsf-o-princ-pio-da-incerteza-podcast/se-a-europa-permite-a-destrui-o-da-ucr-nia-isso-significa-que-os-russos-far-o-outro-tipo-de-interven-es",
       "externalId": "e7ecf210-d634-4f48-a819-b4860084a8e0",
@@ -75,7 +79,11 @@
         "resolvedTitle": "\"Se a Europa permite a destruição da Ucrânia, isso significa que os russos farão outro tipo de intervenções\"",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-07-14T10:28:28Z",
-        "sourceDescription": "Com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade See omnystudio.com/listener for privacy information."
+        "sourceDescription": "Com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade See omnystudio.com/listener for privacy information.",
+        "editorialDescription": "Análise sobre com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "bc5c3692d28bb2112cf8132e55056d6f088c45bf99eb994ac01aad82120316b9",
+        "editorialDescriptionProvider": "extractive"
       }
     },
     {
@@ -127,7 +135,7 @@
       "category": "Podcast",
       "title": "Entre exames e construtores, a semana horrível do Governo",
       "authorOrMeta": "Fora do Baralho",
-      "description": "Dois dos ministros com melhor cotação foram apanhados num turbilhão. Fernando Alexandre e Luís Neves estão debaixo de fogo por razões diferentes, mas os danos no executivo são evidentes. See omnystudio.com/listener for privacy information.",
+      "description": "Análise sobre fernando Alexandre e Luís Neves estão debaixo de fogo por razões diferentes, mas os danos no executivo são evidentes.",
       "imageUrl": "/covers/podcast_entre_exames_e_construtores__a_semana_horr_vel_do_go_e37ac11f_ac474dd5b9cf.jpg",
       "link": "https://omny.fm/shows/fora-do-baralho/entre-exames-e-construtores-a-semana-horr-vel-do-governo",
       "externalId": "1ab3c0cd-4d0e-4173-a1b3-b48a013d4875",
@@ -157,7 +165,11 @@
         "resolvedTitle": "Entre exames e construtores, a semana horrível do Governo",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-07-17T20:18:02Z",
-        "sourceDescription": "Dois dos ministros com melhor cotação foram apanhados num turbilhão. Fernando Alexandre e Luís Neves estão debaixo de fogo por razões diferentes, mas os danos no executivo são evidentes. See omnystudio.com/listener for privacy information."
+        "sourceDescription": "Dois dos ministros com melhor cotação foram apanhados num turbilhão. Fernando Alexandre e Luís Neves estão debaixo de fogo por razões diferentes, mas os danos no executivo são evidentes. See omnystudio.com/listener for privacy information.",
+        "editorialDescription": "Análise sobre fernando Alexandre e Luís Neves estão debaixo de fogo por razões diferentes, mas os danos no executivo são evidentes.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "1539637d4683ea359aaf560c713bb86597a1bd30875339a792fd4c7007ce7803",
+        "editorialDescriptionProvider": "extractive"
       }
     },
     {
