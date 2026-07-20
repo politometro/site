@@ -27,6 +27,15 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  icons: {
+    icon: [
+      { url: "/icon.png?v=6", sizes: "512x512", type: "image/png" },
+      { url: "/favicon.ico?v=6", sizes: "any" }
+    ],
+    apple: [
+      { url: "/apple-icon.png?v=6", sizes: "180x180", type: "image/png" }
+    ]
+  },
   openGraph: {
     title: "Politómetro - Análise de Programas Eleitorais Portugueses",
     description: "Explore e compare as propostas dos partidos políticos de forma imparcial com fontes oficiais citadas.",
@@ -67,6 +76,14 @@ export default function RootLayout({
     "alternateName": ["Politometro", "Politómetro Portugal"],
     "url": "https://politometro.vercel.app",
     "description": "Análise rigorosa e imparcial dos programas eleitorais em Portugal.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Politómetro",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://politometro.vercel.app/icon.png?v=6"
+      }
+    }
   };
 
   return (
