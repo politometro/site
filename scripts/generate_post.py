@@ -263,7 +263,7 @@ def _legacy_get_recommendations_with_valid_covers(queue):
 
 
 # --- SOURCE-GROUNDED SELECTION & QUALITY GATE ---
-ROTATING_Q3_TYPES = ("nostalgia", "investigation", "movie")
+ROTATING_Q3_TYPES = ("investigation", "movie")
 
 REQUIRED_TYPES = {
     "q1": "book",
