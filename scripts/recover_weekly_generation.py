@@ -46,10 +46,10 @@ def _timestamp(value):
 
 def _generation_needed(now):
     """Return (needed, reason), rechecking state when a queued job starts."""
-    if now.weekday() != 5:
-        return False, "Outside the Saturday recovery window."
+    if now.weekday() not in (1, 5):
+        return False, "Outside the bounded recovery windows (Tuesday/Saturday)."
     cycle_start = now.replace(
-        hour=RECOVERY_START_HOUR,
+        hour=RECOVERY_START_HOUR if now.weekday() == 5 else 17,
         minute=RECOVERY_START_MINUTE,
         second=0,
         microsecond=0,
@@ -63,7 +63,7 @@ def _generation_needed(now):
     if not (cycle_start <= now <= latest_start):
         return (
             False,
-            "Outside the bounded 18:45-19:50 UTC generation-start window.",
+            "Outside the bounded generation-start window.",
         )
 
     publication = _load_optional(PUBLICATION_PATH)
@@ -126,7 +126,13 @@ def main():
             "instagram_generate.yml/dispatches"
         ),
         data=json.dumps(
-            {"ref": "main", "inputs": {"recovery_mode": "true"}}
+            {
+                "ref": "main",
+                "inputs": {
+                    "recovery_mode": "true",
+                    "post_type": "wednesday_nostalgia" if now.weekday() == 1 else "sunday_standard",
+                },
+            }
         ).encode("utf-8"),
         headers={
             "Authorization": f"Bearer {token}",

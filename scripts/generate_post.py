@@ -95,7 +95,17 @@ QUADRANTS_CONFIG = {
         "label_pos": (435, 525),
         "title_pos": (435, 547),
         "cover_x": 435,
-    }
+    },
+    "w1": {
+        "label_pos": (50, 150),
+        "title_pos": (50, 175),
+        "cover_x": 50,
+    },
+    "w2": {
+        "label_pos": (50, 525),
+        "title_pos": (50, 550),
+        "cover_x": 50,
+    },
 }
 
 DESCRIPTION_CHAR_LIMITS = {
@@ -103,12 +113,16 @@ DESCRIPTION_CHAR_LIMITS = {
     "q2": 138,
     "q3": 220,
     "q4": 145,
+    "w1": 260,
+    "w2": 260,
 }
 DESCRIPTION_LINE_LIMITS = {
     "q1": 11,
     "q2": 8,
     "q3": 11,
     "q4": 8,
+    "w1": 9,
+    "w2": 9,
 }
 
 # --- ROUNDED CORNERS HELPER ---
@@ -262,29 +276,48 @@ def _legacy_get_recommendations_with_valid_covers(queue):
     return selected, covers
 
 
-# --- SOURCE-GROUNDED SELECTION & QUALITY GATE ---
-ROTATING_Q3_TYPES = ("investigation", "movie")
+# --- SOURCE-GROUNDED SELECTION & QUALITY GATE ---# --- SOURCE-GROUNDED SELECTION & QUALITY GATE ---
+SUNDAY_Q3_TYPES = ("investigation", "movie")
+WEDNESDAY_Q3_TYPES = ("nostalgia",)
+ROTATING_Q3_TYPES = ("nostalgia", "investigation", "movie")
 
-REQUIRED_TYPES = {
-    "q1": "book",
-    "q2": "podcast",
-    # "movie" remains the backwards-compatible fallback. Selection prefers the
-    # weekly rotating type whenever that pool contains an approved episode.
-    "q3": "movie",
-    "q4": "highlight",
+REQUIRED_SLOTS_FOR_POST_TYPE = {
+    "sunday_standard": {
+        "q1": "book",
+        "q2": "podcast",
+        "q3": "movie",
+        "q4": "highlight",
+    },
+    "wednesday_nostalgia": {
+        "w1": "podcast",
+        "w2": "nostalgia",
+    },
 }
 
+REQUIRED_TYPES = REQUIRED_SLOTS_FOR_POST_TYPE["sunday_standard"]
 
-def _slot_types(qkey):
-    if qkey != "q3":
-        return (REQUIRED_TYPES[qkey],)
-    week = datetime.datetime.now(datetime.timezone.utc).isocalendar().week
-    preferred = ROTATING_Q3_TYPES[week % len(ROTATING_Q3_TYPES)]
-    return (preferred,) + tuple(
-        media_type
-        for media_type in ROTATING_Q3_TYPES
-        if media_type != preferred
-    )
+
+def _slot_types(qkey, post_type="sunday_standard"):
+    if post_type == "wednesday_nostalgia":
+        if qkey == "w1":
+            return ("podcast", "book", "investigation", "movie", "highlight")
+        elif qkey == "w2":
+            return ("nostalgia",)
+    if qkey == "q1":
+        return ("book",)
+    elif qkey == "q2":
+        return ("podcast",)
+    elif qkey == "q3":
+        week = datetime.datetime.now(datetime.timezone.utc).isocalendar().week
+        preferred = SUNDAY_Q3_TYPES[week % len(SUNDAY_Q3_TYPES)]
+        return (preferred,) + tuple(
+            media_type
+            for media_type in SUNDAY_Q3_TYPES
+            if media_type != preferred
+        )
+    elif qkey == "q4":
+        return ("highlight",)
+    return (REQUIRED_TYPES.get(qkey, "highlight"),)
 
 TYPE_EMOJIS = {
     "book": "📖",
@@ -337,9 +370,12 @@ def _recommendation_emoji(item):
     return TYPE_EMOJIS.get(item.get("type"), "🔎")
 
 
-def _caption_hashtags(selected):
+def _caption_hashtags(selected, post_type="sunday_standard"):
     hashtags = list(CAPTION_HASHTAGS)
-    for qkey in REQUIRED_TYPES:
+    if post_type == "wednesday_nostalgia":
+        if "#Classicos" not in hashtags:
+            hashtags.append("#Classicos")
+    for qkey in selected.keys():
         item = selected.get(qkey)
         if not item:
             continue
@@ -349,40 +385,54 @@ def _caption_hashtags(selected):
             hashtag = TYPE_HASHTAGS.get(item.get("type"))
         if hashtag and hashtag not in hashtags:
             hashtags.append(hashtag)
-    return " ".join(hashtags)
+    forbidden = {"#humorpolitico", "#quartanostalgia", "#satirapolitica"}
+    final_hashtags = [h for h in hashtags if h.casefold() not in forbidden]
+    return " ".join(final_hashtags)
 
 
-def build_caption(selected):
+def build_caption(selected, post_type="sunday_standard"):
     sections = []
-    for qkey in REQUIRED_TYPES:
+    for qkey in selected.keys():
         item = selected[qkey]
         emoji = _recommendation_emoji(item)
         title = _ellipsize(item["title"], 110)
         author = _ellipsize(item.get("authorOrMeta", ""), 80)
-        description = _compact_text(item["description"], 220)
+        clean_desc = _sanitize_description(item.get("description", ""), item.get("title", ""))
+        description = _compact_text(clean_desc, 220)
         author_suffix = f" ({author})" if author else ""
         sections.append(
             f"{emoji} {item['category'].upper()}: {title}{author_suffix}\n"
             f"{description}"
         )
 
+    if post_type == "wednesday_nostalgia":
+        title_line = "📣 RECOMENDAÇÕES DO POLITÓMETRO\n\n"
+        intro_line = (
+            "Trazemos-te a nossa seleção de meio da semana com um grande clássico "
+            "do nosso arquivo e uma sugestão imperdível!\n\n"
+        )
+    else:
+        title_line = "📣 RECOMENDAÇÕES DO POLITÓMETRO\n\n"
+        intro_line = (
+            "Trazemos-te a nossa seleção semanal de conteúdos essenciais para "
+            "compreenderes a política, a história e a economia de Portugal e do mundo.\n\n"
+        )
+
     return (
-        "📣 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO\n\n"
-        "Trazemos-te a nossa seleção semanal de conteúdos essenciais para "
-        "compreenderes a política, a história e a economia de Portugal e do mundo.\n\n"
-        "Desenvolvido por @_.davstrango._ e @luisflmaximo no âmbito do projeto "
+        title_line
+        + intro_line
+        + "Desenvolvido por @_.davstrango._ e @luisflmaximo no âmbito do projeto "
         "@politiza.te.\n\n"
         + "\n\n".join(sections)
         + "\n\nQual destes vais espreitar primeiro? Diz-nos nos comentários e "
         "aproveita para deixar as tuas próprias sugestões para a próxima semana! 👇\n\n"
-        "—\n"
-        + _caption_hashtags(selected)
+        + "—\n"
+        + _caption_hashtags(selected, post_type=post_type)
         + "\n"
     )
 
 
 def _item_score(item, now):
-    """Return the editorial priority score, or -1 for an expired item."""
     score = item.get("priority", 3)
     time_sensitive = item.get("type") in {"podcast", "highlight"}
     if time_sensitive and item.get("sourcePublishedAt"):
@@ -422,7 +472,7 @@ def _cover_hash(item, cover):
     return hashlib.sha256(cover.convert("RGB").tobytes()).hexdigest()
 
 
-def get_recommendations_with_valid_covers(queue, history=None):
+def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday_standard"):
     """
     Resolve identity, canonical link and cover as one atomic unit.
 
@@ -464,8 +514,9 @@ def get_recommendations_with_valid_covers(queue, history=None):
     covers = {}
     seen_cover_hashes = set()
 
-    for qkey, required_type in REQUIRED_TYPES.items():
-        allowed_types = _slot_types(qkey)
+    target_slots = REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type, REQUIRED_SLOTS_FOR_POST_TYPE["sunday_standard"])
+    for qkey, required_type in target_slots.items():
+        allowed_types = _slot_types(qkey, post_type=post_type)
         candidates = [
             item
             for media_type in allowed_types
@@ -551,6 +602,33 @@ def wrap_text(draw, text, font, max_width):
     return lines
 
 
+def _sanitize_description(description, title=""):
+    import html
+    text = html.unescape(str(description or ""))
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = re.sub(r"https?://\S+", "", text)
+    text = re.sub(r"www\.\S+", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+
+    if title:
+        norm_title = re.sub(r"\s+", " ", str(title)).strip()
+        if norm_title and len(norm_title) >= 5:
+            if text.startswith(norm_title):
+                text = text[len(norm_title):].strip()
+            elif text.lower().startswith(norm_title.lower()):
+                text = text[len(norm_title):].strip()
+            else:
+                parts = [p.strip() for p in re.split(r"[:—|-]", norm_title) if len(p.strip()) >= 8]
+                for p in parts:
+                    if text.startswith(p):
+                        text = text[len(p):].strip()
+                        break
+
+    text = re.sub(r"^[\s:—\-.,;]+", "", text).strip()
+    text = re.sub(r"(?:\.{2,}|…)\s*$", "", text).strip()
+    return text or re.sub(r"(?:\.{2,}|…)\s*$", "", str(description or "").strip()).strip()
+
+
 def _ellipsize(value, max_chars):
     text = re.sub(r"\s+", " ", str(value or "")).strip()
     if len(text) <= max_chars:
@@ -561,6 +639,7 @@ def _ellipsize(value, max_chars):
 def _compact_text(value, max_chars):
     """Shorten text at natural boundaries without adding ellipses."""
     text = re.sub(r"\s+", " ", str(value or "")).strip()
+    text = re.sub(r"(?:\.{2,}|…)\s*$", "", text).strip()
     if len(text) <= max_chars:
         return text
 
@@ -573,10 +652,34 @@ def _compact_text(value, max_chars):
         else:
             break
     if best_complete:
-        return best_complete
+        return re.sub(r"(?:\.{2,}|…)\s*$", "", best_complete)
 
-    shortened = text[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:.!?")
-    return shortened or text[:max_chars].rstrip(" ,;:.!?")
+    shortened = text[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:.!?…")
+    return re.sub(r"(?:\.{2,}|…)\s*$", "", shortened) or re.sub(r"(?:\.{2,}|…)\s*$", "", text[:max_chars].rstrip(" ,;:.!?…"))
+
+def remove_black_bars(image, threshold=28):
+    """Detect and crop black/dark letterbox or pillarbox borders from an image."""
+    try:
+        img_rgb = image.convert("RGB") if image.mode not in ("RGB", "RGBA") else image
+        gray = img_rgb.convert("L")
+        w, h = gray.size
+        if w < 50 or h < 50:
+            return image
+
+        bw = gray.point(lambda p: 255 if p > threshold else 0)
+        bbox = bw.getbbox()
+        if not bbox:
+            return image
+
+        left, top, right, bottom = bbox
+        crop_w = right - left
+        crop_h = bottom - top
+
+        if (left > 0 or top > 0 or right < w or bottom < h) and (crop_w >= w * 0.4) and (crop_h >= h * 0.4):
+            return image.crop((left, top, right, bottom))
+    except Exception:
+        pass
+    return image
 
 
 def _fit_text_lines(
@@ -924,7 +1027,18 @@ def generate_production_post():
     parser.add_argument("--commit", action="store_true", help="Commit the currently approved review draft to database")
     parser.add_argument("--verify-approved", action="store_true", help="Validate an approved draft without changing state")
     parser.add_argument("--test", action="store_true", help="Mark the generated draft as a test run")
+    parser.add_argument(
+        "--post-type",
+        choices=["auto", "sunday_standard", "wednesday_nostalgia"],
+        default="auto",
+        help="Specify post edition (sunday_standard or wednesday_nostalgia)",
+    )
     args = parser.parse_args()
+
+    post_type = args.post_type
+    if post_type == "auto":
+        now_utc = datetime.datetime.now(datetime.timezone.utc)
+        post_type = "wednesday_nostalgia" if now_utc.weekday() == 2 else "sunday_standard"
 
     DRAFT_FILE = os.path.join(SCRIPT_DIR, "review_draft.json")
 
@@ -964,11 +1078,12 @@ def generate_production_post():
     queue = data.get("queue", [])
     history = data.get("history", [])
     
-    selected, covers = get_recommendations_with_valid_covers(queue, history=history)
+    selected, covers = get_recommendations_with_valid_covers(queue, history=history, post_type=post_type)
     
-    missing = [q for q in ["q1", "q2", "q3", "q4"] if q not in selected]
+    slot_keys = list(selected.keys())
+    missing = [q for q in slot_keys if q not in selected]
     if missing:
-        print(f"ERROR: Missing quadrants: {missing}")
+        print(f"ERROR: Missing slots: {missing}")
         sys.exit(1)
     
     # Normalise full-resolution template assets to the coordinate canvas used
@@ -997,7 +1112,7 @@ def generate_production_post():
     title_lines_map = {}
     title_bottoms = {}
     
-    for qkey in ["q1", "q2", "q3", "q4"]:
+    for qkey in slot_keys:
         item = selected[qkey]
         config = QUADRANTS_CONFIG[qkey]
         
@@ -1015,14 +1130,22 @@ def generate_production_post():
         
         # Wrap title
         tx, ty = config["title_pos"]
-        title_max_lines = 3 if qkey == "q2" else 2
+        title_max_lines = 3 if (qkey in ["q2", "q3", "q4", "w1", "w2"] or len(item.get("title", "")) > 55) else 2
+        raw_title = item.get("title", "")
+        if len(raw_title) > 55 and "empresa de construção" in raw_title.lower():
+            raw_title = re.sub(r"burlar dezenas de famílias com empresa de construção", "burla na construção", raw_title, flags=re.I)
+        elif len(raw_title) > 65:
+            raw_title = _ellipsize(raw_title, 65)
+        item["title"] = raw_title
+
+        max_title_width = 700 if qkey in ["w1", "w2"] else 350
         fitted_title_font, lines, title_spacing = _fit_text_lines(
             draw,
-            item["title"],
+            raw_title,
             FONT_BOLD,
-            32,
-            24,
-            350,
+            30,
+            18,
+            max_title_width,
             title_max_lines,
         )
         title_lines_map[qkey] = lines
@@ -1037,51 +1160,43 @@ def generate_production_post():
 
     # Determine Cover Dimensions based on item TYPE dynamically
     cover_dims = {}
-    for qkey in ["q1", "q2", "q3", "q4"]:
+    for qkey in slot_keys:
         item = selected[qkey]
-        if item["type"] == "podcast":
-            cover_dims[qkey] = (192, 192)
-        elif item["type"] == "highlight":
-            # Highlights use the same square format as podcasts so editorial
-            # thumbnails do not become visually tiny in the grid.
+        if qkey in ["w1", "w2"]:
+            cover_dims[qkey] = (200, 200) if item["type"] in ["podcast", "highlight", "nostalgia"] else (160, 220)
+        elif item["type"] in ["podcast", "highlight"]:
             cover_dims[qkey] = (192, 192)
         else:
             cover_dims[qkey] = (160, 220)
 
-    # --- ROW 1 (TOP) DYNAMIC ALIGNMENT ---
-    gap_q1 = 18 if len(title_lines_map["q1"]) >= 2 else 12
-    gap_q2 = 18 if len(title_lines_map["q2"]) >= 2 else 12
-    
-    h_q1 = cover_dims["q1"][1]
-    h_q2 = cover_dims["q2"][1]
-    
-    q1_min_bottom = title_bottoms["q1"] + gap_q1 + h_q1
-    q2_min_bottom = title_bottoms["q2"] + gap_q2 + h_q2
-    
-    common_bottom_y = max(q1_min_bottom, q2_min_bottom)
-    
-    cover_y_map = {
-        "q1": common_bottom_y - h_q1,
-        "q2": common_bottom_y - h_q2
-    }
-    
-    # --- ROW 2 (BOTTOM) DYNAMIC ALIGNMENT ---
-    gap_q3 = 18 if len(title_lines_map["q3"]) >= 2 else 12
-    gap_q4 = 18 if len(title_lines_map["q4"]) >= 2 else 12
-    
-    q3_top_y = title_bottoms["q3"] + gap_q3
-    q4_top_y = title_bottoms["q4"] + gap_q4
-    
-    common_top_y = max(q3_top_y, q4_top_y)
-    
-    cover_y_map["q3"] = common_top_y
-    cover_y_map["q4"] = common_top_y
+    cover_y_map = {}
+    if "q1" in slot_keys and "q2" in slot_keys:
+        gap_q1 = 18 if len(title_lines_map["q1"]) >= 2 else 12
+        gap_q2 = 18 if len(title_lines_map["q2"]) >= 2 else 12
+        h_q1 = cover_dims["q1"][1]
+        h_q2 = cover_dims["q2"][1]
+        q1_min_bottom = title_bottoms["q1"] + gap_q1 + h_q1
+        q2_min_bottom = title_bottoms["q2"] + gap_q2 + h_q2
+        common_bottom_y = max(q1_min_bottom, q2_min_bottom)
+        cover_y_map["q1"] = common_bottom_y - h_q1
+        cover_y_map["q2"] = common_bottom_y - h_q2
+        
+        gap_q3 = 18 if len(title_lines_map["q3"]) >= 2 else 12
+        gap_q4 = 18 if len(title_lines_map["q4"]) >= 2 else 12
+        q3_top_y = title_bottoms["q3"] + gap_q3
+        q4_top_y = title_bottoms["q4"] + gap_q4
+        common_top_y = max(q3_top_y, q4_top_y)
+        cover_y_map["q3"] = common_top_y
+        cover_y_map["q4"] = common_top_y
+    else:
+        cover_y_map["w1"] = max(title_bottoms.get("w1", 195) + 15, 230)
+        cover_y_map["w2"] = max(title_bottoms.get("w2", 570) + 15, 600)
 
     # --- PASTE COVERS AND WRITE DESCRIPTIONS ---
-    for qkey in ["q1", "q2", "q3", "q4"]:
+    for qkey in slot_keys:
         config = QUADRANTS_CONFIG[qkey]
         item = selected[qkey]
-        cover = covers[qkey]
+        cover = remove_black_bars(covers[qkey])
         
         cover_w, cover_h = cover_dims[qkey]
         cover_y = cover_y_map[qkey]
@@ -1099,21 +1214,24 @@ def generate_production_post():
         template.alpha_composite(cover_rounded, (cx, cover_y))
         
         # Wrap description
-        dx = cx + cover_w + 15
-        if qkey in ["q1", "q3"]:
+        dx = cx + cover_w + 20
+        if qkey in ["w1", "w2"]:
+            desc_w = 760 - dx
+        elif qkey in ["q1", "q3"]:
             desc_w = 400 - dx
         else:
             desc_w = 780 - dx
             
+        clean_desc = _sanitize_description(item.get("description", ""), item.get("title", ""))
+        item["description"] = clean_desc
         description = _compact_text(
-            item["description"],
-            DESCRIPTION_CHAR_LIMITS[qkey],
+            clean_desc,
+            DESCRIPTION_CHAR_LIMITS.get(qkey, 240),
         )
-        desc_lines = wrap_text(draw, description, desc_font, desc_w)
         
         spacing = 18
         max_lines = min(
-            DESCRIPTION_LINE_LIMITS[qkey],
+            DESCRIPTION_LINE_LIMITS.get(qkey, 8),
             max(1, cover_h // spacing),
         )
         fitted_font, desc_lines, spacing = _fit_text_lines(
@@ -1149,7 +1267,7 @@ def generate_production_post():
     print(f"\n[OK] Production post image saved to: {OUTPUT_PATH}")
     
     # 5. Generate the caption from the exact recommendations in this draft.
-    caption = build_caption(selected)
+    caption = build_caption(selected, post_type=post_type)
     if len(caption) > 1800:
         raise RuntimeError(
             f"A legenda excede o limite editorial seguro ({len(caption)} caracteres)."
@@ -1180,6 +1298,7 @@ def generate_production_post():
             "schema_version": 2,
             "draft_id": f"draft_{content_hash[:20]}",
             "content_hash": content_hash,
+            "post_type": post_type,
             "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
             "is_test": args.test,
             "post_sha256": post_sha,

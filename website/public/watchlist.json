@@ -63,6 +63,43 @@
     }
   ],
   "watchSources": {
+    "nostalgia": [
+      {
+        "name": "Contra Informação",
+        "link": "https://arquivos.rtp.pt/programas/contra-informacao/",
+        "rule": "Selecionar apenas páginas de episódios individuais."
+      },
+      {
+        "name": "Herman Enciclopédia",
+        "link": "https://www.rtp.pt/play/p4515/herman-enciclopedia",
+        "rule": "Selecionar apenas páginas de episódios individuais."
+      },
+      {
+        "name": "Os Contemporâneos",
+        "link": "https://www.rtp.pt/play/p117/os-contemporaneos",
+        "rule": "Selecionar apenas páginas de episódios individuais."
+      },
+      {
+        "name": "Último a Sair",
+        "link": "https://www.rtp.pt/play/p703/ultimo-a-sair",
+        "rule": "Selecionar apenas episódios que estejam efetivamente disponíveis."
+      },
+      {
+        "name": "Estado de Graça",
+        "link": "https://www.rtp.pt/play/p5950/estado-de-graca",
+        "rule": "Selecionar apenas páginas de episódios individuais."
+      },
+      {
+        "name": "Gato Fedorento / Telerural",
+        "link": "https://www.youtube.com/channel/UCL8juHy9kYJ6G3FRScj7_aA",
+        "rule": "Selecionar apenas vídeos completos ou sketches individuais."
+      },
+      {
+        "name": "A Liga dos Últimos",
+        "link": "https://www.youtube.com/results?search_query=A+Liga+dos+%C3%9Altimos+RTP",
+        "rule": "Confirmar autoria e disponibilidade antes de recomendar um episódio."
+      }
+    ],
     "investigation": [
       {
         "name": "A Prova dos Factos",
@@ -80,11 +117,43 @@
   },
   "episodeCandidates": [
     {
+      "type": "nostalgia",
+      "title": "Política | Herman Enciclopédia",
+      "authorOrMeta": "Herman Enciclopédia / RTP",
+      "description": "O episódio dedicado à política recupera personagens e sátiras de Herman José e das Produções Fictícias.",
+      "link": "https://www.rtp.pt/play/p4515/e741384/herman-enciclopedia",
+      "priority": 5
+    },
+    {
+      "type": "nostalgia",
+      "title": "Os Contemporâneos | Episódio 1",
+      "authorOrMeta": "Os Contemporâneos / RTP",
+      "description": "Primeiro episódio do programa de sketches que observa com humor a sociedade portuguesa.",
+      "link": "https://www.rtp.pt/play/p117/e934828/os-contemporaneos",
+      "priority": 4
+    },
+    {
+      "type": "nostalgia",
+      "title": "Telerural — Desportivo de Curral de Moinas perde por 26-1",
+      "authorOrMeta": "RTP",
+      "description": "Hilariante relato do noticiário fictício Telerural sobre a pesada derrota do Desportivo de Curral de Moinas por 26-1 frente ao Cuspe Futebol Clube.",
+      "link": "https://www.youtube.com/watch?v=Q_Lk_bEISX0",
+      "priority": 5
+    },
+    {
       "type": "podcast",
       "title": "Conteúdo do Batáguas EP02 — Climáximo + Debate dos Pequeninos + Partido Nojento",
       "authorOrMeta": "Diogo Bataguas",
       "description": "Episódio do formato de humor de Diogo Batáguas que cruza atualidade, sátira e segmentos de estúdio.",
       "link": "https://www.youtube.com/watch?v=7A0mUSB-sgw",
+      "priority": 5
+    },
+    {
+      "type": "nostalgia",
+      "title": "Contra Informação",
+      "authorOrMeta": "RTP Arquivos",
+      "description": "Episódio de sátira política, social, cultural e desportiva protagonizado pelos bonecos do Contra Informação.",
+      "link": "https://arquivos.rtp.pt/conteudos/contra-informacao-577/",
       "priority": 5
     },
     {
@@ -97,9 +166,9 @@
     },
     {
       "type": "investigation",
-      "title": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construção",
+      "title": "Repórter Sábado: Henrique Vassal acusado de burla na construção",
       "authorOrMeta": "NOW Canal",
-      "description": "Episódio do Repórter Sábado sobre denúncias de dezenas de famílias contra uma empresa de construção.",
+      "description": "Investigação jornalística do NOW Canal sobre denúncias de alegada burla a dezenas de famílias no setor da construção civil, reunindo testemunhos de lesados e dados sobre o caso.",
       "link": "https://www.youtube.com/watch?v=LEpWEUWVxC4",
       "priority": 5,
       "is_time_sensitive": true

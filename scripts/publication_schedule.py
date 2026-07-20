@@ -18,8 +18,16 @@ DRAFT_PATH = os.path.join(SCRIPT_DIR, "review_draft.json")
 RECEIPT_PATH = os.path.join(SCRIPT_DIR, "instagram_publication.json")
 PUBLICATION_TIMEZONE_NAME = "Europe/Lisbon"
 PUBLICATION_TIMEZONE = ZoneInfo(PUBLICATION_TIMEZONE_NAME)
-PUBLICATION_WEEKDAY = 6  # Sunday
-PUBLICATION_HOUR = 10
+SUNDAY_WEEKDAY = 6  # Sunday
+SUNDAY_HOUR = 10
+WEDNESDAY_WEEKDAY = 2  # Wednesday
+WEDNESDAY_HOUR = 9
+
+
+def _get_draft_edition(draft):
+    if isinstance(draft, dict):
+        return draft.get("post_type") or draft.get("edition") or "sunday_standard"
+    return "sunday_standard"
 
 
 def _parse_datetime(value):
@@ -49,7 +57,7 @@ def _load_optional(path):
 
 
 def scheduled_for_draft(draft):
-    """Return the weekly cycle's Sunday 10:00 target as an UTC ISO string."""
+    """Return the draft's target publication window as an UTC ISO string."""
     approval = draft.get("approval") or {}
     reference = _parse_datetime(draft.get("created_at"))
     if reference is None:
@@ -57,16 +65,16 @@ def scheduled_for_draft(draft):
     if reference is None:
         return None
 
+    edition = _get_draft_edition(draft)
+    target_weekday = WEDNESDAY_WEEKDAY if edition == "wednesday_nostalgia" else SUNDAY_WEEKDAY
+    target_hour = WEDNESDAY_HOUR if edition == "wednesday_nostalgia" else SUNDAY_HOUR
+
     local_reference = reference.astimezone(PUBLICATION_TIMEZONE)
-    days_until_sunday = (
-        PUBLICATION_WEEKDAY - local_reference.weekday()
-    ) % 7
-    target_date = local_reference.date() + datetime.timedelta(
-        days=days_until_sunday
-    )
+    days_until_target = (target_weekday - local_reference.weekday()) % 7
+    target_date = local_reference.date() + datetime.timedelta(days=days_until_target)
     target_local = datetime.datetime.combine(
         target_date,
-        datetime.time(PUBLICATION_HOUR, 0),
+        datetime.time(target_hour, 0),
         tzinfo=PUBLICATION_TIMEZONE,
     )
     return target_local.astimezone(datetime.timezone.utc).isoformat()
@@ -97,12 +105,16 @@ def publication_decision(draft, receipt=None, *, now=None, force_now=False):
         or _parse_datetime(scheduled_for_draft(draft))
     )
     if scheduled_for is None:
-        return False, "Não foi possível determinar o domingo deste rascunho.", None
+        return False, "Não foi possível determinar o agendamento deste rascunho.", None
+
+    edition = _get_draft_edition(draft)
+    expected_weekday = WEDNESDAY_WEEKDAY if edition == "wednesday_nostalgia" else SUNDAY_WEEKDAY
+    expected_hour = WEDNESDAY_HOUR if edition == "wednesday_nostalgia" else SUNDAY_HOUR
 
     target_local = scheduled_for.astimezone(PUBLICATION_TIMEZONE)
     if (
-        target_local.weekday() != PUBLICATION_WEEKDAY
-        or target_local.hour != PUBLICATION_HOUR
+        target_local.weekday() != expected_weekday
+        or target_local.hour != expected_hour
         or target_local.minute != 0
     ):
         return False, "O horário guardado para o rascunho é inválido.", scheduled_for
@@ -137,13 +149,13 @@ def publication_decision(draft, receipt=None, *, now=None, force_now=False):
             scheduled_for,
         )
     if (
-        current_local.weekday() != PUBLICATION_WEEKDAY
-        or current_local.hour != PUBLICATION_HOUR
+        current_local.weekday() != expected_weekday
+        or current_local.hour != expected_hour
     ):
+        day_label = "quarta-feira" if expected_weekday == 2 else "domingo"
         return (
             False,
-            "A publicação só pode começar no domingo entre as 10:00 e as 10:59.",
-            scheduled_for,
+            f"A publicação só pode começar na {day_label} entre as {expected_hour:02d}:00 e as {expected_hour:02d}:59.",
         )
 
     receipt = receipt if isinstance(receipt, dict) else {}

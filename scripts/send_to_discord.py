@@ -77,24 +77,28 @@ async def on_ready():
         if not channel:
             channel = await bot.fetch_channel(CHANNEL_ID)
             
-        embed = discord.Embed(
-            title="📅 Revisão Semanal de Recomendações - Politómetro",
-            description="Verifica a imagem em anexo. A legenda sugerida segue na mensagem abaixo.",
-            color=discord.Color.blue()
-        )
-        
         # Load links from review_draft.json
         draft_path = os.path.join(SCRIPT_DIR, "review_draft.json")
         if not os.path.exists(draft_path):
             raise FileNotFoundError("review_draft.json está em falta")
-        if os.path.exists(draft_path):
-            try:
-                with open(draft_path, "r", encoding="utf-8") as df:
-                    draft_data = json.load(df)
-                draft_id = draft_data.get("draft_id")
-                content_hash = draft_data.get("content_hash")
-                if not draft_id or not content_hash:
-                    raise ValueError("rascunho sem draft_id/content_hash")
+        with open(draft_path, "r", encoding="utf-8") as df:
+            draft_data = json.load(df)
+        draft_id = draft_data.get("draft_id")
+        content_hash = draft_data.get("content_hash")
+        post_type = draft_data.get("post_type") or "sunday_standard"
+        if not draft_id or not content_hash:
+            raise ValueError("rascunho sem draft_id/content_hash")
+
+        if post_type == "wednesday_nostalgia":
+            card_title = "📼 Revisão: Clássicos & Sátira (Quarta-feira 09:00) - Politómetro"
+        else:
+            card_title = "📅 Revisão Semanal de Recomendações (Domingo 10:00) - Politómetro"
+
+        embed = discord.Embed(
+            title=card_title,
+            description="Verifica a imagem em anexo. A legenda sugerida segue na mensagem abaixo.",
+            color=discord.Color.purple() if post_type == "wednesday_nostalgia" else discord.Color.blue()
+        )
                 q1 = draft_data.get("q1", {})
                 q2 = draft_data.get("q2", {})
                 q3 = draft_data.get("q3", {})

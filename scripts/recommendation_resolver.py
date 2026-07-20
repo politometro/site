@@ -1077,6 +1077,31 @@ def _get_json(url: str) -> tuple[str, dict[str, Any]]:
     return final_url, parsed
 
 
+def remove_black_bars(image: Image.Image, threshold: int = 28) -> Image.Image:
+    """Detect and crop black/dark letterbox or pillarbox borders from an image."""
+    try:
+        img_rgb = image.convert("RGB") if image.mode not in ("RGB", "RGBA") else image
+        gray = img_rgb.convert("L")
+        w, h = gray.size
+        if w < 50 or h < 50:
+            return image
+
+        bw = gray.point(lambda p: 255 if p > threshold else 0)
+        bbox = bw.getbbox()
+        if not bbox:
+            return image
+
+        left, top, right, bottom = bbox
+        crop_w = right - left
+        crop_h = bottom - top
+
+        if (left > 0 or top > 0 or right < w or bottom < h) and (crop_w >= w * 0.4) and (crop_h >= h * 0.4):
+            return image.crop((left, top, right, bottom))
+    except Exception:
+        pass
+    return image
+
+
 def _decode_and_normalize_image(
     data: bytes, mime: str, source_url: str
 ) -> NormalizedCover:
@@ -1117,6 +1142,7 @@ def _decode_and_normalize_image(
         reopened.seek(0)
         image = ImageOps.exif_transpose(reopened)
         image.load()
+        image = remove_black_bars(image)
     except RecommendationResolutionError:
         raise
     except (UnidentifiedImageError, OSError, ValueError) as exc:

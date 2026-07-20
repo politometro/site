@@ -1987,9 +1987,9 @@ def auto_populate():
     ]
     if not any(
         remaining_counts[media_type] >= 1
-        for media_type in ("movie", "investigation")
+        for media_type in ("movie", "nostalgia", "investigation")
     ):
-        missing_for_post.append("movie/investigation")
+        missing_for_post.append("movie/nostalgia/investigation")
     if missing_for_post:
         raise RuntimeError(
             "Não foi possível obter sequer um candidato verificado para: "
