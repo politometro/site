@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.rtp.pt/play/p16129/e942040/a-prova-dos-factos",
+  "coverHash": "bf471e4274c14701c48933e17db9803b0b2d91fd393ae49837259f3534a58ce0",
+  "coverSourceMime": "image/webp",
+  "coverSourceUrl": "https://cdn-images.rtp.pt/EPG/imagens/41916_64561_11224.jpg?v=3&w=860",
+  "entityId": "article:url:68e27129abb3cd93eb83cc24",
+  "expiryDate": null,
+  "height": 482,
+  "isbn": "",
+  "resolvedAuthor": "www.rtp.pt",
+  "resolvedTitle": "A Prova dos Factos",
+  "score": 0.75,
+  "source": "news:www.rtp.pt",
+  "sourcePublishedAt": "2026-07-10T00:00:00Z",
+  "title": "A Prova dos Factos",
+  "titleNormalized": "a prova dos factos",
+  "type": "investigation",
+  "verifiedAt": "2026-07-20T18:33:17.710301Z",
+  "width": 860
+}

@@ -29,6 +29,8 @@ from cover_fetcher import load_cover_for_item
 from recommendation_resolver import (
     ResolutionError,
     is_eligible_highlight,
+    is_same_series,
+    is_series_recency_restricted,
     probe_verified_source,
     resolve_recommendation,
 )
@@ -420,7 +422,7 @@ def _cover_hash(item, cover):
     return hashlib.sha256(cover.convert("RGB").tobytes()).hexdigest()
 
 
-def get_recommendations_with_valid_covers(queue):
+def get_recommendations_with_valid_covers(queue, history=None):
     """
     Resolve identity, canonical link and cover as one atomic unit.
 
@@ -428,6 +430,14 @@ def get_recommendations_with_valid_covers(queue):
     entities and invalid/generic images are skipped in favour of the next
     candidate. There is deliberately no production placeholder.
     """
+    if history is None:
+        try:
+            with open(REC_FILE, "r", encoding="utf-8") as f:
+                rec_data = json.load(f)
+            history = rec_data.get("history", [])
+        except Exception:
+            history = []
+
     now = datetime.datetime.now(datetime.timezone.utc)
     active_items = [
         item
@@ -466,6 +476,16 @@ def get_recommendations_with_valid_covers(queue):
 
         for queue_item in candidates:
             try:
+                if is_series_recency_restricted(queue_item, history, now):
+                    raise ValueError(
+                        "série/podcast recomendado nas últimas 4 semanas (restrição de recência)"
+                    )
+                if any(
+                    is_same_series(queue_item, sel_item)
+                    for sel_item in selected.values()
+                ):
+                    raise ValueError("mesma série/podcast já selecionada no post atual")
+
                 # Prefer the recent identity-bound proof already produced by
                 # population. The resolver refreshes it automatically when its
                 # TTL, link proof or local cover manifest is no longer valid.
@@ -944,7 +964,7 @@ def generate_production_post():
     queue = data.get("queue", [])
     history = data.get("history", [])
     
-    selected, covers = get_recommendations_with_valid_covers(queue)
+    selected, covers = get_recommendations_with_valid_covers(queue, history=history)
     
     missing = [q for q in ["q1", "q2", "q3", "q4"] if q not in selected]
     if missing:

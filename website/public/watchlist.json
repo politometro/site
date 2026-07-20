@@ -54,51 +54,15 @@
       "description": "Um olhar semanal sobre os meandros da política, coligações e jogadas de bastidores no panorama partidário português.",
       "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts116/v4/5a/04/e6/5a04e6c3-1ad9-d2d0-ca5d-d9fe7f2025bc/mza_15684949576326168541.jpg/600x600bb.jpg",
       "link": "https://observador.pt"
+    },
+    {
+      "name": "Conteúdo do Batáguas",
+      "author": "Diogo Batáguas",
+      "description": "Formato de humor e sátira política de Diogo Batáguas focado na atualidade e temas marcantes.",
+      "link": "https://www.youtube.com/channel/UCQ2IleutNd89c9F-LjrwwwQ"
     }
   ],
   "watchSources": {
-    "nostalgia": [
-      {
-        "name": "Contra Informação",
-        "link": "https://arquivos.rtp.pt/programas/contra-informacao/",
-        "rule": "Selecionar apenas páginas de episódios individuais."
-      },
-      {
-        "name": "Herman Enciclopédia",
-        "link": "https://www.rtp.pt/play/p4515/herman-enciclopedia",
-        "rule": "Selecionar apenas páginas de episódios individuais."
-      },
-      {
-        "name": "Os Contemporâneos",
-        "link": "https://www.rtp.pt/play/p117/os-contemporaneos",
-        "rule": "Selecionar apenas páginas de episódios individuais."
-      },
-      {
-        "name": "Último a Sair",
-        "link": "https://www.rtp.pt/play/p703/ultimo-a-sair",
-        "rule": "Selecionar apenas episódios que estejam efetivamente disponíveis."
-      },
-      {
-        "name": "Estado de Graça",
-        "link": "https://www.rtp.pt/play/p5950/estado-de-graca",
-        "rule": "Selecionar apenas páginas de episódios individuais."
-      },
-      {
-        "name": "Gato Fedorento / Telerural",
-        "link": "https://www.youtube.com/channel/UCL8juHy9kYJ6G3FRScj7_aA",
-        "rule": "Selecionar apenas vídeos completos ou sketches individuais."
-      },
-      {
-        "name": "A Liga dos Últimos",
-        "link": "https://www.youtube.com/results?search_query=A+Liga+dos+%C3%9Altimos+RTP",
-        "rule": "Confirmar autoria e disponibilidade antes de recomendar um episódio."
-      },
-      {
-        "name": "Conteúdo do Batáguas",
-        "link": "https://www.youtube.com/channel/UCQ2IleutNd89c9F-LjrwwwQ",
-        "rule": "Vigiar novos vídeos e recomendar apenas episódios individuais."
-      }
-    ],
     "investigation": [
       {
         "name": "A Prova dos Factos",
@@ -116,35 +80,11 @@
   },
   "episodeCandidates": [
     {
-      "type": "nostalgia",
-      "title": "Política | Herman Enciclopédia",
-      "authorOrMeta": "Herman Enciclopédia / RTP",
-      "description": "O episódio dedicado à política recupera personagens e sátiras de Herman José e das Produções Fictícias.",
-      "link": "https://www.rtp.pt/play/p4515/e741384/herman-enciclopedia",
-      "priority": 5
-    },
-    {
-      "type": "nostalgia",
-      "title": "Os Contemporâneos | Episódio 1",
-      "authorOrMeta": "Os Contemporâneos / RTP",
-      "description": "Primeiro episódio do programa de sketches que observa com humor a sociedade portuguesa.",
-      "link": "https://www.rtp.pt/play/p117/e934828/os-contemporaneos",
-      "priority": 4
-    },
-    {
-      "type": "nostalgia",
-      "title": "Telerural — Desportivo de Curral de Moinas perde por 26-1",
-      "authorOrMeta": "Gato Fedorento",
-      "description": "Sketch do noticiário rural fictício Telerural sobre uma derrota futebolística difícil de explicar.",
-      "link": "https://www.youtube.com/watch?v=Q_Lk_bEISX0",
-      "priority": 5
-    },
-    {
-      "type": "nostalgia",
-      "title": "Contra Informação",
-      "authorOrMeta": "RTP Arquivos",
-      "description": "Episódio de sátira política, social, cultural e desportiva protagonizado pelos bonecos do Contra Informação.",
-      "link": "https://arquivos.rtp.pt/conteudos/contra-informacao-577/",
+      "type": "podcast",
+      "title": "Conteúdo do Batáguas EP02 — Climáximo + Debate dos Pequeninos + Partido Nojento",
+      "authorOrMeta": "Diogo Bataguas",
+      "description": "Episódio do formato de humor de Diogo Batáguas que cruza atualidade, sátira e segmentos de estúdio.",
+      "link": "https://www.youtube.com/watch?v=7A0mUSB-sgw",
       "priority": 5
     },
     {
@@ -157,27 +97,30 @@
     },
     {
       "type": "investigation",
-      "title": "“Oui, Monsieur”: o saco azul do Marquês",
-      "authorOrMeta": "Grande Reportagem SIC",
-      "description": "Grande Reportagem sobre o alegado saco azul do GES e a acusação no processo Operação Marquês.",
-      "link": "https://sicnoticias.pt/programas/reportagemsic/2025-07-02-video-oui-monsieur-o-saco-azul-do-ges-b9287249",
-      "priority": 5
+      "title": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construção",
+      "authorOrMeta": "NOW Canal",
+      "description": "Episódio do Repórter Sábado sobre denúncias de dezenas de famílias contra uma empresa de construção.",
+      "link": "https://www.youtube.com/watch?v=LEpWEUWVxC4",
+      "priority": 5,
+      "is_time_sensitive": true
     },
     {
       "type": "investigation",
-      "title": "Testa de ferro",
-      "authorOrMeta": "Grande Reportagem SIC",
-      "description": "Investigação sobre a relação financeira entre Luís Filipe Vieira e o império do Grupo Espírito Santo.",
-      "link": "https://sicnoticias.pt/programas/reportagemsic/2021-11-18-Testa-de-ferro-18311aa5",
-      "priority": 4
+      "title": "Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas",
+      "authorOrMeta": "NOW Canal",
+      "description": "Episódio de investigação do Repórter Sábado sobre burlas digitais e as vítimas destes esquemas.",
+      "link": "https://www.youtube.com/watch?v=uMj2e_ob68Y",
+      "priority": 5,
+      "is_time_sensitive": true
     },
     {
       "type": "investigation",
-      "title": "O que liga um deputado, uma juíza e um gigantesco avião?",
-      "authorOrMeta": "Investigação SIC",
-      "description": "Investigação sobre negócios da SATA e um processo por alegada gestão danosa e participação económica em negócio.",
-      "link": "https://sicnoticias.pt/programas/investigacao-sic/2024-12-04-video-o-que-liga-um-deputado-uma-juiza-e-um-gigantesco-aviao--769cf350",
-      "priority": 4
+      "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
+      "authorOrMeta": "NOW Canal",
+      "description": "Episódio do Repórter Sábado sobre um advogado acusado de corrupção de uma inspetora do SEF.",
+      "link": "https://www.youtube.com/watch?v=lChT1gKqjWQ",
+      "priority": 4,
+      "is_time_sensitive": true
     }
   ]
 }

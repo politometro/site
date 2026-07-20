@@ -1890,15 +1890,15 @@ def auto_populate():
         if not isinstance(raw, dict):
             continue
         media_type = raw.get("type")
-        if media_type not in {"nostalgia", "investigation"}:
+        if media_type not in ALLOWED_TYPES:
             continue
         candidate = {
             **raw,
             "id": raw.get("id") or f"watch_{media_type}_{uuid.uuid4().hex[:16]}",
-            "category": CATEGORIES[media_type],
+            "category": CATEGORIES.get(media_type, media_type.title()),
             "imageUrl": "",
             "priority": int(raw.get("priority", 3)),
-            "expiryDate": None,
+            "expiryDate": raw.get("expiryDate"),
             "createdAt": raw.get("createdAt") or _utc_now(),
             "status": "queue",
             "sourceHint": "curated-episode-watchlist",

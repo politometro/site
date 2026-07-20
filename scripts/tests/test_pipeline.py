@@ -24,6 +24,8 @@ def verified_item(media_type, suffix, status="queue"):
         "book": "Livro",
         "podcast": "Podcast",
         "movie": "Filme",
+        "nostalgia": "Nostalgia",
+        "investigation": "Investigação",
         "highlight": "Destaque",
     }
     link = f"https://example.com/{media_type}/{suffix}"
@@ -78,7 +80,27 @@ class ZeroStatePopulationTests(unittest.TestCase):
             rec_path = Path(tmp) / "recommendations.json"
             watch_path = Path(tmp) / "watchlist.json"
             rec_path.write_text('{"queue": [], "history": []}\n', encoding="utf-8")
-            watch_path.write_text('{"podcasts": []}\n', encoding="utf-8")
+            episode_candidates = [
+                {
+                    "id": f"watch_{media_type}_{index}",
+                    "type": media_type,
+                    "title": f"{media_type} episode {index}",
+                    "authorOrMeta": f"Publisher {index}",
+                    "description": "Grounded episode.",
+                    "link": f"https://example.com/{media_type}/{index}",
+                }
+                for media_type in ("nostalgia", "investigation")
+                for index in range(auto_populate_ai.TARGET_PER_TYPE)
+            ]
+            watch_path.write_text(
+                json.dumps(
+                    {
+                        "podcasts": [],
+                        "episodeCandidates": episode_candidates,
+                    }
+                ),
+                encoding="utf-8",
+            )
 
             podcasts = [
                 verified_item("podcast", str(index))
@@ -154,7 +176,11 @@ class ZeroStatePopulationTests(unittest.TestCase):
 
             data = json.loads(rec_path.read_text(encoding="utf-8"))
             self.assertEqual(data["history"], [])
-            self.assertEqual(len(data["queue"]), 16)
+            self.assertEqual(
+                len(data["queue"]),
+                len(auto_populate_ai.ALLOWED_TYPES)
+                * auto_populate_ai.TARGET_PER_TYPE,
+            )
             for media_type in auto_populate_ai.ALLOWED_TYPES:
                 items = [
                     item

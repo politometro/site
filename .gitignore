@@ -9,3 +9,4 @@ node_modules/
 __pycache__/
 *.py[cod]
 .twitch_token_state.json
+scripts/nostalgia_archive.json

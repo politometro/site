@@ -332,10 +332,131 @@ def _expiry_for(
         days = _podcast_expiry_days(item)
     elif media_type == "highlight":
         days = int(os.environ.get("HIGHLIGHT_EXPIRY_DAYS", "60"))
+    elif media_type == "investigation":
+        is_time_sensitive = bool(
+            item.get("is_time_sensitive") or item.get("isTimeSensitive")
+        )
+        expiry_days = item.get("expiry_days") or item.get("expiryDays")
+        if is_time_sensitive or expiry_days:
+            days = int(
+                expiry_days or os.environ.get("INVESTIGATION_EXPIRY_DAYS", "60")
+            )
+        else:
+            return None
     else:
         return None
-    days = max(1, min(days, 60 if media_type == "highlight" else 35))
+    max_days = 90 if media_type == "investigation" else (60 if media_type == "highlight" else 35)
+    days = max(1, min(days, max_days))
     return (parsed + _dt.timedelta(days=days)).isoformat().replace("+00:00", "Z")
+
+
+def is_same_series(item1: Mapping[str, Any], item2: Mapping[str, Any]) -> bool:
+    """Return True if two items belong to the same podcast/show/series."""
+    t1_type = str(item1.get("type") or "").lower()
+    t2_type = str(item2.get("type") or "").lower()
+    if t1_type and t2_type and t1_type != t2_type:
+        return False
+
+    s1 = str(item1.get("sourceSeriesId") or item1.get("seriesId") or "").strip()
+    s2 = str(item2.get("sourceSeriesId") or item2.get("seriesId") or "").strip()
+    if s1 and s2 and s1 == s2:
+        return True
+
+    def _norm(val: Any) -> str:
+        s = str(val or "").strip().lower()
+        s = re.sub(r"^(filme|s[eé]rie|document[aá]rio|podcast)\s*/\s*", "", s)
+        s = re.sub(r"[^\w\s]", "", s)
+        return re.sub(r"\s+", " ", s).strip()
+
+    t1 = _norm(item1.get("sourceSeriesTitle") or item1.get("authorOrMeta"))
+    t2 = _norm(item2.get("sourceSeriesTitle") or item2.get("authorOrMeta"))
+    if (
+        t1
+        and t2
+        and len(t1) >= 3
+        and len(t2) >= 3
+        and (
+            t1 == t2
+            or (len(t1) >= 5 and len(t2) >= 5 and (t1 in t2 or t2 in t1))
+        )
+    ):
+        return True
+
+    title1 = _norm(item1.get("title"))
+    title2 = _norm(item2.get("title"))
+
+    def _extract_show(title_norm: str) -> str:
+        parts = re.split(
+            r"\bep\d*|\bepis[óo]dio|\bpart[e\d]*|\b\||\b—|\b-", title_norm
+        )
+        return parts[0].strip() if parts else title_norm
+
+    show1 = _extract_show(title1)
+    show2 = _extract_show(title2)
+    if show1 and show2 and len(show1) >= 4 and show1 == show2:
+        return True
+
+    if t1 and len(t1) >= 4 and (t1 in title2 or title2 in t1):
+        return True
+    if t2 and len(t2) >= 4 and (t2 in title1 or title1 in t2):
+        return True
+
+    return False
+
+
+def is_series_recency_restricted(
+    item: Mapping[str, Any],
+    history: Sequence[Mapping[str, Any]],
+    now: _dt.datetime | None = None,
+    window_days: int = 28,
+) -> bool:
+    """
+    Return True if an episode of the same show/podcast was recommended in the past 4 weeks (28 days).
+
+    Exclusions:
+    - `type == "investigation"` is explicitly excluded (allows multi-part investigations).
+    - Items marked with `high_importance` / `is_high_importance` / `highImportance` are exempted.
+    """
+    media_type = str(item.get("type") or "").lower()
+    if media_type == "investigation":
+        return False
+
+    is_high_importance = bool(
+        item.get("high_importance")
+        or item.get("highImportance")
+        or item.get("is_high_importance")
+        or item.get("isHighImportance")
+        or item.get("override_recency")
+    )
+    if is_high_importance:
+        return False
+
+    if not now:
+        now = _dt.datetime.now(_dt.timezone.utc)
+
+    cutoff = now - _dt.timedelta(days=window_days)
+
+    for past_item in history:
+        if str(past_item.get("type") or "").lower() == "investigation":
+            continue
+
+        pub_str = (
+            past_item.get("publishedAt")
+            or past_item.get("sourcePublishedAt")
+            or past_item.get("createdAt")
+        )
+        if not pub_str:
+            continue
+        try:
+            pub_dt = _dt.datetime.fromisoformat(str(pub_str).replace("Z", "+00:00"))
+        except Exception:
+            continue
+
+        if pub_dt >= cutoff:
+            if is_same_series(item, past_item):
+                return True
+
+    return False
 
 
 def _cache_key(title: str, media_type: str, identity: str | None = None) -> str:
@@ -1090,6 +1211,7 @@ class _MetadataParser(HTMLParser):
                 values.get("property")
                 or values.get("name")
                 or values.get("itemprop")
+                or ""
             ).casefold()
             content = values.get("content", "").strip()
             if key and content and key not in self.meta:
@@ -1226,9 +1348,10 @@ def _page_metadata(url: str) -> dict[str, Any]:
 
     image = ""
     for candidate in image_candidates:
-        candidate = urllib.parse.urljoin(canonical, candidate.strip())
+        candidate = candidate.strip()
         if not candidate:
             continue
+        candidate = urllib.parse.urljoin(canonical, candidate)
         try:
             _assert_safe_url(candidate, purpose="image")
         except RecommendationResolutionError:
@@ -2504,11 +2627,14 @@ def _validate_highlight_page(
             "parsely-section",
         )
     ]
-    if not is_eligible_highlight(
-        title=metadata["title"],
-        description=metadata["description"],
-        link=metadata["canonical"],
-        categories=categories,
+    if (
+        str(item.get("type", "")).casefold().strip() == "highlight"
+        and not is_eligible_highlight(
+            title=metadata["title"],
+            description=metadata["description"],
+            link=metadata["canonical"],
+            categories=categories,
+        )
     ):
         raise RecommendationResolutionError(
             "NEWS_NOT_ALLOWED",
@@ -3095,19 +3221,29 @@ def resolve_recommendation(
     source_published_at = existing_published or _normalise_datetime(
         entity.published_at
     )
-    if resolved_type in {"podcast", "highlight"} and not source_published_at:
+    is_time_sensitive_investigation = (
+        resolved_type == "investigation"
+        and bool(item.get("is_time_sensitive") or item.get("isTimeSensitive"))
+    )
+    if (
+        resolved_type in {"podcast", "highlight"}
+        or is_time_sensitive_investigation
+    ) and not source_published_at:
         raise RecommendationResolutionError(
             "SOURCE_DATE_UNVERIFIED",
-            "Podcast/destaque sem data de publicação verificável.",
+            "Conteúdo datado sem data de publicação verificável.",
             item=item,
         )
     derived_expiry = _expiry_for(
         resolved_type, source_published_at, item
     )
-    if resolved_type in {"podcast", "highlight"} and not derived_expiry:
+    if (
+        resolved_type in {"podcast", "highlight"}
+        or is_time_sensitive_investigation
+    ) and not derived_expiry:
         raise RecommendationResolutionError(
             "EXPIRY_UNVERIFIED",
-            "Podcast/destaque sem data de expiração válida.",
+            "Conteúdo datado sem data de expiração válida.",
             item=item,
         )
     if derived_expiry:

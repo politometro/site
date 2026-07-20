@@ -437,6 +437,154 @@ class RecommendationResolverTests(unittest.TestCase):
                 ),
             )
 
+    def test_investigation_expiry_when_time_sensitive(self):
+        published = iso_now()
+        evergreen = resolver._expiry_for("investigation", published, {})
+        self.assertIsNone(evergreen)
+
+        time_sensitive = resolver._expiry_for(
+            "investigation", published, {"is_time_sensitive": True}
+        )
+        self.assertIsNotNone(time_sensitive)
+        published_dt = dt.datetime.fromisoformat(
+            published.replace("Z", "+00:00")
+        )
+        ts_dt = dt.datetime.fromisoformat(time_sensitive.replace("Z", "+00:00"))
+        self.assertAlmostEqual((ts_dt - published_dt).days, 60)
+
+        # Confirm resolution fails if time-sensitive investigation is expired
+        base = {
+            "type": "investigation",
+            "title": "Investigação Datada",
+            "authorOrMeta": "NOW Canal",
+            "description": "Reportagem",
+            "link": "",
+            "imageUrl": "",
+            "is_time_sensitive": True,
+        }
+        expired_entity = self.entity(
+            media_type="highlight", published_at=iso_days_ago(120)
+        )
+        with patch.object(
+            resolver, "_resolve_entity", return_value=expired_entity
+        ), patch.object(resolver, "_assert_safe_url"):
+            with self.assertRaisesRegex(
+                resolver.ResolutionError, "CONTENT_EXPIRED"
+            ):
+                resolver.resolve_recommendation(base)
+
+    def test_bataguas_categorized_as_podcast(self):
+        item = {
+            "type": "podcast",
+            "title": "Conteúdo do Batáguas EP02",
+            "authorOrMeta": "Diogo Bataguas",
+            "description": "Sátira e humor sobre a atualidade política.",
+            "link": "https://www.youtube.com/watch?v=7A0mUSB-sgw",
+            "imageUrl": "",
+        }
+        bat_entity = resolver.EntityResolution(
+            link="https://www.youtube.com/watch?v=7A0mUSB-sgw",
+            image_url="https://cdn.example.org/cover.jpg",
+            external_id="youtube:7A0mUSB-sgw",
+            source="youtube:Diogo Bataguas",
+            score=1.0,
+            resolved_title="Conteúdo do Batáguas EP02",
+            resolved_author="Diogo Bataguas",
+            description="Sátira e humor sobre a atualidade política.",
+            published_at=iso_days_ago(5),
+        )
+        result = self.resolve_with(item, bat_entity)
+        self.assertEqual(result["type"], "podcast")
+        self.assertIsNotNone(result["expiryDate"])
+
+    def test_series_recency_restriction_prevents_recommendation_within_4_weeks(self):
+        recent_pub = iso_days_ago(10)
+        old_pub = iso_days_ago(40)
+        history = [
+            {
+                "type": "podcast",
+                "title": "Isto É Gozar Com Quem Trabalha EP01",
+                "authorOrMeta": "SIC",
+                "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+                "publishedAt": recent_pub,
+            },
+            {
+                "type": "podcast",
+                "title": "Linhas Vermelhas EP05",
+                "authorOrMeta": "SIC Notícias",
+                "sourceSeriesTitle": "Linhas Vermelhas",
+                "publishedAt": old_pub,
+            },
+        ]
+        # Candidate from same podcast within 4 weeks -> blocked
+        new_ep_same_podcast = {
+            "type": "podcast",
+            "title": "Isto É Gozar Com Quem Trabalha EP02",
+            "authorOrMeta": "SIC",
+            "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+        }
+        self.assertTrue(
+            resolver.is_series_recency_restricted(new_ep_same_podcast, history)
+        )
+
+        # Candidate from podcast published > 4 weeks ago -> allowed
+        old_podcast_ep = {
+            "type": "podcast",
+            "title": "Linhas Vermelhas EP06",
+            "authorOrMeta": "SIC Notícias",
+            "sourceSeriesTitle": "Linhas Vermelhas",
+        }
+        self.assertFalse(
+            resolver.is_series_recency_restricted(old_podcast_ep, history)
+        )
+
+    def test_high_importance_overrides_series_recency_restriction(self):
+        history = [
+            {
+                "type": "podcast",
+                "title": "Conteúdo do Batáguas EP01",
+                "authorOrMeta": "Diogo Bataguas",
+                "publishedAt": iso_days_ago(7),
+            }
+        ]
+        candidate_normal = {
+            "type": "podcast",
+            "title": "Conteúdo do Batáguas EP02",
+            "authorOrMeta": "Diogo Bataguas",
+        }
+        candidate_important = {
+            "type": "podcast",
+            "title": "Conteúdo do Batáguas EP02 — Especial Eleições",
+            "authorOrMeta": "Diogo Bataguas",
+            "high_importance": True,
+        }
+        self.assertTrue(
+            resolver.is_series_recency_restricted(candidate_normal, history)
+        )
+        self.assertFalse(
+            resolver.is_series_recency_restricted(candidate_important, history)
+        )
+
+    def test_investigation_is_exempt_from_series_recency_restriction(self):
+        history = [
+            {
+                "type": "investigation",
+                "title": "Repórter Sábado: Parte 1",
+                "authorOrMeta": "NOW Canal",
+                "sourceSeriesTitle": "Repórter Sábado",
+                "publishedAt": iso_days_ago(5),
+            }
+        ]
+        part2 = {
+            "type": "investigation",
+            "title": "Repórter Sábado: Parte 2",
+            "authorOrMeta": "NOW Canal",
+            "sourceSeriesTitle": "Repórter Sábado",
+        }
+        self.assertFalse(
+            resolver.is_series_recency_restricted(part2, history)
+        )
+
     def test_spoofed_imdb_and_untrusted_catalog_links_are_rejected_before_network(self):
         with self.assertRaisesRegex(
             resolver.ResolutionError, "MOVIE_LINK_NOT_IMDB"
