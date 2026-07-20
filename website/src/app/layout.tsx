@@ -5,7 +5,11 @@ import AnalyticsGate from "@/components/AnalyticsGate";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://politometro.vercel.app"),
-  title: "Politómetro - Análise de Programas Eleitorais Portugueses",
+  applicationName: "Politómetro",
+  title: {
+    default: "Politómetro - Análise de Programas Eleitorais Portugueses",
+    template: "%s | Politómetro",
+  },
   description: "Explore, pesquise e compare propostas dos partidos políticos portugueses de forma rigorosa, imparcial e baseada exclusivamente em documentos oficiais.",
   keywords: [
     "Politómetro", "programas eleitorais", "Portugal", "partidos políticos", 
@@ -19,6 +23,9 @@ export const metadata: Metadata = {
     email: false,
     address: false,
     telephone: false,
+  },
+  alternates: {
+    canonical: "/",
   },
   openGraph: {
     title: "Politómetro - Análise de Programas Eleitorais Portugueses",
@@ -53,8 +60,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Politómetro",
+    "alternateName": ["Politometro", "Politómetro Portugal"],
+    "url": "https://politometro.vercel.app",
+    "description": "Análise rigorosa e imparcial dos programas eleitorais em Portugal.",
+  };
+
   return (
     <html lang="pt" suppressHydrationWarning>
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      </head>
       <body suppressHydrationWarning>
         <div className="ambient-glow"></div>
         <div style={{ display: "flex", flexDirection: "column", minHeight: "100dvh", width: "100%" }}>
