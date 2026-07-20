@@ -44,49 +44,6 @@
       }
     },
     {
-      "id": "rss_podcast_1c92af1ae4c5b799",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "\"Se a Europa permite a destruição da Ucrânia, isso significa que os russos farão outro tipo de intervenções\"",
-      "authorOrMeta": "O Princípio da Incerteza",
-      "description": "Análise sobre com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade.",
-      "imageUrl": "/covers/podcast__se_a_europa_permite_a_destrui__o_da_ucr_nia__isso_s_c66954ff_1c92af1ae4c5.jpg",
-      "link": "https://omny.fm/shows/tsf-o-princ-pio-da-incerteza-podcast/se-a-europa-permite-a-destrui-o-da-ucr-nia-isso-significa-que-os-russos-far-o-outro-tipo-de-interven-es",
-      "externalId": "e7ecf210-d634-4f48-a819-b4860084a8e0",
-      "sourceSeriesId": "1747493813",
-      "sourceSeriesTitle": "O Princípio da Incerteza",
-      "priority": 4,
-      "sourcePublishedAt": "2026-07-14T10:28:28Z",
-      "expiryDate": "2026-07-24T10:28:28Z",
-      "createdAt": "2026-07-18T23:32:45.208371Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/podcast.rss",
-        "guid": "e7ecf210-d634-4f48-a819-b4860084a8e0",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/image.jpg?t=1716287262&size=Large",
-        "show": "O Princípio da Incerteza"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "e7ecf210-d634-4f48-a819-b4860084a8e0",
-        "score": 1.0,
-        "coverHash": "8355b2ba0c52b926884cf81e712cac7f615379c4df76a46d9872af10b1d05354",
-        "verifiedAt": "2026-07-18T23:32:51.338016Z",
-        "resolvedTitle": "\"Se a Europa permite a destruição da Ucrânia, isso significa que os russos farão outro tipo de intervenções\"",
-        "resolvedAuthor": "O Princípio da Incerteza",
-        "sourcePublishedAt": "2026-07-14T10:28:28Z",
-        "sourceDescription": "Com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade See omnystudio.com/listener for privacy information.",
-        "editorialDescription": "Análise sobre com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "bc5c3692d28bb2112cf8132e55056d6f088c45bf99eb994ac01aad82120316b9",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_f3b29bb82a4da314",
       "type": "highlight",
       "category": "Destaque",
@@ -100,7 +57,7 @@
       "sourcePublishedAt": "2026-07-18T23:22:21Z",
       "expiryDate": "2026-08-17T23:22:21Z",
       "createdAt": "2026-07-18T23:32:58.452842Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -113,7 +70,7 @@
           "Cultura"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -125,7 +82,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-07-18T23:22:21Z",
         "sourceDescription": "Os países enriquecem e desenvolvem-se não porque os políticos queiram ou façam por isso, mas se o sistema político for estável e os governos garantirem previsibilidade legislativa e financeira"
-      }
+      },
+      "validationError": "HIGHLIGHT_NOT_FOUND [Fim à política da fezada]: O artigo deixou de constar do RSS autorizado."
     },
     {
       "id": "rss_highlight_1e4660e0df789045",
@@ -141,7 +99,7 @@
       "sourcePublishedAt": "2026-07-18T23:15:57Z",
       "expiryDate": "2026-08-17T23:15:57Z",
       "createdAt": "2026-07-18T23:32:58.453459Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -153,7 +111,7 @@
           "Mundo"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -165,7 +123,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-07-18T23:15:57Z",
         "sourceDescription": "Entre a fragmentação nacional e a integração federal, uma reflexão sobre os possíveis caminhos da construção política europeia."
-      }
+      },
+      "validationError": "HIGHLIGHT_NOT_FOUND [Da Fragmentação à Federação (II)]: O artigo deixou de constar do RSS autorizado."
     },
     {
       "id": "rss_highlight_74676d21e950fd08",
@@ -181,7 +140,7 @@
       "sourcePublishedAt": "2026-07-18T23:04:13Z",
       "expiryDate": "2026-08-17T23:04:13Z",
       "createdAt": "2026-07-18T23:32:58.455109Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -199,7 +158,7 @@
           "Legislação"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -211,7 +170,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-07-18T23:04:13Z",
         "sourceDescription": "Quando o arrendamento for mais acessível que o crédito à habitação, saberemos que a Ordem Espontânea de Hayek está em movimento."
-      }
+      },
+      "validationError": "HIGHLIGHT_NOT_FOUND [Será desta que a Reforma do Arrendamento Urbano resulta?]: O artigo deixou de constar do RSS autorizado."
     },
     {
       "id": "ai_book_00368397f9eb494f",
@@ -261,7 +221,7 @@
         "status": "verified",
         "source": "openlibrary",
         "entityId": "openlibrary:/works/OL16568759W",
-        "score": 1.0,
+        "score": 0.9426,
         "coverHash": "fbfa86af86684b71dd834888cf802bbaf08466e56e21c6ea16a507e3abe49e48",
         "verifiedAt": "2026-07-18T23:33:07.741406Z",
         "resolvedTitle": "Why Nations Fail",
@@ -422,6 +382,196 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "e0e1fcfe19c56804a846f37878d7eb40417a460f9c2d6d5da7393f97adda2545",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_9b68bc25fc0ae391",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Luaty Beirão, em Luanda: como pode Angola sair do ciclo de opressão e corrupção?",
+      "authorOrMeta": "Perguntar Não Ofende",
+      "description": "Análise sobre os temas e questões de luaty beirão, em luanda: como pode angola sair do ciclo de opressão e corrupção.",
+      "imageUrl": "/covers/podcast_luaty_beir_o__em_luanda__como_pode_angola_sair_do_ci_18f5edb6_9b68bc25fc0a.jpg",
+      "link": "https://omny.fm/shows/perguntar-n-o-ofende/luaty-beir-o-em-luanda-como-pode-angola-sair-do-ciclo-de-opress-o-e-corrup-o",
+      "externalId": "90b61863-632e-40f9-acbb-b4780152c69d",
+      "sourceSeriesId": "1374367269",
+      "sourceSeriesTitle": "Perguntar Não Ofende",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-01T14:30:00Z",
+      "expiryDate": "2026-07-22T14:30:00Z",
+      "createdAt": "2026-07-20T12:29:05.839255Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/b9ad4462-e46a-4162-9cc4-adcf0103ac7c/podcast.rss",
+        "guid": "90b61863-632e-40f9-acbb-b4780152c69d",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/90b61863-632e-40f9-acbb-b4780152c69d/image.jpg?t=1782765515&size=Large",
+        "show": "Perguntar Não Ofende"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "90b61863-632e-40f9-acbb-b4780152c69d",
+        "score": 1.0,
+        "coverHash": "1f7aa9f4bc11626bb24c23c5fd7fbe7ba6981a9bffeb51dfb1d49e514799eed9",
+        "verifiedAt": "2026-07-19T00:59:50.499447Z",
+        "resolvedTitle": "Luaty Beirão, em Luanda: como pode Angola sair do ciclo de opressão e corrupção?",
+        "resolvedAuthor": "Perguntar Não Ofende",
+        "sourcePublishedAt": "2026-07-01T14:30:00Z",
+        "sourceDescription": "Filho do regime, o rap levou Luaty Beirão a uma Angola que o privilégio não lhe tinha permitido conhecer, a consciência do país em que vivia levou-o à oposição frontal a José Eduardo dos Santos e a oposição levou-o à prisão, onde esteve com mais de 14 companheiros, há 11 anos.",
+        "editorialDescription": "Análise sobre os temas e questões de luaty beirão, em luanda: como pode angola sair do ciclo de opressão e corrupção.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "d72516f3b9fef6e292794f5404483d7280ba77da703319476414191d73a9ce4d",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_04e901e1411e385f",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "O estado da Nação “é sofrível” ou ainda há tempo para corrigir?",
+      "authorOrMeta": "O Princípio da Incerteza",
+      "description": "Análise sobre com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade.",
+      "imageUrl": "/covers/podcast_o_estado_da_na__o____sofr_vel__ou_ainda_h__tempo_par_a1b8b409_04e901e1411e.jpg",
+      "link": "https://omny.fm/shows/tsf-o-princ-pio-da-incerteza-podcast/o-estado-da-na-o-sofr-vel-ou-ainda-h-tempo-para-corrigir",
+      "externalId": "553e1b71-5713-4793-91d9-b48d0086f2bd",
+      "sourceSeriesId": "1747493813",
+      "sourceSeriesTitle": "O Princípio da Incerteza",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-20T08:16:47Z",
+      "expiryDate": "2026-07-30T08:16:47Z",
+      "createdAt": "2026-07-20T12:29:06.112152Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/podcast.rss",
+        "guid": "553e1b71-5713-4793-91d9-b48d0086f2bd",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/image.jpg?t=1716287262&size=Large",
+        "show": "O Princípio da Incerteza"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "553e1b71-5713-4793-91d9-b48d0086f2bd",
+        "score": 1.0,
+        "coverHash": "8355b2ba0c52b926884cf81e712cac7f615379c4df76a46d9872af10b1d05354",
+        "verifiedAt": "2026-07-20T12:29:10.008178Z",
+        "resolvedTitle": "O estado da Nação “é sofrível” ou ainda há tempo para corrigir?",
+        "resolvedAuthor": "O Princípio da Incerteza",
+        "sourcePublishedAt": "2026-07-20T08:16:47Z",
+        "sourceDescription": "Com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade See omnystudio.com/listener for privacy information.",
+        "editorialDescription": "Análise sobre com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "a6c5417f86e7dc38029868bc8ea87872320e75617c6fbe10416e371f76e31f32",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_bb97fa0362d88e66",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Exames. \"Era muito arriscado passar para a generalização\"",
+      "authorOrMeta": "observador.pt",
+      "description": "O antigo presidente do Júri Nacional de Exames revela que teste piloto já tinha mostrado falhas no sistema. Luís Duque de Almeida considera que ministro não devia ter publicado as pautas tão cedo.",
+      "imageUrl": "/covers/highlight_exames___era_muito_arriscado_passar_para_a_general_5e78cba7_56d70aa76c4a.jpg",
+      "link": "https://observador.pt/programas/explicador/exames-era-muito-arriscado-passar-para-a-generalizacao/",
+      "externalId": "article:url:bb97fa0362d88e66da42a516",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-20T08:55:31Z",
+      "expiryDate": "2026-08-19T08:55:31Z",
+      "createdAt": "2026-07-20T12:29:14.831562Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/exames-era-muito-arriscado-passar-para-a-generalizacao/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "Exames Nacionais",
+          "Educação",
+          "Ministério da Educação",
+          "País",
+          "Sociedade",
+          "Estudantes",
+          "Governo",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:bb97fa0362d88e66da42a516",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-07-20T12:29:16.096966Z",
+        "resolvedTitle": "Exames. \"Era muito arriscado passar para a generalização\"",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-07-20T08:55:31Z",
+        "sourceDescription": "O antigo presidente do Júri Nacional de Exames revela que teste piloto já tinha mostrado falhas no sistema. Luís Duque de Almeida considera que ministro não devia ter publicado as pautas tão cedo."
+      }
+    },
+    {
+      "id": "ai_book_c39c996580464759",
+      "type": "book",
+      "category": "Livro",
+      "title": "Animal Farm",
+      "authorOrMeta": "George Orwell",
+      "description": "Fábula política sobre revolução, poder e a forma como ideais libertadores podem ser capturados por novas elites.",
+      "imageUrl": "/covers/book_animal_farm_b4d10dae_09d2251a2474.jpg",
+      "link": "https://openlibrary.org/works/OL1168007W",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-07-20T12:29:16.100660Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL1168007W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL1168007W",
+        "score": 1.0,
+        "coverHash": "a5651813831697703797327eb6cffa933b63d9e632f89f1d81e37f99a3e5c41e",
+        "verifiedAt": "2026-07-20T12:29:17.546939Z",
+        "resolvedTitle": "Animal Farm",
+        "resolvedAuthor": "George Orwell",
+        "sourceDescription": "Fábula política sobre revolução, poder e a forma como ideais libertadores podem ser capturados por novas elites."
+      }
+    },
+    {
+      "id": "ai_movie_c89512189f814145",
+      "type": "movie",
+      "category": "Filme",
+      "title": "Frost/Nixon",
+      "authorOrMeta": "Ron Howard",
+      "description": "Drama político sobre entrevistas que expõem responsabilidade, poder mediático e memória pública.",
+      "imageUrl": "/covers/movie_frost_nixon_495818f2_46d6ab2ebe8d.jpg",
+      "link": "https://www.imdb.com/title/tt0870111/",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-07-20T12:29:17.602959Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "imdb:tt0870111",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "wikidata+imdb",
+        "entityId": "imdb:tt0870111",
+        "score": 1.0,
+        "coverHash": "a3d125a8537ecb28dffff17ee99fca4473234350fda71fc2896e92b5a97ed13b",
+        "verifiedAt": "2026-07-20T12:29:18.999177Z",
+        "resolvedTitle": "Frost/Nixon",
+        "resolvedAuthor": "Ron Howard",
+        "sourceDescription": "Drama político sobre entrevistas que expõem responsabilidade, poder mediático e memória pública."
       }
     }
   ],
