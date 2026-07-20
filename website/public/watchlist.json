@@ -1,6 +1,12 @@
 {
   "podcasts": [
     {
+      "name": "Isto É Gozar Com Quem Trabalha",
+      "author": "SIC",
+      "description": "Recomendar sempre episódios individuais do programa de sátira política de Ricardo Araújo Pereira.",
+      "link": "https://podcasts.apple.com/pt/podcast/isto-%C3%A9-gozar-com-quem-trabalha/id1585178009"
+    },
+    {
       "name": "Linhas Vermelhas",
       "author": "SIC Notícias",
       "description": "Podcast de debate e comentário político sobre a atualidade portuguesa, com opiniões contrastantes e temas marcantes da semana.",
@@ -48,6 +54,130 @@
       "description": "Um olhar semanal sobre os meandros da política, coligações e jogadas de bastidores no panorama partidário português.",
       "imageUrl": "https://is1-ssl.mzstatic.com/image/thumb/Podcasts116/v4/5a/04/e6/5a04e6c3-1ad9-d2d0-ca5d-d9fe7f2025bc/mza_15684949576326168541.jpg/600x600bb.jpg",
       "link": "https://observador.pt"
+    }
+  ],
+  "watchSources": {
+    "nostalgia": [
+      {
+        "name": "Contra Informação",
+        "link": "https://arquivos.rtp.pt/programas/contra-informacao/",
+        "rule": "Selecionar apenas páginas de episódios individuais."
+      },
+      {
+        "name": "Herman Enciclopédia",
+        "link": "https://www.rtp.pt/play/p4515/herman-enciclopedia",
+        "rule": "Selecionar apenas páginas de episódios individuais."
+      },
+      {
+        "name": "Os Contemporâneos",
+        "link": "https://www.rtp.pt/play/p117/os-contemporaneos",
+        "rule": "Selecionar apenas páginas de episódios individuais."
+      },
+      {
+        "name": "Último a Sair",
+        "link": "https://www.rtp.pt/play/p703/ultimo-a-sair",
+        "rule": "Selecionar apenas episódios que estejam efetivamente disponíveis."
+      },
+      {
+        "name": "Estado de Graça",
+        "link": "https://www.rtp.pt/play/p5950/estado-de-graca",
+        "rule": "Selecionar apenas páginas de episódios individuais."
+      },
+      {
+        "name": "Gato Fedorento / Telerural",
+        "link": "https://www.youtube.com/channel/UCL8juHy9kYJ6G3FRScj7_aA",
+        "rule": "Selecionar apenas vídeos completos ou sketches individuais."
+      },
+      {
+        "name": "A Liga dos Últimos",
+        "link": "https://www.youtube.com/results?search_query=A+Liga+dos+%C3%9Altimos+RTP",
+        "rule": "Confirmar autoria e disponibilidade antes de recomendar um episódio."
+      },
+      {
+        "name": "Conteúdo do Batáguas",
+        "link": "https://www.youtube.com/channel/UCQ2IleutNd89c9F-LjrwwwQ",
+        "rule": "Vigiar novos vídeos e recomendar apenas episódios individuais."
+      }
+    ],
+    "investigation": [
+      {
+        "name": "A Prova dos Factos",
+        "link": "https://www.rtp.pt/play/p16129/a-prova-dos-factos"
+      },
+      {
+        "name": "Grande Reportagem / Investigação SIC",
+        "link": "https://sicnoticias.pt/programas/reportagemsic"
+      },
+      {
+        "name": "Repórter Sábado",
+        "link": "https://www.nowcanal.pt/programas"
+      }
+    ]
+  },
+  "episodeCandidates": [
+    {
+      "type": "nostalgia",
+      "title": "Política | Herman Enciclopédia",
+      "authorOrMeta": "Herman Enciclopédia / RTP",
+      "description": "O episódio dedicado à política recupera personagens e sátiras de Herman José e das Produções Fictícias.",
+      "link": "https://www.rtp.pt/play/p4515/e741384/herman-enciclopedia",
+      "priority": 5
+    },
+    {
+      "type": "nostalgia",
+      "title": "Os Contemporâneos | Episódio 1",
+      "authorOrMeta": "Os Contemporâneos / RTP",
+      "description": "Primeiro episódio do programa de sketches que observa com humor a sociedade portuguesa.",
+      "link": "https://www.rtp.pt/play/p117/e934828/os-contemporaneos",
+      "priority": 4
+    },
+    {
+      "type": "nostalgia",
+      "title": "Telerural — Desportivo de Curral de Moinas perde por 26-1",
+      "authorOrMeta": "Gato Fedorento",
+      "description": "Sketch do noticiário rural fictício Telerural sobre uma derrota futebolística difícil de explicar.",
+      "link": "https://www.youtube.com/watch?v=Q_Lk_bEISX0",
+      "priority": 5
+    },
+    {
+      "type": "nostalgia",
+      "title": "Contra Informação",
+      "authorOrMeta": "RTP Arquivos",
+      "description": "Episódio de sátira política, social, cultural e desportiva protagonizado pelos bonecos do Contra Informação.",
+      "link": "https://arquivos.rtp.pt/conteudos/contra-informacao-577/",
+      "priority": 5
+    },
+    {
+      "type": "investigation",
+      "title": "A Prova dos Factos | Episódio 24",
+      "authorOrMeta": "RTP",
+      "description": "Episódio do programa de investigação da RTP, coordenado por Rita Marrafa de Carvalho e apresentado por Mariana Flor.",
+      "link": "https://www.rtp.pt/play/p16129/e942040/a-prova-dos-factos",
+      "priority": 5
+    },
+    {
+      "type": "investigation",
+      "title": "“Oui, Monsieur”: o saco azul do Marquês",
+      "authorOrMeta": "Grande Reportagem SIC",
+      "description": "Grande Reportagem sobre o alegado saco azul do GES e a acusação no processo Operação Marquês.",
+      "link": "https://sicnoticias.pt/programas/reportagemsic/2025-07-02-video-oui-monsieur-o-saco-azul-do-ges-b9287249",
+      "priority": 5
+    },
+    {
+      "type": "investigation",
+      "title": "Testa de ferro",
+      "authorOrMeta": "Grande Reportagem SIC",
+      "description": "Investigação sobre a relação financeira entre Luís Filipe Vieira e o império do Grupo Espírito Santo.",
+      "link": "https://sicnoticias.pt/programas/reportagemsic/2021-11-18-Testa-de-ferro-18311aa5",
+      "priority": 4
+    },
+    {
+      "type": "investigation",
+      "title": "O que liga um deputado, uma juíza e um gigantesco avião?",
+      "authorOrMeta": "Investigação SIC",
+      "description": "Investigação sobre negócios da SATA e um processo por alegada gestão danosa e participação económica em negócio.",
+      "link": "https://sicnoticias.pt/programas/investigacao-sic/2024-12-04-video-o-que-liga-um-deputado-uma-juiza-e-um-gigantesco-aviao--769cf350",
+      "priority": 4
     }
   ]
 }

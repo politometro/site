@@ -206,6 +206,11 @@ TYPE_ALIASES = {
     "documentary": "movie",
     "highlight": "highlight",
     "article": "highlight",
+    # Stable, episode-level editorial video. These reuse the strict
+    # first-party/YouTube resolver used by highlights, but deliberately do not
+    # inherit the short news expiry contract.
+    "nostalgia": "highlight",
+    "investigation": "highlight",
 }
 
 
@@ -3046,7 +3051,12 @@ def resolve_recommendation(
         if cached is not None:
             return cached
 
-    resolved_type = TYPE_ALIASES[media_type]
+    entity_type = TYPE_ALIASES[media_type]
+    resolved_type = (
+        media_type
+        if media_type in {"nostalgia", "investigation"}
+        else entity_type
+    )
     entity = _resolve_entity(item)
     if not entity.link or not entity.external_id or not entity.image_url:
         raise RecommendationResolutionError(
@@ -3067,7 +3077,11 @@ def resolve_recommendation(
     canonical_author = re.sub(
         r"\s+", " ", str(entity.resolved_author or "").strip()
     )
-    if not canonical_author and resolved_type == "highlight":
+    if not canonical_author and resolved_type in {
+        "highlight",
+        "nostalgia",
+        "investigation",
+    }:
         canonical_author = _hostname(entity.link)
     if not canonical_author and resolved_type in {"book", "podcast", "movie"}:
         raise RecommendationResolutionError(

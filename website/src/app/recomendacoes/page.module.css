@@ -147,6 +147,8 @@
 .badgeDocumentary { background: rgba(10, 49, 74, 0.05); color: #0284c7; }
 .badgeArticle { background: rgba(194, 41, 38, 0.05); color: #b45309; }
 .badgeHighlight { background: rgba(245, 158, 11, 0.1); color: #d97706; }
+.badgeNostalgia { background: rgba(126, 34, 206, 0.09); color: #7e22ce; }
+.badgeInvestigation { background: rgba(2, 132, 199, 0.09); color: #0369a1; }
 .badgeDefault { background: rgba(100, 116, 139, 0.08); color: #64748b; }
 
 .itemTitle {

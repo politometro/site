@@ -5,6 +5,8 @@ export const RECOMMENDATION_TYPES = [
   "book",
   "podcast",
   "movie",
+  "nostalgia",
+  "investigation",
   "highlight",
   "project",
 ] as const;
@@ -105,6 +107,8 @@ const CATEGORY_BY_TYPE: Record<RecommendationType, string> = {
   book: "Livro",
   podcast: "Podcast",
   movie: "Filme",
+  nostalgia: "Nostalgia",
+  investigation: "Investigação",
   highlight: "Destaque",
   project: "Sugestão para o Projeto",
 };
@@ -139,6 +143,14 @@ const PROVIDED_LINK_DOMAINS: Record<
   book: BOOK_DOMAINS,
   podcast: ["podcasts.apple.com"],
   movie: ["imdb.com"],
+  nostalgia: ["rtp.pt", "youtube.com", "youtu.be"],
+  investigation: [
+    "rtp.pt",
+    "sicnoticias.pt",
+    "nowcanal.pt",
+    "youtube.com",
+    "youtu.be",
+  ],
   highlight: HIGHLIGHT_DOMAINS,
 };
 
@@ -963,6 +975,15 @@ function nodeFitsType(node: Record<string, unknown>, type: RecommendationType): 
     book: ["book", "product"],
     podcast: ["podcastepisode", "podcastseries", "audioobject"],
     movie: ["movie", "tvseries", "creativework"],
+    nostalgia: ["episode", "tvepisode", "videoobject", "creativework"],
+    investigation: [
+      "article",
+      "newsarticle",
+      "reportagenewsarticle",
+      "episode",
+      "tvepisode",
+      "videoobject",
+    ],
     highlight: [
       "article",
       "newsarticle",
@@ -1121,6 +1142,10 @@ function deterministicDescription(candidate: {
       return `Episódio ou programa “${candidate.title}”, de ${candidate.authorOrMeta}.`;
     case "movie":
       return `Obra audiovisual “${candidate.title}”, realizada por ${candidate.authorOrMeta}.`;
+    case "nostalgia":
+      return `Episódio de humor “${candidate.title}”, publicado por ${candidate.authorOrMeta}.`;
+    case "investigation":
+      return `Episódio de investigação “${candidate.title}”, publicado por ${candidate.authorOrMeta}.`;
     case "highlight":
       return `Conteúdo jornalístico “${candidate.title}”, publicado por ${candidate.authorOrMeta}.`;
     case "project":
@@ -2097,6 +2122,8 @@ export async function resolveRecommendation(
       book: "Open Library/Google CSE",
       podcast: "Apple Podcasts",
       movie: "Wikidata/IMDb",
+      nostalgia: "RTP/YouTube/fonte fornecida",
+      investigation: "RTP/SIC/NOW/YouTube/fonte fornecida",
       highlight: "Google CSE/fonte fornecida",
     };
     return unresolved(

@@ -761,6 +761,8 @@ async function notifyDiscord(item: JsonRecord): Promise<string | null> {
     book: "📚",
     podcast: "🎙️",
     movie: "🎬",
+    nostalgia: "📼",
+    investigation: "🔎",
     highlight: "📰",
     project: "💡",
   };
@@ -768,6 +770,8 @@ async function notifyDiscord(item: JsonRecord): Promise<string | null> {
     book: 0x2e86ab,
     podcast: 0x8338ec,
     movie: 0xe63946,
+    nostalgia: 0x7e22ce,
+    investigation: 0x0369a1,
     highlight: 0xf77f00,
     project: 0x0099ff,
   };

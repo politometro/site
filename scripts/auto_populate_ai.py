@@ -49,11 +49,20 @@ PODCAST_SUMMARY_MODELS = (
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant",
 )
-ALLOWED_TYPES = ("book", "podcast", "movie", "highlight")
+ALLOWED_TYPES = (
+    "book",
+    "podcast",
+    "movie",
+    "nostalgia",
+    "investigation",
+    "highlight",
+)
 CATEGORIES = {
     "book": "Livro",
     "podcast": "Podcast",
     "movie": "Filme",
+    "nostalgia": "Nostalgia",
+    "investigation": "Investigação",
     "highlight": "Destaque",
 }
 
@@ -1800,7 +1809,7 @@ def auto_populate():
     )
     seen_titles, seen_links, seen_ids, _ = identities
 
-    watchlist = {"podcasts": []}
+    watchlist = {"podcasts": [], "episodeCandidates": []}
     if os.path.exists(WATCHLIST_FILE):
         try:
             with open(WATCHLIST_FILE, "r", encoding="utf-8") as handle:
@@ -1864,6 +1873,39 @@ def auto_populate():
         changed |= added
         highlights_added += int(added)
     changed |= _trim_time_sensitive_pool(queue, "highlight")
+
+    # Curated episode URLs are intentionally distinct from programme/channel
+    # watch targets. Only an exact, independently verifiable episode can enter
+    # the recommendation queue.
+    all_identities = _identity_sets(
+        queue + history, include_cover_hashes=False
+    )
+    identities = (
+        all_identities[0],
+        all_identities[1],
+        all_identities[2],
+        _identity_sets(queue)[3],
+    )
+    for raw in watchlist.get("episodeCandidates", []):
+        if not isinstance(raw, dict):
+            continue
+        media_type = raw.get("type")
+        if media_type not in {"nostalgia", "investigation"}:
+            continue
+        candidate = {
+            **raw,
+            "id": raw.get("id") or f"watch_{media_type}_{uuid.uuid4().hex[:16]}",
+            "category": CATEGORIES[media_type],
+            "imageUrl": "",
+            "priority": int(raw.get("priority", 3)),
+            "expiryDate": None,
+            "createdAt": raw.get("createdAt") or _utc_now(),
+            "status": "queue",
+            "sourceHint": "curated-episode-watchlist",
+        }
+        changed |= _add_if_verified(
+            candidate, queue, identities, needed
+        )
 
     all_identities = _identity_sets(
         queue + history, include_cover_hashes=False
@@ -1940,9 +1982,14 @@ def auto_populate():
 
     missing_for_post = [
         media_type
-        for media_type in ALLOWED_TYPES
+        for media_type in ("book", "podcast", "highlight")
         if remaining_counts[media_type] < 1
     ]
+    if not any(
+        remaining_counts[media_type] >= 1
+        for media_type in ("movie", "nostalgia", "investigation")
+    ):
+        missing_for_post.append("movie/nostalgia/investigation")
     if missing_for_post:
         raise RuntimeError(
             "Não foi possível obter sequer um candidato verificado para: "

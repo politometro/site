@@ -261,12 +261,28 @@ def _legacy_get_recommendations_with_valid_covers(queue):
 
 
 # --- SOURCE-GROUNDED SELECTION & QUALITY GATE ---
+ROTATING_Q3_TYPES = ("nostalgia", "investigation", "movie")
+
 REQUIRED_TYPES = {
     "q1": "book",
     "q2": "podcast",
+    # "movie" remains the backwards-compatible fallback. Selection prefers the
+    # weekly rotating type whenever that pool contains an approved episode.
     "q3": "movie",
     "q4": "highlight",
 }
+
+
+def _slot_types(qkey):
+    if qkey != "q3":
+        return (REQUIRED_TYPES[qkey],)
+    week = datetime.datetime.now(datetime.timezone.utc).isocalendar().week
+    preferred = ROTATING_Q3_TYPES[week % len(ROTATING_Q3_TYPES)]
+    return (preferred,) + tuple(
+        media_type
+        for media_type in ROTATING_Q3_TYPES
+        if media_type != preferred
+    )
 
 TYPE_EMOJIS = {
     "book": "📖",
@@ -274,6 +290,8 @@ TYPE_EMOJIS = {
     "movie": "🎞️",
     "documentary": "🎥",
     "series": "📺",
+    "nostalgia": "📼",
+    "investigation": "🔎",
     "highlight": "📰",
 }
 
@@ -292,6 +310,8 @@ TYPE_HASHTAGS = {
     "movie": "#Filme",
     "documentary": "#Documentario",
     "series": "#Serie",
+    "nostalgia": "#Nostalgia",
+    "investigation": "#Investigacao",
 }
 
 CATEGORY_HASHTAGS = {
@@ -304,6 +324,7 @@ CATEGORY_HASHTAGS = {
     "documentario": "#Documentario",
     "investigação": "#Investigacao",
     "investigacao": "#Investigacao",
+    "nostalgia": "#Nostalgia",
     "artigo": "#Artigo",
     "artigo de opinião": "#ArtigoDeOpiniao",
     "artigo de opiniao": "#ArtigoDeOpiniao",
@@ -434,8 +455,12 @@ def get_recommendations_with_valid_covers(queue):
     seen_cover_hashes = set()
 
     for qkey, required_type in REQUIRED_TYPES.items():
+        allowed_types = _slot_types(qkey)
         candidates = [
-            item for item in active_items if item.get("type") == required_type
+            item
+            for media_type in allowed_types
+            for item in active_items
+            if item.get("type") == media_type
         ]
         failures = []
 
@@ -647,8 +672,14 @@ def _parse_utc_datetime(value):
 def _validate_publish_item(qkey, item, now=None):
     expected_type = REQUIRED_TYPES[qkey]
     now = now or datetime.datetime.now(datetime.timezone.utc)
-    if not isinstance(item, dict) or item.get("type") != expected_type:
-        raise RuntimeError(f"{qkey} não contém um item do tipo {expected_type}")
+    allowed_types = (
+        ROTATING_Q3_TYPES if qkey == "q3" else (expected_type,)
+    )
+    if not isinstance(item, dict) or item.get("type") not in allowed_types:
+        raise RuntimeError(
+            f"{qkey} não contém um item de um tipo permitido: "
+            + ", ".join(allowed_types)
+        )
     if item.get("status") != "queue":
         raise RuntimeError(f"{qkey} já não está aprovado na fila")
     if item.get("resolutionStatus") != "verified":
@@ -955,6 +986,8 @@ def generate_production_post():
             "book": "Livro",
             "podcast": "Podcast",
             "movie": "Filme",
+            "nostalgia": "Nostalgia",
+            "investigation": "Investigação",
             "highlight": "Destaque",
         }.get(item.get("type"), "Recomendação")
         item["category"] = category

@@ -6,7 +6,7 @@ import styles from "./page.module.css";
 
 interface Recommendation {
   id: string;
-  type: "book" | "podcast" | "movie" | "highlight" | "project" | "series" | "documentary" | "article";
+  type: "book" | "podcast" | "movie" | "nostalgia" | "investigation" | "highlight" | "project" | "series" | "documentary" | "article";
   category: string;
   title: string;
   link: string;
@@ -61,6 +61,8 @@ export default function RecommendationsPage() {
       case "series": return "📺";
       case "documentary": return "🎥";
       case "article": return "📰";
+      case "nostalgia": return "📼";
+      case "investigation": return "🔎";
       case "highlight": return "⭐";
       default: return "💡";
     }
@@ -73,6 +75,8 @@ export default function RecommendationsPage() {
       case "movie": case "series": return styles.badgeMovie;
       case "documentary": return styles.badgeDocumentary;
       case "article": return styles.badgeArticle;
+      case "nostalgia": return styles.badgeNostalgia;
+      case "investigation": return styles.badgeInvestigation;
       case "highlight": return styles.badgeHighlight;
       default: return styles.badgeDefault;
     }
@@ -148,7 +152,7 @@ export default function RecommendationsPage() {
         <div className={styles.titleSection}>
           <h1 className={styles.title}>Recomendações Politómetro</h1>
           <p className={styles.subtitle}>
-            Livros, podcasts, documentários, séries e artigos sobre política, economia e sociedade.
+            Livros, podcasts, investigação, nostalgia e outros conteúdos sobre política, economia e sociedade.
           </p>
         </div>
 
