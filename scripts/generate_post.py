@@ -289,7 +289,10 @@ REQUIRED_SLOTS_FOR_POST_TYPE = {
         "q4": "highlight",
     },
     "wednesday_nostalgia": {
-        "w1": "nostalgia",
+        "q1": "book",
+        "q2": "podcast",
+        "q3": "movie",
+        "q4": "nostalgia",
     },
 }
 
@@ -297,9 +300,6 @@ REQUIRED_TYPES = REQUIRED_SLOTS_FOR_POST_TYPE["sunday_standard"]
 
 
 def _slot_types(qkey, post_type="sunday_standard"):
-    if post_type == "wednesday_nostalgia":
-        if qkey == "w1":
-            return ("nostalgia",)
     if qkey == "q1":
         return ("book",)
     elif qkey == "q2":
@@ -313,7 +313,10 @@ def _slot_types(qkey, post_type="sunday_standard"):
             if media_type != preferred
         )
     elif qkey == "q4":
-        return ("highlight", "investigation", "movie", "podcast")
+        if post_type == "wednesday_nostalgia":
+            return ("nostalgia",)
+        else:
+            return ("highlight", "investigation", "movie", "podcast")
     return (REQUIRED_TYPES.get(qkey, "highlight"),)
 
 TYPE_EMOJIS = {
@@ -405,8 +408,8 @@ def build_caption(selected, post_type="sunday_standard"):
     if post_type == "wednesday_nostalgia":
         title_line = "📣 RECOMENDAÇÕES DO POLITÓMETRO\n\n"
         intro_line = (
-            "Trazemos-te a nossa seleção de meio da semana com um grande clássico "
-            "do nosso arquivo e uma sugestão imperdível!\n\n"
+            "Trazemos-te a nossa seleção de meio da semana com quatro conteúdos "
+            "essenciais e um grande clássico do nosso arquivo!\n\n"
         )
     else:
         title_line = "📣 RECOMENDAÇÕES DO POLITÓMETRO\n\n"
