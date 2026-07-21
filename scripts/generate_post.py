@@ -316,7 +316,7 @@ def _slot_types(qkey, post_type="sunday_standard"):
             if media_type != preferred
         )
     elif qkey == "q4":
-        return ("highlight",)
+        return ("highlight", "investigation", "movie", "podcast")
     return (REQUIRED_TYPES.get(qkey, "highlight"),)
 
 TYPE_EMOJIS = {
@@ -769,7 +769,7 @@ def _draft_content_hash(
     quadrants, post_sha256, caption_sha256, is_test=False
 ):
     payload = {
-        "quadrants": {key: quadrants[key] for key in sorted(REQUIRED_TYPES)},
+        "quadrants": {key: quadrants[key] for key in sorted(quadrants.keys())},
         "post_sha256": post_sha256,
         "caption_sha256": caption_sha256,
         "is_test": bool(is_test),
@@ -1285,7 +1285,7 @@ def generate_production_post():
         with open(REC_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2, ensure_ascii=False)
 
-        quadrants = {qkey: selected[qkey] for qkey in REQUIRED_TYPES}
+        quadrants = {qkey: selected[qkey] for qkey in selected.keys()}
         post_sha = _sha256_file(OUTPUT_PATH)
         caption_sha = _sha256_file(OUTPUT_CAPTION_PATH)
         content_hash = _draft_content_hash(
