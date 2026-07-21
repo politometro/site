@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.rtp.pt/play/p117/e934828/os-contemporaneos",
+  "coverHash": "be0e7f207ceaff654e809a26f104e52c8c3a2060d87355309c07ccbf2e548dbd",
+  "coverSourceMime": "image/webp",
+  "coverSourceUrl": "https://cdn-images.rtp.pt/EPG/imagens/23711_46006_84970.jpg?v=3&w=860",
+  "entityId": "article:url:81a7f7a34245994bc75df1c6",
+  "expiryDate": null,
+  "height": 482,
+  "isbn": "",
+  "resolvedAuthor": "www.rtp.pt",
+  "resolvedTitle": "Os Contemporâneos",
+  "score": 1.0,
+  "source": "news:www.rtp.pt",
+  "sourcePublishedAt": "2026-05-01T00:00:00Z",
+  "title": "Os Contemporâneos",
+  "titleNormalized": "os contemporaneos",
+  "type": "nostalgia",
+  "verifiedAt": "2026-07-21T11:26:51.197196Z",
+  "width": 860
+}

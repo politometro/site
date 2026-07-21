@@ -1,49 +1,6 @@
 {
   "queue": [
     {
-      "id": "rss_podcast_13120483530c1b64",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Que nota merece o ministro da Educação?",
-      "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre os temas e questões de que nota merece o ministro da educação.",
-      "imageUrl": "/covers/podcast_que_nota_merece_o_ministro_da_educa__o__a88fc70f_13120483530c.jpg",
-      "link": "https://omny.fm/shows/linhas-vermelhas/que-nota-merece-o-ministro-da-educa-o",
-      "externalId": "2a40b8d3-bad6-415b-a2dc-b4860138a16d",
-      "sourceSeriesId": "1596904063",
-      "sourceSeriesTitle": "Linhas Vermelhas",
-      "priority": 4,
-      "sourcePublishedAt": "2026-07-14T07:00:00Z",
-      "expiryDate": "2026-07-24T07:00:00Z",
-      "createdAt": "2026-07-18T23:32:44.424553Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
-        "guid": "2a40b8d3-bad6-415b-a2dc-b4860138a16d",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
-        "show": "Linhas Vermelhas"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "2a40b8d3-bad6-415b-a2dc-b4860138a16d",
-        "score": 1.0,
-        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
-        "verifiedAt": "2026-07-18T23:32:47.531636Z",
-        "resolvedTitle": "Que nota merece o ministro da Educação?",
-        "resolvedAuthor": "Linhas Vermelhas",
-        "sourcePublishedAt": "2026-07-14T07:00:00Z",
-        "sourceDescription": "O prazo para a correção dos exames nacionais termina esta terça-feira e Fernando Alexandre garante que a nova data fixada para a divulgação das notas, a 17 de julho, vai ser cumprida. A dois dias do debate anual do Estado da Nação, que avaliação se pode fazer da gestão de todo este processo por parte do Ministério da Educação e do Governo?",
-        "editorialDescription": "Análise sobre os temas e questões de que nota merece o ministro da educação.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "4d01a37c51f545d2052b8d94365daef4d796c0ee4d8b2730186542b6cabea63a",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_f3b29bb82a4da314",
       "type": "highlight",
       "category": "Destaque",
@@ -357,7 +314,7 @@
       "sourcePublishedAt": "2026-07-19T05:00:00Z",
       "expiryDate": "2026-07-22T05:00:00Z",
       "createdAt": "2026-07-19T10:13:19.513492Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -366,7 +323,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1774034614&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -382,7 +339,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "e0e1fcfe19c56804a846f37878d7eb40417a460f9c2d6d5da7393f97adda2545",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Como se calcula o cabaz de produtos essenciais? - Ouvintes]: Conteúdo expira em 2026-07-22T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_podcast_04e901e1411e385f",
@@ -390,7 +348,7 @@
       "category": "Podcast",
       "title": "O estado da Nação “é sofrível” ou ainda há tempo para corrigir?",
       "authorOrMeta": "O Princípio da Incerteza",
-      "description": "Debate e análise da atualidade política com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte, sob a moderação de Carlos Andrade.",
+      "description": "Análise sobre os temas e questões de o estado da nação “é sofrível” ou ainda há tempo para corrigir.",
       "imageUrl": "/covers/podcast_o_estado_da_na__o____sofr_vel__ou_ainda_h__tempo_par_a1b8b409_04e901e1411e.jpg",
       "link": "https://omny.fm/shows/tsf-o-princ-pio-da-incerteza-podcast/o-estado-da-na-o-sofr-vel-ou-ainda-h-tempo-para-corrigir",
       "externalId": "553e1b71-5713-4793-91d9-b48d0086f2bd",
@@ -421,9 +379,9 @@
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-07-20T08:16:47Z",
         "sourceDescription": "Debate e análise da atualidade política com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte, sob a moderação de Carlos Andrade.",
-        "editorialDescription": "Debate e análise da atualidade política com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte, sob a moderação de Carlos Andrade.",
+        "editorialDescription": "Análise sobre os temas e questões de o estado da nação “é sofrível” ou ainda há tempo para corrigir.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "a6c5417f86e7dc38029868bc8ea87872320e75617c6fbe10416e371f76e31f32",
+        "editorialSourceHash": "89d9b21a4df7527dcc14d63f2d718c52e9d201659659983e424ec8e400825b1e",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -616,10 +574,10 @@
       "imageUrl": "/covers/nostalgia_conte_do_do_bat_guas_ep02___clim_ximo___debate_dos_496422d0_ec7ed448d786.jpg",
       "expiryDate": null,
       "createdAt": "2026-07-20T18:30:17.256980Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "curated-episode-watchlist",
       "externalId": "youtube:7A0mUSB-sgw",
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "youtube:Diogo Bataguas",
@@ -632,13 +590,14 @@
         "sourcePublishedAt": "2024-03-04T21:00:01Z",
         "sourceDescription": "Episódio do formato de humor de Diogo Batáguas que cruza atualidade, sátira e segmentos de estúdio."
       },
-      "sourcePublishedAt": "2024-03-04T21:00:01Z"
+      "sourcePublishedAt": "2024-03-04T21:00:01Z",
+      "validationError": "PODCAST_DOMAIN_NOT_ALLOWED [Conteúdo do Batáguas EP02 - Climáximo + Debate dos Pequeninos + Partido Nojento]: Plataforma/editor de podcast não autorizado: www.youtube.com."
     },
     {
       "type": "investigation",
-      "title": "Repórter Sábado: Henrique Vassal acusado de burla na construção",
+      "title": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construção",
       "authorOrMeta": "NOW Canal",
-      "description": "Henrique Vassal acusado de burlar dezenas de famílias com empresa de construçãoHenrique Vassal é acusado de ter burlado dezenas de famílias",
+      "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
       "link": "https://www.youtube.com/watch?v=LEpWEUWVxC4",
       "priority": 5,
       "id": "watch_investigation_92ada34713f34ca7",
@@ -660,7 +619,7 @@
         "resolvedTitle": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construção",
         "resolvedAuthor": "NOW Canal",
         "sourcePublishedAt": "2026-07-11T12:49:25Z",
-        "sourceDescription": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construçãoHenrique Vassal é acusado de ter burlado dezenas de famílias...."
+        "sourceDescription": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube."
       },
       "sourcePublishedAt": "2026-07-11T12:49:25Z"
     },
@@ -744,9 +703,9 @@
         "status": "verified",
         "source": "news:www.rtp.pt",
         "entityId": "article:url:2889d15c9477efed2619fc5a",
-        "score": 0.8061,
+        "score": 1.0,
         "coverHash": "8e8fc8b8c02ccdad8bc933ac8680b090137f6e5b3f6bc3245850abeba66f5454",
-        "verifiedAt": "2026-07-20T18:33:14.715006Z",
+        "verifiedAt": "2026-07-21T11:26:50.089626Z",
         "resolvedTitle": "Herman Enciclopédia",
         "resolvedAuthor": "www.rtp.pt",
         "sourcePublishedAt": "2022-12-08T00:00:00Z",
@@ -774,9 +733,9 @@
         "status": "verified",
         "source": "news:www.rtp.pt",
         "entityId": "article:url:81a7f7a34245994bc75df1c6",
-        "score": 0.768,
+        "score": 1.0,
         "coverHash": "be0e7f207ceaff654e809a26f104e52c8c3a2060d87355309c07ccbf2e548dbd",
-        "verifiedAt": "2026-07-20T18:33:15.917140Z",
+        "verifiedAt": "2026-07-21T11:26:51.197196Z",
         "resolvedTitle": "Os Contemporâneos",
         "resolvedAuthor": "www.rtp.pt",
         "sourcePublishedAt": "2026-05-01T00:00:00Z",
@@ -813,6 +772,120 @@
         "sourceDescription": "Procurar a verdade, obriga a confrontar, investigar, perguntar.Estes são tempos de muitas opiniões e diferentes ângulos sobre os factos. E em cada"
       },
       "sourcePublishedAt": "2026-07-10T00:00:00Z"
+    },
+    {
+      "id": "rss_podcast_4279596a584b82c3",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Exames nacionais: o Governo anda a correr atrás do problema?",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre deveria Fernando Alexandre ter adiado o calendário de candidaturas ao ensino superior?",
+      "imageUrl": "/covers/podcast_exames_nacionais__o_governo_anda_a_correr_atr_s_do_p_cfbd7b97_4279596a584b.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/exames-nacionais-o-governo-anda-a-correr-atr-s-do-problema",
+      "externalId": "3a5f4891-e232-42e3-aaf1-b48d01380371",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-21T09:11:55Z",
+      "expiryDate": "2026-07-31T09:11:55Z",
+      "createdAt": "2026-07-21T11:26:52.031054Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "3a5f4891-e232-42e3-aaf1-b48d01380371",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "3a5f4891-e232-42e3-aaf1-b48d01380371",
+        "score": 1.0,
+        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
+        "verifiedAt": "2026-07-21T11:26:54.225606Z",
+        "resolvedTitle": "Exames nacionais: o Governo anda a correr atrás do problema?",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-07-21T09:11:55Z",
+        "sourceDescription": "Neste episódio de Linhas Vermelhas , Cecília Meireles e Miguel Prata Roque debatem os mais recentes desenvolvimentos no caso dos exames nacionais e as polémicas que envolvem o ministro da Administração Interna, Luís Neves. Deveria Fernando Alexandre ter adiado o calendário de candidaturas ao ensino superior?",
+        "editorialDescription": "Análise sobre deveria Fernando Alexandre ter adiado o calendário de candidaturas ao ensino superior?",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "11925dad7be89498856d2e7bcd7fedb046563020c49b29f180d4f9fe894baed5",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_9b68bc25fc0ae391",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Luaty Beirão, em Luanda: como pode Angola sair do ciclo de opressão e corrupção?",
+      "authorOrMeta": "Perguntar Não Ofende",
+      "description": "Análise sobre os temas e questões de luaty beirão, em luanda: como pode angola sair do ciclo de opressão e corrupção.",
+      "imageUrl": "/covers/podcast_luaty_beir_o__em_luanda__como_pode_angola_sair_do_ci_18f5edb6_9b68bc25fc0a.jpg",
+      "link": "https://omny.fm/shows/perguntar-n-o-ofende/luaty-beir-o-em-luanda-como-pode-angola-sair-do-ciclo-de-opress-o-e-corrup-o",
+      "externalId": "90b61863-632e-40f9-acbb-b4780152c69d",
+      "sourceSeriesId": "1374367269",
+      "sourceSeriesTitle": "Perguntar Não Ofende",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-01T14:30:00Z",
+      "expiryDate": "2026-07-22T14:30:00Z",
+      "createdAt": "2026-07-21T11:26:52.332835Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/b9ad4462-e46a-4162-9cc4-adcf0103ac7c/podcast.rss",
+        "guid": "90b61863-632e-40f9-acbb-b4780152c69d",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/90b61863-632e-40f9-acbb-b4780152c69d/image.jpg?t=1782765515&size=Large",
+        "show": "Perguntar Não Ofende"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "90b61863-632e-40f9-acbb-b4780152c69d",
+        "score": 1.0,
+        "coverHash": "1f7aa9f4bc11626bb24c23c5fd7fbe7ba6981a9bffeb51dfb1d49e514799eed9",
+        "verifiedAt": "2026-07-19T00:59:50.499447Z",
+        "resolvedTitle": "Luaty Beirão, em Luanda: como pode Angola sair do ciclo de opressão e corrupção?",
+        "resolvedAuthor": "Perguntar Não Ofende",
+        "sourcePublishedAt": "2026-07-01T14:30:00Z",
+        "sourceDescription": "Filho do regime, o rap levou Luaty Beirão a uma Angola que o privilégio não lhe tinha permitido conhecer, a consciência do país em que vivia levou-o à oposição frontal a José Eduardo dos Santos e a oposição levou-o à prisão, onde esteve com mais de 14 companheiros, há 11 anos.",
+        "editorialDescription": "Análise sobre os temas e questões de luaty beirão, em luanda: como pode angola sair do ciclo de opressão e corrupção.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "d72516f3b9fef6e292794f5404483d7280ba77da703319476414191d73a9ce4d",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "type": "nostalgia",
+      "title": "Contra Informação",
+      "authorOrMeta": "arquivos.rtp.pt",
+      "description": "Programa de sátira política, social, cultural e desportiva, protagonizada por bonecos manipulados que caricaturam figuras públicas da sociedade portuguesa e internacional.",
+      "link": "https://arquivos.rtp.pt/conteudos/contra-informacao-577/",
+      "priority": 5,
+      "id": "watch_nostalgia_b67ab1664b1e417d",
+      "category": "Nostalgia",
+      "imageUrl": "/covers/nostalgia_contra_informa__o_e5a6103b_c901ba9b7d81.jpg",
+      "expiryDate": null,
+      "createdAt": "2026-07-21T11:26:58.755156Z",
+      "status": "queue",
+      "sourceHint": "curated-episode-watchlist",
+      "externalId": "article:url:1010c4fa17764b5b8177e456",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news:arquivos.rtp.pt",
+        "entityId": "article:url:1010c4fa17764b5b8177e456",
+        "score": 1.0,
+        "coverHash": "2a548a4b976f63b547b50044b0bbb3b93621d68c00a265ff2fb579bbeb272de8",
+        "verifiedAt": "2026-07-21T11:27:00.832686Z",
+        "resolvedTitle": "Contra Informação",
+        "resolvedAuthor": "arquivos.rtp.pt",
+        "sourceDescription": "Programa de sátira política, social, cultural e desportiva, protagonizada por bonecos manipulados que caricaturam figuras públicas da sociedade portuguesa e internacional."
+      }
     }
   ],
   "history": [

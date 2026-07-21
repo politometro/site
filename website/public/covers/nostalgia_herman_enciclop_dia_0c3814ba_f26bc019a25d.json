@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.rtp.pt/play/p4515/e741384/herman-enciclopedia",
+  "coverHash": "8e8fc8b8c02ccdad8bc933ac8680b090137f6e5b3f6bc3245850abeba66f5454",
+  "coverSourceMime": "image/webp",
+  "coverSourceUrl": "https://cdn-images.rtp.pt/EPG/imagens/8435_44020_28472.jpg?v=3&w=860",
+  "entityId": "article:url:2889d15c9477efed2619fc5a",
+  "expiryDate": null,
+  "height": 481,
+  "isbn": "",
+  "resolvedAuthor": "www.rtp.pt",
+  "resolvedTitle": "Herman Enciclopédia",
+  "score": 1.0,
+  "source": "news:www.rtp.pt",
+  "sourcePublishedAt": "2022-12-08T00:00:00Z",
+  "title": "Herman Enciclopédia",
+  "titleNormalized": "herman enciclopedia",
+  "type": "nostalgia",
+  "verifiedAt": "2026-07-21T11:26:50.089626Z",
+  "width": 860
+}
