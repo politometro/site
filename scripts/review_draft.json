@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_f47d5e3e012fdbb660a6",
-  "content_hash": "f47d5e3e012fdbb660a62edee7b5a5047596965e4442cd996bd1c25cff87d502",
-  "post_type": "wednesday_nostalgia",
-  "created_at": "2026-07-21T08:37:09.126841+00:00",
+  "draft_id": "draft_f335f95d647bbbe43598",
+  "content_hash": "f335f95d647bbbe435981880e4819959a5bce43a89431d184f5c22f666e55cca",
+  "post_type": "sunday_standard",
+  "created_at": "2026-07-21T09:14:43.737734+00:00",
   "is_test": true,
-  "post_sha256": "6a0d25c548ee0456bba0769afc87becfb6aed4d2c7c1275b21a4b59e71092c2f",
-  "caption_sha256": "52b29d73a3f7d8a8477463d96296fe9c0b3c27bd6172ba7436b3de9b56ba3553",
+  "post_sha256": "2e8456005127e3b3c5adc4e8bf1702ee2f1f4de0c7ca8a05721f4cba59ec6286",
+  "caption_sha256": "52d17fc2b2e3d95089a088b02d25810b65f89333bb42fc1ecceb9ea1cdf51fe1",
   "approval": {
     "approved": false
   },
@@ -112,33 +112,33 @@
     "sourcePublishedAt": "2026-07-11T12:49:25Z"
   },
   "q4": {
-    "type": "nostalgia",
-    "title": "TELERURAL - Desportivo de Curral de Moinas perde por 26-1",
-    "authorOrMeta": "RTP",
-    "description": "Hilariante relato do noticiário fictício Telerural sobre a pesada derrota do Desportivo de Curral de Moinas por 26-1 frente ao Cuspe Futebol Clube.",
-    "link": "https://www.youtube.com/watch?v=Q_Lk_bEISX0",
+    "type": "investigation",
+    "title": "A Prova dos Factos",
+    "authorOrMeta": "www.rtp.pt",
+    "description": "Procurar a verdade, obriga a confrontar, investigar, perguntar.Estes são tempos de muitas opiniões e diferentes ângulos sobre os factos. E em cada",
+    "link": "https://www.rtp.pt/play/p16129/e942040/a-prova-dos-factos",
     "priority": 5,
-    "id": "watch_nostalgia_d33f33231f2c4958",
-    "category": "Nostalgia",
-    "imageUrl": "/covers/nostalgia_telerural___desportivo_de_curral_de_moinas_perde_p_116da5a6_2c0c50b6f5c8.jpg",
+    "id": "watch_investigation_f9407280e49e4d98",
+    "category": "Investigação",
+    "imageUrl": "/covers/investigation_a_prova_dos_factos_201ae81f_3962ed54bc80.jpg",
     "expiryDate": null,
-    "createdAt": "2026-07-20T18:30:14.969543Z",
+    "createdAt": "2026-07-20T18:33:15.931458Z",
     "status": "queue",
     "sourceHint": "curated-episode-watchlist",
-    "externalId": "youtube:Q_Lk_bEISX0",
+    "externalId": "article:url:68e27129abb3cd93eb83cc24",
     "resolutionStatus": "verified",
     "verification": {
       "status": "verified",
-      "source": "youtube:RTP",
-      "entityId": "youtube:Q_Lk_bEISX0",
-      "score": 1.0,
-      "coverHash": "669d9f198b4b94224ff7d0e9eae4707fadfb74616f0b2e03de6f0cffd3263011",
-      "verifiedAt": "2026-07-20T18:30:17.244859Z",
-      "resolvedTitle": "TELERURAL - Desportivo de Curral de Moinas perde por 26-1",
-      "resolvedAuthor": "RTP",
-      "sourcePublishedAt": "2009-12-09T11:50:17Z",
-      "sourceDescription": "Hilariante relato do noticiário fictício Telerural sobre a pesada derrota do Desportivo de Curral de Moinas por 26-1 frente ao Cuspe Futebol Clube."
+      "source": "news:www.rtp.pt",
+      "entityId": "article:url:68e27129abb3cd93eb83cc24",
+      "score": 0.75,
+      "coverHash": "bf471e4274c14701c48933e17db9803b0b2d91fd393ae49837259f3534a58ce0",
+      "verifiedAt": "2026-07-20T18:33:17.710301Z",
+      "resolvedTitle": "A Prova dos Factos",
+      "resolvedAuthor": "www.rtp.pt",
+      "sourcePublishedAt": "2026-07-10T00:00:00Z",
+      "sourceDescription": "Procurar a verdade, obriga a confrontar, investigar, perguntar.Estes são tempos de muitas opiniões e diferentes ângulos sobre os factos. E em cada"
     },
-    "sourcePublishedAt": "2009-12-09T11:50:17Z"
+    "sourcePublishedAt": "2026-07-10T00:00:00Z"
   }
 }

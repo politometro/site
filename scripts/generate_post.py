@@ -412,7 +412,7 @@ def build_caption(selected, post_type="sunday_standard"):
             "essenciais e um grande clássico do nosso arquivo!\n\n"
         )
     else:
-        title_line = "📣 RECOMENDAÇÕES DO POLITÓMETRO\n\n"
+        title_line = "📣 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO\n\n"
         intro_line = (
             "Trazemos-te a nossa seleção semanal de conteúdos essenciais para "
             "compreenderes a política, a história e a economia de Portugal e do mundo.\n\n"
@@ -1037,8 +1037,7 @@ def generate_production_post():
 
     post_type = args.post_type
     if post_type == "auto":
-        now_utc = datetime.datetime.now(datetime.timezone.utc)
-        post_type = "wednesday_nostalgia" if now_utc.weekday() == 2 else "sunday_standard"
+        post_type = "sunday_standard"
 
     DRAFT_FILE = os.path.join(SCRIPT_DIR, "review_draft.json")
 

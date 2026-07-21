@@ -704,7 +704,7 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
         caption = generate_post.build_caption(selected)
 
         self.assertTrue(
-            caption.startswith("📣 RECOMENDAÇÕES DO POLITÓMETRO")
+            caption.startswith("📣 RECOMENDAÇÕES DA SEMANA")
         )
         self.assertIn("@_.davstrango._", caption)
         self.assertIn("@luisflmaximo", caption)
