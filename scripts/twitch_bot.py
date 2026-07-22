@@ -81,6 +81,8 @@ _twitch_status = {
     "state": "inactive",
     "detail": "A configuração ainda não foi verificada.",
     "channels": list(TWITCH_CHANNELS),
+    "joined_channels": [],
+    "channel_states": {},
     "last_error": "",
     "updated_at": "",
     "mentions_received": 0,
@@ -111,6 +113,42 @@ def _set_twitch_status(state, detail="", error=""):
         )
 
 
+def _set_channel_status(channel, *, joined=None, slow_seconds=None):
+    channel_key = str(channel or "").strip().lstrip("#").lower()
+    if not channel_key:
+        return
+    with _status_lock:
+        channel_states = dict(_twitch_status.get("channel_states") or {})
+        previous = dict(channel_states.get(channel_key) or {})
+        if joined is not None:
+            previous["joined"] = bool(joined)
+        if slow_seconds is not None:
+            previous["slow_seconds"] = max(0, int(slow_seconds))
+        channel_states[channel_key] = previous
+        _twitch_status["channel_states"] = channel_states
+        _twitch_status["joined_channels"] = sorted(
+            name
+            for name, state in channel_states.items()
+            if state.get("joined")
+        )
+        _twitch_status["updated_at"] = datetime.datetime.now(
+            datetime.timezone.utc
+        ).isoformat().replace("+00:00", "Z")
+
+
+def _reset_channel_statuses():
+    with _status_lock:
+        _twitch_status["channels"] = list(TWITCH_CHANNELS)
+        _twitch_status["joined_channels"] = []
+        _twitch_status["channel_states"] = {
+            channel: {"joined": False, "slow_seconds": 0}
+            for channel in TWITCH_CHANNELS
+        }
+        _twitch_status["updated_at"] = datetime.datetime.now(
+            datetime.timezone.utc
+        ).isoformat().replace("+00:00", "Z")
+
+
 def get_twitch_status():
     with _status_lock:
         return dict(_twitch_status)
@@ -136,10 +174,14 @@ def twitch_status_markdown():
         "error": "🔴 Erro",
     }
     channels = ", ".join(status["channels"]) or "nenhum"
+    joined_channels = ", ".join(
+        f"#{channel}" for channel in status.get("joined_channels", [])
+    ) or "nenhum confirmado ainda"
     lines = [
         "### Estado da Twitch",
         f"**{labels.get(status['state'], status['state'])}**",
         f"Canais configurados: `{channels}`",
+        f"Canais ligados: `{joined_channels}`",
         (
             "Menções recebidas desde o arranque: "
             f"`{status.get('mentions_received', 0)}`"
@@ -149,6 +191,20 @@ def twitch_status_markdown():
             f"`{status.get('responses_sent', 0)}`"
         ),
     ]
+    channel_states = status.get("channel_states") or {}
+    for channel in status["channels"]:
+        channel_state = channel_states.get(channel) or {}
+        joined = channel_state.get("joined")
+        slow_seconds = int(channel_state.get("slow_seconds") or 0)
+        if joined:
+            detail = (
+                f"Modo lento de {slow_seconds}s."
+                if slow_seconds
+                else "Sem modo lento."
+            )
+            lines.append(f"`#{channel}`: {detail}")
+        else:
+            lines.append(f"`#{channel}`: A aguardar confirmaÃ§Ã£o da ligaÃ§Ã£o.")
     if status.get("detail"):
         lines.append(status["detail"])
     if status.get("last_error"):
@@ -652,10 +708,12 @@ def run_twitch_bot_forever():
         return
 
     backoff = 5
+    _reset_channel_statuses()
     _set_twitch_status("starting", "A preparar a ligação segura ao chat.")
     while True:
         try:
             print(f"A iniciar bot de Twitch em: {', '.join(TWITCH_CHANNELS)}")
+            _reset_channel_statuses()
             _set_twitch_status(
                 "connecting", "A estabelecer ligação com a Twitch."
             )
@@ -713,6 +771,16 @@ def run_twitch_bot_forever():
                                     _channel_slow_seconds[
                                         roomstate["channel"]
                                     ] = roomstate["slow_seconds"]
+                                _set_channel_status(
+                                    roomstate["channel"],
+                                    joined=True,
+                                    slow_seconds=roomstate["slow_seconds"],
+                                )
+                                joined_count = len(
+                                    get_twitch_status().get(
+                                        "joined_channels", []
+                                    )
+                                )
                                 slow_detail = (
                                     f"Modo lento de "
                                     f"{roomstate['slow_seconds']}s detetado."
@@ -722,7 +790,9 @@ def run_twitch_bot_forever():
                                 _set_twitch_status(
                                     "connected",
                                     (
-                                        f"Ligado a #{roomstate['channel']}. "
+                                        f"Ligado a {joined_count}/"
+                                        f"{len(TWITCH_CHANNELS)} canais. "
+                                        f"#{roomstate['channel']}: "
                                         f"{slow_detail}"
                                     ),
                                 )

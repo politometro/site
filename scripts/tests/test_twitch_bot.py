@@ -25,6 +25,7 @@ class TwitchBotTests(unittest.TestCase):
         twitch_bot._channel_pending_questions.clear()
         twitch_bot._queue_full_notice_pending.clear()
         twitch_bot._seen_source_messages.clear()
+        twitch_bot._reset_channel_statuses()
 
     def test_parse_privmsg_with_tags(self):
         line = (
@@ -240,6 +241,25 @@ class TwitchBotTests(unittest.TestCase):
         self.assertNotIn("refresh-secret", rendered)
         self.assertNotIn("client-secret", rendered)
         self.assertIn("***", rendered)
+
+    def test_status_page_lists_each_channel_independently(self):
+        with mock.patch.object(
+            twitch_bot, "TWITCH_CHANNELS", ["brun0mestre", "grande_ze"]
+        ):
+            twitch_bot._reset_channel_statuses()
+            twitch_bot._set_channel_status(
+                "grande_ze", joined=True, slow_seconds=10
+            )
+            twitch_bot._set_twitch_status(
+                "connected",
+                "Ligado a 1/2 canais. #grande_ze: Modo lento de 10s detetado.",
+            )
+
+            rendered = twitch_bot.twitch_status_markdown()
+
+        self.assertIn("Canais ligados: `#grande_ze`", rendered)
+        self.assertIn("`#grande_ze`: Modo lento de 10s.", rendered)
+        self.assertIn("`#brun0mestre`: A aguardar confirma", rendered)
 
     def test_long_utf8_answer_becomes_one_message_within_byte_limit(self):
         answer = (

@@ -335,7 +335,8 @@ class RecoveryWindowTests(unittest.TestCase):
             "python scripts/recover_weekly_generation.py",
             keep_alive_workflow,
         )
-        self.assertIn("group: politometro-content-writer", keep_alive_workflow)
+        self.assertIn("*/15 * * * *", keep_alive_workflow)
+        self.assertIn("group: politometro-space-keepalive", keep_alive_workflow)
 
     def test_recovery_is_bounded_and_test_draft_never_blocks_production(self):
         with tempfile.TemporaryDirectory() as tmp:
