@@ -1049,6 +1049,11 @@ def generate_production_post():
         default="auto",
         help="Specify post edition (sunday_standard or wednesday_nostalgia)",
     )
+    parser.add_argument(
+        "--recommendation-id",
+        default="",
+        help="Select one specific verified queue item for a single-card edition",
+    )
     args = parser.parse_args()
 
     post_type = args.post_type
@@ -1092,6 +1097,15 @@ def generate_production_post():
     
     queue = data.get("queue", [])
     history = data.get("history", [])
+
+    if args.recommendation_id:
+        if post_type != "wednesday_nostalgia":
+            print("ERROR: --recommendation-id is only valid for wednesday_nostalgia")
+            sys.exit(1)
+        queue = [item for item in queue if item.get("id") == args.recommendation_id]
+        if len(queue) != 1 or queue[0].get("type") != "nostalgia":
+            print("ERROR: The requested Nostalgia recommendation was not found")
+            sys.exit(1)
     
     selected, covers = get_recommendations_with_valid_covers(queue, history=history, post_type=post_type)
     

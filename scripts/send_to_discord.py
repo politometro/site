@@ -99,39 +99,40 @@ async def on_ready():
             description="Verifica a imagem em anexo. A legenda sugerida segue na mensagem abaixo.",
             color=discord.Color.purple() if post_type == "wednesday_nostalgia" else discord.Color.blue()
         )
-                q1 = draft_data.get("q1", {})
-                q2 = draft_data.get("q2", {})
-                q3 = draft_data.get("q3", {})
-                q4 = draft_data.get("q4", {})
-                for qkey, item in {
-                    "Q1": q1,
-                    "Q2": q2,
-                    "Q3": q3,
-                    "Q4": q4,
-                }.items():
-                    if not str(item.get("link") or "").startswith(
-                        ("http://", "https://")
-                    ):
-                        raise ValueError(f"{qkey} sem link verificável")
-                
-                links_text = (
-                    f"📚 **Q1 ({q1.get('category', 'Livro')})**: [{q1.get('title')}]({q1.get('link')})\n"
-                    f"🎙️ **Q2 ({q2.get('category', 'Podcast')})**: [{q2.get('title')}]({q2.get('link')})\n"
-                    f"🎬 **Q3 ({q3.get('category', 'Filme')})**: [{q3.get('title')}]({q3.get('link')})\n"
-                    f"⭐ **Q4 ({q4.get('category', 'Destaque')})**: [{q4.get('title')}]({q4.get('link')})"
-                )
-                embed.add_field(name="🔗 Links para Verificação", value=links_text, inline=False)
-                embed.set_footer(
-                    text=f"Rascunho: {draft_id} | Hash: {content_hash[:16]}"
-                )
-                if draft_data.get("is_test"):
-                    embed.description = (
-                        "TESTE — verifica imagem e ligações. Este rascunho não "
-                        "pode ser publicado no Instagram."
-                    )
-            except Exception as e:
-                print(f"❌ Rascunho inválido: {e}")
-                raise
+
+        if post_type == "wednesday_nostalgia":
+            review_items = {"Nostalgia": draft_data.get("w1", {})}
+        else:
+            review_items = {
+                "Q1": draft_data.get("q1", {}),
+                "Q2": draft_data.get("q2", {}),
+                "Q3": draft_data.get("q3", {}),
+                "Q4": draft_data.get("q4", {}),
+            }
+
+        link_lines = []
+        for slot_label, item in review_items.items():
+            link = str(item.get("link") or "")
+            if not link.startswith(("http://", "https://")):
+                raise ValueError(f"{slot_label} sem link verificável")
+            category = item.get("category") or item.get("type") or "Recomendação"
+            link_lines.append(
+                f"**{slot_label} ({category})**: [{item.get('title')}]({link})"
+            )
+
+        embed.add_field(
+            name="🔗 Links para Verificação",
+            value="\n".join(link_lines),
+            inline=False,
+        )
+        embed.set_footer(
+            text=f"Rascunho: {draft_id} | Hash: {content_hash[:16]}"
+        )
+        if draft_data.get("is_test"):
+            embed.description = (
+                "TESTE — verifica imagem e ligações. Este rascunho não "
+                "pode ser publicado no Instagram."
+            )
         
         file_to_send = discord.File(IMAGE_PATH, filename="post.jpg")
         embed.set_image(url="attachment://post.jpg")

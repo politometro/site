@@ -33,6 +33,11 @@ on:
           - sunday_standard
           - wednesday_nostalgia
         default: auto
+      recommendation_id:
+        description: 'Optional exact recommendation ID for a single Nostalgia post'
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: write
@@ -125,9 +130,11 @@ jobs:
             fi
           fi
           if [ "${{ inputs.test_mode }}" = "true" ]; then
-            python scripts/generate_post.py --review --test --post-type "$POST_TYPE"
+            python scripts/generate_post.py --review --test --post-type "$POST_TYPE" \
+              --recommendation-id "${{ inputs.recommendation_id }}"
           else
-            python scripts/generate_post.py --review --post-type "$POST_TYPE"
+            python scripts/generate_post.py --review --post-type "$POST_TYPE" \
+              --recommendation-id "${{ inputs.recommendation_id }}"
           fi
         env:
           GOOGLE_CSE_API_KEY: ${{ secrets.GOOGLE_CSE_API_KEY }}
