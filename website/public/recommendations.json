@@ -348,7 +348,7 @@
       "category": "Podcast",
       "title": "O estado da Nação “é sofrível” ou ainda há tempo para corrigir?",
       "authorOrMeta": "O Princípio da Incerteza",
-      "description": "Análise sobre os temas e questões de o estado da nação “é sofrível” ou ainda há tempo para corrigir.",
+      "description": "Análise sobre com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade.",
       "imageUrl": "/covers/podcast_o_estado_da_na__o____sofr_vel__ou_ainda_h__tempo_par_a1b8b409_04e901e1411e.jpg",
       "link": "https://omny.fm/shows/tsf-o-princ-pio-da-incerteza-podcast/o-estado-da-na-o-sofr-vel-ou-ainda-h-tempo-para-corrigir",
       "externalId": "553e1b71-5713-4793-91d9-b48d0086f2bd",
@@ -378,10 +378,10 @@
         "resolvedTitle": "O estado da Nação “é sofrível” ou ainda há tempo para corrigir?",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-07-20T08:16:47Z",
-        "sourceDescription": "Debate e análise da atualidade política com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte, sob a moderação de Carlos Andrade.",
-        "editorialDescription": "Análise sobre os temas e questões de o estado da nação “é sofrível” ou ainda há tempo para corrigir.",
+        "sourceDescription": "Com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade See omnystudio.com/listener for privacy information.",
+        "editorialDescription": "Análise sobre com José Pacheco Pereira, Alexandra Leitão e Pedro Duarte. Moderação de Carlos Andrade.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "89d9b21a4df7527dcc14d63f2d718c52e9d201659659983e424ec8e400825b1e",
+        "editorialSourceHash": "a6c5417f86e7dc38029868bc8ea87872320e75617c6fbe10416e371f76e31f32",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -399,7 +399,7 @@
       "sourcePublishedAt": "2026-07-20T08:55:31Z",
       "expiryDate": "2026-08-19T08:55:31Z",
       "createdAt": "2026-07-20T12:29:14.831562Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -419,7 +419,7 @@
           "Política"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -431,7 +431,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-07-20T08:55:31Z",
         "sourceDescription": "O antigo presidente do Júri Nacional de Exames revela que teste piloto já tinha mostrado falhas no sistema. Luís Duque de Almeida considera que ministro não devia ter publicado as pautas tão cedo."
-      }
+      },
+      "validationError": "HIGHLIGHT_NOT_FOUND [Exames. \"Era muito arriscado passar para a generalização\"]: O artigo deixou de constar do RSS autorizado."
     },
     {
       "id": "ai_book_c39c996580464759",
@@ -536,7 +537,7 @@
       "type": "nostalgia",
       "title": "TELERURAL - Desportivo de Curral de Moinas perde por 26-1",
       "authorOrMeta": "RTP",
-      "description": "Hilariante relato do noticiário fictício Telerural sobre a pesada derrota do Desportivo de Curral de Moinas por 26-1 frente ao Cuspe Futebol Clube.",
+      "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
       "link": "https://www.youtube.com/watch?v=Q_Lk_bEISX0",
       "priority": 5,
       "id": "watch_nostalgia_d33f33231f2c4958",
@@ -554,11 +555,11 @@
         "entityId": "youtube:Q_Lk_bEISX0",
         "score": 1.0,
         "coverHash": "669d9f198b4b94224ff7d0e9eae4707fadfb74616f0b2e03de6f0cffd3263011",
-        "verifiedAt": "2026-07-20T18:30:17.244859Z",
+        "verifiedAt": "2026-07-20T20:27:44.279230Z",
         "resolvedTitle": "TELERURAL - Desportivo de Curral de Moinas perde por 26-1",
         "resolvedAuthor": "RTP",
         "sourcePublishedAt": "2009-12-09T11:50:17Z",
-        "sourceDescription": "Hilariante relato do noticiário fictício Telerural sobre a pesada derrota do Desportivo de Curral de Moinas por 26-1 frente ao Cuspe Futebol Clube."
+        "sourceDescription": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube."
       },
       "sourcePublishedAt": "2009-12-09T11:50:17Z"
     },
@@ -613,7 +614,7 @@
         "status": "verified",
         "source": "youtube:NOW Canal",
         "entityId": "youtube:LEpWEUWVxC4",
-        "score": 0.7553,
+        "score": 1.0,
         "coverHash": "83ca2e7d8fc7c36513f730e2c0bfa4d6ec60f522183cae95743f0a9916438dda",
         "verifiedAt": "2026-07-20T18:30:25.063601Z",
         "resolvedTitle": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construção",
@@ -627,7 +628,7 @@
       "type": "investigation",
       "title": "Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas",
       "authorOrMeta": "NOW Canal",
-      "description": "Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimasAs burlas levadas a cabo através das plataformas digitais afetam cada vez mais pe...",
+      "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
       "link": "https://www.youtube.com/watch?v=uMj2e_ob68Y",
       "priority": 5,
       "id": "watch_investigation_b30758365b064f5d",
@@ -649,7 +650,7 @@
         "resolvedTitle": "Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas",
         "resolvedAuthor": "NOW Canal",
         "sourcePublishedAt": "2026-06-14T13:23:27Z",
-        "sourceDescription": "Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimasAs burlas levadas a cabo através das plataformas digitais afetam cada vez mais pe..."
+        "sourceDescription": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube."
       },
       "sourcePublishedAt": "2026-06-14T13:23:27Z"
     },
@@ -657,7 +658,7 @@
       "type": "investigation",
       "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
       "authorOrMeta": "NOW Canal",
-      "description": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes (chega a atender cerca de 100 pessoas por dia)Miguel Rij...",
+      "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
       "link": "https://www.youtube.com/watch?v=lChT1gKqjWQ",
       "priority": 4,
       "id": "watch_investigation_edcb6b3869b94510",
@@ -679,7 +680,7 @@
         "resolvedTitle": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
         "resolvedAuthor": "NOW Canal",
         "sourcePublishedAt": "2025-11-30T13:00:13Z",
-        "sourceDescription": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes (chega a atender cerca de 100 pessoas por dia)Miguel Rij..."
+        "sourceDescription": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube."
       },
       "sourcePublishedAt": "2025-11-30T13:00:13Z"
     },
@@ -763,7 +764,7 @@
         "status": "verified",
         "source": "news:www.rtp.pt",
         "entityId": "article:url:68e27129abb3cd93eb83cc24",
-        "score": 0.75,
+        "score": 1.0,
         "coverHash": "bf471e4274c14701c48933e17db9803b0b2d91fd393ae49837259f3534a58ce0",
         "verifiedAt": "2026-07-20T18:33:17.710301Z",
         "resolvedTitle": "A Prova dos Factos",
@@ -832,7 +833,7 @@
       "sourcePublishedAt": "2026-07-01T14:30:00Z",
       "expiryDate": "2026-07-22T14:30:00Z",
       "createdAt": "2026-07-21T11:26:52.332835Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -841,7 +842,7 @@
         "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/90b61863-632e-40f9-acbb-b4780152c69d/image.jpg?t=1782765515&size=Large",
         "show": "Perguntar Não Ofende"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -857,7 +858,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "d72516f3b9fef6e292794f5404483d7280ba77da703319476414191d73a9ce4d",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Luaty Beirão, em Luanda: como pode Angola sair do ciclo de opressão e corrupção?]: Conteúdo expira em 2026-07-22T14:30:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "type": "nostalgia",
@@ -885,6 +887,173 @@
         "resolvedTitle": "Contra Informação",
         "resolvedAuthor": "arquivos.rtp.pt",
         "sourceDescription": "Programa de sátira política, social, cultural e desportiva, protagonizada por bonecos manipulados que caricaturam figuras públicas da sociedade portuguesa e internacional."
+      }
+    },
+    {
+      "id": "rss_highlight_c85e22a4d357a08e",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Um Governo em decomposição",
+      "authorOrMeta": "observador.pt",
+      "description": "Num governo sem soluções na saúda, na habitaçã, nos transportes, o enfraquecimento de dois ministros torna-se especialmente preocupante.",
+      "imageUrl": "/covers/highlight_um_governo_em_decomposi__o_be612cd0_be451efe2b58.jpg",
+      "link": "https://observador.pt/opiniao/um-governo-em-decomposicao/",
+      "externalId": "article:url:c85e22a4d357a08ef33db785",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-21T23:23:01Z",
+      "expiryDate": "2026-08-20T23:23:01Z",
+      "createdAt": "2026-07-22T00:41:29.047538Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/um-governo-em-decomposicao/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2019%2F10%2F11100759%2Fandrecc81-azevedo-alves-11_467x467_acf_cropped.jpg",
+        "categories": [
+          "Governo",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:c85e22a4d357a08ef33db785",
+        "score": 1.0,
+        "coverHash": "1ee326b9fb13bc7a93059115a739f3122f30f83b309c4a7fcb55b588ce6234c1",
+        "verifiedAt": "2026-07-22T00:41:30.832554Z",
+        "resolvedTitle": "Um Governo em decomposição",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-07-21T23:23:01Z",
+        "sourceDescription": "Num governo sem soluções na saúda, na habitaçã, nos transportes, o enfraquecimento de dois ministros torna-se especialmente preocupante."
+      }
+    },
+    {
+      "id": "rss_highlight_d1f86428b5e52050",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A ciência nas mãos da ideologia",
+      "authorOrMeta": "observador.pt",
+      "description": "O parecer recentemente emitido pela Ordem dos Médicos, bem como a sua representação nos meios de comunicação, deveriam preocupar todos os portugueses, independentemente da sua posição política",
+      "imageUrl": "/covers/highlight_a_ci_ncia_nas_m_os_da_ideologia_ae257bcb_fc21d2503563.jpg",
+      "link": "https://observador.pt/opiniao/a-ciencia-nas-maos-da-ideologia/",
+      "externalId": "article:url:d1f86428b5e520506f0c021c",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-21T23:13:28Z",
+      "expiryDate": "2026-08-20T23:13:28Z",
+      "createdAt": "2026-07-22T00:41:29.050826Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-ciencia-nas-maos-da-ideologia/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A497%3A497%3Anowe%3A0%3A29%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F02%2F02130317%2F1000046572-e1770037512918.jpg",
+        "categories": [
+          "Tribuna Aberta",
+          "Opinião",
+          "Observador",
+          "Identidade de Género",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:d1f86428b5e520506f0c021c",
+        "score": 1.0,
+        "coverHash": "7f538d791a4096f66740760e867f9660caf54500b2e0cd10779b04e2b87b805e",
+        "verifiedAt": "2026-07-22T00:41:32.036426Z",
+        "resolvedTitle": "A ciência nas mãos da ideologia",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-07-21T23:13:28Z",
+        "sourceDescription": "O parecer recentemente emitido pela Ordem dos Médicos, bem como a sua representação nos meios de comunicação, deveriam preocupar todos os portugueses, independentemente da sua posição política"
+      }
+    },
+    {
+      "id": "rss_highlight_4327bc469ced91f0",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Hepatites Virais: no caminho tortuoso para a erradicação",
+      "authorOrMeta": "observador.pt",
+      "description": "Neste Dia Mundial das Hepatites Virais, a Sociedade Portuguesa de Gastrenterologia apela a todos os cidadãos para que realizem o rastreio para a hepatite B e para a hepatite C.",
+      "imageUrl": "/covers/highlight_hepatites_virais__no_caminho_tortuoso_para_a_errad_140c2734_564782ec8e96.jpg",
+      "link": "https://observador.pt/opiniao/hepatites-virais-no-caminho-tortuoso-para-a-erradicacao/",
+      "externalId": "article:url:4327bc469ced91f0482ae1e9",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-21T23:02:11Z",
+      "expiryDate": "2026-08-20T23:02:11Z",
+      "createdAt": "2026-07-22T00:41:29.053201Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/hepatites-virais-no-caminho-tortuoso-para-a-erradicacao/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A31%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F07%2F21222933%2Fdra-joana-nunes-fotografia.jpg",
+        "categories": [
+          "Tribuna Aberta",
+          "Opinião",
+          "Observador",
+          "Doenças",
+          "Saúde",
+          "Medicina",
+          "Ciência"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:4327bc469ced91f0482ae1e9",
+        "score": 1.0,
+        "coverHash": "ee3ed3709622084b8be2a1cbbbbc597372228d747d6fbdaae6edfa826922a387",
+        "verifiedAt": "2026-07-22T00:41:32.972250Z",
+        "resolvedTitle": "Hepatites Virais: no caminho tortuoso para a erradicação",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-07-21T23:02:11Z",
+        "sourceDescription": "Neste Dia Mundial das Hepatites Virais, a Sociedade Portuguesa de Gastrenterologia apela a todos os cidadãos para que realizem o rastreio para a hepatite B e para a hepatite C."
+      }
+    },
+    {
+      "id": "rss_highlight_4b0ae41ea6c6487a",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Ministros de Luís Montenegro enfrentam época quente",
+      "authorOrMeta": "www.rtp.pt",
+      "description": "Fernando Alexandre e Luís Neves, o primeiro na pasta da Educação e o segundo na Administração Interna, estão envolvidos em polémicas que insistem em não se desvanecer.",
+      "imageUrl": "/covers/highlight_ministros_de_lu_s_montenegro_enfrentam__poca_quent_822894f2_a7c5d434e444.jpg",
+      "link": "https://www.rtp.pt/noticias/opiniao/rita-rato-e-bernardo-blanco/ministros-de-luis-montenegro-enfrentam-epoca-quente_1755007",
+      "externalId": "article:url:4b0ae41ea6c6487aeb973f65",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-21T22:29:57Z",
+      "expiryDate": "2026-08-20T22:29:57Z",
+      "createdAt": "2026-07-22T00:41:28.799963Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://www.rtp.pt/noticias/rss",
+        "guid": "https://www.rtp.pt/noticias/opiniao/rita-rato-e-bernardo-blanco/ministros-de-luis-montenegro-enfrentam-epoca-quente_1755007",
+        "imageUrl": "https://cdn-images.rtp.pt/noticias/images/default_rtpnoticias.png?w=350&q=50&auto=format",
+        "categories": [
+          "Rita Rato e Bernardo Blanco"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:www.rtp.pt",
+        "entityId": "article:url:4b0ae41ea6c6487aeb973f65",
+        "score": 1.0,
+        "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
+        "verifiedAt": "2026-07-22T00:41:33.288824Z",
+        "resolvedTitle": "Ministros de Luís Montenegro enfrentam época quente",
+        "resolvedAuthor": "www.rtp.pt",
+        "sourcePublishedAt": "2026-07-21T22:29:57Z",
+        "sourceDescription": "Fernando Alexandre e Luís Neves, o primeiro na pasta da Educação e o segundo na Administração Interna, estão envolvidos em polémicas que insistem em não se desvanecer."
       }
     }
   ],
