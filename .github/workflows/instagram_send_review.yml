@@ -1,0 +1,52 @@
+name: Send Instagram Draft to Discord
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel_id:
+        description: 'Optional Discord review channel override'
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: instagram-review-discord
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v7
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Send Review Card to Discord
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_REVIEW_CHANNEL_ID: ${{ inputs.channel_id || secrets.DISCORD_REVIEW_CHANNEL_ID }}
+          PING_EVERYONE: 'false'
+        run: python scripts/send_to_discord.py
+
+      - name: Persist Discord Delivery Receipt
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add scripts/review_notification.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Discord review delivery [skip ci]"
+            git pull --rebase origin main
+            git push origin main
+          fi

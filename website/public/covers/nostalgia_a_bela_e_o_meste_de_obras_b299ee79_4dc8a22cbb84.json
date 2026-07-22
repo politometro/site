@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.youtube.com/watch?v=JCqO5vMlAYs",
+  "coverHash": "b2576b145cad04bcc7d2dd67902a206f4c75d906cad1387ca5cfaed432aae112",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://i.ytimg.com/vi/JCqO5vMlAYs/hqdefault.jpg",
+  "entityId": "youtube:JCqO5vMlAYs",
+  "expiryDate": null,
+  "height": 360,
+  "isbn": "",
+  "resolvedAuthor": "RTP",
+  "resolvedTitle": "A Bela e o Meste de Obras",
+  "score": 0.9159,
+  "source": "youtube:RTP",
+  "sourcePublishedAt": "2007-04-23T00:00:00Z",
+  "title": "A Bela e o Meste de Obras",
+  "titleNormalized": "a bela e o meste de obras",
+  "type": "nostalgia",
+  "verifiedAt": "2026-07-22T00:59:35.194783Z",
+  "width": 450
+}

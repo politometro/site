@@ -3000,7 +3000,10 @@ def validate_cached_cover(item: Mapping[str, Any]) -> bool:
             return False
         if manifest.get("type") != str(item.get("type", "")).casefold():
             return False
-        if manifest.get("titleNormalized") != _normalise_text(item.get("title", "")):
+        cover_identity_title = item.get("title", "")
+        if item.get("type") == "nostalgia" and item.get("editorialTitle"):
+            cover_identity_title = verification.get("resolvedTitle") or cover_identity_title
+        if manifest.get("titleNormalized") != _normalise_text(cover_identity_title):
             return False
         entity_id = str(
             verification.get("entityId") or item.get("externalId") or ""
@@ -3120,7 +3123,12 @@ def _already_verified(item: Mapping[str, Any]) -> dict[str, Any] | None:
         editorial_description = str(
             verification.get("editorialDescription", "")
         ).strip()
-        if (
+        nostalgia_description = str(
+            item.get("editorialDescription", "")
+        ).strip()
+        if item.get("type") == "nostalgia" and nostalgia_description:
+            cached["description"] = nostalgia_description
+        elif (
             item.get("type") == "podcast"
             and _has_content_description(
                 editorial_description,
@@ -3325,6 +3333,11 @@ def resolve_recommendation(
     ):
         item_description = ""
     factual_description = source_description or item_description
+    nostalgia_description = _clean_description(
+        str(item.get("editorialDescription", ""))
+    )
+    if resolved_type == "nostalgia" and nostalgia_description:
+        factual_description = nostalgia_description
     if not factual_description:
         if item.get("sourceHint") == "ai-catalogue-candidate":
             raise RecommendationResolutionError(

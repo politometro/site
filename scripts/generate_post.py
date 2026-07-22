@@ -1097,17 +1097,24 @@ def generate_production_post():
     
     queue = data.get("queue", [])
     history = data.get("history", [])
+    candidate_queue = queue
 
     if args.recommendation_id:
         if post_type != "wednesday_nostalgia":
             print("ERROR: --recommendation-id is only valid for wednesday_nostalgia")
             sys.exit(1)
-        queue = [item for item in queue if item.get("id") == args.recommendation_id]
-        if len(queue) != 1 or queue[0].get("type") != "nostalgia":
+        candidate_queue = [
+            item for item in queue if item.get("id") == args.recommendation_id
+        ]
+        if len(candidate_queue) != 1 or candidate_queue[0].get("type") != "nostalgia":
             print("ERROR: The requested Nostalgia recommendation was not found")
             sys.exit(1)
-    
-    selected, covers = get_recommendations_with_valid_covers(queue, history=history, post_type=post_type)
+
+    selected, covers = get_recommendations_with_valid_covers(
+        candidate_queue,
+        history=history,
+        post_type=post_type,
+    )
     
     slot_keys = list(selected.keys())
     missing = [q for q in slot_keys if q not in selected]
