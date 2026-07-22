@@ -39,6 +39,9 @@ from recommendation_resolver import (
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 TEMPLATE_PATH = os.path.join(SCRIPT_DIR, "post_template.jpg")
+WEDNESDAY_TEMPLATE_PATH = os.path.join(
+    SCRIPT_DIR, "wednesday_nostalgia_template.jpg"
+)
 TEMPLATE_CANVAS_SIZE = (819, 1024)
 REC_FILE = os.path.join(ROOT_DIR, "website", "public", "recommendations.json")
 OUTPUT_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.jpg")
@@ -289,10 +292,7 @@ REQUIRED_SLOTS_FOR_POST_TYPE = {
         "q4": "highlight",
     },
     "wednesday_nostalgia": {
-        "q1": "book",
-        "q2": "podcast",
-        "q3": "movie",
-        "q4": "nostalgia",
+        "w1": "nostalgia",
     },
 }
 
@@ -300,6 +300,8 @@ REQUIRED_TYPES = REQUIRED_SLOTS_FOR_POST_TYPE["sunday_standard"]
 
 
 def _slot_types(qkey, post_type="sunday_standard"):
+    if post_type == "wednesday_nostalgia" and qkey == "w1":
+        return ("nostalgia",)
     if qkey == "q1":
         return ("book",)
     elif qkey == "q2":
@@ -408,8 +410,8 @@ def build_caption(selected, post_type="sunday_standard"):
     if post_type == "wednesday_nostalgia":
         title_line = "📣 RECOMENDAÇÕES DO POLITÓMETRO\n\n"
         intro_line = (
-            "Trazemos-te a nossa seleção de meio da semana com quatro conteúdos "
-            "essenciais e um grande clássico do nosso arquivo!\n\n"
+            "A meio da semana recuperamos um episódio de humor português "
+            "que merece ser visto ou revisto.\n\n"
         )
     else:
         title_line = "📣 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO\n\n"
@@ -424,8 +426,13 @@ def build_caption(selected, post_type="sunday_standard"):
         + "Desenvolvido por @_.davstrango._ e @luisflmaximo no âmbito do projeto "
         "@politiza.te.\n\n"
         + "\n\n".join(sections)
-        + "\n\nQual destes vais espreitar primeiro? Diz-nos nos comentários e "
-        "aproveita para deixar as tuas próprias sugestões para a próxima semana! 👇\n\n"
+        + (
+            "\n\nJá conhecias este episódio? Deixa nos comentários outra sugestão "
+            "para uma próxima Nostalgia! 👇\n\n"
+            if post_type == "wednesday_nostalgia"
+            else "\n\nQual destes vais espreitar primeiro? Diz-nos nos comentários e "
+            "aproveita para deixar as tuas próprias sugestões para a próxima semana! 👇\n\n"
+        )
         + "—\n"
         + _caption_hashtags(selected, post_type=post_type)
         + "\n"
@@ -792,11 +799,16 @@ def _parse_utc_datetime(value):
     return parsed.astimezone(datetime.timezone.utc)
 
 
-def _validate_publish_item(qkey, item, now=None):
-    expected_type = REQUIRED_TYPES[qkey]
+def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
+    required_slots = REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type)
+    if not required_slots or qkey not in required_slots:
+        raise RuntimeError(f"Slot {qkey} inválido para {post_type}")
+    expected_type = required_slots[qkey]
     now = now or datetime.datetime.now(datetime.timezone.utc)
     allowed_types = (
-        ROTATING_Q3_TYPES if qkey == "q3" else (expected_type,)
+        SUNDAY_Q3_TYPES
+        if post_type == "sunday_standard" and qkey == "q3"
+        else (expected_type,)
     )
     if not isinstance(item, dict) or item.get("type") not in allowed_types:
         raise RuntimeError(
@@ -914,9 +926,13 @@ def commit_approved_draft(
     if post_sha != draft.get("post_sha256") or caption_sha != draft.get("caption_sha256"):
         raise RuntimeError("A imagem ou legenda mudou depois da aprovação.")
 
-    quadrants = {key: draft.get(key) for key in REQUIRED_TYPES}
+    post_type = draft.get("post_type") or "sunday_standard"
+    required_slots = REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type)
+    if not required_slots:
+        raise RuntimeError(f"Tipo de publicação inválido: {post_type}")
+    quadrants = {key: draft.get(key) for key in required_slots}
     for qkey, item in quadrants.items():
-        _validate_publish_item(qkey, item, now=now)
+        _validate_publish_item(qkey, item, now=now, post_type=post_type)
     expected_hash = _draft_content_hash(
         quadrants,
         post_sha,
@@ -997,7 +1013,7 @@ def commit_approved_draft(
 
     published_at = now.isoformat()
     history_ids = {item.get("id") for item in history}
-    for qkey in REQUIRED_TYPES:
+    for qkey in quadrants:
         reviewed_item = copy.deepcopy(quadrants[qkey])
         reviewed_item["status"] = "published"
         reviewed_item["publishedAt"] = published_at
@@ -1087,7 +1103,12 @@ def generate_production_post():
     
     # Normalise full-resolution template assets to the coordinate canvas used
     # below. This keeps the supplied 4:5 artwork intact and the layout stable.
-    with Image.open(TEMPLATE_PATH) as template_source:
+    template_path = (
+        WEDNESDAY_TEMPLATE_PATH
+        if post_type == "wednesday_nostalgia"
+        else TEMPLATE_PATH
+    )
+    with Image.open(template_path) as template_source:
         template = ImageOps.fit(
             template_source.convert("RGBA"),
             TEMPLATE_CANVAS_SIZE,
@@ -1122,13 +1143,26 @@ def generate_production_post():
         item["category"] = category
         
         center_x = 410  # 819 // 2
+
+        # Keep all editorial text readable independently of where the supplied
+        # navy/cream wave crosses the canvas.
+        draw.rounded_rectangle(
+            (40, 270, 779, 430),
+            radius=22,
+            fill=(23, 52, 78),
+        )
         
         # 1. Draw Category Label centered at top (24px)
         solo_label_font = ImageFont.truetype(FONT_REG, 24)
         cat_text = category.upper()
         cat_bbox = solo_label_font.getbbox(cat_text)
         cat_w = cat_bbox[2] - cat_bbox[0]
-        draw.text((center_x - cat_w // 2, 145), cat_text, fill=TEXT_COLOR, font=solo_label_font)
+        draw.text(
+            (center_x - cat_w // 2, 285),
+            cat_text,
+            fill=(255, 249, 238),
+            font=solo_label_font,
+        )
         
         # 2. Draw Title centered across full width (700px) with larger font (40px -> 26px)
         raw_title = item.get("title", "")
@@ -1145,18 +1179,23 @@ def generate_production_post():
             700,
             3,
         )
-        curr_y = 180
+        curr_y = 320
         for line in lines:
             bbox = fitted_title_font.getbbox(line)
             line_w = bbox[2] - bbox[0]
-            draw.text((center_x - line_w // 2, curr_y), line, fill=TEXT_COLOR, font=fitted_title_font)
+            draw.text(
+                (center_x - line_w // 2, curr_y),
+                line,
+                fill=(255, 249, 238),
+                font=fitted_title_font,
+            )
             curr_y += title_spacing
             
         # 3. Draw Centered Hero Cover Banner (660x360px)
         cover = remove_black_bars(covers[qkey])
-        cover_w, cover_h = 660, 360
+        cover_w, cover_h = 660, 300
         cover_x = (819 - cover_w) // 2
-        cover_y = curr_y + 15
+        cover_y = max(curr_y + 15, 450)
         
         cover_resized = ImageOps.fit(
             cover.convert("RGB"),

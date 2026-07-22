@@ -477,6 +477,41 @@ class PostQualityGateTests(unittest.TestCase):
 
 
 class PodcastEditorialDescriptionTests(unittest.TestCase):
+    def test_wednesday_edition_selects_exactly_one_nostalgia_episode(self):
+        queue = [
+            verified_item("nostalgia", "classic"),
+            verified_item("book", "book"),
+            verified_item("podcast", "podcast"),
+            verified_item("movie", "movie"),
+            verified_item("highlight", "highlight"),
+        ]
+
+        with (
+            mock.patch.object(
+                generate_post,
+                "resolve_recommendation",
+                side_effect=lambda item, force=False: item,
+            ),
+            mock.patch.object(
+                generate_post,
+                "load_cover_for_item",
+                return_value=Image.new("RGB", (300, 300), "navy"),
+            ),
+            mock.patch.object(
+                generate_post,
+                "_revalidate_reviewed_source",
+                return_value=None,
+            ),
+        ):
+            selected, _ = generate_post.get_recommendations_with_valid_covers(
+                queue,
+                history=[],
+                post_type="wednesday_nostalgia",
+            )
+
+        self.assertEqual(list(selected), ["w1"])
+        self.assertEqual(selected["w1"]["type"], "nostalgia")
+
     title = (
         "Exames nacionais: de “tropeção em tropeção”, "
         "o que há ainda para correr mal?"

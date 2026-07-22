@@ -6,6 +6,8 @@ on:
     # or dropped GitHub schedule events. The state guard and shared concurrency
     # lock ensure that only the first valid attempt generates a proposal.
     - cron: '7,17,27,37,47 19 * * 6'
+    # Tuesday evening: prepare the single Nostalgia recommendation for Wednesday.
+    - cron: '7,17,27,37,47 19 * * 2'
   workflow_dispatch: # Allows manual trigger at any time from GitHub UI or Discord Bot
     inputs:
       channel_id:
@@ -22,6 +24,15 @@ on:
         required: false
         type: boolean
         default: false
+      post_type:
+        description: 'Post edition to generate'
+        required: false
+        type: choice
+        options:
+          - auto
+          - sunday_standard
+          - wednesday_nostalgia
+        default: auto
 
 permissions:
   contents: write
@@ -105,10 +116,18 @@ jobs:
       - name: Generate Post Image & Caption
         if: ${{ steps.recovery_guard.outputs.run_generation == 'true' }}
         run: |
+          POST_TYPE="${{ inputs.post_type || 'auto' }}"
+          if [ "$POST_TYPE" = "auto" ]; then
+            if [ "${{ github.event.schedule }}" = "7,17,27,37,47 19 * * 2" ]; then
+              POST_TYPE="wednesday_nostalgia"
+            else
+              POST_TYPE="sunday_standard"
+            fi
+          fi
           if [ "${{ inputs.test_mode }}" = "true" ]; then
-            python scripts/generate_post.py --review --test
+            python scripts/generate_post.py --review --test --post-type "$POST_TYPE"
           else
-            python scripts/generate_post.py --review
+            python scripts/generate_post.py --review --post-type "$POST_TYPE"
           fi
         env:
           GOOGLE_CSE_API_KEY: ${{ secrets.GOOGLE_CSE_API_KEY }}
