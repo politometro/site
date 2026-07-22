@@ -863,9 +863,9 @@
     },
     {
       "type": "nostalgia",
-      "title": "Contra Informação",
+      "title": "Contra Informação — episódio de 5 de abril de 2009",
       "authorOrMeta": "arquivos.rtp.pt",
-      "description": "Programa de sátira política, social, cultural e desportiva, protagonizada por bonecos manipulados que caricaturam figuras públicas da sociedade portuguesa e internacional.",
+      "description": "Episódio emitido a 5 de abril de 2009 do programa de sátira política, social, cultural e desportiva da RTP.",
       "link": "https://arquivos.rtp.pt/conteudos/contra-informacao-577/",
       "priority": 5,
       "id": "watch_nostalgia_b67ab1664b1e417d",
@@ -884,10 +884,12 @@
         "score": 1.0,
         "coverHash": "2a548a4b976f63b547b50044b0bbb3b93621d68c00a265ff2fb579bbeb272de8",
         "verifiedAt": "2026-07-21T11:27:00.832686Z",
-        "resolvedTitle": "Contra Informação",
+        "resolvedTitle": "Contra Informação — episódio de 5 de abril de 2009",
         "resolvedAuthor": "arquivos.rtp.pt",
-        "sourceDescription": "Programa de sátira política, social, cultural e desportiva, protagonizada por bonecos manipulados que caricaturam figuras públicas da sociedade portuguesa e internacional."
-      }
+        "sourceDescription": "Episódio emitido a 5 de abril de 2009 do programa de sátira política, social, cultural e desportiva da RTP.",
+        "sourcePublishedAt": "2009-04-05T00:00:00Z"
+      },
+      "sourcePublishedAt": "2009-04-05T00:00:00Z"
     },
     {
       "id": "rss_highlight_c85e22a4d357a08e",
