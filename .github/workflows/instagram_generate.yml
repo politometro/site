@@ -6,8 +6,6 @@ on:
     # or dropped GitHub schedule events. The state guard and shared concurrency
     # lock ensure that only the first valid attempt generates a proposal.
     - cron: '7,17,27,37,47 19 * * 6'
-    # Tuesday evening: prepare the single Nostalgia recommendation for Wednesday.
-    - cron: '7,17,27,37,47 19 * * 2'
   workflow_dispatch: # Allows manual trigger at any time from GitHub UI or Discord Bot
     inputs:
       channel_id:

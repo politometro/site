@@ -198,6 +198,9 @@ class PublicationScheduleTests(unittest.TestCase):
         )
         workflow = workflow_path.read_text(encoding="utf-8")
 
+        self.assertNotIn("cron: '0 9 * * 3'", workflow)
+        self.assertNotIn("cron: '7 9 * * 3'", workflow)
+        self.assertNotIn("cron: '17 9 * * 3'", workflow)
         self.assertIn("cron: '0 10 * * 0'", workflow)
         self.assertIn("cron: '7 10 * * 0'", workflow)
         self.assertIn("cron: '17 10 * * 0'", workflow)
@@ -208,6 +211,10 @@ class PublicationScheduleTests(unittest.TestCase):
         self.assertIn("types: [weekly-publish]", workflow)
         self.assertIn(
             "github.event.schedule == '17 10 * * 0'",
+            workflow,
+        )
+        self.assertNotIn(
+            "github.event.schedule == '17 9 * * 3'",
             workflow,
         )
         self.assertLess(

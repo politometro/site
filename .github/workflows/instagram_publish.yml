@@ -4,12 +4,6 @@ on:
   # The first run targets 10:00. Two bounded recovery runs protect against a
   # delayed/dropped schedule without allowing publication later in the day.
   schedule:
-    - cron: '0 9 * * 3'
-      timezone: 'Europe/Lisbon'
-    - cron: '7 9 * * 3'
-      timezone: 'Europe/Lisbon'
-    - cron: '17 9 * * 3'
-      timezone: 'Europe/Lisbon'
     - cron: '0 10 * * 0'
       timezone: 'Europe/Lisbon'
     - cron: '7 10 * * 0'
@@ -193,7 +187,6 @@ jobs:
         && needs.publish.result == 'failure'
         && (
           github.event_name == 'workflow_dispatch'
-          || github.event.schedule == '17 9 * * 3'
           || github.event.schedule == '17 10 * * 0'
         )
       }}
