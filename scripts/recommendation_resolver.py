@@ -3109,7 +3109,12 @@ def _already_verified(item: Mapping[str, Any]) -> dict[str, Any] | None:
         ):
             return None
         cached = dict(item)
-        cached["title"] = canonical_title
+        editorial_title = str(item.get("editorialTitle", "")).strip()
+        cached["title"] = (
+            editorial_title
+            if item.get("type") == "nostalgia" and editorial_title
+            else canonical_title
+        )
         if canonical_author:
             cached["authorOrMeta"] = canonical_author
         editorial_description = str(
@@ -3189,6 +3194,7 @@ def resolve_recommendation(
             "BAD_ITEM", "A recomendação deve ser um objeto."
         )
     title = str(item.get("title", "")).strip()
+    editorial_title = str(item.get("editorialTitle", "")).strip()
     media_type = str(item.get("type", "")).casefold().strip()
     if not title or len(title) < 2:
         raise RecommendationResolutionError(
@@ -3226,6 +3232,11 @@ def resolve_recommendation(
             "A fonte verificada não forneceu um título canónico.",
             item=item,
         )
+    display_title = (
+        editorial_title
+        if resolved_type == "nostalgia" and editorial_title
+        else canonical_title
+    )
     canonical_author = re.sub(
         r"\s+", " ", str(entity.resolved_author or "").strip()
     )
@@ -3335,7 +3346,7 @@ def resolve_recommendation(
     provisional.update(
         {
             "type": resolved_type,
-            "title": canonical_title,
+            "title": display_title,
             "authorOrMeta": canonical_author,
             "description": factual_description,
             "link": _canonicalize_url(entity.link),
@@ -3443,7 +3454,7 @@ def resolve_recommendation(
     result.update(
         {
             "type": resolved_type,
-            "title": canonical_title,
+            "title": display_title,
             "authorOrMeta": canonical_author,
             "description": factual_description,
             "link": _canonicalize_url(entity.link),
