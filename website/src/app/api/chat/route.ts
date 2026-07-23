@@ -104,6 +104,13 @@ function completionIsUsable(text: string) {
   return true;
 }
 
+function stripModelReasoning(text: string) {
+  return text
+    .replace(/<think>[\s\S]*?<\/think>/gi, "")
+    .replace(/<think>[\s\S]*$/gi, "")
+    .trim();
+}
+
 function completionAsSse(text: string) {
   const event = JSON.stringify({
     choices: [{ delta: { content: text } }],
@@ -539,9 +546,11 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
         if (groqRes.ok) {
           if (validateBeforeSending) {
             const completionPayload = await groqRes.json();
-            const completion = String(
-              completionPayload.choices?.[0]?.message?.content || ""
-            ).trim();
+            const completion = stripModelReasoning(
+              String(
+                completionPayload.choices?.[0]?.message?.content || ""
+              )
+            );
             if (!completionIsUsable(completion)) {
               console.warn(
                 `[API CHAT] Model ${model} returned an unusable ` +
