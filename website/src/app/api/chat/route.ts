@@ -66,6 +66,7 @@ function retrievalPlanFor(query: string) {
 
   return {
     mode,
+    requiresMultipleYears: asksForEvolution || years.size >= 2,
     maxSources,
     candidateCount: Math.min(30, maxSources * 2),
     maxContextCharacters: context.total,
@@ -90,9 +91,12 @@ function sourceExcerpt(text: string, maxCharacters: number) {
   return prefix.slice(0, wordEnd > 0 ? wordEnd : prefix.length).trim();
 }
 
-function completionIsUsable(text: string) {
+function completionIsUsable(
+  text: string,
+  requiresMultipleYears = false
+) {
   const normalized = text.trim();
-  if (normalized.length < 80) {
+  if (normalized.length < 220) {
     return false;
   }
   if (
@@ -102,6 +106,14 @@ function completionIsUsable(text: string) {
     /^(?:\s*\d+\.){8,}/.test(normalized)
   ) {
     return false;
+  }
+  if (requiresMultipleYears) {
+    const mentionedYears = new Set(
+      normalized.match(/\b(?:19|20)\d{2}\b/g) || []
+    );
+    if (mentionedYears.size < 2) {
+      return false;
+    }
   }
   return true;
 }
@@ -507,9 +519,9 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
     const fallbackChain = Array.from(new Set([
       requestedModel,
       "llama-3.3-70b-versatile",
-      "meta-llama/llama-4-scout-17b-16e-instruct",
-      "qwen/qwen3-32b",
       "qwen/qwen3.6-27b",
+      "openai/gpt-oss-120b",
+      "openai/gpt-oss-20b",
       "llama-3.1-8b-instant"
     ]));
 
@@ -561,7 +573,12 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
                 completionPayload.choices?.[0]?.message?.content || ""
               )
             );
-            if (!completionIsUsable(completion)) {
+            if (
+              !completionIsUsable(
+                completion,
+                retrievalPlan.requiresMultipleYears
+              )
+            ) {
               console.warn(
                 `[API CHAT] Model ${model} returned an unusable ` +
                 "comparative completion; trying the next model."
