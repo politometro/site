@@ -369,8 +369,8 @@ export async function POST(req: NextRequest) {
             const contextBlock =
               retrievalPlan.mode === "comparative"
                 ? (
-                    `\n[Documento ${retrievedSources.length + 1}: ` +
-                    `${meta.party}, ${meta.category} ${meta.year}]\n` +
+                    `\n[Programa de ${meta.party} para ` +
+                    `${meta.category} de ${meta.year}]\n` +
                     `${excerpt}\n`
                   )
                 : (
