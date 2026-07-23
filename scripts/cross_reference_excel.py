@@ -125,7 +125,7 @@ for row in excel_data:
             on_disk = (party, category, year) in disk_docs
             if not on_disk:
                 COALITION_MEMBERS = {
-                    "AD": {"PSD", "CDS", "PPM"},
+                    "AD": {"PSD", "CDS"},
                     "A21": {"MPT/ALTERNATIVA 21", "MPT"},
                     "ALTERNATIVA 21": {"MPT/ALTERNATIVA 21", "MPT"},
                     "BASTA": {"PPM", "CHEGA", "PPV"},

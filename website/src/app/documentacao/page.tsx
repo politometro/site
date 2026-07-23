@@ -257,6 +257,10 @@ const PARTIES_METADATA_NORM = Object.keys(PARTIES_METADATA).reduce((acc, key) =>
   return acc;
 }, {} as { [key: string]: PartyMetadata });
 
+if (PARTIES_METADATA.PPM?.coalitions) {
+  delete PARTIES_METADATA.PPM.coalitions["Legislativas - 2025"];
+}
+
 export default function DocumentationPage() {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
