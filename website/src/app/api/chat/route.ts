@@ -55,7 +55,7 @@ function retrievalPlanFor(query: string) {
     string,
     { total: number; perSource: number }
   > = {
-    comparative: { total: 7500, perSource: 500 },
+    comparative: { total: 4500, perSource: 220 },
     "single-year": { total: 7500, perSource: 1500 },
     broad: { total: 12000, perSource: 1000 },
     overview: { total: 10000, perSource: 1000 },
@@ -319,7 +319,14 @@ export async function POST(req: NextRequest) {
 
           for (const match of matches) {
             const meta = match.metadata || {};
-            const sourceText = String(meta.text || "").trim();
+            const sourceText = String(meta.text || "")
+              .replace(
+                /^(?:\s*\d+(?:\.\d+)*[.)]?\s*)+/,
+                ""
+              )
+              .replace(/(?:\b\d+\.){3,}/g, " ")
+              .replace(/\s+/g, " ")
+              .trim();
             if (!sourceText) {
               continue;
             }
@@ -360,9 +367,17 @@ export async function POST(req: NextRequest) {
               retrievalPlan.maxCharactersPerSource
             );
             const contextBlock =
-              `\n--- Programa Eleitoral: ${meta.party}, ` +
-              `${meta.category} ${meta.year} (Página ${meta.page}) ---\n` +
-              `${excerpt}\n`;
+              retrievalPlan.mode === "comparative"
+                ? (
+                    `\n[Documento ${retrievedSources.length + 1}: ` +
+                    `${meta.party}, ${meta.category} ${meta.year}]\n` +
+                    `${excerpt}\n`
+                  )
+                : (
+                    `\n--- Programa Eleitoral: ${meta.party}, ` +
+                    `${meta.category} ${meta.year} ` +
+                    `(Página ${meta.page}) ---\n${excerpt}\n`
+                  );
             if (
               retrievedSources.length > 0 &&
               contextText.length + contextBlock.length >
