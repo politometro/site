@@ -561,6 +561,14 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
               : validateBeforeSending
                 ? 1400
                 : 900,
+            ...(model === "qwen/qwen3.6-27b"
+              ? { reasoning_effort: "none" }
+              : model.startsWith("openai/gpt-oss-")
+                ? {
+                    reasoning_effort: "low",
+                    reasoning_format: "hidden",
+                  }
+                : {}),
             stream: !validateBeforeSending,
           }),
         });
