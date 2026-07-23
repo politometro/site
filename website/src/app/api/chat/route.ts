@@ -51,15 +51,25 @@ function retrievalPlanFor(query: string) {
     maxSources = 6;
   }
 
+  const contextSettings: Record<
+    string,
+    { total: number; perSource: number }
+  > = {
+    comparative: { total: 7500, perSource: 500 },
+    "single-year": { total: 7500, perSource: 1500 },
+    broad: { total: 12000, perSource: 1000 },
+    overview: { total: 10000, perSource: 1000 },
+    specific: { total: 9000, perSource: 1500 },
+    standard: { total: 10000, perSource: 1250 },
+  };
+  const context = contextSettings[mode];
+
   return {
     mode,
     maxSources,
     candidateCount: Math.min(30, maxSources * 2),
-    maxContextCharacters: Math.min(12000, maxSources * 1500),
-    maxCharactersPerSource: Math.max(
-      700,
-      Math.floor(Math.min(12000, maxSources * 1500) / maxSources)
-    ),
+    maxContextCharacters: context.total,
+    maxCharactersPerSource: context.perSource,
   };
 }
 
@@ -313,10 +323,25 @@ export async function POST(req: NextRequest) {
             if (!sourceText) {
               continue;
             }
+            const numericYear = Number(meta.year);
+            if (
+              retrievalPlan.mode === "comparative" &&
+              (!Number.isFinite(numericYear) || numericYear < 1975)
+            ) {
+              continue;
+            }
+            const openingText = sourceText.slice(0, 500);
+            const looksLikeIndex =
+              /\b[ií]ndice\b/i.test(openingText) &&
+              (openingText.match(/\d/g) || []).length >= 12;
+            const hasBrokenNumbering =
+              /(?:\b\d+\.){5,}/.test(openingText);
+            if (looksLikeIndex || hasBrokenNumbering) {
+              continue;
+            }
             const sourceKey = [
               meta.filename,
               meta.page,
-              sourceText.slice(0, 160),
             ].join("|");
             if (seenSources.has(sourceKey)) {
               continue;
@@ -526,6 +551,7 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
       "X-Retrieval-Source-Limit",
       String(retrievalPlan.maxSources)
     );
+    responseHeaders.set("X-Groq-Model", chosenModel);
 
     return new Response(groqRes.body, {
       headers: responseHeaders,
