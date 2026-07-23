@@ -62,7 +62,19 @@ function findPdf(pdfList: string[], party: string, category: string, year: numbe
       isMatch = true;
     } else if (partyLower.includes("cdu") && (nameLower.includes("cdu") || nameLower.includes("pcp") || nameLower.includes("pev"))) {
       isMatch = true;
+    } else if (
+      (partyLower.includes("pctp") || partyLower.includes("mrpp")) &&
+      (nameLower.includes("pctp") || nameLower.includes("mrpp"))
+    ) {
+      isMatch = true;
     } else if (partyLower.includes("adn") && (nameLower.includes("adn") || nameLower.includes("pdr"))) {
+      isMatch = true;
+    } else if (partyLower.includes("volt") && nameLower.includes("volt")) {
+      isMatch = true;
+    } else if (
+      (partyLower.includes("ergue-te") || partyLower.includes("pnr")) &&
+      (nameLower.includes("ergue-te") || nameLower.includes("pnr"))
+    ) {
       isMatch = true;
     } else if (partyLower.includes("mpt") && (nameLower.includes("mpt") || nameLower.includes("alternativa 21") || nameLower.includes("alternativa21"))) {
       isMatch = true;

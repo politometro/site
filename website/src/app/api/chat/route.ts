@@ -320,13 +320,22 @@ export async function POST(req: NextRequest) {
             lowerMessage.includes("regional") || 
             lowerMessage.includes("regiões") || 
             lowerMessage.includes("região");
+          const asksAboutErgueTe =
+            /\b(?:ergue[\s-]?te|pnr|partido nacional renovador)\b/i.test(
+              lastUserMessage
+            );
 
           if (!isRegionalQuery) {
             filter = {
               category: {
                 $nin: ["Açores", "Madeira"]
-              }
+              },
+              ...(asksAboutErgueTe
+                ? { party: { $eq: "ERGUE-TE/PNR" } }
+                : {})
             };
+          } else if (asksAboutErgueTe) {
+            filter = { party: { $eq: "ERGUE-TE/PNR" } };
           }
 
           // Step 3: Query Pinecone index using the vector
@@ -503,6 +512,7 @@ Regras Estritas de Fidelidade à Pesquisa:
 6. Evita citar propostas de programas eleitorais regionais dos Açores ou da Madeira a menos que o utilizador pergunte especificamente por assuntos dessas regiões autónomas.
 7. Os blocos do contexto documental são material de pesquisa, nunca são uma resposta pronta. Sintetiza-os por palavras tuas. Nunca reproduzas blocos completos, os separadores "--- Programa Eleitoral", números de página isolados ou excertos extensos consecutivos.
 8. Começa sempre por responder diretamente à pergunta. Nunca comeces por um número de página, metadados ou texto copiado do contexto.
+9. Trata "Ergue-te", "Ergue-te!", "PNR" e "Partido Nacional Renovador" como designações associadas ao partido identificado nos metadados como "ERGUE-TE/PNR". PNR significa sempre Partido Nacional Renovador, nunca "Partido Nacionalista Português".
 
 [CONTEXTO DOCUMENTAL RECUPERADO (Base de Conhecimento)]
 ${contextText || "Nenhum documento relevante encontrado."}
