@@ -55,8 +55,29 @@ function retrievalPlanFor(query: string) {
     mode,
     maxSources,
     candidateCount: Math.min(30, maxSources * 2),
-    maxContextCharacters: maxSources * 1500,
+    maxContextCharacters: Math.min(12000, maxSources * 1500),
+    maxCharactersPerSource: Math.max(
+      700,
+      Math.floor(Math.min(12000, maxSources * 1500) / maxSources)
+    ),
   };
+}
+
+function sourceExcerpt(text: string, maxCharacters: number) {
+  if (text.length <= maxCharacters) {
+    return text;
+  }
+  const prefix = text.slice(0, maxCharacters).trimEnd();
+  const sentenceEnd = Math.max(
+    prefix.lastIndexOf(". "),
+    prefix.lastIndexOf("? "),
+    prefix.lastIndexOf("! ")
+  );
+  if (sentenceEnd >= Math.floor(maxCharacters * 0.55)) {
+    return prefix.slice(0, sentenceEnd + 1).trim();
+  }
+  const wordEnd = prefix.lastIndexOf(" ");
+  return prefix.slice(0, wordEnd > 0 ? wordEnd : prefix.length).trim();
 }
 
 export async function POST(req: NextRequest) {
@@ -284,6 +305,7 @@ export async function POST(req: NextRequest) {
           const maxContextCharacters =
             retrievalPlan.maxContextCharacters;
           const seenSources = new Set<string>();
+          const sourcesPerYear = new Map<string, number>();
 
           for (const match of matches) {
             const meta = match.metadata || {};
@@ -299,11 +321,23 @@ export async function POST(req: NextRequest) {
             if (seenSources.has(sourceKey)) {
               continue;
             }
+            const sourceYear = String(meta.year || "sem-ano");
+            const yearCount = sourcesPerYear.get(sourceYear) || 0;
+            if (
+              retrievalPlan.mode === "comparative" &&
+              yearCount >= 5
+            ) {
+              continue;
+            }
 
+            const excerpt = sourceExcerpt(
+              sourceText,
+              retrievalPlan.maxCharactersPerSource
+            );
             const contextBlock =
               `\n--- Programa Eleitoral: ${meta.party}, ` +
               `${meta.category} ${meta.year} (Página ${meta.page}) ---\n` +
-              `${sourceText}\n`;
+              `${excerpt}\n`;
             if (
               retrievedSources.length > 0 &&
               contextText.length + contextBlock.length >
@@ -313,6 +347,7 @@ export async function POST(req: NextRequest) {
             }
 
             seenSources.add(sourceKey);
+            sourcesPerYear.set(sourceYear, yearCount + 1);
             retrievedSources.push({
               party: meta.party,
               year: meta.year,
