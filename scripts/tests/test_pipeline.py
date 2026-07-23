@@ -102,6 +102,34 @@ class ZeroStatePopulationTests(unittest.TestCase):
         )
         self.assertEqual(candidates[0]["_discovery"]["kind"], "rss")
 
+    def test_invalid_rotated_rss_highlight_can_be_recovered(self):
+        stale = verified_item("highlight", "rotated", status="invalid")
+        stale["resolutionStatus"] = "rejected"
+        stale["validationError"] = (
+            "HIGHLIGHT_NOT_FOUND [Destaque rotated]: "
+            "O artigo deixou de constar do RSS autorizado."
+        )
+        recovered = copy.deepcopy(stale)
+        recovered["status"] = "queue"
+        recovered["resolutionStatus"] = "verified"
+        recovered["expiryDate"] = (
+            datetime.datetime.now(datetime.timezone.utc)
+            + datetime.timedelta(days=7)
+        ).isoformat()
+
+        with mock.patch.object(
+            auto_populate_ai,
+            "resolve_recommendation",
+            return_value=recovered,
+        ):
+            changed = auto_populate_ai._recover_recheckable_invalid_queue(
+                [stale]
+            )
+
+        self.assertTrue(changed)
+        self.assertEqual(stale["status"], "queue")
+        self.assertEqual(stale["resolutionStatus"], "verified")
+
     def test_verified_catalogue_has_a_multiweek_margin_per_type(self):
         candidates = auto_populate_ai.VERIFIED_CATALOGUE_CANDIDATES
         for media_type in ("book", "movie"):

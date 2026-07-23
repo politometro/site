@@ -1779,6 +1779,36 @@ def _quarantine_unverified_queue(queue):
     return changed
 
 
+def _recover_recheckable_invalid_queue(queue):
+    """Retry invalid records whose old validation failure is now recoverable."""
+    changed = False
+    for item in queue:
+        if (
+            item.get("status") != "invalid"
+            or item.get("resolutionStatus") != "rejected"
+            or item.get("type") != "highlight"
+            or not str(item.get("link") or "").startswith(("http://", "https://"))
+            or not str(item.get("validationError") or "").startswith(
+                "HIGHLIGHT_NOT_FOUND"
+            )
+        ):
+            continue
+        try:
+            resolved = resolve_recommendation(dict(item), force=True)
+            resolved["status"] = "queue"
+            resolved["category"] = CATEGORIES["highlight"]
+            if not _is_publishable_record(resolved):
+                raise ValueError("contrato de verificaÃ§Ã£o incompleto")
+            item.clear()
+            item.update(resolved)
+            changed = True
+            print(f"  [RECOVERED/highlight] {item.get('title')}")
+        except (ResolutionError, requests.RequestException, OSError, ValueError) as exc:
+            item["validationError"] = str(exc)
+            print(f"  [STILL INVALID/highlight] {item.get('title')}: {exc}")
+    return changed
+
+
 def _prune_expired_queue(queue):
     original_length = len(queue)
     queue[:] = [
@@ -1800,6 +1830,7 @@ def auto_populate():
     changed = _prune_expired_queue(queue)
     changed |= _refresh_verified_queue(queue)
     changed |= _quarantine_unverified_queue(queue)
+    changed |= _recover_recheckable_invalid_queue(queue)
 
     publishable = [item for item in queue if _is_publishable_record(item)]
     counts = {
