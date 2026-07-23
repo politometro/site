@@ -7,6 +7,58 @@ const modelDailyExhaustionTimes: { [model: string]: number } = {};
 // Shared memory to track request counts for rate limiting (100 requests per user per day)
 const requestCounts: { [key: string]: { count: number; day: string } } = {};
 
+function retrievalPlanFor(query: string) {
+  const normalized = query
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+  const years = new Set(
+    normalized.match(/\b(?:19|20)\d{2}\b/g) || []
+  );
+  const asksForEvolution =
+    /\b(evolucao|ao longo dos anos|historico|mudou|mudanca|desde|entre anos|varios anos)\b/.test(
+      normalized
+    );
+  const asksForComparison =
+    /\b(compara|comparacao|diferenca|versus|vs)\b/.test(normalized);
+  const asksForBroadOverview =
+    /\b(o que sabes|o que sabe|fala-me|visao geral|panorama|em geral)\b/.test(
+      normalized
+    );
+  const asksForExhaustiveCoverage =
+    /\b(todas|todos|lista completa|exaustiv)\b/.test(normalized);
+  const asksSpecificQuestion =
+    /\b(qual|quais|como|quando|quanto|medida|proposta|posicao|defende|preve)\b/.test(
+      normalized
+    );
+
+  let mode = "standard";
+  let maxSources = 8;
+  if (asksForEvolution || asksForComparison || years.size >= 2) {
+    mode = "comparative";
+    maxSources = 15;
+  } else if (years.size === 1) {
+    mode = "single-year";
+    maxSources = 5;
+  } else if (asksForExhaustiveCoverage) {
+    mode = "broad";
+    maxSources = 12;
+  } else if (asksForBroadOverview) {
+    mode = "overview";
+    maxSources = 10;
+  } else if (asksSpecificQuestion) {
+    mode = "specific";
+    maxSources = 6;
+  }
+
+  return {
+    mode,
+    maxSources,
+    candidateCount: Math.min(30, maxSources * 2),
+    maxContextCharacters: maxSources * 1500,
+  };
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
@@ -62,6 +114,7 @@ export async function POST(req: NextRequest) {
     // Get the last user message
     const userMessages = messages.filter((m: any) => m.role === "user");
     const lastUserMessage = userMessages[userMessages.length - 1]?.content || "";
+    const retrievalPlan = retrievalPlanFor(lastUserMessage);
 
     let contextText = "";
     let retrievedSources: any[] = [];
@@ -213,7 +266,7 @@ export async function POST(req: NextRequest) {
             },
             body: JSON.stringify({
               vector: queryVector,
-              topK: 16,
+              topK: retrievalPlan.candidateCount,
               includeMetadata: true,
               ...(filter ? { filter } : {})
             }),
@@ -227,8 +280,9 @@ export async function POST(req: NextRequest) {
 
           const queryData = await queryRes.json();
           const matches = queryData.matches || [];
-          const maxSources = isTwitchClient ? 6 : 8;
-          const maxContextCharacters = isTwitchClient ? 7000 : 12000;
+          const maxSources = retrievalPlan.maxSources;
+          const maxContextCharacters =
+            retrievalPlan.maxContextCharacters;
           const seenSources = new Set<string>();
 
           for (const match of matches) {
@@ -432,6 +486,11 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
     // If there are sources, we can append them in a header or as a special message chunk
     // We will inject the sources metadata in the stream or in custom headers
     responseHeaders.set("X-Sources", encodeURIComponent(JSON.stringify(retrievedSources)));
+    responseHeaders.set("X-Retrieval-Mode", retrievalPlan.mode);
+    responseHeaders.set(
+      "X-Retrieval-Source-Limit",
+      String(retrievalPlan.maxSources)
+    );
 
     return new Response(groqRes.body, {
       headers: responseHeaders,
