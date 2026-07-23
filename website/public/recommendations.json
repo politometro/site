@@ -907,7 +907,7 @@
       "sourcePublishedAt": "2026-07-21T23:23:01Z",
       "expiryDate": "2026-08-20T23:23:01Z",
       "createdAt": "2026-07-22T00:41:29.047538Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -919,7 +919,7 @@
           "Política"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -931,7 +931,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-07-21T23:23:01Z",
         "sourceDescription": "Num governo sem soluções na saúda, na habitaçã, nos transportes, o enfraquecimento de dois ministros torna-se especialmente preocupante."
-      }
+      },
+      "validationError": "HIGHLIGHT_NOT_FOUND [Um Governo em decomposição]: O artigo deixou de constar do RSS autorizado."
     },
     {
       "id": "rss_highlight_d1f86428b5e52050",
@@ -947,7 +948,7 @@
       "sourcePublishedAt": "2026-07-21T23:13:28Z",
       "expiryDate": "2026-08-20T23:13:28Z",
       "createdAt": "2026-07-22T00:41:29.050826Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -962,7 +963,7 @@
           "Sociedade"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -974,7 +975,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-07-21T23:13:28Z",
         "sourceDescription": "O parecer recentemente emitido pela Ordem dos Médicos, bem como a sua representação nos meios de comunicação, deveriam preocupar todos os portugueses, independentemente da sua posição política"
-      }
+      },
+      "validationError": "HIGHLIGHT_NOT_FOUND [A ciência nas mãos da ideologia]: O artigo deixou de constar do RSS autorizado."
     },
     {
       "id": "rss_highlight_4327bc469ced91f0",
@@ -990,7 +992,7 @@
       "sourcePublishedAt": "2026-07-21T23:02:11Z",
       "expiryDate": "2026-08-20T23:02:11Z",
       "createdAt": "2026-07-22T00:41:29.053201Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1007,7 +1009,7 @@
           "Ciência"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -1019,7 +1021,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-07-21T23:02:11Z",
         "sourceDescription": "Neste Dia Mundial das Hepatites Virais, a Sociedade Portuguesa de Gastrenterologia apela a todos os cidadãos para que realizem o rastreio para a hepatite B e para a hepatite C."
-      }
+      },
+      "validationError": "HIGHLIGHT_NOT_FOUND [Hepatites Virais: no caminho tortuoso para a erradicação]: O artigo deixou de constar do RSS autorizado."
     },
     {
       "id": "rss_highlight_4b0ae41ea6c6487a",
@@ -1035,7 +1038,7 @@
       "sourcePublishedAt": "2026-07-21T22:29:57Z",
       "expiryDate": "2026-08-20T22:29:57Z",
       "createdAt": "2026-07-22T00:41:28.799963Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1046,7 +1049,7 @@
           "Rita Rato e Bernardo Blanco"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:www.rtp.pt",
@@ -1058,7 +1061,8 @@
         "resolvedAuthor": "www.rtp.pt",
         "sourcePublishedAt": "2026-07-21T22:29:57Z",
         "sourceDescription": "Fernando Alexandre e Luís Neves, o primeiro na pasta da Educação e o segundo na Administração Interna, estão envolvidos em polémicas que insistem em não se desvanecer."
-      }
+      },
+      "validationError": "HIGHLIGHT_NOT_FOUND [Ministros de Luís Montenegro enfrentam época quente]: O artigo deixou de constar do RSS autorizado."
     }
   ],
   "history": [
