@@ -97,6 +97,8 @@ function completionIsUsable(text: string) {
   }
   if (
     normalized.includes("--- Programa Eleitoral:") ||
+    /\[Programa de [^\]]+ para [^\]]+ de \d{4}\]/i.test(normalized) ||
+    /ÍndiceIdentidade|IndiceIdentidade/i.test(normalized) ||
     /^(?:\s*\d+\.){8,}/.test(normalized)
   ) {
     return false;
@@ -366,8 +368,12 @@ export async function POST(req: NextRequest) {
               continue;
             }
             const openingText = sourceText.slice(0, 500);
+            const normalizedOpeningText = openingText
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")
+              .toLowerCase();
             const looksLikeIndex =
-              /\b[ií]ndice\b/i.test(openingText) &&
+              normalizedOpeningText.includes("indice") &&
               (openingText.match(/\d/g) || []).length >= 12;
             const hasBrokenNumbering =
               /(?:\b\d+\.){5,}/.test(openingText);
@@ -538,7 +544,11 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
               ...messages,
             ],
             temperature: 0.15,
-            max_completion_tokens: isTwitchClient ? 300 : 900,
+            max_completion_tokens: isTwitchClient
+              ? 300
+              : validateBeforeSending
+                ? 1400
+                : 900,
             stream: !validateBeforeSending,
           }),
         });
