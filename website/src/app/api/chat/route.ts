@@ -93,41 +93,15 @@ export async function POST(req: NextRequest) {
           throw new Error("PINECONE_INDEX_HOST_MISSING");
         }
 
-        // Step 2: Embed the user query using Pinecone's inference service, with Hugging Face fallback
+        // Step 2: Generate a query vector with the same model used to build
+        // the index. Prefer Hugging Face so Pinecone's inference quota does
+        // not affect document search.
         let queryVector = null;
         let pineconeEmbedStatus = "not_attempted";
         let huggingFaceEmbedStatus = "not_configured";
         const hfToken = process.env.HF_TOKEN;
 
-        try {
-          const embedRes = await fetch("https://api.pinecone.io/embed", {
-            method: "POST",
-            headers: {
-              "Api-Key": pineconeApiKey,
-              "Content-Type": "application/json",
-              "X-Pinecone-API-Version": "2025-10",
-            },
-            body: JSON.stringify({
-              model: "multilingual-e5-large",
-              inputs: [{ text: lastUserMessage }],
-              parameters: { input_type: "query" },
-            }),
-          });
-
-          if (embedRes.ok) {
-            const embedData = await embedRes.json();
-            queryVector = embedData.data?.[0]?.values;
-            pineconeEmbedStatus = queryVector ? "ok" : "invalid_response";
-          } else {
-            pineconeEmbedStatus = `http_${embedRes.status}`;
-          }
-        } catch {
-          pineconeEmbedStatus = "request_failed";
-        }
-
-        // Fallback to Hugging Face Inference API if Pinecone failed and HF_TOKEN is configured
-        if (!queryVector && hfToken) {
-          console.log("Pinecone embedding quota reached or failed. Trying Hugging Face fallback...");
+        if (hfToken) {
           try {
             const hfRes = await fetch("https://router.huggingface.co/hf-inference/models/intfloat/multilingual-e5-large", {
               method: "POST",
@@ -148,7 +122,9 @@ export async function POST(req: NextRequest) {
                 huggingFaceEmbedStatus = queryVector
                   ? "ok"
                   : "invalid_response";
-                console.log("Successfully generated query embedding using Hugging Face fallback!");
+                console.log(
+                  "Successfully generated query embedding using Hugging Face."
+                );
               } else {
                 huggingFaceEmbedStatus = "invalid_response";
                 console.error("Hugging Face API returned non-array data:", hfData);
@@ -163,6 +139,38 @@ export async function POST(req: NextRequest) {
           } catch (err) {
             huggingFaceEmbedStatus = "request_failed";
             console.error("Hugging Face embedding fallback error:", err);
+          }
+        }
+
+        // Pinecone inference remains a fallback for environments without a
+        // working Hugging Face token.
+        if (!queryVector) {
+          try {
+            const embedRes = await fetch("https://api.pinecone.io/embed", {
+              method: "POST",
+              headers: {
+                "Api-Key": pineconeApiKey,
+                "Content-Type": "application/json",
+                "X-Pinecone-API-Version": "2025-10",
+              },
+              body: JSON.stringify({
+                model: "multilingual-e5-large",
+                inputs: [{ text: lastUserMessage }],
+                parameters: { input_type: "query" },
+              }),
+            });
+
+            if (embedRes.ok) {
+              const embedData = await embedRes.json();
+              queryVector = embedData.data?.[0]?.values;
+              pineconeEmbedStatus = queryVector
+                ? "ok"
+                : "invalid_response";
+            } else {
+              pineconeEmbedStatus = `http_${embedRes.status}`;
+            }
+          } catch {
+            pineconeEmbedStatus = "request_failed";
           }
         }
 
