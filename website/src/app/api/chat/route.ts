@@ -213,7 +213,7 @@ export async function POST(req: NextRequest) {
             },
             body: JSON.stringify({
               vector: queryVector,
-              topK: 30,
+              topK: 16,
               includeMetadata: true,
               ...(filter ? { filter } : {})
             }),
@@ -227,9 +227,38 @@ export async function POST(req: NextRequest) {
 
           const queryData = await queryRes.json();
           const matches = queryData.matches || [];
+          const maxSources = isTwitchClient ? 6 : 8;
+          const maxContextCharacters = isTwitchClient ? 7000 : 12000;
+          const seenSources = new Set<string>();
 
-          matches.forEach((match: any) => {
+          for (const match of matches) {
             const meta = match.metadata || {};
+            const sourceText = String(meta.text || "").trim();
+            if (!sourceText) {
+              continue;
+            }
+            const sourceKey = [
+              meta.filename,
+              meta.page,
+              sourceText.slice(0, 160),
+            ].join("|");
+            if (seenSources.has(sourceKey)) {
+              continue;
+            }
+
+            const contextBlock =
+              `\n--- Programa Eleitoral: ${meta.party}, ` +
+              `${meta.category} ${meta.year} (Página ${meta.page}) ---\n` +
+              `${sourceText}\n`;
+            if (
+              retrievedSources.length > 0 &&
+              contextText.length + contextBlock.length >
+                maxContextCharacters
+            ) {
+              continue;
+            }
+
+            seenSources.add(sourceKey);
             retrievedSources.push({
               party: meta.party,
               year: meta.year,
@@ -238,9 +267,12 @@ export async function POST(req: NextRequest) {
               page: meta.page,
               score: match.score,
             });
+            contextText += contextBlock;
 
-            contextText += `\n--- Programa Eleitoral: ${meta.party}, ${meta.category} ${meta.year} (Página ${meta.page}) ---\n${meta.text}\n`;
-          });
+            if (retrievedSources.length >= maxSources) {
+              break;
+            }
+          }
         }
       } catch (err: any) {
         const ragError = String(err?.message || "RAG_FAILED")
@@ -291,6 +323,8 @@ Regras Estritas de Fidelidade à Pesquisa:
 4. Se não encontrares informação sobre um tema ou período específico, diz simplesmente que não encontraste registos sobre esse tema nos programas eleitorais consultados, sem sugerir limitações temporais ou de sistema da base de dados.
 5. NUNCA uses expressões defensivas como "embora não tenha acesso", "não tenho acesso", "não posso aceder", "não me é possível consultar" ou semelhantes. Evita justificar respostas negativas com supostas limitações técnicas; responde de forma direta e afirmativa baseando-te apenas nos trechos disponíveis.
 6. Evita citar propostas de programas eleitorais regionais dos Açores ou da Madeira a menos que o utilizador pergunte especificamente por assuntos dessas regiões autónomas.
+7. Os blocos do contexto documental são material de pesquisa, nunca são uma resposta pronta. Sintetiza-os por palavras tuas. Nunca reproduzas blocos completos, os separadores "--- Programa Eleitoral", números de página isolados ou excertos extensos consecutivos.
+8. Começa sempre por responder diretamente à pergunta. Nunca comeces por um número de página, metadados ou texto copiado do contexto.
 
 [CONTEXTO DOCUMENTAL RECUPERADO (Base de Conhecimento)]
 ${contextText || "Nenhum documento relevante encontrado."}
@@ -344,6 +378,7 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
               ...messages,
             ],
             temperature: 0.15,
+            max_completion_tokens: isTwitchClient ? 300 : 900,
             stream: true,
           }),
         });
