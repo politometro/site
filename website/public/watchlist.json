@@ -59,7 +59,8 @@
       "name": "Conteúdo do Batáguas",
       "author": "Diogo Batáguas",
       "description": "Formato de humor e sátira política de Diogo Batáguas focado na atualidade e temas marcantes.",
-      "link": "https://www.youtube.com/channel/UCQ2IleutNd89c9F-LjrwwwQ"
+      "link": "https://www.youtube.com/channel/UCQ2IleutNd89c9F-LjrwwwQ",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ"
     }
   ],
   "watchSources": {
@@ -138,14 +139,6 @@
       "authorOrMeta": "RTP",
       "description": "Hilariante relato do noticiário fictício Telerural sobre a pesada derrota do Desportivo de Curral de Moinas por 26-1 frente ao Cuspe Futebol Clube.",
       "link": "https://www.youtube.com/watch?v=Q_Lk_bEISX0",
-      "priority": 5
-    },
-    {
-      "type": "podcast",
-      "title": "Conteúdo do Batáguas EP02 — Climáximo + Debate dos Pequeninos + Partido Nojento",
-      "authorOrMeta": "Diogo Bataguas",
-      "description": "Episódio do formato de humor de Diogo Batáguas que cruza atualidade, sátira e segmentos de estúdio.",
-      "link": "https://www.youtube.com/watch?v=7A0mUSB-sgw",
       "priority": 5
     },
     {

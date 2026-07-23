@@ -59,6 +59,49 @@ def verified_item(media_type, suffix, status="queue"):
 
 
 class ZeroStatePopulationTests(unittest.TestCase):
+    def test_podcast_discovery_uses_supplied_atom_feed_links(self):
+        published = (
+            datetime.datetime.now(datetime.timezone.utc)
+            - datetime.timedelta(days=1)
+        ).isoformat()
+        feed = f"""<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <entry>
+    <id>yt:video:recent123</id>
+    <title>Conteudo do Bataguas EP99</title>
+    <link rel="alternate" href="https://www.youtube.com/watch?v=recent123" />
+    <published>{published}</published>
+    <summary>Satira politica recente.</summary>
+    <media:thumbnail url="https://i.ytimg.com/vi/recent123/hqdefault.jpg" />
+  </entry>
+</feed>""".encode("utf-8")
+        response = mock.Mock()
+        response.content = feed
+        response.raise_for_status.return_value = None
+        watchlist = {
+            "podcasts": [
+                {
+                    "name": "Conteudo do Bataguas",
+                    "author": "Diogo Bataguas",
+                    "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+                }
+            ]
+        }
+
+        with mock.patch.object(
+            auto_populate_ai.requests, "get", return_value=response
+        ):
+            candidates = auto_populate_ai.discover_podcast_candidates(
+                watchlist, set(), set(), 1
+            )
+
+        self.assertEqual(len(candidates), 1)
+        self.assertEqual(
+            candidates[0]["link"],
+            "https://www.youtube.com/watch?v=recent123",
+        )
+        self.assertEqual(candidates[0]["_discovery"]["kind"], "rss")
+
     def test_verified_catalogue_has_a_multiweek_margin_per_type(self):
         candidates = auto_populate_ai.VERIFIED_CATALOGUE_CANDIDATES
         for media_type in ("book", "movie"):
@@ -337,6 +380,8 @@ class RecoveryWindowTests(unittest.TestCase):
         )
         self.assertIn("*/15 * * * *", keep_alive_workflow)
         self.assertIn("group: politometro-space-keepalive", keep_alive_workflow)
+        self.assertIn("HF_TOKEN: ${{ secrets.HF_TOKEN }}", keep_alive_workflow)
+        self.assertIn("Hugging Face backend HTTP:", keep_alive_workflow)
 
     def test_recovery_is_bounded_and_test_draft_never_blocks_production(self):
         with tempfile.TemporaryDirectory() as tmp:

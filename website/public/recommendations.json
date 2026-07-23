@@ -564,37 +564,6 @@
       "sourcePublishedAt": "2009-12-09T11:50:17Z"
     },
     {
-      "type": "podcast",
-      "title": "Conteúdo do Batáguas EP02 - Climáximo + Debate dos Pequeninos + Partido Nojento",
-      "authorOrMeta": "Diogo Bataguas",
-      "description": "Episódio do formato de humor de Diogo Batáguas que cruza atualidade, sátira e segmentos de estúdio.",
-      "link": "https://www.youtube.com/watch?v=7A0mUSB-sgw",
-      "priority": 5,
-      "id": "watch_podcast_178c12aa28474850",
-      "category": "Podcast",
-      "imageUrl": "/covers/nostalgia_conte_do_do_bat_guas_ep02___clim_ximo___debate_dos_496422d0_ec7ed448d786.jpg",
-      "expiryDate": null,
-      "createdAt": "2026-07-20T18:30:17.256980Z",
-      "status": "invalid",
-      "sourceHint": "curated-episode-watchlist",
-      "externalId": "youtube:7A0mUSB-sgw",
-      "resolutionStatus": "rejected",
-      "verification": {
-        "status": "verified",
-        "source": "youtube:Diogo Bataguas",
-        "entityId": "youtube:7A0mUSB-sgw",
-        "score": 1.0,
-        "coverHash": "e96d913bbf2e711d01b97d5946bd145b42724e50753a1a85f9a2e28f36bd418e",
-        "verifiedAt": "2026-07-20T18:30:19.946962Z",
-        "resolvedTitle": "Conteúdo do Batáguas EP02 - Climáximo + Debate dos Pequeninos + Partido Nojento",
-        "resolvedAuthor": "Diogo Bataguas",
-        "sourcePublishedAt": "2024-03-04T21:00:01Z",
-        "sourceDescription": "Episódio do formato de humor de Diogo Batáguas que cruza atualidade, sátira e segmentos de estúdio."
-      },
-      "sourcePublishedAt": "2024-03-04T21:00:01Z",
-      "validationError": "PODCAST_DOMAIN_NOT_ALLOWED [Conteúdo do Batáguas EP02 - Climáximo + Debate dos Pequeninos + Partido Nojento]: Plataforma/editor de podcast não autorizado: www.youtube.com."
-    },
-    {
       "type": "investigation",
       "title": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construção",
       "authorOrMeta": "NOW Canal",

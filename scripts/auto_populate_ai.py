@@ -807,6 +807,20 @@ def _rss_text(element, local_name):
     return ""
 
 
+def _rss_link(element):
+    text_link = _rss_text(element, "link")
+    if text_link:
+        return text_link
+    for child in element.iter():
+        if child.tag.rsplit("}", 1)[-1].lower() != "link":
+            continue
+        href = (child.attrib.get("href") or "").strip()
+        rel = (child.attrib.get("rel") or "alternate").strip().lower()
+        if href and rel in {"alternate", ""}:
+            return href
+    return ""
+
+
 def _rss_image(item, channel, fallback):
     image_names = {"image", "thumbnail", "content"}
     for parent in (item, channel):
@@ -983,7 +997,7 @@ def discover_podcast_candidates(watchlist, seen_titles, seen_ids, limit):
                 if expiry_at <= now:
                     break
                 title = _rss_text(episode, "title")
-                link = _rss_text(episode, "link")
+                link = _rss_link(episode)
                 guid = _rss_text(episode, "guid") or link
                 if not link and guid.startswith("http"):
                     link = guid
@@ -1255,7 +1269,7 @@ def discover_rss_highlight_candidates(seen_links, limit):
         )
         for entry in entries[:30]:
             title = _clean_source_text(_rss_text(entry, "title"), 180)
-            link = _rss_text(entry, "link")
+            link = _rss_link(entry)
             published_at = _rss_date(entry)
             if (
                 not title

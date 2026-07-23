@@ -497,6 +497,42 @@ class RecommendationResolverTests(unittest.TestCase):
         self.assertEqual(result["type"], "podcast")
         self.assertIsNotNone(result["expiryDate"])
 
+    def test_rss_highlight_falls_back_to_direct_page_when_feed_rotates(self):
+        item = {
+            "type": "highlight",
+            "title": "Analise politica",
+            "authorOrMeta": "RTP",
+            "description": "Artigo de analise politica.",
+            "link": "https://www.rtp.pt/noticias/politica/analise-politica_n1",
+        }
+        discovery = {
+            "kind": "rss-highlight",
+            "feedUrl": "https://www.rtp.pt/noticias/rss",
+            "guid": "old-guid",
+        }
+        expected = self.entity(
+            media_type="highlight",
+            title="Analise politica",
+            author="RTP",
+            description="Artigo de analise politica.",
+            published_at=iso_days_ago(2),
+        )
+
+        with (
+            patch.object(resolver, "_fetch_feed", return_value=[]),
+            patch.object(
+                resolver,
+                "_validate_highlight_page",
+                return_value=expected,
+            ) as validate_page,
+        ):
+            result = resolver._resolve_highlight_rss_discovery(
+                item, discovery
+            )
+
+        validate_page.assert_called_once_with(item, item["link"])
+        self.assertEqual(result, expected)
+
     def test_series_recency_restriction_prevents_recommendation_within_4_weeks(self):
         recent_pub = iso_days_ago(10)
         old_pub = iso_days_ago(40)

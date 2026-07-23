@@ -2754,6 +2754,9 @@ def _resolve_highlight_rss_discovery(
         if not best or score > best[0]:
             best = (score, entry)
     if not best:
+        supplied_link = str(item.get("link", "")).strip()
+        if supplied_link:
+            return _validate_highlight_page(item, supplied_link)
         raise RecommendationResolutionError(
             "HIGHLIGHT_NOT_FOUND",
             "O artigo deixou de constar do RSS autorizado.",
