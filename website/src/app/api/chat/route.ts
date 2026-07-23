@@ -90,6 +90,27 @@ function sourceExcerpt(text: string, maxCharacters: number) {
   return prefix.slice(0, wordEnd > 0 ? wordEnd : prefix.length).trim();
 }
 
+function completionIsUsable(text: string) {
+  const normalized = text.trim();
+  if (normalized.length < 80) {
+    return false;
+  }
+  if (
+    normalized.includes("--- Programa Eleitoral:") ||
+    /^(?:\s*\d+\.){8,}/.test(normalized)
+  ) {
+    return false;
+  }
+  return true;
+}
+
+function completionAsSse(text: string) {
+  const event = JSON.stringify({
+    choices: [{ delta: { content: text } }],
+  });
+  return `data: ${event}\n\ndata: [DONE]\n\n`;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
@@ -490,6 +511,9 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
     let groqRes: Response | null = null;
     let lastErrorText = "";
     let chosenModel = "";
+    let validatedCompletion = "";
+    const validateBeforeSending =
+      retrievalPlan.mode === "comparative";
 
     for (const model of modelsToTry) {
       console.log(`[API CHAT] Trying model: ${model}`);
@@ -508,13 +532,33 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
             ],
             temperature: 0.15,
             max_completion_tokens: isTwitchClient ? 300 : 900,
-            stream: true,
+            stream: !validateBeforeSending,
           }),
         });
 
         if (groqRes.ok) {
+          if (validateBeforeSending) {
+            const completionPayload = await groqRes.json();
+            const completion = String(
+              completionPayload.choices?.[0]?.message?.content || ""
+            ).trim();
+            if (!completionIsUsable(completion)) {
+              console.warn(
+                `[API CHAT] Model ${model} returned an unusable ` +
+                "comparative completion; trying the next model."
+              );
+              lastErrorText =
+                `Resposta comparativa inválida do modelo ${model}.`;
+              groqRes = null;
+              continue;
+            }
+            validatedCompletion = completion;
+          }
           chosenModel = model;
-          console.log(`[API CHAT] Successfully initiated stream using model: ${chosenModel}`);
+          console.log(
+            `[API CHAT] Successfully generated response using model: ` +
+            chosenModel
+          );
           break; // Success! Break the loop
         }
 
@@ -568,7 +612,11 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
     );
     responseHeaders.set("X-Groq-Model", chosenModel);
 
-    return new Response(groqRes.body, {
+    const responseBody = validatedCompletion
+      ? completionAsSse(validatedCompletion)
+      : groqRes.body;
+
+    return new Response(responseBody, {
       headers: responseHeaders,
     });
   } catch (err: any) {
