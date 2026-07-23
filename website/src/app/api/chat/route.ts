@@ -36,7 +36,7 @@ function retrievalPlanFor(query: string) {
   let maxSources = 8;
   if (asksForEvolution || asksForComparison || years.size >= 2) {
     mode = "comparative";
-    maxSources = 15;
+    maxSources = 30;
   } else if (years.size === 1) {
     mode = "single-year";
     maxSources = 5;
@@ -55,7 +55,7 @@ function retrievalPlanFor(query: string) {
     string,
     { total: number; perSource: number }
   > = {
-    comparative: { total: 4500, perSource: 220 },
+    comparative: { total: 9000, perSource: 220 },
     "single-year": { total: 7500, perSource: 1500 },
     broad: { total: 12000, perSource: 1000 },
     overview: { total: 10000, perSource: 1000 },
@@ -68,7 +68,7 @@ function retrievalPlanFor(query: string) {
     mode,
     requiresMultipleYears: asksForEvolution || years.size >= 2,
     maxSources,
-    candidateCount: Math.min(30, maxSources * 2),
+    candidateCount: Math.min(60, maxSources * 2),
     maxContextCharacters: context.total,
     maxCharactersPerSource: context.perSource,
   };
@@ -403,7 +403,10 @@ export async function POST(req: NextRequest) {
             const yearCount = sourcesPerYear.get(sourceYear) || 0;
             if (
               retrievalPlan.mode === "comparative" &&
-              yearCount >= 5
+              yearCount >= Math.max(
+                5,
+                Math.ceil(retrievalPlan.maxSources / 3)
+              )
             ) {
               continue;
             }
