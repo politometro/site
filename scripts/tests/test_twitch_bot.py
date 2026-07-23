@@ -284,6 +284,41 @@ class TwitchBotTests(unittest.TestCase):
         )
         self.assertNotIn("politometro.vercel.app", rendered)
 
+    def test_long_answer_is_split_into_at_most_two_messages(self):
+        answer = (
+            "1. Reforcar os cuidados de saude primarios em todo o pais. "
+            "2. Contratar mais profissionais para o SNS. "
+            "3. Melhorar o acesso a consultas e cirurgias programadas. "
+        ) * 4
+
+        rendered = twitch_bot.format_twitch_responses(answer, "Luis")
+
+        self.assertEqual(len(rendered), 2)
+        self.assertTrue(rendered[0].startswith("@Luis "))
+        self.assertFalse(rendered[1].startswith("@Luis "))
+        self.assertNotIn("…", "".join(rendered))
+        self.assertNotIn("...", "".join(rendered))
+        for message in rendered:
+            self.assertLessEqual(
+                len(message.encode("utf-8")),
+                twitch_bot.TWITCH_RESPONSE_LIMIT,
+            )
+
+    def test_numbered_list_keeps_first_item_and_mentions_only_once(self):
+        answer = (
+            "1. Primeira medida com uma explicacao objetiva. "
+            "2. Segunda medida com uma explicacao objetiva. "
+            "3. Terceira medida com uma explicacao objetiva."
+        )
+
+        rendered = twitch_bot.format_twitch_responses(answer, "Luis")
+
+        self.assertIn("1. Primeira medida", rendered[0])
+        self.assertEqual(
+            sum(message.count("@Luis") for message in rendered),
+            1,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

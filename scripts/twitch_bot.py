@@ -306,24 +306,59 @@ def _utf8_prefix(value, max_bytes):
     return encoded[:max_bytes].decode("utf-8", errors="ignore")
 
 
-def format_twitch_response(response, display_name):
-    """Build exactly one IRC-safe answer, including the user mention."""
+def _split_twitch_content(text, max_bytes):
+    """Split at a natural boundary without adding truncation markers."""
+    if len(text.encode("utf-8")) <= max_bytes:
+        return text.strip(), ""
+
+    prefix = _utf8_prefix(text, max_bytes).rstrip()
+    boundaries = [
+        match.end()
+        for match in re.finditer(
+            r"(?:[.!?](?=\s|$)|(?=\s+\d+[.)]\s))",
+            prefix,
+        )
+    ]
+    useful_boundaries = [
+        position
+        for position in boundaries
+        if position >= max(40, len(prefix) // 3)
+    ]
+    if useful_boundaries:
+        cut_at = useful_boundaries[-1]
+    elif " " in prefix:
+        cut_at = prefix.rfind(" ")
+    else:
+        cut_at = len(prefix)
+
+    head = text[:cut_at].strip(" ,;:-")
+    tail = text[cut_at:].strip()
+    return head, tail
+
+
+def format_twitch_responses(response, display_name):
+    """Build at most two IRC-safe messages and mention only in the first."""
     prefix = f"@{display_name} "
     text = re.sub(r"\s+", " ", str(response or "")).strip()
     text = re.sub(r"(?<!\w)[#*_`]+|[#*_`]+(?!\w)", "", text).strip()
-    available = max(
+    first_budget = max(
         1,
         TWITCH_RESPONSE_LIMIT - len(prefix.encode("utf-8")),
     )
-    if len(text.encode("utf-8")) <= available:
-        return prefix + text
+    first, remaining = _split_twitch_content(text, first_budget)
+    messages = [prefix + first]
+    if remaining:
+        second, _ = _split_twitch_content(
+            remaining, TWITCH_RESPONSE_LIMIT
+        )
+        if second:
+            messages.append(second)
+    return messages
 
-    suffix = "…"
-    content_budget = max(1, available - len(suffix.encode("utf-8")))
-    shortened = _utf8_prefix(text, content_budget).rstrip()
-    if " " in shortened:
-        shortened = shortened.rsplit(" ", 1)[0].rstrip(" ,;:-")
-    return prefix + shortened + suffix
+
+def format_twitch_response(response, display_name):
+    """Compatibility wrapper returning the first formatted message."""
+    return format_twitch_responses(response, display_name)[0]
 
 
 def _parse_privmsg(raw_line):
@@ -606,12 +641,9 @@ def _answer_question(sock, channel, display_name, user, question):
             question, source="twitch-bot", user_id=user
         )
         _wait_for_slowmode_retry(channel)
-        _send_message(
-            sock,
-            channel,
-            format_twitch_response(response, display_name),
-        )
-        _increment_status("responses_sent")
+        for message in format_twitch_responses(response, display_name):
+            _send_message(sock, channel, message)
+            _increment_status("responses_sent")
         _set_twitch_status(
             "connected",
             "A última pergunta recebida foi respondida.",

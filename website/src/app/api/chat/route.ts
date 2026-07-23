@@ -70,24 +70,33 @@ export async function POST(req: NextRequest) {
       try {
         // Step 1: Get index details (specifically the host url)
         const indexRes = await fetch(
-          `https://api.pinecone.io/indexes/${pineconeIndexName}`,
+          `https://api.pinecone.io/indexes/${encodeURIComponent(pineconeIndexName)}`,
           {
             headers: {
               "Api-Key": pineconeApiKey,
+              "X-Pinecone-Api-Version": "2025-10",
             },
           }
         );
 
         if (!indexRes.ok) {
-          throw new Error(`Falha ao obter índice Pinecone. Status: ${indexRes.status}`);
+          throw new Error(
+            `PINECONE_INDEX_LOOKUP_FAILED status=${indexRes.status}`
+          );
         }
 
         const indexData = await indexRes.json();
-        const indexHost = indexData.host; // e.g. "https://politometro-123.svc.us-east1-gcp.pinecone.io"
+        const indexHost = String(indexData.host || "")
+          .replace(/^https?:\/\//i, "")
+          .replace(/\/+$/, "");
+        if (!indexHost) {
+          throw new Error("PINECONE_INDEX_HOST_MISSING");
+        }
 
         // Step 2: Embed the user query using Pinecone's inference service, with Hugging Face fallback
         let queryVector = null;
-        let embedErrorMsg = "";
+        let pineconeEmbedStatus = "not_attempted";
+        let huggingFaceEmbedStatus = "not_configured";
         const hfToken = process.env.HF_TOKEN;
 
         try {
@@ -108,12 +117,12 @@ export async function POST(req: NextRequest) {
           if (embedRes.ok) {
             const embedData = await embedRes.json();
             queryVector = embedData.data?.[0]?.values;
+            pineconeEmbedStatus = queryVector ? "ok" : "invalid_response";
           } else {
-            const errBody = await embedRes.text();
-            embedErrorMsg = `Pinecone status ${embedRes.status}: ${errBody}`;
+            pineconeEmbedStatus = `http_${embedRes.status}`;
           }
-        } catch (err: any) {
-          embedErrorMsg = err.message || String(err);
+        } catch {
+          pineconeEmbedStatus = "request_failed";
         }
 
         // Fallback to Hugging Face Inference API if Pinecone failed and HF_TOKEN is configured
@@ -136,21 +145,33 @@ export async function POST(req: NextRequest) {
               if (Array.isArray(hfData)) {
                 // Feature extraction might return a 2D array or 1D array
                 queryVector = Array.isArray(hfData[0]) ? hfData[0] : hfData;
+                huggingFaceEmbedStatus = queryVector
+                  ? "ok"
+                  : "invalid_response";
                 console.log("Successfully generated query embedding using Hugging Face fallback!");
               } else {
+                huggingFaceEmbedStatus = "invalid_response";
                 console.error("Hugging Face API returned non-array data:", hfData);
               }
             } else {
-              const errText = await hfRes.text();
-              console.error("Hugging Face embedding fallback failed:", hfRes.status, errText);
+              huggingFaceEmbedStatus = `http_${hfRes.status}`;
+              console.error(
+                "Hugging Face embedding fallback failed:",
+                hfRes.status
+              );
             }
           } catch (err) {
+            huggingFaceEmbedStatus = "request_failed";
             console.error("Hugging Face embedding fallback error:", err);
           }
         }
 
         if (!queryVector) {
-          throw new Error(`Falha ao gerar embeddings no Pinecone e Hugging Face. Detalhes: ${embedErrorMsg}`);
+          throw new Error(
+            "EMBEDDING_FAILED " +
+            `pinecone=${pineconeEmbedStatus} ` +
+            `huggingface=${huggingFaceEmbedStatus}`
+          );
         }
 
         if (queryVector) {
@@ -180,6 +201,7 @@ export async function POST(req: NextRequest) {
             headers: {
               "Api-Key": pineconeApiKey,
               "Content-Type": "application/json",
+              "X-Pinecone-Api-Version": "2025-10",
             },
             body: JSON.stringify({
               vector: queryVector,
@@ -189,29 +211,48 @@ export async function POST(req: NextRequest) {
             }),
           });
 
-          if (queryRes.ok) {
-            const queryData = await queryRes.json();
-            const matches = queryData.matches || [];
-
-            matches.forEach((match: any, idx: number) => {
-              const meta = match.metadata || {};
-              retrievedSources.push({
-                party: meta.party,
-                year: meta.year,
-                category: meta.category,
-                filename: meta.filename,
-                page: meta.page,
-                score: match.score,
-              });
-
-              contextText += `\n--- Programa Eleitoral: ${meta.party}, ${meta.category} ${meta.year} (Página ${meta.page}) ---\n${meta.text}\n`;
-            });
+          if (!queryRes.ok) {
+            throw new Error(
+              `PINECONE_QUERY_FAILED status=${queryRes.status}`
+            );
           }
+
+          const queryData = await queryRes.json();
+          const matches = queryData.matches || [];
+
+          matches.forEach((match: any) => {
+            const meta = match.metadata || {};
+            retrievedSources.push({
+              party: meta.party,
+              year: meta.year,
+              category: meta.category,
+              filename: meta.filename,
+              page: meta.page,
+              score: match.score,
+            });
+
+            contextText += `\n--- Programa Eleitoral: ${meta.party}, ${meta.category} ${meta.year} (Página ${meta.page}) ---\n${meta.text}\n`;
+          });
         }
       } catch (err: any) {
-        console.error("Erro RAG Pinecone:", err);
-        // We will fallback to calling LLM without context, but notify the LLM about it in a system prompt
-        contextText = "[AVISO DE ERRO DE LIGAÇÃO: A base de dados documental de programas eleitorais está temporariamente inacessível. Por favor, inicia a resposta dizendo exatamente: 'Infelizmente, devido a um erro de ligação à base de dados de programas políticos, não me é possível consultar os documentos oficiais neste momento. Contudo, com base no conhecimento geral...' e depois responde com o teu conhecimento interno da melhor forma possível.]";
+        const ragError = String(err?.message || "RAG_FAILED")
+          .replace(/[^\w= -]/g, "")
+          .slice(0, 120);
+        console.error("Erro RAG Pinecone:", ragError);
+        return NextResponse.json(
+          {
+            error:
+              "A pesquisa documental está temporariamente indisponível. " +
+              "Tenta novamente dentro de instantes.",
+          },
+          {
+            status: 503,
+            headers: {
+              "X-Rag-Status": "unavailable",
+              "X-Rag-Error": ragError,
+            },
+          }
+        );
       }
     }
 
@@ -249,10 +290,11 @@ ${contextText || "Nenhum documento relevante encontrado."}
 Utiliza o contexto documental acima para fundamentar as tuas respostas. Se as passagens não contiverem a informação pedida, esclarece que não encontraste essa informação específica nos programas eleitorais consultados.
 
 ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
-- responde numa única mensagem, sem listas, títulos ou Markdown;
-- planeia a resposta antes de escrever e usa no máximo 250 caracteres;
-- termina sempre a ideia e a última frase; nunca deixes a resposta incompleta;
-- dá apenas a conclusão ou comparação mais importante;
+- escreve texto suficiente para, no máximo, duas mensagens curtas de chat e não ultrapasses 700 caracteres no total;
+- não uses títulos nem Markdown;
+- quando o utilizador pedir uma lista, começa obrigatoriamente no número 1 e usa numeração consecutiva;
+- termina sempre cada ideia e a última frase; nunca uses reticências nem deixes a resposta incompleta;
+- dá apenas as medidas, conclusão ou comparação mais importantes;
 - não incluas saudações, introduções, fontes ou frases de encerramento.` : ""}`;
 
     // Call Groq API with fallback chain
