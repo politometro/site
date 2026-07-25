@@ -312,49 +312,6 @@
       }
     },
     {
-      "id": "rss_podcast_5b5e3aab655d8526",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Regresso a 2021: “Era uma vez a incompetência de Eduardo Cabrita”",
-      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Análise sobre quando este episódio foi emitido, estávamos em plena época de pandemia.",
-      "imageUrl": "/covers/podcast_regresso_a_2021___era_uma_vez_a_incompet_ncia_de_edu_941a29df_5b5e3aab655d.jpg",
-      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/regresso-a-2021-era-uma-vez-a-incompet-ncia-de-eduardo-cabrita",
-      "externalId": "552a2a1a-76f2-4870-b0d7-b47200fccbe6",
-      "sourceSeriesId": "1585178009",
-      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
-      "priority": 4,
-      "sourcePublishedAt": "2026-07-19T12:16:21Z",
-      "expiryDate": "2026-07-29T12:16:21Z",
-      "createdAt": "2026-07-20T18:27:16.788904Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
-        "guid": "552a2a1a-76f2-4870-b0d7-b47200fccbe6",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/image.jpg?t=1668425400&size=Large",
-        "show": "Isto É Gozar Com Quem Trabalha"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "552a2a1a-76f2-4870-b0d7-b47200fccbe6",
-        "score": 1.0,
-        "coverHash": "7cf2e9fe63d6c0f324df402973a58d21a64ce08e1db59a7a7dfe77828a620730",
-        "verifiedAt": "2026-07-20T18:27:30.063641Z",
-        "resolvedTitle": "Regresso a 2021: “Era uma vez a incompetência de Eduardo Cabrita”",
-        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
-        "sourcePublishedAt": "2026-07-19T12:16:21Z",
-        "sourceDescription": "Quando este episódio foi emitido, estávamos em plena época de pandemia. A economia enfrentava um desafio nunca antes visto e o setor hoteleiro, do qual Portugal tanto dependia e ainda depende, fechava portas por não ter clientes. Contudo, o nosso Governo arranjou uma solução provisória.",
-        "editorialDescription": "Análise sobre quando este episódio foi emitido, estávamos em plena época de pandemia.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "23d0d851bf7af3cff0a6a53e84ff2fc2e671df0fb4468b64f58c8ce539b07627",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "type": "nostalgia",
       "title": "TELERURAL - Desportivo de Curral de Moinas perde por 26-1",
       "authorOrMeta": "RTP",
@@ -824,7 +781,7 @@
       "sourcePublishedAt": "2026-07-21T22:29:57Z",
       "expiryDate": "2026-08-20T22:29:57Z",
       "createdAt": "2026-07-22T00:41:28.799963Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -835,7 +792,7 @@
           "Rita Rato e Bernardo Blanco"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news:www.rtp.pt",
@@ -848,7 +805,93 @@
         "sourcePublishedAt": "2026-07-21T22:29:57Z",
         "sourceDescription": "Fernando Alexandre e Luís Neves, o primeiro na pasta da Educação e o segundo na Administração Interna, estão envolvidos em polémicas que insistem em não se desvanecer."
       },
-      "validationError": "HIGHLIGHT_NOT_FOUND [Ministros de Luís Montenegro enfrentam época quente]: O artigo deixou de constar do RSS autorizado."
+      "validationError": "SOURCE_MISMATCH [Ministros de Luís Montenegro enfrentam época quente]: Editor indicado não corresponde ao domínio www.rtp.pt."
+    },
+    {
+      "id": "rss_podcast_6d374811beb02589",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Os casos do “dono” da Polícia Judiciária que escaldam o Governo",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre o Governo despede-se de julho debaixo de fogo e logo por causa do ministro que tem de cuidar da época dos incêndios.",
+      "imageUrl": "/covers/podcast_os_casos_do__dono__da_pol_cia_judici_ria_que_escalda_b2a0168a_6d374811beb0.jpg",
+      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/os-casos-do-dono-da-pol-cia-judici-ria-que-escaldam-o-governo",
+      "externalId": "fac71b5f-396a-408a-8646-b491018385f0",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-25T06:00:00Z",
+      "expiryDate": "2026-08-04T06:00:00Z",
+      "createdAt": "2026-07-25T10:16:50.344118Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "fac71b5f-396a-408a-8646-b491018385f0",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "fac71b5f-396a-408a-8646-b491018385f0",
+        "score": 1.0,
+        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
+        "verifiedAt": "2026-07-25T10:16:53.430734Z",
+        "resolvedTitle": "Os casos do “dono” da Polícia Judiciária que escaldam o Governo",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-07-25T06:00:00Z",
+        "sourceDescription": "O Governo despede-se de julho debaixo de fogo e logo por causa do ministro que tem de cuidar da época dos incêndios. Luís Neves continua sem dar explicações e mostra-se mais fragilizado — e com ele o Governo também. Ventura aproveita e avança com uma Comissão de Inquérito aos mandatos de Neves na Judiciária.",
+        "editorialDescription": "Análise sobre o Governo despede-se de julho debaixo de fogo e logo por causa do ministro que tem de cuidar da época dos incêndios.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "0647b6c2dfd5c61cb6e5a0682ad1ca159e2f8a8c4168f03d5fdb97c18806d403",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_c1d71681f2bac939",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "MAI sem boas explicações e PM à espera dos incêndios?",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre os temas e questões de mai sem boas explicações e pm à espera dos incêndios.",
+      "imageUrl": "/covers/podcast_mai_sem_boas_explica__es_e_pm___espera_dos_inc_ndios_72746a3d_c1d71681f2ba.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/mai-sem-boas-explica-es-e-pm-espera-dos-inc-ndios",
+      "externalId": "a5a51abf-3f8a-4489-b071-b491013f9ba7",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-24T20:30:03Z",
+      "expiryDate": "2026-08-03T20:30:03Z",
+      "createdAt": "2026-07-25T10:16:50.978219Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "a5a51abf-3f8a-4489-b071-b491013f9ba7",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "a5a51abf-3f8a-4489-b071-b491013f9ba7",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-07-25T10:16:54.285583Z",
+        "resolvedTitle": "MAI sem boas explicações e PM à espera dos incêndios?",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-07-24T20:30:03Z",
+        "sourceDescription": "Numa semana em que continuam a surgir notícias de Luís Neves, os ases avaliam o caso e questionam a falta de resposta do ministro. Além disso, esperam uma decisão de Montenegro para o pós-Verão. See omnystudio.com/listener for privacy information.",
+        "editorialDescription": "Análise sobre os temas e questões de mai sem boas explicações e pm à espera dos incêndios.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "a293fcff24944064dbe6e9a3b7636087a51e4963a521bdd83b8240da23fee328",
+        "editorialDescriptionProvider": "extractive"
+      }
     }
   ],
   "history": [
