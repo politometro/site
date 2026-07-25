@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_35e2a77ad3e3b4aa5a04",
-  "content_hash": "35e2a77ad3e3b4aa5a04f2bef48b7d2df8c32f540cabca50d5c57fde5a4b501c",
+  "draft_id": "draft_69df17050b1dfc5cb7b9",
+  "content_hash": "69df17050b1dfc5cb7b9e3c1fb89066813c70a6870fd7230408d479970c14119",
   "post_type": "sunday_standard",
-  "created_at": "2026-07-25T22:45:32.524837+00:00",
+  "created_at": "2026-07-25T22:49:57.930806+00:00",
   "is_test": false,
-  "post_sha256": "22a06b9abae74b17715908154f9169cb46a6820e2075df1337ac7e56d4e60605",
-  "caption_sha256": "a22583aaf2acf96bb1ad1445cd41b842d081fc30f9edc4ebcb471b2bd2cec591",
+  "post_sha256": "8d3790ac567f386ef8e0a0ba80d92b7b9d5a0a3df495ee82d87f1d09351eef8b",
+  "caption_sha256": "4cb22560783aa4217d5e8c13e558d7e5750d828ea91ce14149e95ff5a2c05241",
   "approval": {
     "approved": false
   },
@@ -101,13 +101,13 @@
       "status": "verified",
       "source": "youtube:NOW Canal",
       "entityId": "youtube:LEpWEUWVxC4",
-      "score": 0.7553,
+      "score": 1.0,
       "coverHash": "83ca2e7d8fc7c36513f730e2c0bfa4d6ec60f522183cae95743f0a9916438dda",
       "verifiedAt": "2026-07-20T18:30:25.063601Z",
       "resolvedTitle": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construção",
       "resolvedAuthor": "NOW Canal",
       "sourcePublishedAt": "2026-07-11T12:49:25Z",
-      "sourceDescription": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construçãoHenrique Vassal é acusado de ter burlado dezenas de famílias...."
+      "sourceDescription": "Investigação jornalística do NOW Canal sobre denúncias de alegada burla a dezenas de famílias no setor da construção civil, reunindo testemunhos de lesados e dados sobre o caso."
     },
     "sourcePublishedAt": "2026-07-11T12:49:25Z"
   },
