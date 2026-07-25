@@ -386,9 +386,9 @@
     },
     {
       "type": "investigation",
-      "title": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construção",
+      "title": "Repórter Sábado: Henrique Vassal acusado de burla na construção",
       "authorOrMeta": "NOW Canal",
-      "description": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube.",
+      "description": "Investigação jornalística do NOW Canal sobre denúncias de alegada burla a dezenas de famílias no setor da construção civil, reunindo testemunhos de lesados e dados sobre o caso.",
       "link": "https://www.youtube.com/watch?v=LEpWEUWVxC4",
       "priority": 5,
       "id": "watch_investigation_92ada34713f34ca7",
@@ -404,13 +404,13 @@
         "status": "verified",
         "source": "youtube:NOW Canal",
         "entityId": "youtube:LEpWEUWVxC4",
-        "score": 1.0,
+        "score": 0.7553,
         "coverHash": "83ca2e7d8fc7c36513f730e2c0bfa4d6ec60f522183cae95743f0a9916438dda",
         "verifiedAt": "2026-07-20T18:30:25.063601Z",
         "resolvedTitle": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construção",
         "resolvedAuthor": "NOW Canal",
         "sourcePublishedAt": "2026-07-11T12:49:25Z",
-        "sourceDescription": "Enjoy the videos and music you love, upload original content, and share it all with friends, family, and the world on YouTube."
+        "sourceDescription": "Repórter Sábado: Henrique Vassal acusado de burlar dezenas de famílias com empresa de construçãoHenrique Vassal é acusado de ter burlado dezenas de famílias...."
       },
       "sourcePublishedAt": "2026-07-11T12:49:25Z"
     },
@@ -570,7 +570,7 @@
       "category": "Podcast",
       "title": "Exames nacionais: o Governo anda a correr atrás do problema?",
       "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre deveria Fernando Alexandre ter adiado o calendário de candidaturas ao ensino superior?",
+      "description": "Neste episódio de Linhas Vermelhas , Cecília Meireles e Miguel Prata Roque debatem os mais recentes desenvolvimentos no caso dos exames nacionais e as polémicas que envolvem o ministro da Administração Interna, Luís Neves. Deveria Fernando Alexandre ter adiado o calendário de candidaturas ao ensino superior?",
       "imageUrl": "/covers/podcast_exames_nacionais__o_governo_anda_a_correr_atr_s_do_p_cfbd7b97_4279596a584b.jpg",
       "link": "https://omny.fm/shows/linhas-vermelhas/exames-nacionais-o-governo-anda-a-correr-atr-s-do-problema",
       "externalId": "3a5f4891-e232-42e3-aaf1-b48d01380371",
@@ -600,11 +600,7 @@
         "resolvedTitle": "Exames nacionais: o Governo anda a correr atrás do problema?",
         "resolvedAuthor": "Linhas Vermelhas",
         "sourcePublishedAt": "2026-07-21T09:11:55Z",
-        "sourceDescription": "Neste episódio de Linhas Vermelhas , Cecília Meireles e Miguel Prata Roque debatem os mais recentes desenvolvimentos no caso dos exames nacionais e as polémicas que envolvem o ministro da Administração Interna, Luís Neves. Deveria Fernando Alexandre ter adiado o calendário de candidaturas ao ensino superior?",
-        "editorialDescription": "Análise sobre deveria Fernando Alexandre ter adiado o calendário de candidaturas ao ensino superior?",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "11925dad7be89498856d2e7bcd7fedb046563020c49b29f180d4f9fe894baed5",
-        "editorialDescriptionProvider": "extractive"
+        "sourceDescription": "Neste episódio de Linhas Vermelhas , Cecília Meireles e Miguel Prata Roque debatem os mais recentes desenvolvimentos no caso dos exames nacionais e as polémicas que envolvem o ministro da Administração Interna, Luís Neves. Deveria Fernando Alexandre ter adiado o calendário de candidaturas ao ensino superior?"
       }
     },
     {

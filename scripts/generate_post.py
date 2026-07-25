@@ -44,6 +44,7 @@ WEDNESDAY_TEMPLATE_PATH = os.path.join(
 )
 TEMPLATE_CANVAS_SIZE = (819, 1024)
 REC_FILE = os.path.join(ROOT_DIR, "website", "public", "recommendations.json")
+WATCHLIST_FILE = os.path.join(ROOT_DIR, "website", "public", "watchlist.json")
 OUTPUT_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.jpg")
 OUTPUT_CAPTION_PATH = os.path.join(ROOT_DIR, "website", "public", "current_caption.txt")
 PUBLICATION_RECEIPT_PATH = os.path.join(
@@ -127,6 +128,8 @@ DESCRIPTION_LINE_LIMITS = {
     "w1": 9,
     "w2": 9,
 }
+DESCRIPTION_FONT_START_SIZE = 15
+DESCRIPTION_FONT_MIN_SIZE = 11
 
 # --- ROUNDED CORNERS HELPER ---
 def apply_rounded_corners(img, radius):
@@ -636,6 +639,58 @@ def _sanitize_description(description, title=""):
     return text or re.sub(r"(?:\.{2,}|…)\s*$", "", str(description or "").strip()).strip()
 
 
+def _description_is_generic_platform_text(value):
+    lowered = re.sub(r"\s+", " ", str(value or "")).strip().casefold()
+    generic_platform_fragments = (
+        "enjoy the videos and music you love",
+        "upload original content",
+        "share it all with friends",
+        "the world on youtube",
+        "see omnystudio.com/listener",
+        "privacy information",
+    )
+    return any(fragment in lowered for fragment in generic_platform_fragments)
+
+
+def _fallback_description_from_title(item):
+    raw_title = re.sub(r"\s+", " ", str(item.get("title", ""))).strip(" -:|")
+    if not raw_title:
+        return ""
+    topic = re.sub(
+        r"^(?:rep[oó]rter s[aá]bado|a prova dos factos|telerural|contra informa[cç][aã]o)\s*[:|\-]\s*",
+        "",
+        raw_title,
+        flags=re.IGNORECASE,
+    ).strip(" -:|")
+    topic = topic if topic else raw_title
+    media_type = str(item.get("type", "")).strip().lower()
+    if media_type == "investigation":
+        return f"Investigação sobre {topic.rstrip(' .!?')}."
+    if media_type == "nostalgia":
+        return f"Sketch ou episódio de humor sobre {topic.rstrip(' .!?')}."
+    if media_type == "highlight":
+        return f"Texto de opinião sobre {topic.rstrip(' .!?')}."
+    if media_type == "podcast":
+        return f"Análise sobre {topic.rstrip(' .!?')}."
+    return raw_title
+
+
+def _best_description(item):
+    verification = item.get("verification") or {}
+    candidates = [
+        _curated_watchlist_description(item),
+        item.get("editorialDescription"),
+        verification.get("editorialDescription"),
+        item.get("description"),
+        verification.get("sourceDescription"),
+    ]
+    for candidate in candidates:
+        clean = _sanitize_description(candidate, item.get("title", ""))
+        if clean and not _description_is_generic_platform_text(clean):
+            return clean
+    return _fallback_description_from_title(item)
+
+
 def _ellipsize(value, max_chars):
     text = re.sub(r"\s+", " ", str(value or "")).strip()
     if len(text) <= max_chars:
@@ -689,6 +744,61 @@ def remove_black_bars(image, threshold=28):
     return image
 
 
+_FONT_CACHE = {}
+_WATCHLIST_DESCRIPTION_CACHE = None
+
+
+def _load_font(font_path, size):
+    cache_key = (font_path, size)
+    cached = _FONT_CACHE.get(cache_key)
+    if cached is not None:
+        return cached
+    try:
+        font = ImageFont.truetype(font_path, size)
+    except Exception:
+        font = ImageFont.load_default()
+    _FONT_CACHE[cache_key] = font
+    return font
+
+
+def _curated_watchlist_description(item):
+    global _WATCHLIST_DESCRIPTION_CACHE
+    if item.get("sourceHint") != "curated-episode-watchlist":
+        return ""
+    if _WATCHLIST_DESCRIPTION_CACHE is None:
+        try:
+            with open(WATCHLIST_FILE, "r", encoding="utf-8") as handle:
+                watchlist = json.load(handle)
+        except (OSError, ValueError, json.JSONDecodeError):
+            watchlist = {}
+        cache = {}
+        for candidate in watchlist.get("episodeCandidates", []):
+            if not isinstance(candidate, dict):
+                continue
+            description = str(candidate.get("description", "")).strip()
+            if not description:
+                continue
+            link = str(candidate.get("link", "")).strip()
+            title = str(candidate.get("title", "")).strip()
+            media_type = str(candidate.get("type", "")).strip().lower()
+            if link:
+                cache[(media_type, "link", link)] = description
+            if title:
+                cache[(media_type, "title", title)] = description
+        _WATCHLIST_DESCRIPTION_CACHE = cache
+
+    media_type = str(item.get("type", "")).strip().lower()
+    link = str(item.get("link", "")).strip()
+    if link:
+        match = _WATCHLIST_DESCRIPTION_CACHE.get((media_type, "link", link))
+        if match:
+            return match
+    title = str(item.get("title", "")).strip()
+    if title:
+        return _WATCHLIST_DESCRIPTION_CACHE.get((media_type, "title", title), "")
+    return ""
+
+
 def _fit_text_lines(
     draw,
     text,
@@ -700,18 +810,12 @@ def _fit_text_lines(
 ):
     compact = str(text or "").strip()
     for size in range(start_size, min_size - 1, -1):
-        try:
-            font = ImageFont.truetype(font_path, size)
-        except Exception:
-            font = ImageFont.load_default()
+        font = _load_font(font_path, size)
         lines = wrap_text(draw, compact, font, max_width)
         if len(lines) <= max_lines:
             return font, lines, max(16, size + 3)
 
-    try:
-        font = ImageFont.truetype(font_path, min_size)
-    except Exception:
-        font = ImageFont.load_default()
+    font = _load_font(font_path, min_size)
     lines = wrap_text(draw, compact, font, max_width)
     if len(lines) > max_lines:
         sentence_ends = [
@@ -762,6 +866,46 @@ def _fit_text_lines(
                 break
             words.pop()
     return font, lines, max(15, min_size + 3)
+
+
+def _fit_text_lines_at_size(draw, text, font_path, size, max_width, max_lines):
+    font = _load_font(font_path, size)
+    lines = wrap_text(draw, str(text or "").strip(), font, max_width)
+    return font, lines, max(15, size + 3)
+
+
+def _fit_fixed_description_lines(draw, text, max_width, max_lines):
+    font, lines, spacing = _fit_text_lines_at_size(
+        draw,
+        text,
+        FONT_DESC_BOLD,
+        DESCRIPTION_FONT_START_SIZE,
+        max_width,
+        max_lines,
+    )
+    if len(lines) <= max_lines:
+        return font, lines, spacing
+
+    compact = str(text or "").strip()
+    sentence_ends = [
+        match.end()
+        for match in re.finditer(r"[.!?](?:\s|$)", compact)
+        if match.end() < len(compact)
+    ]
+    for sentence_end in reversed(sentence_ends):
+        candidate = compact[:sentence_end].strip()
+        candidate_lines = wrap_text(draw, candidate, font, max_width)
+        if len(candidate_lines) <= max_lines:
+            return font, candidate_lines, spacing
+
+    words = compact.rstrip(" .!?").split()
+    while words:
+        candidate = " ".join(words).rstrip(" ,;:.!?")
+        candidate_lines = wrap_text(draw, candidate, font, max_width)
+        if candidate and len(candidate_lines) <= max_lines:
+            return font, candidate_lines, spacing
+        words.pop()
+    return font, lines[:max_lines], spacing
 
 
 def _sha256_file(path):
@@ -1140,9 +1284,9 @@ def generate_production_post():
     
     # Load fonts
     try:
-        title_font = ImageFont.truetype(FONT_BOLD, 32)
-        label_font = ImageFont.truetype(FONT_REG, 18)
-        desc_font = ImageFont.truetype(FONT_DESC_BOLD, 15)
+        title_font = _load_font(FONT_BOLD, 32)
+        label_font = _load_font(FONT_REG, 18)
+        desc_font = _load_font(FONT_DESC_BOLD, 15)
     except Exception as e:
         print(f"Font error: {e}")
         title_font = label_font = desc_font = ImageFont.load_default()
@@ -1174,7 +1318,7 @@ def generate_production_post():
         )
         
         # 1. Draw Category Label centered at top (24px)
-        solo_label_font = ImageFont.truetype(FONT_REG, 24)
+        solo_label_font = _load_font(FONT_REG, 24)
         cat_text = category.upper()
         cat_bbox = solo_label_font.getbbox(cat_text)
         cat_w = cat_bbox[2] - cat_bbox[0]
@@ -1228,7 +1372,7 @@ def generate_production_post():
         template.alpha_composite(cover_rounded, (cover_x, cover_y))
         
         # 4. Draw Centered Description below Hero Cover with larger font (20px -> 15px)
-        clean_desc = _sanitize_description(item.get("description", ""), item.get("title", ""))
+        clean_desc = _best_description(item)
         item["description"] = clean_desc
         description = _compact_text(clean_desc, 320)
         
@@ -1332,7 +1476,9 @@ def generate_production_post():
             cover_y_map["w1"] = max(title_bottoms.get("w1", 195) + 15, 230)
             cover_y_map["w2"] = max(title_bottoms.get("w2", 570) + 15, 600)
 
-        # --- PASTE COVERS AND WRITE DESCRIPTIONS ---
+        description_plans = []
+
+        # --- PASTE COVERS AND PREPARE DESCRIPTIONS ---
         for qkey in slot_keys:
             config = QUADRANTS_CONFIG[qkey]
             item = selected[qkey]
@@ -1362,32 +1508,40 @@ def generate_production_post():
             else:
                 desc_w = 780 - dx
                 
-            clean_desc = _sanitize_description(item.get("description", ""), item.get("title", ""))
+            clean_desc = _best_description(item)
             item["description"] = clean_desc
             description = _compact_text(
                 clean_desc,
                 DESCRIPTION_CHAR_LIMITS.get(qkey, 240),
             )
-            
-            spacing = 18
             max_lines = min(
                 DESCRIPTION_LINE_LIMITS.get(qkey, 8),
-                max(1, cover_h // spacing),
+                max(1, cover_h // 18),
             )
-            fitted_font, desc_lines, spacing = _fit_text_lines(
+            description_plans.append(
+                {
+                    "qkey": qkey,
+                    "dx": dx,
+                    "cover_y": cover_y,
+                    "cover_h": cover_h,
+                    "desc_w": desc_w,
+                    "max_lines": max_lines,
+                    "description": description,
+                }
+            )
+
+        for plan in description_plans:
+            fitted_font, desc_lines, spacing = _fit_fixed_description_lines(
                 draw,
-                description,
-                FONT_DESC_BOLD,
-                15,
-                11,
-                desc_w,
-                max_lines,
+                plan["description"],
+                plan["desc_w"],
+                plan["max_lines"],
             )
-            text_block_h = len(desc_lines[:max_lines]) * spacing
-            dy = cover_y + max(0, (cover_h - text_block_h) // 2)
-            
-            for line in desc_lines[:max_lines]:
-                draw.text((dx, dy), line, fill=TEXT_COLOR, font=fitted_font)
+            text_block_h = len(desc_lines[: plan["max_lines"]]) * spacing
+            dy = plan["cover_y"] + max(0, (plan["cover_h"] - text_block_h) // 2)
+
+            for line in desc_lines[: plan["max_lines"]]:
+                draw.text((plan["dx"], dy), line, fill=TEXT_COLOR, font=fitted_font)
                 dy += spacing
             
     # Save image

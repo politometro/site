@@ -2,10 +2,9 @@ name: Generate Weekly Instagram Post
 
 on:
   schedule:
-    # Several off-peak attempts make the weekly proposal resilient to delayed
-    # or dropped GitHub schedule events. The state guard and shared concurrency
-    # lock ensure that only the first valid attempt generates a proposal.
-    - cron: '7,17,27,37,47 19 * * 6'
+    # GitHub Actions cron uses UTC. 16:00 UTC maps to 17:00 in Lisbon during
+    # daylight-saving time.
+    - cron: '0 16 * * 6'
   workflow_dispatch: # Allows manual trigger at any time from GitHub UI or Discord Bot
     inputs:
       channel_id:
@@ -66,24 +65,15 @@ jobs:
         id: recovery_guard
         env:
           RECOVERY_MODE: ${{ github.event.inputs.recovery_mode || 'false' }}
-          EVENT_NAME: ${{ github.event_name }}
         run: |
-          if [ "$RECOVERY_MODE" = "true" ] || [ "$EVENT_NAME" = "schedule" ]; then
+          if [ "$RECOVERY_MODE" = "true" ]; then
             if python scripts/recover_weekly_generation.py --needs-generation; then
               echo "run_generation=true" >> "$GITHUB_OUTPUT"
-              echo "late_skip=false" >> "$GITHUB_OUTPUT"
             else
-              status=$?
               echo "run_generation=false" >> "$GITHUB_OUTPUT"
-              if [ "$status" -eq 4 ]; then
-                echo "late_skip=true" >> "$GITHUB_OUTPUT"
-              else
-                echo "late_skip=false" >> "$GITHUB_OUTPUT"
-              fi
             fi
           else
             echo "run_generation=true" >> "$GITHUB_OUTPUT"
-            echo "late_skip=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Populate Grounded Recommendations
@@ -186,16 +176,6 @@ jobs:
               sleep 10
             done
           fi
-
-      - name: Alert When Scheduled Run Started Too Late
-        if: ${{ steps.recovery_guard.outputs.late_skip == 'true' }}
-        env:
-          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
-          DISCORD_REVIEW_CHANNEL_ID: ${{ secrets.DISCORD_REVIEW_CHANNEL_ID }}
-          GITHUB_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          FAILURE_KIND: late_generation
-        run: |
-          python scripts/notify_generation_failure.py
 
   notify_failure:
     needs: generate

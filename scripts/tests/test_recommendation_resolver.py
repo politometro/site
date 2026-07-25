@@ -170,6 +170,34 @@ class RecommendationResolverTests(unittest.TestCase):
         )
         self.assertNotIn("Groq", result["description"])
 
+    def test_generic_youtube_boilerplate_never_overrides_curated_description(self):
+        item = {
+            "type": "investigation",
+            "title": "Repórter Sábado: Caso de teste",
+            "authorOrMeta": "NOW Canal",
+            "description": (
+                "Investigação jornalística sobre denúncias de burla e os "
+                "testemunhos recolhidos junto das vítimas."
+            ),
+            "link": "https://www.youtube.com/watch?v=abc123",
+            "imageUrl": "",
+        }
+        result = self.resolve_with(
+            item,
+            self.entity(
+                media_type="highlight",
+                title="Repórter Sábado: Caso de teste",
+                author="NOW Canal",
+                description=(
+                    "Enjoy the videos and music you love, upload original "
+                    "content, and share it all with friends, family, and the "
+                    "world on YouTube."
+                ),
+            ),
+        )
+        self.assertIn("denúncias de burla", result["description"])
+        self.assertNotIn("Enjoy the videos", result["description"])
+
     def test_cached_podcast_preserves_editorial_copy_and_source_evidence(self):
         now = dt.datetime.now(dt.timezone.utc)
         source_description = (

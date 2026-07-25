@@ -709,12 +709,29 @@ def _clean_description(value: str, max_chars: int = 360) -> str:
         return shortened[: sentence_end + 1].strip()
     return shortened[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:") + "…"
 
+
+def _is_generic_platform_description(description: str) -> bool:
+    text = _normalise_text(description)
+    boilerplate_patterns = (
+        r"\benjoy the videos and music you love\b",
+        r"\bupload original content\b",
+        r"\bshare it all with friends(?:, family)?\b",
+        r"\bthe world on youtube\b",
+        r"\bsee omnystudio\b",
+        r"\bprivacy information\b",
+        r"\bwatch the latest videos\b",
+        r"\bsubscribe to (?:the )?channel\b",
+    )
+    return any(re.search(pattern, text) for pattern in boilerplate_patterns)
+
 def _has_content_description(
     description: str,
     media_type: str,
     title: str = "",
     author: str = "",
 ) -> bool:
+    if _is_generic_platform_description(description):
+        return False
     text = _normalise_text(description)
     if len(text) < 35:
         return False

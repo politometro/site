@@ -400,7 +400,7 @@ class RecoveryWindowTests(unittest.TestCase):
             repository_root / ".github/workflows/keep_alive.yml"
         ).read_text(encoding="utf-8")
 
-        self.assertIn("7,17,27,37,47 19 * * 6", generate_workflow)
+        self.assertIn("0 16 * * 6", generate_workflow)
         self.assertIn("12,32,47 19 * * 6", preflight_workflow)
         self.assertIn(
             "python scripts/recover_weekly_generation.py",
@@ -503,6 +503,69 @@ class PostQualityGateTests(unittest.TestCase):
             generate_post.DESCRIPTION_LINE_LIMITS["q4"] * 18,
             192,
         )
+
+    def test_best_description_skips_platform_boilerplate_and_uses_title_fallback(self):
+        item = {
+            "type": "investigation",
+            "title": "Repórter Sábado: Henrique Vassal acusado de burla na construção",
+            "description": (
+                "Enjoy the videos and music you love, upload original content, "
+                "and share it all with friends, family, and the world on YouTube."
+            ),
+            "verification": {
+                "sourceDescription": (
+                    "Enjoy the videos and music you love, upload original content, "
+                    "and share it all with friends, family, and the world on YouTube."
+                )
+            },
+        }
+
+        description = generate_post._best_description(item)
+
+        self.assertEqual(
+            description,
+            "Investigação sobre Henrique Vassal acusado de burla na construção.",
+        )
+
+    def test_best_description_prefers_curated_watchlist_copy(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            watchlist_path = Path(tmp) / "watchlist.json"
+            watchlist_path.write_text(
+                json.dumps(
+                    {
+                        "episodeCandidates": [
+                            {
+                                "type": "investigation",
+                                "title": "Repórter Sábado: Henrique Vassal acusado de burla na construção",
+                                "link": "https://www.youtube.com/watch?v=LEpWEUWVxC4",
+                                "description": (
+                                    "Investigação jornalística sobre denúncias de alegada "
+                                    "burla a dezenas de famílias no setor da construção civil."
+                                ),
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            item = {
+                "type": "investigation",
+                "title": "Repórter Sábado: Henrique Vassal acusado de burla na construção",
+                "link": "https://www.youtube.com/watch?v=LEpWEUWVxC4",
+                "sourceHint": "curated-episode-watchlist",
+                "description": (
+                    "Enjoy the videos and music you love, upload original content, "
+                    "and share it all with friends, family, and the world on YouTube."
+                ),
+            }
+            with (
+                mock.patch.object(generate_post, "WATCHLIST_FILE", str(watchlist_path)),
+                mock.patch.object(generate_post, "_WATCHLIST_DESCRIPTION_CACHE", None),
+            ):
+                description = generate_post._best_description(item)
+
+        self.assertIn("alegada burla", description)
+        self.assertNotIn("Enjoy the videos", description)
 
     def test_news_cannot_fill_highlight_quadrant(self):
         queue = [
