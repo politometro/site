@@ -1139,7 +1139,7 @@ class PostReviewView(discord.ui.View):
 
         await interaction.message.edit(
             content=(
-                f"✅ Post **Aprovado** por {interaction.user.mention}! "
+                f"@everyone ✅ Post **Aprovado** por {interaction.user.mention}! "
                 "Publicação agendada para domingo às 10:00 "
                 "(hora de Lisboa)."
             ),
