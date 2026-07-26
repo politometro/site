@@ -68,6 +68,7 @@ class RecommendationResolverTests(unittest.TestCase):
         author: str = "Autor Real",
         description: str = "",
         published_at: str = "",
+        url: str = "https://example.org/content",
     ) -> resolver.EntityResolution:
         prefix = {
             "book": "isbn:9789720000001",
@@ -76,7 +77,7 @@ class RecommendationResolverTests(unittest.TestCase):
             "highlight": "article:url:abc123",
         }[media_type]
         return resolver.EntityResolution(
-            link="https://example.org/content",
+            link=url,
             image_url="https://cdn.example.org/cover.jpg",
             external_id=prefix,
             source=f"test:{media_type}",
@@ -197,6 +198,36 @@ class RecommendationResolverTests(unittest.TestCase):
         )
         self.assertIn("denúncias de burla", result["description"])
         self.assertNotIn("Enjoy the videos", result["description"])
+
+    def test_validate_cached_cover_accepts_editorial_title_when_entity_matches(self):
+        item = {
+            "type": "investigation",
+            "title": "Repórter Sábado: Henrique Vassal acusado de burla na construção",
+            "authorOrMeta": "NOW Canal",
+            "description": (
+                "Investigação jornalística sobre denúncias de alegada burla "
+                "e testemunhos de famílias lesadas."
+            ),
+            "link": "https://www.youtube.com/watch?v=abc123",
+            "imageUrl": "",
+        }
+        result = self.resolve_with(
+            item,
+            self.entity(
+                media_type="highlight",
+                title=(
+                    "Repórter Sábado: Henrique Vassal acusado de burlar "
+                    "dezenas de famílias com empresa de construção"
+                ),
+                author="NOW Canal",
+                description=(
+                    "Investigação jornalística sobre denúncias de alegada "
+                    "burla e testemunhos de famílias lesadas."
+                ),
+                url="https://www.youtube.com/watch?v=abc123",
+            ),
+        )
+        self.assertTrue(resolver.validate_cached_cover(result))
 
     def test_cached_podcast_preserves_editorial_copy_and_source_evidence(self):
         now = dt.datetime.now(dt.timezone.utc)

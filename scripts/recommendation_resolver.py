@@ -3020,10 +3020,16 @@ def validate_cached_cover(item: Mapping[str, Any]) -> bool:
             return False
         if manifest.get("type") != str(item.get("type", "")).casefold():
             return False
-        cover_identity_title = item.get("title", "")
-        if item.get("type") == "nostalgia" and item.get("editorialTitle"):
-            cover_identity_title = verification.get("resolvedTitle") or cover_identity_title
-        if manifest.get("titleNormalized") != _normalise_text(cover_identity_title):
+        candidate_titles = []
+        editorial_title = str(item.get("title", "")).strip()
+        if editorial_title:
+            candidate_titles.append(_normalise_text(editorial_title))
+        resolved_title = str(verification.get("resolvedTitle", "")).strip()
+        if resolved_title:
+            candidate_titles.append(_normalise_text(resolved_title))
+        if not candidate_titles:
+            return False
+        if manifest.get("titleNormalized") not in set(candidate_titles):
             return False
         entity_id = str(
             verification.get("entityId") or item.get("externalId") or ""
