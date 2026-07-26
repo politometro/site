@@ -46,9 +46,6 @@ TEMPLATE_CANVAS_SIZE = (819, 1024)
 REC_FILE = os.path.join(ROOT_DIR, "website", "public", "recommendations.json")
 WATCHLIST_FILE = os.path.join(ROOT_DIR, "website", "public", "watchlist.json")
 OUTPUT_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.jpg")
-OUTPUT_STORY_PATH = os.path.join(
-    ROOT_DIR, "website", "public", "current_story.jpg"
-)
 OUTPUT_CAPTION_PATH = os.path.join(ROOT_DIR, "website", "public", "current_caption.txt")
 PUBLICATION_RECEIPT_PATH = os.path.join(
     SCRIPT_DIR, "instagram_publication.json"
