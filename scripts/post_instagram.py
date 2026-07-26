@@ -39,7 +39,7 @@ RECONCILE_DELAY_SECONDS = 3
 RECONCILE_CLOCK_SKEW_SECONDS = 300
 INSTAGRAM_USER_TAGS = [
     {"username": "_.davstrango._", "x": 0.08, "y": 0.88},
-    {"username": "luiflmaximo", "x": 0.50, "y": 0.88},
+    {"username": "luisflmaximo", "x": 0.50, "y": 0.88},
     {"username": "politiza.te", "x": 0.88, "y": 0.88},
 ]
 
