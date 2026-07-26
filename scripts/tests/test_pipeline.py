@@ -847,6 +847,10 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
                 generate_post.generate_production_post()
 
             self.assertTrue(output_path.is_file())
+            story_path = output_path.with_name("current_story.jpg")
+            self.assertTrue(story_path.is_file())
+            with Image.open(story_path) as story:
+                self.assertEqual(story.size, (1080, 1920))
             self.assertTrue(caption_path.is_file())
             self.assertTrue(draft_path.is_file())
             draft = json.loads(draft_path.read_text(encoding="utf-8"))

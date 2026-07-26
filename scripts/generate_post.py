@@ -46,6 +46,9 @@ TEMPLATE_CANVAS_SIZE = (819, 1024)
 REC_FILE = os.path.join(ROOT_DIR, "website", "public", "recommendations.json")
 WATCHLIST_FILE = os.path.join(ROOT_DIR, "website", "public", "watchlist.json")
 OUTPUT_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.jpg")
+OUTPUT_STORY_PATH = os.path.join(
+    ROOT_DIR, "website", "public", "current_story.jpg"
+)
 OUTPUT_CAPTION_PATH = os.path.join(ROOT_DIR, "website", "public", "current_caption.txt")
 PUBLICATION_RECEIPT_PATH = os.path.join(
     SCRIPT_DIR, "instagram_publication.json"
@@ -916,6 +919,34 @@ def _sha256_file(path):
     return digest.hexdigest()
 
 
+def _save_story_asset(post_image, output_path=None):
+    """Fit the complete feed artwork inside a native 9:16 Story canvas."""
+    story_path = output_path or os.path.join(
+        os.path.dirname(OUTPUT_PATH), "current_story.jpg"
+    )
+    source = post_image.convert("RGB")
+    background = source.getpixel((0, 0))
+    canvas = Image.new("RGB", (1080, 1920), background)
+    contained = ImageOps.contain(
+        source,
+        canvas.size,
+        method=Image.Resampling.LANCZOS,
+    )
+    position = (
+        (canvas.width - contained.width) // 2,
+        (canvas.height - contained.height) // 2,
+    )
+    canvas.paste(contained, position)
+    canvas.save(
+        story_path,
+        "JPEG",
+        quality=95,
+        optimize=True,
+        progressive=True,
+    )
+    return story_path
+
+
 def _draft_content_hash(
     quadrants, post_sha256, caption_sha256, is_test=False
 ):
@@ -1561,7 +1592,9 @@ def generate_production_post():
         optimize=True,
         progressive=True,
     )
+    story_path = _save_story_asset(output)
     print(f"\n[OK] Production post image saved to: {OUTPUT_PATH}")
+    print(f"[OK] Native Story image saved to: {story_path}")
     
     # 5. Generate the caption from the exact recommendations in this draft.
     caption = build_caption(selected, post_type=post_type)

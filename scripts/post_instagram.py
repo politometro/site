@@ -155,12 +155,17 @@ def _context():
         f"https://raw.githubusercontent.com/{environment['repository']}/"
         f"{environment['commit_sha']}/website/public/current_post.jpg"
     )
+    story_image_url = (
+        f"https://raw.githubusercontent.com/{environment['repository']}/"
+        f"{environment['commit_sha']}/website/public/current_story.jpg"
+    )
     return {
         **environment,
         "draft": draft,
         "caption": caption,
         "caption_sha256": caption_sha256,
         "image_url": image_url,
+        "story_image_url": story_image_url,
     }
 
 
@@ -356,7 +361,7 @@ def prepare_story(session=None):
     response = client.post(
         f"{context['base_url']}/{context['instagram_id']}/media",
         data={
-            "image_url": context["image_url"],
+            "image_url": context["story_image_url"],
             "media_type": "STORIES",
             "access_token": context["access_token"],
         },
@@ -370,6 +375,7 @@ def prepare_story(session=None):
     receipt["story_creation_id"] = str(payload["id"])
     receipt["story_state"] = "prepared"
     receipt["story_prepared_at"] = _iso_now()
+    receipt["story_image_url"] = context["story_image_url"]
     _write_json_atomic(RECEIPT_PATH, receipt)
     return receipt
 

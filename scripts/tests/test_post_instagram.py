@@ -35,6 +35,7 @@ class FakeMetaSession:
         self.publish_calls = 0
         self.recent_media = []
         self.creation_ids = []
+        self.create_payloads = []
 
     def post(self, url, data, timeout):
         if url.endswith("/media_publish"):
@@ -71,6 +72,7 @@ class FakeMetaSession:
 
         if url.endswith("/media"):
             self.create_calls += 1
+            self.create_payloads.append(dict(data))
             creation_id = f"container-{self.create_calls}"
             self.creation_ids.append(creation_id)
             return FakeResponse({"id": creation_id})
@@ -210,6 +212,12 @@ class InstagramIdempotencyTests(unittest.TestCase):
         with mock.patch.dict(os.environ, {"INSTAGRAM_PUBLISH_STORY": "true"}):
             post_instagram.prepare_publication(session)
             self.assertEqual(self.receipt()["story_creation_id"], "container-2")
+            self.assertTrue(
+                session.create_payloads[1]["image_url"].endswith(
+                    "/website/public/current_story.jpg"
+                )
+            )
+            self.assertEqual(session.create_payloads[1]["media_type"], "STORIES")
             post_instagram.prepare_story(session)
             self.assertEqual(session.create_calls, 2)
 
