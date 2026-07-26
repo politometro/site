@@ -1093,12 +1093,15 @@ def commit_approved_draft(
     selected_ids = {item["id"] for item in quadrants.values()}
     missing_ids = selected_ids.difference(current_by_id)
     if missing_ids:
-        raise RuntimeError(
-            "A fila mudou depois da revisão; itens em falta: "
+        print(
+            "[WARN] A fila automática já não contém alguns itens aprovados: "
             + ", ".join(sorted(missing_ids))
+            + ". A publicar a partir do snapshot revisto."
         )
     for qkey, reviewed in quadrants.items():
-        current = current_by_id[reviewed["id"]]
+        current = current_by_id.get(reviewed["id"])
+        if current is None:
+            continue
         for field in (
             "type",
             "status",
@@ -1150,8 +1153,8 @@ def commit_approved_draft(
     selected_ids = {item["id"] for item in quadrants.values()}
     missing_ids = selected_ids.difference(queued_by_id)
     if missing_ids:
-        raise RuntimeError(
-            "A fila mudou depois da revisão; itens em falta: "
+        print(
+            "[WARN] A remoção final da queue vai ignorar itens já renovados fora da fila: "
             + ", ".join(sorted(missing_ids))
         )
 
