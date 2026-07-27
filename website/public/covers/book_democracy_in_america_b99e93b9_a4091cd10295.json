@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL32342092W",
+  "coverHash": "f1d50569f8a560639675b95da70ec4e50f0470975ab8f84a22df4f739bc7ca7a",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://ia601909.us.archive.org/view_archive.php?archive=%2F31%2Fitems%2Fl_covers_0013%2Fl_covers_0013_28.zip&file=0013281409-L.jpg",
+  "entityId": "openlibrary:/works/OL32342092W",
+  "expiryDate": null,
+  "height": 500,
+  "isbn": "",
+  "resolvedAuthor": "Alexis de Tocqueville",
+  "resolvedTitle": "Democracy in America",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "Democracy in America",
+  "titleNormalized": "democracy in america",
+  "type": "book",
+  "verifiedAt": "2026-07-27T13:46:33.369687Z",
+  "width": 350
+}
