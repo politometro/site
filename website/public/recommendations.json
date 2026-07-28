@@ -728,7 +728,7 @@
       "sourcePublishedAt": "2026-07-26T05:00:00Z",
       "expiryDate": "2026-07-29T05:00:00Z",
       "createdAt": "2026-07-26T10:25:03.820669Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -737,7 +737,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -753,7 +753,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "cb33c5092330fcb098e744bebde83d11b63fb99324664c21fa678fd0da507711",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Há “desconfiança instalada” nos exames nacionais? - Ouvintes]: Conteúdo expira em 2026-07-29T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_30bf50141a793671",
@@ -864,6 +865,97 @@
         "resolvedTitle": "Democracy in America",
         "resolvedAuthor": "Alexis de Tocqueville",
         "sourceDescription": "Observação fundamental sobre democracia, igualdade, costumes cívicos e instituições nos Estados Unidos."
+      }
+    },
+    {
+      "id": "rss_podcast_62491cd45b60e970",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "O risco do silêncio de Luís Neves está a ser devidamente calculado (ou até programado) pelo Governo?",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre os temas e questões de o risco do silêncio de luís neves está a ser devidamente calculado (ou até programado) pelo governo.",
+      "imageUrl": "/covers/podcast_o_risco_do_sil_ncio_de_lu_s_neves_est__a_ser_devidam_e6971e71_62491cd45b60.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/o-risco-do-sil-ncio-de-lu-s-neves-est-a-ser-devidamente-calculado-ou-at-programado-pelo-governo",
+      "externalId": "8b9c7674-faa5-4f99-b2e0-b49401373c54",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-28T08:20:00Z",
+      "expiryDate": "2026-08-07T08:20:00Z",
+      "createdAt": "2026-07-28T11:48:05.321289Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "8b9c7674-faa5-4f99-b2e0-b49401373c54",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "8b9c7674-faa5-4f99-b2e0-b49401373c54",
+        "score": 1.0,
+        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
+        "verifiedAt": "2026-07-28T11:48:08.566891Z",
+        "resolvedTitle": "O risco do silêncio de Luís Neves está a ser devidamente calculado (ou até programado) pelo Governo?",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-07-28T08:20:00Z",
+        "sourceDescription": "Cecília Meireles e Miguel Prata Roque discutem o silêncio do ministro da Administração Interna, Luís Neves, perante as suspeitas relacionadas com a sua atuação enquanto diretor da Polícia Judiciária, e a recusa do PSD e do CDS em viabilizar uma audição urgente do ministro no Parlamento, através de uma convocação extraordinária da Comissão Permanente.",
+        "editorialDescription": "Análise sobre os temas e questões de o risco do silêncio de luís neves está a ser devidamente calculado (ou até programado) pelo governo.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "2615f5d8c0987194474685456642522ca5765ab7abc40e8c7415d14b6e26a1b5",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_97072dd181e1099f",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "O fisco está a vingar-se de quem trabalha em casa?",
+      "authorOrMeta": "observador.pt",
+      "description": "Quem usa parte da casa para trabalhar pode ser impedido de usar as mais-valias da venda da habitação na compra de uma nova. Os fiscalistas Luís Leon e Carlos Lobo explicam o que está em causa.",
+      "imageUrl": "/covers/highlight_o_fisco_est__a_vingar_se_de_quem_trabalha_em_casa__f2944b99_055b729f0597.jpg",
+      "link": "https://observador.pt/programas/explicador/o-fisco-esta-a-vingar-se-de-quem-trabalha-em-casa/",
+      "externalId": "article:url:97072dd181e1099f13e3633e",
+      "priority": 4,
+      "sourcePublishedAt": "2026-07-28T08:36:56Z",
+      "expiryDate": "2026-08-27T08:36:56Z",
+      "createdAt": "2026-07-28T11:48:10.387997Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/o-fisco-esta-a-vingar-se-de-quem-trabalha-em-casa/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "Impostos",
+          "Economia",
+          "Fiscalidade",
+          "Casas",
+          "Habitação e Urbanismo",
+          "País",
+          "Sociedade",
+          "Mercado Imobiliário"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:97072dd181e1099f13e3633e",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-07-28T11:48:10.579755Z",
+        "resolvedTitle": "O fisco está a vingar-se de quem trabalha em casa?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-07-28T08:36:56Z",
+        "sourceDescription": "Quem usa parte da casa para trabalhar pode ser impedido de usar as mais-valias da venda da habitação na compra de uma nova. Os fiscalistas Luís Leon e Carlos Lobo explicam o que está em causa."
       }
     }
   ],
