@@ -832,10 +832,10 @@
         "resolvedTitle": "Depois das férias, vamos ter o Governo tal e qual como está hoje?",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-07-27T08:01:43Z",
-        "sourceDescription": "Episódio “Depois das férias, vamos ter o Governo tal e qual como está hoje?” do podcast O Princípio da Incerteza, publicado em 27/07/2026.",
+        "sourceDescription": "Análise sobre os temas e questões de depois das férias, vamos ter o governo tal e qual como está hoje.",
         "editorialDescription": "Análise sobre os temas e questões de depois das férias, vamos ter o governo tal e qual como está hoje.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "cdf7fb1287f8e74c6ab47453f32dacfb8aabdf1a6923c4404e426f2beeaa25f1",
+        "editorialSourceHash": "b208eb6617e26b85f48bf8321328ba2c16599a332bab68cf78084f2af1ddc4eb",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -915,7 +915,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "O fisco está a vingar-se de quem trabalha em casa?",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Bruno Vieira Amaral, Paulo Ferreira",
       "description": "Quem usa parte da casa para trabalhar pode ser impedido de usar as mais-valias da venda da habitação na compra de uma nova. Os fiscalistas Luís Leon e Carlos Lobo explicam o que está em causa.",
       "imageUrl": "/covers/highlight_o_fisco_est__a_vingar_se_de_quem_trabalha_em_casa__f2944b99_055b729f0597.jpg",
       "link": "https://observador.pt/programas/explicador/o-fisco-esta-a-vingar-se-de-quem-trabalha-em-casa/",
@@ -947,13 +947,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:97072dd181e1099f13e3633e",
         "score": 1.0,
         "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
         "verifiedAt": "2026-07-28T11:48:10.579755Z",
         "resolvedTitle": "O fisco está a vingar-se de quem trabalha em casa?",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Bruno Vieira Amaral, Paulo Ferreira",
         "sourcePublishedAt": "2026-07-28T08:36:56Z",
         "sourceDescription": "Quem usa parte da casa para trabalhar pode ser impedido de usar as mais-valias da venda da habitação na compra de uma nova. Os fiscalistas Luís Leon e Carlos Lobo explicam o que está em causa."
       }
