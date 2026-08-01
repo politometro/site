@@ -387,7 +387,7 @@ def is_same_series(item1: Mapping[str, Any], item2: Mapping[str, Any]) -> bool:
 
     def _extract_show(title_norm: str) -> str:
         parts = re.split(
-            r"\bep\d*|\bepis[óo]dio|\bpart[e\d]*|\b\||\b—|\b-", title_norm
+            r"\bep\d*|\bepis[óo]dio|\bpart[e\d]*|\b\||\b-", title_norm
         )
         return parts[0].strip() if parts else title_norm
 
@@ -581,7 +581,7 @@ def is_eligible_highlight(
         )
     )
     if re.match(
-        rf"^(?:{title_pattern})\s*(?::|\||-|–|—)",
+        rf"^(?:{title_pattern})\s*(?::|\||-|–)",
         title_label,
     ):
         return True

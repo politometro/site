@@ -472,6 +472,27 @@ class RecoveryWindowTests(unittest.TestCase):
 
 
 class PostQualityGateTests(unittest.TestCase):
+    def test_display_title_prefers_concise_editorial_copy(self):
+        item = {
+            "title": "Título canónico muito extenso da fonte",
+            "editorialTitle": "Título editorial curto",
+        }
+
+        self.assertEqual(
+            generate_post._display_title(item),
+            "Título editorial curto",
+        )
+        self.assertEqual(item["title"], "Título canónico muito extenso da fonte")
+
+    def test_render_gate_rejects_silently_truncated_copy(self):
+        with self.assertRaisesRegex(RuntimeError, "não cabe integralmente"):
+            generate_post._require_complete_render(
+                "A ideia completa não pode desaparecer",
+                ["A ideia completa"],
+                "q2",
+                "título",
+            )
+
     def test_compact_text_keeps_largest_complete_prefix_without_ellipsis(self):
         text = (
             "Primeira frase informativa. "
@@ -1183,7 +1204,7 @@ class ApprovedDraftCommitTests(unittest.TestCase):
             )
             with self.assertRaisesRegex(RuntimeError, "não foi aprovado"):
                 generate_post.commit_approved_draft(str(draft_path))
-    def test_dry_run_rejects_item_replaced_after_review(self):
+    def test_dry_run_uses_reviewed_snapshot_when_queue_item_is_replaced(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
             rec_path = tmp_path / "recommendations.json"
@@ -1253,12 +1274,18 @@ class ApprovedDraftCommitTests(unittest.TestCase):
                     ),
                     encoding="utf-8",
                 )
-                with self.assertRaisesRegex(RuntimeError, "itens em falta"):
+                validated_draft, validated_quadrants = (
                     generate_post.commit_approved_draft(
                         str(draft_path),
                         require_publication_receipt=False,
                         dry_run=True,
                     )
+                )
+
+            self.assertEqual(validated_draft["draft_id"], draft_id)
+            self.assertEqual(
+                validated_quadrants["q2"]["id"], quadrants["q2"]["id"]
+            )
 
 
 if __name__ == "__main__":

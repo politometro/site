@@ -649,7 +649,7 @@ class RecommendationResolverTests(unittest.TestCase):
         }
         candidate_important = {
             "type": "podcast",
-            "title": "Conteúdo do Batáguas EP02 — Especial Eleições",
+            "title": "Conteúdo do Batáguas EP02: Especial Eleições",
             "authorOrMeta": "Diogo Bataguas",
             "high_importance": True,
         }

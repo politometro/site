@@ -294,7 +294,7 @@ export default function DocumentationPage() {
         alert(`Não foi possível descarregar o programa de ${party} (${col}). O ficheiro não foi encontrado no servidor.`);
         return;
       }
-      // File exists — trigger native browser download
+      // File exists; trigger native browser download
       const a = document.createElement("a");
       a.href = downloadUrl;
       a.download = "";

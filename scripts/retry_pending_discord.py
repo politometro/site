@@ -169,7 +169,7 @@ def _message_payload(item):
         },
         {
             "name": "Autor / Fonte",
-            "value": str(item.get("authorOrMeta") or "—")[:1024],
+            "value": str(item.get("authorOrMeta") or "N/D")[:1024],
             "inline": True,
         },
         {
@@ -206,7 +206,7 @@ def _message_payload(item):
             f"{emojis.get(media_type, '💡')} Sugestão: "
             f"{str(item.get('title') or '')}"
         )[:256],
-        "description": str(item.get("description") or "—")[:4096],
+        "description": str(item.get("description") or "N/D")[:4096],
         "color": colours.get(media_type, 0x0099FF),
         "fields": fields,
         "footer": {

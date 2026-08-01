@@ -737,7 +737,7 @@ function createStoredRecommendation(
 }
 
 function truncateDiscord(value: unknown, maxLength: number): string {
-  return sanitizeText(value, maxLength) || "—";
+  return sanitizeText(value, maxLength) || "N/D";
 }
 
 async function notifyDiscord(item: JsonRecord): Promise<string | null> {
@@ -791,7 +791,7 @@ async function notifyDiscord(item: JsonRecord): Promise<string | null> {
   const confidence =
     typeof verification.confidence === "number"
       ? `${Math.round(verification.confidence * 100)}%`
-      : "—";
+      : "N/D";
 
   const fields: Array<{ name: string; value: string; inline: boolean }> = [
     {

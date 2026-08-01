@@ -382,7 +382,7 @@ function isEligibleHighlightCandidate(candidate: {
         pathSegments.includes(marker) || querySegments.includes(marker),
     ) ||
     HIGHLIGHT_EDITORIAL_MARKERS.some((marker) =>
-      new RegExp(`^${marker.replace(/\s+/g, "\\s+")}\\s*(?::|\\||-|–|—)`).test(
+      new RegExp(`^${marker.replace(/\s+/g, "\\s+")}\\s*(?::|\\||-|–)`).test(
         titleLabel,
       ),
     ) ||
@@ -1033,7 +1033,7 @@ function imageFromSchema(value: unknown): string {
 function stripKnownSiteSuffix(value: string): string {
   return sanitizeText(value, 400)
     .replace(
-      /\s+[|–—-]\s+(WOOK|Fnac(?:\.pt)?|Bertrand|Open Library|IMDb|YouTube|RTP|Expresso|PÚBLICO|Observador|SIC Notícias).*$/i,
+      /\s+[|–-]\s+(WOOK|Fnac(?:\.pt)?|Bertrand|Open Library|IMDb|YouTube|RTP|Expresso|PÚBLICO|Observador|SIC Notícias).*$/i,
       "",
     )
     .trim();

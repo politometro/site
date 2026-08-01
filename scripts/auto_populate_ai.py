@@ -575,7 +575,7 @@ def _request_podcast_editorial_description(
         "És editor do Politómetro. Mantém o título original fora da resposta. "
         "Escreve uma única frase informativa em português de Portugal, entre "
         "70 e 138 caracteres, que revele detalhes concretos do conteúdo que "
-        "não estejam já explícitos no título — acontecimentos, argumentos, "
+        "não estejam já explícitos no título: acontecimentos, argumentos, "
         "consequências ou questões debatidas. Usa apenas factos presentes no "
         "resumo da fonte. Não reformules nem resumas apenas o título. Não "
         "acrescentes contexto, nomes, números ou conclusões. Não uses "

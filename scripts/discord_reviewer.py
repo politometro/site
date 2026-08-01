@@ -1461,7 +1461,7 @@ class PodcastApprovalChoiceView(discord.ui.View):
             ),
         }
         await interaction.followup.send(
-            f"✅ **{result['title']}** — {messages[mode]}",
+            f"✅ **{result['title']}**: {messages[mode]}",
             ephemeral=True,
         )
         if self.review_message and self.review_message.embeds:

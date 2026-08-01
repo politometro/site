@@ -74,7 +74,7 @@ else:
 
 # Build a simple Gradio UI to keep Hugging Face happy
 with gr.Blocks() as demo:
-    gr.Markdown("# 🤖 Politómetro — Bots Discord e Twitch")
+    gr.Markdown("# 🤖 Politómetro: Bots Discord e Twitch")
     gr.Markdown("O bot está online e a correr em segundo plano na nuvem de forma gratuita!")
     gr.Markdown("---")
     gr.Markdown("👉 Envia uma **Mensagem Privada (DM)** ao bot no Discord com o comando `!check` para iniciar a revisão.")

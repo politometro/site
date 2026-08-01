@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_896919a6879a69893191",
-  "content_hash": "896919a6879a69893191c089a702bce30aef82f0d63685d2ffb6bfd5119350b0",
+  "draft_id": "draft_9f9472b9fd65ad538d31",
+  "content_hash": "9f9472b9fd65ad538d31bf63a61fcb1e80b98f38c0b5e8ac53e9637168057ba6",
   "post_type": "sunday_standard",
-  "created_at": "2026-08-01T20:14:21.993390+00:00",
+  "created_at": "2026-08-01T20:27:16.828875+00:00",
   "is_test": false,
-  "post_sha256": "f4eb494ca14f7d2de3e45b8cd1daeee0dcd7c0750b2c770b4ddf70cabe4c3dfc",
-  "caption_sha256": "f16287357b0492c05f1f60e65fc726bdfbc17eabe3b435b45dfe06612f05ebd7",
+  "post_sha256": "61bf09b3db859e2ffc9d98e76398396b4b0d3bd39e679e68b51d373e3bf4510c",
+  "caption_sha256": "5e2f92fcc90096c8b8cd1382e52464eb947238a6a48024ec14c9ecee249d30b4",
   "approval": {
     "approved": false
   },
@@ -42,9 +42,11 @@
     "id": "rss_podcast_62491cd45b60e970",
     "type": "podcast",
     "category": "Podcast",
-    "title": "O risco do silêncio de Luís Neves está a ser devidamente…",
+    "title": "O risco do silêncio de Luís Neves está a ser devidamente calculado (ou até programado) pelo Governo?",
+    "editorialTitle": "O Governo calculou ou programou o silêncio de Luís Neves?",
     "authorOrMeta": "Linhas Vermelhas",
-    "description": "Cecília Meireles e Miguel Prata Roque discutem o silêncio do ministro da Administração Interna, Luís Neves, perante as suspeitas relacionadas com a sua atuação enquanto diretor da Polícia Judiciária, e a recusa do PSD e do CDS em viabilizar uma audição urgente do ministro no Parlamento, através de uma convocação extraordinária da Comissão Permanente.",
+    "description": "Cecília Meireles e Miguel Prata Roque discutem o silêncio de Luís Neves sobre suspeitas ligadas à sua passagem pela PJ.",
+    "editorialDescription": "Cecília Meireles e Miguel Prata Roque discutem o silêncio de Luís Neves sobre suspeitas ligadas à sua passagem pela PJ.",
     "imageUrl": "/covers/podcast_o_risco_do_sil_ncio_de_lu_s_neves_est__a_ser_devidam_e6971e71_62491cd45b60.jpg",
     "link": "https://omny.fm/shows/linhas-vermelhas/o-risco-do-sil-ncio-de-lu-s-neves-est-a-ser-devidamente-calculado-ou-at-programado-pelo-governo",
     "externalId": "8b9c7674-faa5-4f99-b2e0-b49401373c54",
@@ -111,7 +113,8 @@
     "category": "Destaque",
     "title": "O fisco está a vingar-se de quem trabalha em casa?",
     "authorOrMeta": "Bruno Vieira Amaral, Paulo Ferreira",
-    "description": "Quem usa parte da casa para trabalhar pode ser impedido de usar as mais-valias da venda da habitação na compra de uma nova. Os fiscalistas Luís Leon e Carlos Lobo explicam o que está em causa.",
+    "description": "Trabalhar em parte da casa pode impedir o uso das mais-valias da venda na compra de uma nova habitação.",
+    "editorialDescription": "Trabalhar em parte da casa pode impedir o uso das mais-valias da venda na compra de uma nova habitação.",
     "imageUrl": "/covers/highlight_o_fisco_est__a_vingar_se_de_quem_trabalha_em_casa__f2944b99_055b729f0597.jpg",
     "link": "https://observador.pt/programas/explicador/o-fisco-esta-a-vingar-se-de-quem-trabalha-em-casa/",
     "externalId": "article:url:97072dd181e1099f13e3633e",
@@ -152,13 +155,5 @@
       "sourcePublishedAt": "2026-07-28T08:36:56Z",
       "sourceDescription": "Quem usa parte da casa para trabalhar pode ser impedido de usar as mais-valias da venda da habitação na compra de uma nova. Os fiscalistas Luís Leon e Carlos Lobo explicam o que está em causa."
     }
-  },
-  "reviewFeedback": [
-    {
-      "text": "no q2 e q4 o texto da descrição é curtado repentinamente (deve ser transmitida a mesma ideia com menos palavras) e o mesmo no titulo do q2",
-      "createdAt": "2026-08-01T20:17:20.992124+00:00",
-      "createdById": "602275316156727296",
-      "createdByName": "MaNmAxImO"
-    }
-  ]
+  }
 }

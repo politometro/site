@@ -130,7 +130,7 @@ async def on_ready():
         )
         if draft_data.get("is_test"):
             embed.description = (
-                "TESTE — verifica imagem e ligações. Este rascunho não "
+                "TESTE: verifica imagem e ligações. Este rascunho não "
                 "pode ser publicado no Instagram."
             )
         
@@ -148,7 +148,7 @@ async def on_ready():
         caption_marker = f"Rascunho: `{draft_id}`"
         caption_content = (
             f"📝 **Legenda do Instagram (copiar/colar):**\n\n{caption}"
-            f"\n\n— {caption_marker}"
+            f"\n\n{caption_marker}"
         )
         existing_review = None
         existing_caption = None
