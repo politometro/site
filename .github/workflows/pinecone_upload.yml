@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pypdf pinecone-client requests
+          pip install pypdf pinecone requests
 
       - name: Run Text Extraction
         run: |
