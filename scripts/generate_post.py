@@ -612,6 +612,32 @@ def wrap_text(draw, text, font, max_width):
     return lines
 
 
+def _display_title(item):
+    """Return an optional concise editorial title without changing identity."""
+    editorial_title = re.sub(
+        r"\s+", " ", str(item.get("editorialTitle", ""))
+    ).strip()
+    canonical_title = re.sub(
+        r"\s+", " ", str(item.get("title", ""))
+    ).strip()
+    return editorial_title or canonical_title
+
+
+def _normalise_rendered_text(value):
+    return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def _require_complete_render(original, lines, qkey, field_name):
+    """Fail review generation instead of silently dropping editorial copy."""
+    expected = _normalise_rendered_text(original)
+    rendered = _normalise_rendered_text(" ".join(lines))
+    if rendered != expected:
+        raise RuntimeError(
+            f"{qkey.upper()} {field_name} não cabe integralmente na imagem. "
+            "Define uma versão editorial mais curta; o texto não será cortado."
+        )
+
+
 def _sanitize_description(description, title=""):
     import html
     text = html.unescape(str(description or ""))
@@ -1361,10 +1387,7 @@ def generate_production_post():
         )
         
         # 2. Draw Title centered across full width (700px) with larger font (40px -> 26px)
-        raw_title = item.get("title", "")
-        if len(raw_title) > 65:
-            raw_title = _ellipsize(raw_title, 65)
-        item["title"] = raw_title
+        raw_title = _display_title(item)
 
         fitted_title_font, lines, title_spacing = _fit_text_lines(
             draw,
@@ -1375,6 +1398,7 @@ def generate_production_post():
             700,
             3,
         )
+        _require_complete_render(raw_title, lines, qkey, "título")
         curr_y = 320
         for line in lines:
             bbox = fitted_title_font.getbbox(line)
@@ -1445,13 +1469,8 @@ def generate_production_post():
             
             # Wrap title
             tx, ty = config["title_pos"]
-            title_max_lines = 3 if (qkey in ["q2", "q3", "q4", "w1", "w2"] or len(item.get("title", "")) > 55) else 2
-            raw_title = item.get("title", "")
-            if len(raw_title) > 55 and "empresa de construção" in raw_title.lower():
-                raw_title = re.sub(r"burlar dezenas de famílias com empresa de construção", "burla na construção", raw_title, flags=re.I)
-            elif len(raw_title) > 65:
-                raw_title = _ellipsize(raw_title, 65)
-            item["title"] = raw_title
+            raw_title = _display_title(item)
+            title_max_lines = 3 if (qkey in ["q2", "q3", "q4", "w1", "w2"] or len(raw_title) > 55) else 2
 
             max_title_width = 700 if qkey in ["w1", "w2"] else 350
             fitted_title_font, lines, title_spacing = _fit_text_lines(
@@ -1463,6 +1482,7 @@ def generate_production_post():
                 max_title_width,
                 title_max_lines,
             )
+            _require_complete_render(raw_title, lines, qkey, "título")
             title_lines_map[qkey] = lines
             
             # Draw title
@@ -1545,6 +1565,13 @@ def generate_production_post():
                 clean_desc,
                 DESCRIPTION_CHAR_LIMITS.get(qkey, 240),
             )
+            if _normalise_rendered_text(description) != _normalise_rendered_text(
+                clean_desc
+            ):
+                raise RuntimeError(
+                    f"{qkey.upper()} descrição excede o limite editorial. "
+                    "Define uma descrição mais curta; o texto não será cortado."
+                )
             max_lines = min(
                 DESCRIPTION_LINE_LIMITS.get(qkey, 8),
                 max(1, cover_h // 18),
@@ -1567,6 +1594,12 @@ def generate_production_post():
                 plan["description"],
                 plan["desc_w"],
                 plan["max_lines"],
+            )
+            _require_complete_render(
+                plan["description"],
+                desc_lines,
+                plan["qkey"],
+                "descrição",
             )
             text_block_h = len(desc_lines[: plan["max_lines"]]) * spacing
             dy = plan["cover_y"] + max(0, (plan["cover_h"] - text_block_h) // 2)

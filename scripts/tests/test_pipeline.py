@@ -472,6 +472,27 @@ class RecoveryWindowTests(unittest.TestCase):
 
 
 class PostQualityGateTests(unittest.TestCase):
+    def test_display_title_prefers_concise_editorial_copy(self):
+        item = {
+            "title": "Título canónico muito extenso da fonte",
+            "editorialTitle": "Título editorial curto",
+        }
+
+        self.assertEqual(
+            generate_post._display_title(item),
+            "Título editorial curto",
+        )
+        self.assertEqual(item["title"], "Título canónico muito extenso da fonte")
+
+    def test_render_gate_rejects_silently_truncated_copy(self):
+        with self.assertRaisesRegex(RuntimeError, "não cabe integralmente"):
+            generate_post._require_complete_render(
+                "A ideia completa não pode desaparecer",
+                ["A ideia completa"],
+                "q2",
+                "título",
+            )
+
     def test_compact_text_keeps_largest_complete_prefix_without_ellipsis(self):
         text = (
             "Primeira frase informativa. "
