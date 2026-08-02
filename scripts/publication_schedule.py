@@ -156,6 +156,7 @@ def publication_decision(draft, receipt=None, *, now=None, force_now=False):
         return (
             False,
             f"A publicação só pode começar na {day_label} entre as {expected_hour:02d}:00 e as {expected_hour:02d}:59.",
+        scheduled_for, 
         )
 
     receipt = receipt if isinstance(receipt, dict) else {}
