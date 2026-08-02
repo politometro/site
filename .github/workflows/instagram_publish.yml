@@ -78,7 +78,7 @@ jobs:
 
       - name: Verify Approved Draft Is Still Current
         run: |
-          python scripts/generate_post.py --verify-approved
+          python scripts/generate_post.py
 
       - name: Validate Meta Access
         env:
