@@ -12,10 +12,10 @@
       "priority": 3,
       "expiryDate": null,
       "createdAt": "2026-07-18T23:33:07.743672Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "ai-catalogue-candidate",
       "externalId": "openlibrary:/works/OL10460640W",
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "openlibrary",
@@ -26,7 +26,8 @@
         "resolvedTitle": "The Origins of Totalitarianism",
         "resolvedAuthor": "Hannah Arendt",
         "sourceDescription": "Estudo sobre antissemitismo, imperialismo e regimes totalitários no século XX."
-      }
+      },
+      "validationError": "HTTP_ERROR: HTTP 503 ao obter https://openlibrary.org/search.json?title=The+Origins+of+Totalitarianism&author=Hannah+Arendt&limit=20."
     },
     {
       "id": "ai_movie_8560cb575558426f",
@@ -140,10 +141,10 @@
       "priority": 3,
       "expiryDate": null,
       "createdAt": "2026-07-20T12:29:16.100660Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "ai-catalogue-candidate",
       "externalId": "openlibrary:/works/OL1168007W",
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "openlibrary",
@@ -154,7 +155,8 @@
         "resolvedTitle": "Animal Farm",
         "resolvedAuthor": "George Orwell",
         "sourceDescription": "Fábula política sobre revolução, poder e a forma como ideais libertadores podem ser capturados por novas elites."
-      }
+      },
+      "validationError": "HTTP_ERROR: HTTP 503 ao obter https://openlibrary.org/search.json?title=Animal+Farm&author=George+Orwell&limit=20."
     },
     {
       "id": "ai_movie_c89512189f814145",
@@ -753,10 +755,10 @@
       "priority": 3,
       "expiryDate": null,
       "createdAt": "2026-07-27T13:46:30.577283Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "ai-catalogue-candidate",
       "externalId": "openlibrary:/works/OL32342092W",
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "openlibrary",
@@ -767,7 +769,8 @@
         "resolvedTitle": "Democracy in America",
         "resolvedAuthor": "Alexis de Tocqueville",
         "sourceDescription": "Observação fundamental sobre democracia, igualdade, costumes cívicos e instituições nos Estados Unidos."
-      }
+      },
+      "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=Democracy+in+America&author=Alexis+de+Tocqueville&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Read timed out. (read timeout=18)"
     },
     {
       "id": "rss_podcast_92379fb05216df4c",
@@ -866,6 +869,180 @@
         "resolvedTitle": "The Manchurian Candidate",
         "resolvedAuthor": "John Frankenheimer",
         "sourceDescription": "Thriller sobre manipulação política, conspiração e medo ideológico durante a Guerra Fria."
+      }
+    },
+    {
+      "id": "rss_podcast_1d5f16bbce93cf2c",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Fernando Alexandre conseguiu esclarecer o Parlamento e o país? E o que aconteceu em Ceuta?",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre os temas e questões de fernando alexandre conseguiu esclarecer o parlamento e o país? e o que aconteceu em ceuta.",
+      "imageUrl": "/covers/podcast_fernando_alexandre_conseguiu_esclarecer_o_parlamento_6cda6fa6_1d5f16bbce93.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/fernando-alexandre-conseguiu-esclarecer-o-parlamento-e-o-pa-s-e-o-que-aconteceu-em-ceuta",
+      "externalId": "1495e121-318b-4673-a700-b49b013b4d4b",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-04T08:10:00Z",
+      "expiryDate": "2026-08-14T08:10:00Z",
+      "createdAt": "2026-08-04T12:22:07.511864Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "1495e121-318b-4673-a700-b49b013b4d4b",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "1495e121-318b-4673-a700-b49b013b4d4b",
+        "score": 1.0,
+        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
+        "verifiedAt": "2026-08-04T12:22:10.793078Z",
+        "resolvedTitle": "Fernando Alexandre conseguiu esclarecer o Parlamento e o país? E o que aconteceu em Ceuta?",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-08-04T08:10:00Z",
+        "sourceDescription": "O ministro da Educação regressou ao Parlamento pela quarta vez para responder às perguntas das bancadas parlamentares sobre os exames nacionais. Neste episódio de Linhas Vermelhas , Miguel Prata Roque e, esta semana, Paulo Núncio analisam as explicações de Fernando Alexandre e discutem ainda a crise migratória em Ceuta, onde mais de 60 mil pessoas chegaram…",
+        "editorialDescription": "Análise sobre os temas e questões de fernando alexandre conseguiu esclarecer o parlamento e o país? e o que aconteceu em ceuta.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "f090ecc3808a103b296f7e0da2015c154f739ec90113aa925d22034211b0e540",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_aa88c1190635ee11",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Luís Neves como \"cortina de fumo\" e à beira da saída?",
+      "authorOrMeta": "observador.pt",
+      "description": "Pedro Costa (PS) e Duarte Pacheco (PSD) concordam que será difícil para Luís Neves manter-se no Governo. Ainda os elogios à atuação do Presidente da República, que tem a \"palavra como arma\".",
+      "imageUrl": "/covers/highlight_lu_s_neves_como__cortina_de_fumo__e___beira_da_sa__2b16529d_6251c4dacb73.jpg",
+      "link": "https://observador.pt/programas/explicador/luis-neves-como-cortina-de-fumo-e-a-beira-da-saida/",
+      "externalId": "article:url:aa88c1190635ee11b01e1788",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-04T09:11:25Z",
+      "expiryDate": "2026-09-03T09:11:25Z",
+      "createdAt": "2026-08-04T12:22:13.224812Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/luis-neves-como-cortina-de-fumo-e-a-beira-da-saida/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "PSD",
+          "Política",
+          "Governo",
+          "PS",
+          "Ministério Administração Interna",
+          "Presidente da República",
+          "António José Seguro"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:aa88c1190635ee11b01e1788",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-08-04T12:22:13.466269Z",
+        "resolvedTitle": "Luís Neves como \"cortina de fumo\" e à beira da saída?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-04T09:11:25Z",
+        "sourceDescription": "Pedro Costa (PS) e Duarte Pacheco (PSD) concordam que será difícil para Luís Neves manter-se no Governo. Ainda os elogios à atuação do Presidente da República, que tem a \"palavra como arma\"."
+      }
+    },
+    {
+      "id": "ai_book_a58b6f60a86f4765",
+      "type": "book",
+      "category": "Livro",
+      "title": "Capital",
+      "authorOrMeta": "Karl Marx",
+      "description": "Crítica da economia política centrada no trabalho, no capital e nas dinâmicas de exploração do capitalismo.",
+      "imageUrl": "/covers/book_capital_3cecf3e6_4f9de7204b63.jpg",
+      "link": "https://openlibrary.org/works/OL15663481W",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-08-04T12:24:38.210715Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL15663481W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL15663481W",
+        "score": 1.0,
+        "coverHash": "092162dea5a7dd9483c19f5a3a7d08c156f3bf0f147cab9b711d5b77bebeac8b",
+        "verifiedAt": "2026-08-04T12:24:58.541205Z",
+        "resolvedTitle": "Capital",
+        "resolvedAuthor": "Karl Marx",
+        "sourceDescription": "Crítica da economia política centrada no trabalho, no capital e nas dinâmicas de exploração do capitalismo."
+      }
+    },
+    {
+      "id": "ai_book_23d518845ade4349",
+      "type": "book",
+      "category": "Livro",
+      "title": "On Liberty",
+      "authorOrMeta": "John Stuart Mill",
+      "description": "Defesa influente da liberdade individual, do debate público e dos limites do poder social e estatal.",
+      "imageUrl": "/covers/book_on_liberty_15acefa3_5ae114e753e7.jpg",
+      "link": "https://openlibrary.org/works/OL1068091W",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-08-04T12:24:58.543131Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL1068091W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL1068091W",
+        "score": 1.0,
+        "coverHash": "9fedfbf77400e7093a337c03de678c9e0db03b0c222285b6262e7e49bb01a361",
+        "verifiedAt": "2026-08-04T12:25:56.415692Z",
+        "resolvedTitle": "On Liberty",
+        "resolvedAuthor": "John Stuart Mill",
+        "sourceDescription": "Defesa influente da liberdade individual, do debate público e dos limites do poder social e estatal."
+      }
+    },
+    {
+      "id": "ai_book_5fe008c4f4854e1d",
+      "type": "book",
+      "category": "Livro",
+      "title": "The affluent society",
+      "authorOrMeta": "John Kenneth Galbraith",
+      "description": "Uma obra sobre economia e sociedade.",
+      "imageUrl": "/covers/book_the_affluent_society_bfce2141_3586269fbcaf.jpg",
+      "link": "https://openlibrary.org/works/OL12581W",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-08-04T12:33:02.812156Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL12581W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL12581W",
+        "score": 1.0,
+        "coverHash": "64543f1d975b313083226e11c88fd3bf4d80b74e3f30a631fdf196a1ff3d3e4d",
+        "verifiedAt": "2026-08-04T12:33:21.828449Z",
+        "resolvedTitle": "The affluent society",
+        "resolvedAuthor": "John Kenneth Galbraith",
+        "sourceDescription": "Uma obra sobre economia e sociedade."
       }
     }
   ],

@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL1068091W",
+  "coverHash": "9fedfbf77400e7093a337c03de678c9e0db03b0c222285b6262e7e49bb01a361",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://ia801009.us.archive.org/view_archive.php?archive=%2F12%2Fitems%2Folcovers96%2Folcovers96-L.zip&file=966821-L.jpg",
+  "entityId": "openlibrary:/works/OL1068091W",
+  "expiryDate": null,
+  "height": 475,
+  "isbn": "",
+  "resolvedAuthor": "John Stuart Mill",
+  "resolvedTitle": "On Liberty",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "On Liberty",
+  "titleNormalized": "on liberty",
+  "type": "book",
+  "verifiedAt": "2026-08-04T12:25:56.415692Z",
+  "width": 284
+}
