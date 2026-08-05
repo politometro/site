@@ -716,7 +716,7 @@
       "sourcePublishedAt": "2026-07-27T08:01:43Z",
       "expiryDate": "2026-08-06T08:01:43Z",
       "createdAt": "2026-07-27T13:46:24.722033Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -725,7 +725,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/image.jpg?t=1716287262&size=Large",
         "show": "O Princípio da Incerteza"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -741,7 +741,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "b208eb6617e26b85f48bf8321328ba2c16599a332bab68cf78084f2af1ddc4eb",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Depois das férias, vamos ter o Governo tal e qual como está hoje?]: Conteúdo expira em 2026-08-06T08:01:43Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "ai_book_8d45a12e33734212",
