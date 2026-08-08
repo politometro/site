@@ -3084,7 +3084,9 @@ def load_cover_for_item(item: Mapping[str, Any]) -> Image.Image | None:
         return None
 
 
-def _already_verified(item: Mapping[str, Any]) -> dict[str, Any] | None:
+def _already_verified(
+    item: Mapping[str, Any], *, allow_stale_review_override: bool = False
+) -> dict[str, Any] | None:
     if not validate_cached_cover(item):
         return None
     verification = item.get("verification")
@@ -3106,7 +3108,9 @@ def _already_verified(item: Mapping[str, Any]) -> dict[str, Any] | None:
         verified_at.replace("Z", "+00:00")
     )
     age = _dt.datetime.now(_dt.timezone.utc) - timestamp
-    if age < _dt.timedelta(0) or age > _dt.timedelta(hours=ttl_hours):
+    if age < _dt.timedelta(0) or (
+        age > _dt.timedelta(hours=ttl_hours) and not allow_stale_review_override
+    ):
         return None
     expiry = _normalise_datetime(
         item.get("expiryDate"), allow_future=True
@@ -3234,6 +3238,25 @@ def resolve_recommendation(
         raise RecommendationResolutionError(
             "UNSUPPORTED_TYPE", f"Tipo não suportado: {media_type!r}.", item=item
         )
+    verification = item.get("verification")
+    cover_override = (
+        verification.get("coverOverride")
+        if isinstance(verification, Mapping)
+        else None
+    )
+    if (
+        isinstance(cover_override, Mapping)
+        and cover_override.get("status") == "approved"
+        and cover_override.get("source") == "discord-review"
+    ):
+        reviewed = _already_verified(item, allow_stale_review_override=True)
+        if reviewed is None:
+            raise RecommendationResolutionError(
+                "REVIEW_COVER_INVALID",
+"A capa aprovada no Discord já não é considerada válida (cache expirado ou manifesto inconsistente); não será substituída automaticamente.",
+                item=item,
+            )
+        return reviewed
     if not force:
         cached = _already_verified(item)
         if cached is not None:

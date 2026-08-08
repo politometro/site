@@ -275,6 +275,33 @@ class RecommendationResolverTests(unittest.TestCase):
             source_description,
         )
 
+    def test_forced_resolution_keeps_discord_approved_cover(self):
+        item = {
+            "type": "book",
+            "title": "The Open Society and Its Enemies",
+            "verification": {
+                "coverOverride": {
+                    "status": "approved",
+                    "source": "discord-review",
+                }
+            },
+        }
+        reviewed = {**item, "imageUrl": "/covers/reviewed.jpg"}
+
+        with (
+            patch.object(
+                resolver,
+                "_already_verified",
+                return_value=reviewed,
+            ) as cached,
+            patch.object(resolver, "_resolve_entity") as resolve_entity,
+        ):
+            result = resolver.resolve_recommendation(item, force=True)
+
+        self.assertEqual(result, reviewed)
+        cached.assert_called_once_with(item, allow_stale_review_override=True)
+        resolve_entity.assert_not_called()
+
     def test_unmanifested_legacy_file_never_skips_entity_resolution(self):
         item = {
             "type": "book",

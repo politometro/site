@@ -402,7 +402,9 @@ def build_caption(selected, post_type="sunday_standard"):
         emoji = _recommendation_emoji(item)
         title = _ellipsize(_display_title(item), 110)
         author = _ellipsize(item.get("authorOrMeta", ""), 80)
-        clean_desc = _sanitize_description(item.get("description", ""), item.get("title", ""))
+        clean_desc = _sanitize_description(
+            item.get("description", ""), _display_title(item)
+        )
         description = _compact_text(clean_desc, 220)
         author_suffix = f" ({author})" if author else ""
         sections.append(

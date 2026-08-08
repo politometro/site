@@ -471,7 +471,11 @@ def _apply_review_cover_metadata(item, manifest, cover_bytes, width, height):
         "source": "discord-review",
         "approvedAt": verified_at,
     }
-    verification = item.setdefault("verification", {})
+    verification = item.get("verification")
+    if not isinstance(verification, dict):
+        verification = {}
+        item["verification"] = verification
+    verification["status"] = "verified"
     verification["coverHash"] = cover_hash
     verification["verifiedAt"] = verified_at
     verification["coverOverride"] = override
@@ -485,6 +489,14 @@ def _apply_review_cover_metadata(item, manifest, cover_bytes, width, height):
     manifest["verifiedAt"] = verified_at
     manifest["coverOverride"] = override
     return cover_hash
+
+
+def _review_cover_name(current_name, cover_bytes):
+    """Return a cache-busting filename tied to the reviewed image bytes."""
+    stem = current_name[:-4] if current_name.casefold().endswith(".jpg") else current_name
+    stem = re.sub(r"_review_[0-9a-f]{12}$", "", stem)
+    digest = hashlib.sha256(cover_bytes).hexdigest()[:12]
+    return f"{stem}_review_{digest}.jpg"
 
 
 async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
@@ -516,13 +528,17 @@ async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
     cover_name = urllib.parse.unquote(image_url.removeprefix("/covers/"))
     if "/" in cover_name or "\\" in cover_name:
         return "O caminho da capa da recomendação é inválido."
-    cover_path = f"website/public/covers/{cover_name}"
-    manifest_path = cover_path[:-4] + ".json"
+    source_manifest_path = f"website/public/covers/{cover_name[:-4]}.json"
 
-    manifest_content, manifest_sha = get_github_file(manifest_path)
+    manifest_content, manifest_sha = get_github_file(source_manifest_path)
     if not manifest_content:
         return f"Erro ao obter o manifesto da capa: {manifest_sha}"
     manifest = json.loads(manifest_content.decode("utf-8"))
+
+    reviewed_name = _review_cover_name(cover_name, cover_bytes)
+    reviewed_url = f"/covers/{reviewed_name}"
+    cover_path = f"website/public/covers/{reviewed_name}"
+    manifest_path = cover_path[:-4] + ".json"
 
     rec_content, rec_sha = get_github_file("website/public/recommendations.json")
     if not rec_content:
@@ -547,6 +563,8 @@ async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
     _apply_review_cover_metadata(
         db_item, manifest, cover_bytes, normalized.width, normalized.height
     )
+    draft_item["imageUrl"] = reviewed_url
+    db_item["imageUrl"] = reviewed_url
 
     writes = (
         (cover_path, cover_bytes, "Replace reviewed cover [bot]", None),
@@ -554,7 +572,8 @@ async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
             manifest_path,
             json.dumps(manifest, indent=2, ensure_ascii=False).encode("utf-8"),
             "Bind reviewed cover manifest [bot]",
-            manifest_sha,
+            None,
+            None,
         ),
         (
             "website/public/recommendations.json",
