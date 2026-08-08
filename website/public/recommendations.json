@@ -443,96 +443,6 @@
       }
     },
     {
-      "id": "rss_highlight_d1f86428b5e52050",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "A ciência nas mãos da ideologia",
-      "authorOrMeta": "Francisca Zacarias",
-      "description": "O parecer recentemente emitido pela Ordem dos Médicos, bem como a sua representação nos meios de comunicação, deveriam preocupar todos os portugueses, independentemente da sua posição política",
-      "imageUrl": "/covers/highlight_a_ci_ncia_nas_m_os_da_ideologia_ae257bcb_fc21d2503563.jpg",
-      "link": "https://observador.pt/opiniao/a-ciencia-nas-maos-da-ideologia/",
-      "externalId": "article:url:d1f86428b5e520506f0c021c",
-      "priority": 4,
-      "sourcePublishedAt": "2026-07-21T23:13:28Z",
-      "expiryDate": "2026-08-20T23:13:28Z",
-      "createdAt": "2026-07-22T00:41:29.050826Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/a-ciencia-nas-maos-da-ideologia/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A497%3A497%3Anowe%3A0%3A29%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F02%2F02130317%2F1000046572-e1770037512918.jpg",
-        "categories": [
-          "Tribuna Aberta",
-          "Opinião",
-          "Observador",
-          "Identidade de Género",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:d1f86428b5e520506f0c021c",
-        "score": 1.0,
-        "coverHash": "cd0f25b7e6c2aed8109c84b9c6440e46a850701923e6414f1af410497e54fabf",
-        "verifiedAt": "2026-07-23T11:57:48.959206Z",
-        "resolvedTitle": "A ciência nas mãos da ideologia",
-        "resolvedAuthor": "Francisca Zacarias",
-        "sourcePublishedAt": "2026-07-21T23:13:28Z",
-        "sourceDescription": "O parecer recentemente emitido pela Ordem dos Médicos, bem como a sua representação nos meios de comunicação, deveriam preocupar todos os portugueses, independentemente da sua posição política"
-      },
-      "validationError": "HIGHLIGHT_NOT_FOUND [A ciência nas mãos da ideologia]: O artigo deixou de constar do RSS autorizado."
-    },
-    {
-      "id": "rss_highlight_4327bc469ced91f0",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Hepatites Virais: no caminho tortuoso para a erradicação",
-      "authorOrMeta": "Joana Nunes",
-      "description": "Neste Dia Mundial das Hepatites Virais, a Sociedade Portuguesa de Gastrenterologia apela a todos os cidadãos para que realizem o rastreio para a hepatite B e para a hepatite C.",
-      "imageUrl": "/covers/highlight_hepatites_virais__no_caminho_tortuoso_para_a_errad_140c2734_564782ec8e96.jpg",
-      "link": "https://observador.pt/opiniao/hepatites-virais-no-caminho-tortuoso-para-a-erradicacao/",
-      "externalId": "article:url:4327bc469ced91f0482ae1e9",
-      "priority": 4,
-      "sourcePublishedAt": "2026-07-21T23:02:11Z",
-      "expiryDate": "2026-08-20T23:02:11Z",
-      "createdAt": "2026-07-22T00:41:29.053201Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/hepatites-virais-no-caminho-tortuoso-para-a-erradicacao/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A31%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F07%2F21222933%2Fdra-joana-nunes-fotografia.jpg",
-        "categories": [
-          "Tribuna Aberta",
-          "Opinião",
-          "Observador",
-          "Doenças",
-          "Saúde",
-          "Medicina",
-          "Ciência"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:4327bc469ced91f0482ae1e9",
-        "score": 1.0,
-        "coverHash": "aa88baf05ad7a07510fbefdd870cf641731949d3479b7173e9125729d3beb60a",
-        "verifiedAt": "2026-07-23T11:57:51.029197Z",
-        "resolvedTitle": "Hepatites Virais: no caminho tortuoso para a erradicação",
-        "resolvedAuthor": "Joana Nunes",
-        "sourcePublishedAt": "2026-07-21T23:02:11Z",
-        "sourceDescription": "Neste Dia Mundial das Hepatites Virais, a Sociedade Portuguesa de Gastrenterologia apela a todos os cidadãos para que realizem o rastreio para a hepatite B e para a hepatite C."
-      },
-      "validationError": "HIGHLIGHT_NOT_FOUND [Hepatites Virais: no caminho tortuoso para a erradicação]: O artigo deixou de constar do RSS autorizado."
-    },
-    {
       "id": "rss_highlight_4b0ae41ea6c6487a",
       "type": "highlight",
       "category": "Destaque",
@@ -1044,6 +954,89 @@
         "resolvedTitle": "The affluent society",
         "resolvedAuthor": "John Kenneth Galbraith",
         "sourceDescription": "Uma obra sobre economia e sociedade."
+      }
+    },
+    {
+      "id": "rss_highlight_92c26475816d2dae",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Afinal, Salazar era fascista?",
+      "authorOrMeta": "observador.pt",
+      "description": "As acusações de fascismo nas décadas que levamos de regime democrático, já recaíram sobre várias cabeças e partidos, desde Sá Carneiro ao CDS, ao sabor das necessidades revolucionárias.",
+      "imageUrl": "/covers/highlight_afinal__salazar_era_fascista__bfa2a227_0ba97ced2f13.jpg",
+      "link": "https://observador.pt/opiniao/afinal-salazar-era-fascista/",
+      "externalId": "article:url:92c26475816d2dae0ec3026d",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-07T23:12:56Z",
+      "expiryDate": "2026-09-06T23:12:56Z",
+      "createdAt": "2026-08-08T06:26:44.226790Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/afinal-salazar-era-fascista/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2024%2F05%2F08145002%2Fcaptura-de-ecra-2024-05-08-144606.jpg",
+        "categories": [
+          "Salazar",
+          "País",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:92c26475816d2dae0ec3026d",
+        "score": 1.0,
+        "coverHash": "66d6aeede9584dd0a65f49e73779f6090274ba65e6501640ffe6fdccdf04b030",
+        "verifiedAt": "2026-08-08T06:26:45.360043Z",
+        "resolvedTitle": "Afinal, Salazar era fascista?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-07T23:12:56Z",
+        "sourceDescription": "As acusações de fascismo nas décadas que levamos de regime democrático, já recaíram sobre várias cabeças e partidos, desde Sá Carneiro ao CDS, ao sabor das necessidades revolucionárias."
+      }
+    },
+    {
+      "id": "rss_highlight_4f51a486d04e7c62",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A lei da rolha na criminalidade associada à imigração",
+      "authorOrMeta": "observador.pt",
+      "description": "A ausência persistente de dados sugere uma escolha política de não os tornar públicos, com implicações relevantes.",
+      "imageUrl": "/covers/highlight_a_lei_da_rolha_na_criminalidade_associada___imigra_97fd728a_b3e5c64b094a.jpg",
+      "link": "https://observador.pt/opiniao/a-lei-da-rolha-na-criminalidade-associada-a-imigracao/",
+      "externalId": "article:url:4f51a486d04e7c622c5a55be",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-07T23:08:43Z",
+      "expiryDate": "2026-09-06T23:08:43Z",
+      "createdAt": "2026-08-08T06:26:44.227110Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-lei-da-rolha-na-criminalidade-associada-a-imigracao/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F06%2F25232515%2Fimage0.jpg",
+        "categories": [
+          "Imigração",
+          "Mundo",
+          "Crime",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:4f51a486d04e7c622c5a55be",
+        "score": 1.0,
+        "coverHash": "f6e9673ac9e97820f2d64528393169f955a94a81a137e12ffc38c21973d11c0c",
+        "verifiedAt": "2026-08-08T06:26:46.288187Z",
+        "resolvedTitle": "A lei da rolha na criminalidade associada à imigração",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-07T23:08:43Z",
+        "sourceDescription": "A ausência persistente de dados sugere uma escolha política de não os tornar públicos, com implicações relevantes."
       }
     }
   ],
