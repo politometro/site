@@ -1,0 +1,26 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL8975462W",
+  "coverHash": "e69a0f8d43705d7f7de70fc73987af92182139587db3d8aa2fef1dcafec80cbc",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "discord-review://manual-upload",
+  "coverOverride": {
+    "status": "approved",
+    "source": "discord-review",
+    "approvedAt": "2026-08-08T23:08:36.641746Z"
+  },
+  "entityId": "openlibrary:/works/OL8975462W",
+  "expiryDate": null,
+  "height": 2775,
+  "isbn": "",
+  "resolvedAuthor": "Karl Popper",
+  "resolvedTitle": "The Open Society and Its Enemies",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "The Open Society and Its Enemies",
+  "titleNormalized": "the open society and its enemies",
+  "type": "book",
+  "verifiedAt": "2026-08-08T23:08:36.641746Z",
+  "width": 1839
+}

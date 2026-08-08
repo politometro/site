@@ -734,7 +734,7 @@
       "title": "The Open Society and Its Enemies",
       "authorOrMeta": "Karl Popper",
       "description": "Defesa da sociedade aberta contra projetos políticos fechados, autoritários e hostis ao pluralismo.",
-      "imageUrl": "/covers/book_the_open_society_and_its_enemies_4ae50c92_f77f3b04df26.jpg",
+      "imageUrl": "/covers/book_the_open_society_and_its_enemies_4ae50c92_f77f3b04df26_review_e69a0f8d437.jpg",
       "link": "https://openlibrary.org/works/OL8975462W",
       "priority": 3,
       "expiryDate": null,
@@ -748,8 +748,13 @@
         "source": "openlibrary",
         "entityId": "openlibrary:/works/OL8975462W",
         "score": 1.0,
-        "coverHash": "54d5b78ac2c0b224de0c28f8448b2bb6de0f12ef2c6949e5d6b68a5de447c5fd",
-        "verifiedAt": "2026-08-08T22:50:30.443533Z",
+        "coverHash": "e69a0f8d43705d7f7de70fc73987af92182139587db3d8aa2fef1dcafec80cbc",
+        "verifiedAt": "2026-08-08T23:08:36.641746Z",
+        "coverOverride": {
+          "status": "approved",
+          "source": "discord-review",
+          "approvedAt": "2026-08-08T23:08:36.641746Z"
+        },
         "resolvedTitle": "The Open Society and Its Enemies",
         "resolvedAuthor": "Karl Popper",
         "sourceDescription": "Defesa da sociedade aberta contra projetos políticos fechados, autoritários e hostis ao pluralismo."

@@ -25,7 +25,8 @@ except ValueError:
     print(f"❌ Erro: '{raw_channel}' não é um ID de canal válido (deve ser um número).")
     sys.exit(1)
 
-PING_EVERYONE = os.environ.get("PING_EVERYONE", "false").lower() == "true"
+# Every review card is an approval request and must notify the review group.
+PING_EVERYONE = True
 
 # Determine paths
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))

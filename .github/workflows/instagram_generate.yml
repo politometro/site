@@ -156,7 +156,7 @@ jobs:
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_REVIEW_CHANNEL_ID: ${{ github.event.inputs.channel_id || secrets.DISCORD_REVIEW_CHANNEL_ID }}
-          PING_EVERYONE: ${{ github.event_name == 'schedule' }}
+          PING_EVERYONE: 'true'
         run: |
           python scripts/send_to_discord.py
 
