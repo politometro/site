@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_cfbda4300facc25ee75b",
-  "content_hash": "cfbda4300facc25ee75b8e37202113587baf533e4d6a6b868fa1284e4a5fe22d",
+  "draft_id": "draft_57d238cc8e34f9bfaf82",
+  "content_hash": "57d238cc8e34f9bfaf8244629033a28c04f99ab20c1789ecbdd09bc8c6373277",
   "post_type": "sunday_standard",
-  "created_at": "2026-08-08T21:37:45.495517+00:00",
+  "created_at": "2026-08-08T21:41:21.365798+00:00",
   "is_test": false,
   "post_sha256": "b987933796e9cc4c67401ad00e248e7265e3f1f3229608fee5d382aeb149870a",
   "caption_sha256": "4fdcb7a13c6a7a5fc313386833852362a35c7b58f6046bca22344fdef898ae9b",
@@ -36,8 +36,7 @@
       "resolvedTitle": "The Open Society and Its Enemies",
       "resolvedAuthor": "Karl Popper",
       "sourceDescription": "Defesa da sociedade aberta contra projetos políticos fechados, autoritários e hostis ao pluralismo."
-    },
-    "layout_preference": "template_2"
+    }
   },
   "q2": {
     "id": "rss_podcast_92379fb05216df4c",
@@ -81,8 +80,7 @@
       "editorialDescriptionVersion": 1,
       "editorialSourceHash": "af036a70b71132bf8234553ca207d550fc357df1985223700d995eff09aafe08",
       "editorialDescriptionProvider": "extractive"
-    },
-    "layout_preference": "template_2"
+    }
   },
   "q3": {
     "type": "investigation",
@@ -110,10 +108,9 @@
       "resolvedTitle": "Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas",
       "resolvedAuthor": "NOW Canal",
       "sourcePublishedAt": "2026-06-14T13:23:27Z",
-      "sourceDescription": "Vídeo “Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas”, publicado por NOW Canal em 14/06/2026."
+      "sourceDescription": "Episódio de investigação do Repórter Sábado sobre burlas digitais e as vítimas destes esquemas."
     },
-    "sourcePublishedAt": "2026-06-14T13:23:27Z",
-    "layout_preference": "template_2"
+    "sourcePublishedAt": "2026-06-14T13:23:27Z"
   },
   "q4": {
     "id": "rss_highlight_30bf50141a793671",
@@ -153,7 +150,6 @@
       "resolvedAuthor": "Helena Matos",
       "sourcePublishedAt": "2026-07-25T23:25:54Z",
       "sourceDescription": "Porque protege o PS Luís Neves? Porque o convidou Montenegro para o Governo? Estamos a viver as vésperas de um amanhã engendrado nos silêncios do agora. E no medo que tolhe os protagonistas."
-    },
-    "layout_preference": "template_2"
+    }
   }
 }
