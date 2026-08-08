@@ -220,7 +220,7 @@
       "type": "investigation",
       "title": "Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas",
       "authorOrMeta": "NOW Canal",
-      "description": "Vídeo “Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas”, publicado por NOW Canal em 14/06/2026.",
+      "description": "Episódio de investigação do Repórter Sábado sobre burlas digitais e as vítimas destes esquemas.",
       "link": "https://www.youtube.com/watch?v=uMj2e_ob68Y",
       "priority": 5,
       "id": "watch_investigation_b30758365b064f5d",
@@ -242,7 +242,7 @@
         "resolvedTitle": "Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas",
         "resolvedAuthor": "NOW Canal",
         "sourcePublishedAt": "2026-06-14T13:23:27Z",
-        "sourceDescription": "Vídeo “Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas”, publicado por NOW Canal em 14/06/2026."
+        "sourceDescription": "Episódio de investigação do Repórter Sábado sobre burlas digitais e as vítimas destes esquemas."
       },
       "sourcePublishedAt": "2026-06-14T13:23:27Z"
     },
@@ -690,7 +690,7 @@
       "title": "Reedição do primeiro podcast de Ricardo Araújo Pereira",
       "editorialTitle": "Reedição do primeiro podcast de Ricardo Araújo Pereira",
       "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Ricardo Araújo Pereira na companhia de 7 amantes de comédia",
+      "description": "Análise sobre reedição do arquivo de podcasts da SIC. O primeiro podcast original de Ricardo Araújo Pereira.",
       "imageUrl": "/covers/podcast_sugest_o_de_ver_o__sobre_discorrer_chatamente__com_c_54c57faf_92379fb05216.jpg",
       "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/sugest-o-de-ver-o-sobre-discorrer-chatamente-com-c-tia-domingues-cl-udio-almeida-guilherme-fonseca-joana-marques-manuel-cardoso-miguel-g-is-e-jos-diogo-quintela",
       "externalId": "5b2bd1eb-980a-4484-a193-b49a0101f378",
@@ -716,14 +716,14 @@
         "entityId": "5b2bd1eb-980a-4484-a193-b49a0101f378",
         "score": 1.0,
         "coverHash": "066b65d2e6e5e55366441167925524544f8c4586487554880cf2226b43aafd7b",
-        "verifiedAt": "2026-08-06T12:23:16.717874Z",
-        "resolvedTitle": "Sugestão de Verão: sobre discorrer chatamente, com Cátia Domingues, Cláudio Almeida, Guilherme Fonseca, Joana Marques, Manuel Cardoso, Miguel Góis e José Diogo Quintela",
+        "verifiedAt": "2026-08-08T21:37:28.707533Z",
+        "resolvedTitle": "Sugestão de Verão: sobre discorrer chatamente, com Cátia Domingues, Cláudio Almeida, Guilherme Fonseca, Joana Marques, Manuel Cardoso, Miguel Góis, José Diogo Quintela e Ricardo Araújo Pereira",
         "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
         "sourcePublishedAt": "2026-08-02T16:00:15Z",
         "sourceDescription": "Reedição do arquivo de podcasts da SIC. Episódio publicado originalmente em janeiro de 2024, no festival de podcasts do Expresso, de “Coisa Que Não Edifica Nem Destrói”. o primeiro podcast original de Ricardo Araújo Pereira.",
-        "editorialDescription": "Ricardo Araújo Pereira na companhia de 7 amantes de comédia",
+        "editorialDescription": "Análise sobre reedição do arquivo de podcasts da SIC. O primeiro podcast original de Ricardo Araújo Pereira.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "4c5c2073d855670952c93238fc03640700a2bd8b529a63ce0d882326d927305b",
+        "editorialSourceHash": "af036a70b71132bf8234553ca207d550fc357df1985223700d995eff09aafe08",
         "editorialDescriptionProvider": "extractive"
       }
     },
