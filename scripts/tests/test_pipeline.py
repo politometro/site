@@ -539,6 +539,23 @@ class PostQualityGateTests(unittest.TestCase):
         self.assertNotIn("…", compact)
         self.assertNotIn("...", compact)
 
+    def test_q4_description_is_compacted_instead_of_blocking_post(self):
+        description = (
+            "Porque protege o PS Luís Neves? Porque o convidou Montenegro "
+            "para o Governo? Estamos a viver as vésperas de um amanhã "
+            "engendrado nos silêncios do agora. E no medo que tolhe os protagonistas."
+        )
+
+        compact = generate_post._compact_text(
+            description,
+            generate_post.DESCRIPTION_CHAR_LIMITS["q4"],
+        )
+
+        self.assertEqual(
+            compact,
+            "Porque protege o PS Luís Neves? Porque o convidou Montenegro para o Governo?",
+        )
+
     def test_card_description_limits_prevent_text_from_exceeding_cover(self):
         self.assertLess(
             generate_post.DESCRIPTION_CHAR_LIMITS["q2"],

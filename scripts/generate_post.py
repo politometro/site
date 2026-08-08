@@ -901,18 +901,26 @@ def _fit_text_lines_at_size(draw, text, font_path, size, max_width, max_lines):
 
 
 def _fit_fixed_description_lines(draw, text, max_width, max_lines):
-    font, lines, spacing = _fit_text_lines_at_size(
-        draw,
-        text,
-        FONT_DESC_BOLD,
-        DESCRIPTION_FONT_START_SIZE,
-        max_width,
-        max_lines,
-    )
-    if len(lines) <= max_lines:
-        return font, lines, spacing
-
     compact = str(text or "").strip()
+    for size in range(
+        DESCRIPTION_FONT_START_SIZE,
+        DESCRIPTION_FONT_MIN_SIZE - 1,
+        -1,
+    ):
+        font, lines, spacing = _fit_text_lines_at_size(
+            draw,
+            compact,
+            FONT_DESC_BOLD,
+            size,
+            max_width,
+            max_lines,
+        )
+        if len(lines) <= max_lines:
+            return font, lines, spacing
+
+    # If even the minimum readable size does not fit, retain the largest
+    # complete editorial thought that does. This is deliberate compaction,
+    # rather than silently slicing the rendered lines.
     sentence_ends = [
         match.end()
         for match in re.finditer(r"[.!?](?:\s|$)", compact)
@@ -927,11 +935,12 @@ def _fit_fixed_description_lines(draw, text, max_width, max_lines):
     words = compact.rstrip(" .!?").split()
     while words:
         candidate = " ".join(words).rstrip(" ,;:.!?")
+        candidate = candidate + "." if candidate else ""
         candidate_lines = wrap_text(draw, candidate, font, max_width)
         if candidate and len(candidate_lines) <= max_lines:
             return font, candidate_lines, spacing
         words.pop()
-    return font, lines[:max_lines], spacing
+    return font, [], spacing
 
 
 def _sha256_file(path):
@@ -1565,13 +1574,6 @@ def generate_production_post():
                 clean_desc,
                 DESCRIPTION_CHAR_LIMITS.get(qkey, 240),
             )
-            if _normalise_rendered_text(description) != _normalise_rendered_text(
-                clean_desc
-            ):
-                raise RuntimeError(
-                    f"{qkey.upper()} descrição excede o limite editorial. "
-                    "Define uma descrição mais curta; o texto não será cortado."
-                )
             max_lines = min(
                 DESCRIPTION_LINE_LIMITS.get(qkey, 8),
                 max(1, cover_h // 18),
@@ -1595,12 +1597,10 @@ def generate_production_post():
                 plan["desc_w"],
                 plan["max_lines"],
             )
-            _require_complete_render(
-                plan["description"],
-                desc_lines,
-                plan["qkey"],
-                "descrição",
-            )
+            if not desc_lines:
+                raise RuntimeError(
+                    f'{plan["qkey"].upper()} descrição não tem texto renderizável.'
+                )
             text_block_h = len(desc_lines[: plan["max_lines"]]) * spacing
             dy = plan["cover_y"] + max(0, (plan["cover_h"] - text_block_h) // 2)
 
