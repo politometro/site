@@ -471,15 +471,15 @@ def _apply_review_cover_metadata(item, manifest, cover_bytes, width, height):
         "source": "discord-review",
         "approvedAt": verified_at,
     }
-verification = item.get("verification")
-if not isinstance(verification, dict):
-    verification = {}
-    item["verification"] = verification
-verification["status"] = "verified"
-verification["coverHash"] = cover_hash
-verification["verifiedAt"] = verified_at
-verification["coverOverride"] = override
-item["resolutionStatus"] = "verified"
+    verification = item.get("verification")
+    if not isinstance(verification, dict):
+        verification = {}
+        item["verification"] = verification
+    verification["status"] = "verified"
+    verification["coverHash"] = cover_hash
+    verification["verifiedAt"] = verified_at
+    verification["coverOverride"] = override
+    item["resolutionStatus"] = "verified"
 
     manifest["coverHash"] = cover_hash
     manifest["coverSourceUrl"] = "discord-review://manual-upload"
@@ -572,6 +572,7 @@ async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
             manifest_path,
             json.dumps(manifest, indent=2, ensure_ascii=False).encode("utf-8"),
             "Bind reviewed cover manifest [bot]",
+            None,
             None,
         ),
         (

@@ -95,6 +95,7 @@ class DiscordApplicationTests(unittest.TestCase):
             "https://openlibrary.org/works/OL8975462W",
         )
 
+<<<<<<< HEAD
     def test_review_cover_filename_changes_with_image_bytes(self):
         original = "book_the_open_society_f77f3b04df26.jpg"
 
@@ -105,6 +106,8 @@ class DiscordApplicationTests(unittest.TestCase):
         self.assertRegex(first, r"_review_[0-9a-f]{12}\.jpg$")
         self.assertNotIn("_review_", second.removesuffix(".jpg").rsplit("_review_", 1)[0])
 
+=======
+>>>>>>> origin/main
     def test_free_text_feedback_is_bound_to_exact_draft(self):
         draft = {
             "draft_id": "draft_123",

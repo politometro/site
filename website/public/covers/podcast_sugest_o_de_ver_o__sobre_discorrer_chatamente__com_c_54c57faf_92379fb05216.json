@@ -9,13 +9,22 @@
   "height": 1443,
   "isbn": "",
   "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
+<<<<<<< HEAD
   "resolvedTitle": "Sugestão de Verão: sobre discorrer chatamente, com Cátia Domingues, Cláudio Almeida, Guilherme Fonseca, Joana Marques, Manuel Cardoso, Miguel Góis e José Diogo Quintela",
   "score": 1.0,
   "source": "podcast-rss",
   "sourcePublishedAt": "2026-08-02T16:00:15Z",
   "title": "Sugestão de Verão: sobre discorrer chatamente, com Cátia Domingues, Cláudio Almeida, Guilherme Fonseca, Joana Marques, Manuel Cardoso, Miguel Góis e José Diogo Quintela",
   "titleNormalized": "sugestao de verao sobre discorrer chatamente com catia domingues claudio almeida guilherme fonseca joana marques manuel cardoso miguel gois e jose diogo quintela",
+=======
+  "resolvedTitle": "Sugestão de Verão: sobre discorrer chatamente, com Cátia Domingues, Cláudio Almeida, Guilherme Fonseca, Joana Marques, Manuel Cardoso, Miguel Góis, José Diogo Quintela e Ricardo Araújo Pereira",
+  "score": 1.0,
+  "source": "podcast-rss",
+  "sourcePublishedAt": "2026-08-02T16:00:15Z",
+  "title": "Sugestão de Verão: sobre discorrer chatamente, com Cátia Domingues, Cláudio Almeida, Guilherme Fonseca, Joana Marques, Manuel Cardoso, Miguel Góis, José Diogo Quintela e Ricardo Araújo Pereira",
+  "titleNormalized": "sugestao de verao sobre discorrer chatamente com catia domingues claudio almeida guilherme fonseca joana marques manuel cardoso miguel gois jose diogo quintela e ricardo araujo pereira",
+>>>>>>> origin/main
   "type": "podcast",
-  "verifiedAt": "2026-08-06T12:23:16.717874Z",
+  "verifiedAt": "2026-08-08T22:07:54.275690Z",
   "width": 2400
 }
