@@ -400,7 +400,7 @@ def build_caption(selected, post_type="sunday_standard"):
     for qkey in selected.keys():
         item = selected[qkey]
         emoji = _recommendation_emoji(item)
-        title = _ellipsize(item["title"], 110)
+        title = _ellipsize(_display_title(item), 110)
         author = _ellipsize(item.get("authorOrMeta", ""), 80)
         clean_desc = _sanitize_description(item.get("description", ""), item.get("title", ""))
         description = _compact_text(clean_desc, 220)

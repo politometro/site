@@ -472,6 +472,21 @@ class RecoveryWindowTests(unittest.TestCase):
 
 
 class PostQualityGateTests(unittest.TestCase):
+    def test_long_podcast_guest_list_gets_concise_editorial_title(self):
+        title = (
+            "Sugestão de Verão: sobre discorrer chatamente, com Cátia "
+            "Domingues, Cláudio Almeida, Guilherme Fonseca e Joana Marques"
+        )
+
+        self.assertEqual(
+            auto_populate_ai._podcast_editorial_title(title),
+            "Sugestão de Verão: sobre discorrer chatamente",
+        )
+        self.assertEqual(
+            auto_populate_ai._podcast_editorial_title("Um título curto"),
+            "",
+        )
+
     def test_display_title_prefers_concise_editorial_copy(self):
         item = {
             "title": "Título canónico muito extenso da fonte",
@@ -483,6 +498,21 @@ class PostQualityGateTests(unittest.TestCase):
             "Título editorial curto",
         )
         self.assertEqual(item["title"], "Título canónico muito extenso da fonte")
+
+    def test_caption_prefers_concise_editorial_title(self):
+        item = {
+            "type": "podcast",
+            "category": "Podcast",
+            "title": "Título canónico muito extenso da fonte",
+            "editorialTitle": "Título editorial curto",
+            "authorOrMeta": "Programa",
+            "description": "Uma descrição útil.",
+        }
+
+        caption = generate_post.build_caption({"q1": item})
+
+        self.assertIn("Título editorial curto", caption)
+        self.assertNotIn("Título canónico muito extenso", caption)
 
     def test_render_gate_rejects_silently_truncated_copy(self):
         with self.assertRaisesRegex(RuntimeError, "não cabe integralmente"):
