@@ -3139,11 +3139,7 @@ def _already_verified(item: Mapping[str, Any]) -> dict[str, Any] | None:
             return None
         cached = dict(item)
         editorial_title = str(item.get("editorialTitle", "")).strip()
-        cached["title"] = (
-            editorial_title
-            if item.get("type") == "nostalgia" and editorial_title
-            else canonical_title
-        )
+        cached["title"] = editorial_title or canonical_title
         if canonical_author:
             cached["authorOrMeta"] = canonical_author
         editorial_description = str(
@@ -3266,11 +3262,7 @@ def resolve_recommendation(
             "A fonte verificada não forneceu um título canónico.",
             item=item,
         )
-    display_title = (
-        editorial_title
-        if resolved_type == "nostalgia" and editorial_title
-        else canonical_title
-    )
+    display_title = editorial_title or canonical_title
     canonical_author = re.sub(
         r"\s+", " ", str(entity.resolved_author or "").strip()
     )
