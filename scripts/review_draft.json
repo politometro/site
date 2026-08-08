@@ -36,7 +36,8 @@
       "resolvedTitle": "The Open Society and Its Enemies",
       "resolvedAuthor": "Karl Popper",
       "sourceDescription": "Defesa da sociedade aberta contra projetos políticos fechados, autoritários e hostis ao pluralismo."
-    }
+    },
+    "layout_preference": "template_2"
   },
   "q2": {
     "id": "rss_podcast_92379fb05216df4c",
@@ -80,7 +81,8 @@
       "editorialDescriptionVersion": 1,
       "editorialSourceHash": "af036a70b71132bf8234553ca207d550fc357df1985223700d995eff09aafe08",
       "editorialDescriptionProvider": "extractive"
-    }
+    },
+    "layout_preference": "template_2"
   },
   "q3": {
     "type": "investigation",
@@ -110,7 +112,8 @@
       "sourcePublishedAt": "2026-06-14T13:23:27Z",
       "sourceDescription": "Vídeo “Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas”, publicado por NOW Canal em 14/06/2026."
     },
-    "sourcePublishedAt": "2026-06-14T13:23:27Z"
+    "sourcePublishedAt": "2026-06-14T13:23:27Z",
+    "layout_preference": "template_2"
   },
   "q4": {
     "id": "rss_highlight_30bf50141a793671",
@@ -150,6 +153,7 @@
       "resolvedAuthor": "Helena Matos",
       "sourcePublishedAt": "2026-07-25T23:25:54Z",
       "sourceDescription": "Porque protege o PS Luís Neves? Porque o convidou Montenegro para o Governo? Estamos a viver as vésperas de um amanhã engendrado nos silêncios do agora. E no medo que tolhe os protagonistas."
-    }
+    },
+    "layout_preference": "template_2"
   }
 }
