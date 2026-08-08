@@ -3253,7 +3253,7 @@ def resolve_recommendation(
         if reviewed is None:
             raise RecommendationResolutionError(
                 "REVIEW_COVER_INVALID",
-                "A capa aprovada no Discord deixou de corresponder ao manifesto; não será substituída automaticamente.",
+"A capa aprovada no Discord já não é considerada válida (cache expirado ou manifesto inconsistente); não será substituída automaticamente.",
                 item=item,
             )
         return reviewed
