@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_45f094fd14e3ced345bf",
-  "content_hash": "45f094fd14e3ced345bf3e00f89ecb7534a71f8b4c22ddfdafd620b83bfa3688",
+  "draft_id": "draft_60ea724855d7994200e9",
+  "content_hash": "60ea724855d7994200e9c47724f963d76f42db28131ce4e3849d99c9aa2e1c74",
   "post_type": "sunday_standard",
-  "created_at": "2026-08-08T22:38:55.931924+00:00",
+  "created_at": "2026-08-08T22:50:44.269972+00:00",
   "is_test": false,
   "post_sha256": "b987933796e9cc4c67401ad00e248e7265e3f1f3229608fee5d382aeb149870a",
   "caption_sha256": "4fdcb7a13c6a7a5fc313386833852362a35c7b58f6046bca22344fdef898ae9b",
@@ -32,7 +32,7 @@
       "entityId": "openlibrary:/works/OL8975462W",
       "score": 1.0,
       "coverHash": "54d5b78ac2c0b224de0c28f8448b2bb6de0f12ef2c6949e5d6b68a5de447c5fd",
-      "verifiedAt": "2026-08-03T13:58:33.367539Z",
+      "verifiedAt": "2026-08-08T22:50:30.443533Z",
       "resolvedTitle": "The Open Society and Its Enemies",
       "resolvedAuthor": "Karl Popper",
       "sourceDescription": "Defesa da sociedade aberta contra projetos políticos fechados, autoritários e hostis ao pluralismo."

@@ -3,7 +3,7 @@
   "canonicalLink": "https://openlibrary.org/works/OL8975462W",
   "coverHash": "54d5b78ac2c0b224de0c28f8448b2bb6de0f12ef2c6949e5d6b68a5de447c5fd",
   "coverSourceMime": "image/jpeg",
-  "coverSourceUrl": "https://ia601508.us.archive.org/view_archive.php?archive=%2F31%2Fitems%2Folcovers306%2Folcovers306-L.zip&file=3069237-L.jpg",
+  "coverSourceUrl": "https://ia801508.us.archive.org/view_archive.php?archive=%2F31%2Fitems%2Folcovers306%2Folcovers306-L.zip&file=3069237-L.jpg",
   "entityId": "openlibrary:/works/OL8975462W",
   "expiryDate": null,
   "height": 475,
@@ -16,6 +16,6 @@
   "title": "The Open Society and Its Enemies",
   "titleNormalized": "the open society and its enemies",
   "type": "book",
-  "verifiedAt": "2026-08-03T13:58:33.367539Z",
+  "verifiedAt": "2026-08-08T22:50:30.443533Z",
   "width": 325
 }
