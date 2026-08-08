@@ -472,6 +472,21 @@ class RecoveryWindowTests(unittest.TestCase):
 
 
 class PostQualityGateTests(unittest.TestCase):
+    def test_long_podcast_guest_list_gets_concise_editorial_title(self):
+        title = (
+            "Sugestão de Verão: sobre discorrer chatamente, com Cátia "
+            "Domingues, Cláudio Almeida, Guilherme Fonseca e Joana Marques"
+        )
+
+        self.assertEqual(
+            auto_populate_ai._podcast_editorial_title(title),
+            "Sugestão de Verão: sobre discorrer chatamente",
+        )
+        self.assertEqual(
+            auto_populate_ai._podcast_editorial_title("Um título curto"),
+            "",
+        )
+
     def test_display_title_prefers_concise_editorial_copy(self):
         item = {
             "title": "Título canónico muito extenso da fonte",
@@ -483,6 +498,21 @@ class PostQualityGateTests(unittest.TestCase):
             "Título editorial curto",
         )
         self.assertEqual(item["title"], "Título canónico muito extenso da fonte")
+
+    def test_caption_prefers_concise_editorial_title(self):
+        item = {
+            "type": "podcast",
+            "category": "Podcast",
+            "title": "Título canónico muito extenso da fonte",
+            "editorialTitle": "Título editorial curto",
+            "authorOrMeta": "Programa",
+            "description": "Uma descrição útil.",
+        }
+
+        caption = generate_post.build_caption({"q1": item})
+
+        self.assertIn("Título editorial curto", caption)
+        self.assertNotIn("Título canónico muito extenso", caption)
 
     def test_render_gate_rejects_silently_truncated_copy(self):
         with self.assertRaisesRegex(RuntimeError, "não cabe integralmente"):
@@ -508,6 +538,23 @@ class PostQualityGateTests(unittest.TestCase):
         )
         self.assertNotIn("…", compact)
         self.assertNotIn("...", compact)
+
+    def test_q4_description_is_compacted_instead_of_blocking_post(self):
+        description = (
+            "Porque protege o PS Luís Neves? Porque o convidou Montenegro "
+            "para o Governo? Estamos a viver as vésperas de um amanhã "
+            "engendrado nos silêncios do agora. E no medo que tolhe os protagonistas."
+        )
+
+        compact = generate_post._compact_text(
+            description,
+            generate_post.DESCRIPTION_CHAR_LIMITS["q4"],
+        )
+
+        self.assertEqual(
+            compact,
+            "Porque protege o PS Luís Neves? Porque o convidou Montenegro para o Governo?",
+        )
 
     def test_card_description_limits_prevent_text_from_exceeding_cover(self):
         self.assertLess(

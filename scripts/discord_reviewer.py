@@ -459,6 +459,149 @@ async def update_recommendation_field(original_msg_id, quadrant, field_name, new
         
     return True
 
+
+def _apply_review_cover_metadata(item, manifest, cover_bytes, width, height):
+    """Bind a reviewer-supplied JPEG to the existing verified entity."""
+    cover_hash = hashlib.sha256(cover_bytes).hexdigest()
+    verified_at = datetime.datetime.now(datetime.timezone.utc).isoformat().replace(
+        "+00:00", "Z"
+    )
+    override = {
+        "status": "approved",
+        "source": "discord-review",
+        "approvedAt": verified_at,
+    }
+    verification = item.setdefault("verification", {})
+    verification["coverHash"] = cover_hash
+    verification["verifiedAt"] = verified_at
+    verification["coverOverride"] = override
+    item["resolutionStatus"] = "verified"
+
+    manifest["coverHash"] = cover_hash
+    manifest["coverSourceUrl"] = "discord-review://manual-upload"
+    manifest["coverSourceMime"] = "image/jpeg"
+    manifest["width"] = width
+    manifest["height"] = height
+    manifest["verifiedAt"] = verified_at
+    manifest["coverOverride"] = override
+    return cover_hash
+
+
+def _review_cover_name(current_name, cover_bytes):
+    """Return a cache-busting filename tied to the reviewed image bytes."""
+    stem = current_name[:-4] if current_name.casefold().endswith(".jpg") else current_name
+    stem = re.sub(r"_review_[0-9a-f]{12}$", "", stem)
+    digest = hashlib.sha256(cover_bytes).hexdigest()[:12]
+    return f"{stem}_review_{digest}.jpg"
+
+
+async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
+    """Persist a corrected cover, manifest and hashes before regeneration."""
+    from io import BytesIO
+    from PIL import Image, ImageOps, UnidentifiedImageError
+
+    try:
+        source = Image.open(BytesIO(raw_image_bytes))
+        source.load()
+        normalized = ImageOps.exif_transpose(source).convert("RGB")
+        output = BytesIO()
+        normalized.save(output, format="JPEG", quality=92, optimize=True)
+        cover_bytes = output.getvalue()
+    except (OSError, ValueError, UnidentifiedImageError) as exc:
+        return f"A imagem enviada não é uma capa raster válida: {exc}"
+
+    draft_content, draft_sha = get_github_file("scripts/review_draft.json")
+    if not draft_content:
+        return f"Erro ao obter review_draft.json: {draft_sha}"
+    draft_data = json.loads(draft_content.decode("utf-8"))
+    draft_item = draft_data.get(quadrant)
+    if not isinstance(draft_item, dict):
+        return f"Quadrante {quadrant} não encontrado no rascunho."
+
+    image_url = str(draft_item.get("imageUrl") or "")
+    if not image_url.startswith("/covers/") or not image_url.endswith(".jpg"):
+        return "A recomendação não tem uma capa local verificada para substituir."
+    cover_name = urllib.parse.unquote(image_url.removeprefix("/covers/"))
+    if "/" in cover_name or "\\" in cover_name:
+        return "O caminho da capa da recomendação é inválido."
+    source_manifest_path = f"website/public/covers/{cover_name[:-4]}.json"
+
+    manifest_content, manifest_sha = get_github_file(source_manifest_path)
+    if not manifest_content:
+        return f"Erro ao obter o manifesto da capa: {manifest_sha}"
+    manifest = json.loads(manifest_content.decode("utf-8"))
+
+    reviewed_name = _review_cover_name(cover_name, cover_bytes)
+    reviewed_url = f"/covers/{reviewed_name}"
+    cover_path = f"website/public/covers/{reviewed_name}"
+    manifest_path = cover_path[:-4] + ".json"
+
+    rec_content, rec_sha = get_github_file("website/public/recommendations.json")
+    if not rec_content:
+        return f"Erro ao obter recommendations.json: {rec_sha}"
+    rec_data = json.loads(rec_content.decode("utf-8"))
+    item_id = draft_item.get("id")
+    db_item = next(
+        (
+            candidate
+            for section in ("queue", "history")
+            for candidate in rec_data.get(section, [])
+            if candidate.get("id") == item_id
+        ),
+        None,
+    )
+    if not db_item:
+        return f"Recomendação {item_id} não encontrada na base de dados."
+
+    _apply_review_cover_metadata(
+        draft_item, manifest, cover_bytes, normalized.width, normalized.height
+    )
+    _apply_review_cover_metadata(
+        db_item, manifest, cover_bytes, normalized.width, normalized.height
+    )
+    draft_item["imageUrl"] = reviewed_url
+    db_item["imageUrl"] = reviewed_url
+
+    writes = (
+        (cover_path, cover_bytes, "Replace reviewed cover [bot]", None),
+        (
+            manifest_path,
+            json.dumps(manifest, indent=2, ensure_ascii=False).encode("utf-8"),
+            "Bind reviewed cover manifest [bot]",
+            None,
+        ),
+        (
+            "website/public/recommendations.json",
+            json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8"),
+            "Apply reviewed cover to recommendation [bot]",
+            rec_sha,
+        ),
+        (
+            "scripts/review_draft.json",
+            json.dumps(draft_data, indent=2, ensure_ascii=False).encode("utf-8"),
+            "Apply reviewed cover to draft [bot]",
+            draft_sha,
+        ),
+    )
+    for path, content, message, sha in writes:
+        result = update_github_file(path, content, message, sha=sha)
+        if result is not True:
+            return f"Erro ao guardar {path}: {result}"
+
+    workflow = trigger_github_workflow("instagram_generate.yml")
+    return True if workflow is True else f"Erro ao acionar workflow: {workflow}"
+
+
+async def mark_review_superseded(original_msg_id, text):
+    """Disable the old proposal so Discord does not treat it as actionable."""
+    try:
+        channel = bot.get_channel(CHANNEL_ID) or await bot.fetch_channel(CHANNEL_ID)
+        old_message = await channel.fetch_message(int(original_msg_id))
+        await old_message.edit(content=text, embed=None, view=None)
+    except (discord.HTTPException, discord.NotFound, discord.Forbidden, ValueError):
+        return False
+    return True
+
 # ===================== INTERACTIVE VIEWS =====================
 class ReviewFeedbackModal(discord.ui.Modal, title="Descrever a correção"):
     correction = discord.ui.TextInput(
@@ -876,7 +1019,7 @@ class CoverCorrectionView(discord.ui.View):
             
         await interaction.followup.send(f"🔍 A pesquisar capa para '{query}' automaticamente com a IA...", ephemeral=True)
         
-        from cover_fetcher import fetch_cover, _cache_key
+        from cover_fetcher import fetch_cover
         
         loop = asyncio.get_event_loop()
         try:
@@ -898,16 +1041,17 @@ class CoverCorrectionView(discord.ui.View):
             cover_img.convert("RGB").save(bio, format="JPEG", quality=90)
             image_bytes = bio.getvalue()
             
-            key = _cache_key(item["title"], item["type"])
-            res_upload = update_github_file(f"website/public/covers/{key}.jpg", image_bytes, "Update cover cache image [bot]")
-            if res_upload is True:
-                res_db = await update_recommendation_field(self.original_msg_id, self.quadrant, "imageUrl", f"/covers/{key}.jpg")
-                if res_db is True:
-                    await interaction.followup.send(f"🖼️ Capa do quadrante **{self.quadrant}** atualizada! A regerar proposta...", ephemeral=True)
-                else:
-                    await interaction.followup.send(f"❌ Erro ao atualizar base de dados: {res_db}", ephemeral=True)
+            result = await replace_review_cover(
+                self.original_msg_id, self.quadrant, image_bytes
+            )
+            if result is True:
+                await mark_review_superseded(
+                    self.original_msg_id,
+                    "❌ Proposta substituída após correção da capa. A gerar uma nova proposta...",
+                )
+                await interaction.followup.send(f"🖼️ Capa do quadrante **{self.quadrant}** atualizada! A regerar proposta...", ephemeral=True)
             else:
-                await interaction.followup.send(f"❌ Erro ao guardar capa no GitHub: {res_upload}", ephemeral=True)
+                await interaction.followup.send(f"❌ Erro ao guardar capa no GitHub: {result}", ephemeral=True)
         except Exception as e:
             await interaction.followup.send(f"❌ Ocorreu um erro na pesquisa da capa: {e}", ephemeral=True)
 
@@ -1893,7 +2037,7 @@ async def on_message(message):
                 await message.reply(f"❌ Item do quadrante {quad} não encontrado.")
                 return
                 
-            from cover_fetcher import fetch_cover, _cache_key
+            from cover_fetcher import fetch_cover
             
             loop = asyncio.get_event_loop()
             try:
@@ -1915,16 +2059,17 @@ async def on_message(message):
                 cover_img.convert("RGB").save(bio, format="JPEG", quality=90)
                 image_bytes = bio.getvalue()
                 
-                key = _cache_key(item["title"], item["type"])
-                res_upload = update_github_file(f"website/public/covers/{key}.jpg", image_bytes, "Update cover cache image [bot]")
-                if res_upload is True:
-                    res_db = await update_recommendation_field(quad_info["original_msg_id"], quad, "imageUrl", f"/covers/{key}.jpg")
-                    if res_db is True:
-                        await message.reply(f"🖼️ Nova capa para o quadrante **{quad}** pesquisada e atualizada! A regerar proposta...")
-                    else:
-                        await message.reply(f"❌ Erro ao atualizar imageUrl na base de dados: {res_db}")
+                result = await replace_review_cover(
+                    quad_info["original_msg_id"], quad, image_bytes
+                )
+                if result is True:
+                    await mark_review_superseded(
+                        quad_info["original_msg_id"],
+                        "❌ Proposta substituída após correção da capa. A gerar uma nova proposta...",
+                    )
+                    await message.reply(f"🖼️ Nova capa para o quadrante **{quad}** pesquisada e atualizada! A proposta anterior foi fechada.")
                 else:
-                    await message.reply(f"❌ Erro ao guardar capa no GitHub: {res_upload}")
+                    await message.reply(f"❌ Erro ao guardar capa no GitHub: {result}")
             except Exception as e:
                 await message.reply(f"❌ Ocorreu um erro na pesquisa da capa: {e}")
             return
@@ -1943,9 +2088,6 @@ async def on_message(message):
                 selected = json.loads(draft_content.decode("utf-8"))
                 item = selected.get(quad)
                 if item:
-                    from cover_fetcher import _cache_key
-                    key = _cache_key(item["title"], item["type"])
-                    
                     try:
                         req = urllib.request.Request(
                             attachment_url, 
@@ -1954,16 +2096,17 @@ async def on_message(message):
                         with urllib.request.urlopen(req) as response:
                             image_bytes = response.read()
                         
-                        res_upload = update_github_file(f"website/public/covers/{key}.jpg", image_bytes, "Update cover cache image [bot]")
-                        
-                        if res_upload is True:
-                            res_db = await update_recommendation_field(quad_info["original_msg_id"], quad, "imageUrl", f"/covers/{key}.jpg")
-                            if res_db is True:
-                                await message.reply("🖼️ Nova capa gravada com sucesso! A regerar proposta de post no GitHub Actions...")
-                            else:
-                                await message.reply(f"❌ Erro ao atualizar base de dados: {res_db}")
+                        result = await replace_review_cover(
+                            quad_info["original_msg_id"], quad, image_bytes
+                        )
+                        if result is True:
+                            await mark_review_superseded(
+                                quad_info["original_msg_id"],
+                                "❌ Proposta substituída após correção da capa. A gerar uma nova proposta...",
+                            )
+                            await message.reply("🖼️ Nova capa gravada com sucesso! A proposta anterior foi fechada e uma nova está a ser gerada.")
                         else:
-                            await message.reply(f"❌ Erro ao guardar capa no GitHub: {res_upload}")
+                            await message.reply(f"❌ Erro ao guardar capa no GitHub: {result}")
                     except Exception as e:
                         await message.reply(f"❌ Erro ao descarregar imagem: {e}")
             return

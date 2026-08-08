@@ -45,6 +45,7 @@ REQUEST_TIMEOUT = 20
 PODCAST_DESCRIPTION_VERSION = 1
 PODCAST_DESCRIPTION_MIN_CHARS = 70
 PODCAST_DESCRIPTION_MAX_CHARS = 138
+PODCAST_TITLE_MAX_CHARS = 72
 PODCAST_SUMMARY_MODELS = (
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant",
@@ -345,6 +346,24 @@ def _clean_source_text(value, max_chars=360):
         return value
     shortened = value[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:.!?")
     return shortened
+
+
+def _podcast_editorial_title(value):
+    """Build a render-safe label while retaining the RSS title as identity."""
+    title = re.sub(r"\s+", " ", html.unescape(str(value or ""))).strip()
+    if len(title) <= PODCAST_TITLE_MAX_CHARS:
+        return ""
+
+    # Podcast feeds often append a complete guest list to an otherwise useful
+    # episode title. It is metadata rather than the subject readers need on the
+    # recommendation card, so remove it at a natural boundary.
+    concise = re.split(r",\s+com\s+", title, maxsplit=1, flags=re.IGNORECASE)[0]
+    concise = concise.strip(" ,;:–-")
+    if 12 <= len(concise) <= PODCAST_TITLE_MAX_CHARS:
+        return concise
+
+    shortened = title[:PODCAST_TITLE_MAX_CHARS].rsplit(" ", 1)[0]
+    return shortened.rstrip(" ,;:–-")
 
 
 _PODCAST_DESCRIPTION_STOPWORDS = {
@@ -1014,12 +1033,14 @@ def discover_podcast_candidates(watchlist, seen_titles, seen_ids, limit):
                     _rss_text(episode, "description")
                     or _rss_text(episode, "summary")
                 )
+                editorial_title = _podcast_editorial_title(title)
                 discovered.append(
                     {
                         "id": _new_id("rss_podcast", guid),
                         "type": "podcast",
                         "category": "Podcast",
                         "title": title,
+                        **({"editorialTitle": editorial_title} if editorial_title else {}),
                         "authorOrMeta": (
                             f"{show.get('name', apple.get('collectionName', 'Podcast'))}"
                             f" / {show.get('author', apple.get('artistName', ''))}"
