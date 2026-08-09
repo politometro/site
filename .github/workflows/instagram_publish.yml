@@ -2,8 +2,8 @@ name: Publish Weekly Instagram Post
 
 on:
   # The first run targets 10:00 Europe/Lisbon. We schedule both UTC variants
-  # (winter and summer) and let the Python guard decide whether the current
-  # local hour is the valid publication window. The recovery runs cover
+  # (winter and summer) and let the Python guard confirm the draft belongs
+  # to the Sunday 10:00 window. The recovery runs cover
   # delayed or dropped schedule events, and the guard accepts a late start
   # on the same Sunday so the approved post is not lost.
   schedule:
