@@ -1,9 +1,9 @@
 """Schedule guard for the approved weekly Instagram post.
 
-Discord approval only records consent.  This module decides whether the
-approved draft belongs to the current Sunday 10:00 publication window in
-Europe/Lisbon.  Keeping the decision in Python makes manual workflow runs and
-delayed GitHub runners obey the same local-time rule.
+Discord approval only records consent.  This module targets the approved
+weekly draft for 10:00 Europe/Lisbon while accepting a delayed execution on
+the same publication day. Keeping the decision in Python keeps manual and
+scheduled workflow runs on the same local-time schedule.
 """
 
 import argparse
@@ -148,15 +148,12 @@ def publication_decision(draft, receipt=None, *, now=None, force_now=False):
             "Este rascunho não pertence à janela de publicação de hoje.",
             scheduled_for,
         )
-    if (
-        current_local.weekday() != expected_weekday
-        or current_local.hour != expected_hour
-    ):
+    if current_local < target_local:
         day_label = "quarta-feira" if expected_weekday == 2 else "domingo"
         return (
             False,
-            f"A publicação só pode começar na {day_label} entre as {expected_hour:02d}:00 e as {expected_hour:02d}:59.",
-        scheduled_for, 
+            f"A publicação está agendada para {day_label} às {expected_hour:02d}:00 (hora de Lisboa).",
+            scheduled_for,
         )
 
     receipt = receipt if isinstance(receipt, dict) else {}
@@ -174,7 +171,12 @@ def publication_decision(draft, receipt=None, *, now=None, force_now=False):
                 scheduled_for,
             )
 
-    return True, "Rascunho aprovado e dentro da janela das 10:00.", scheduled_for
+    return (
+        True,
+        f"Rascunho aprovado; janela prevista para as {expected_hour:02d}:00. "
+        "Execução atrasada no mesmo dia aceite.",
+        scheduled_for,
+    )
 
 
 def current_publication_decision(*, now=None, force_now=False):
