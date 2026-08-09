@@ -13,9 +13,16 @@ on:
     - cron: '0 10 * * 0'
     - cron: '7 10 * * 0'
     - cron: '17 10 * * 0'
-  # Uma execução manual serve apenas para diagnóstico/reprocessamento dentro da
-  # janela; nunca existe bypass da regra das 10:00 (hora de Lisboa).
+  # A execução agendada é calculada para as 10:00 Europe/Lisbon.
+  # GitHub Actions usa UTC; as duas variantes cobrem horário de verão/inverno.
+  # Se o runner atrasar, o guard aceita a execução no mesmo domingo.
   workflow_dispatch:
+    inputs:
+      publish_now:
+        description: 'Publicar agora o rascunho já aprovado (uso pontual)'
+        required: false
+        type: boolean
+        default: false
   # Permite que um agendador externo (por exemplo, cron-job.org) faça uma
   # segunda tentativa às 10:00. O mesmo guard e a mesma concurrency impedem
   # qualquer publicação duplicada.
@@ -49,8 +56,7 @@ jobs:
       - name: Check Approved Publication Window
         id: guard
         env:
-          # Publicação sempre sujeita à janela das 10:00 Europe/Lisbon.
-          FORCE_PUBLISH_NOW: 'false'
+          FORCE_PUBLISH_NOW: ${{ inputs.publish_now || 'false' }}
         run: python scripts/publication_schedule.py --github-output
 
   publish:
