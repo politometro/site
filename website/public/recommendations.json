@@ -967,7 +967,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Afinal, Salazar era fascista?",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Paulo Pinto",
       "description": "As acusações de fascismo nas décadas que levamos de regime democrático, já recaíram sobre várias cabeças e partidos, desde Sá Carneiro ao CDS, ao sabor das necessidades revolucionárias.",
       "imageUrl": "/covers/highlight_afinal__salazar_era_fascista__bfa2a227_0ba97ced2f13.jpg",
       "link": "https://observador.pt/opiniao/afinal-salazar-era-fascista/",
@@ -992,13 +992,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:92c26475816d2dae0ec3026d",
         "score": 1.0,
         "coverHash": "66d6aeede9584dd0a65f49e73779f6090274ba65e6501640ffe6fdccdf04b030",
         "verifiedAt": "2026-08-08T06:26:45.360043Z",
         "resolvedTitle": "Afinal, Salazar era fascista?",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Paulo Pinto",
         "sourcePublishedAt": "2026-08-07T23:12:56Z",
         "sourceDescription": "As acusações de fascismo nas décadas que levamos de regime democrático, já recaíram sobre várias cabeças e partidos, desde Sá Carneiro ao CDS, ao sabor das necessidades revolucionárias."
       }
@@ -1008,7 +1008,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "A lei da rolha na criminalidade associada à imigração",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Nelson Miguel Dias da Silva",
       "description": "A ausência persistente de dados sugere uma escolha política de não os tornar públicos, com implicações relevantes.",
       "imageUrl": "/covers/highlight_a_lei_da_rolha_na_criminalidade_associada___imigra_97fd728a_b3e5c64b094a.jpg",
       "link": "https://observador.pt/opiniao/a-lei-da-rolha-na-criminalidade-associada-a-imigracao/",
@@ -1034,13 +1034,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:4f51a486d04e7c622c5a55be",
         "score": 1.0,
         "coverHash": "f6e9673ac9e97820f2d64528393169f955a94a81a137e12ffc38c21973d11c0c",
         "verifiedAt": "2026-08-08T06:26:46.288187Z",
         "resolvedTitle": "A lei da rolha na criminalidade associada à imigração",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Nelson Miguel Dias da Silva",
         "sourcePublishedAt": "2026-08-07T23:08:43Z",
         "sourceDescription": "A ausência persistente de dados sugere uma escolha política de não os tornar públicos, com implicações relevantes."
       }
