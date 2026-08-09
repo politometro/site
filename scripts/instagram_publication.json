@@ -1,7 +1,16 @@
 {
   "schema_version": 2,
-  "state": "confirmed",
-  "draft_id": "draft_previous_cleared",
-  "content_hash": "0000000000000000000000000000000000000000000000000000000000000000",
-  "post_id": "cleared"
+  "state": "prepared",
+  "draft_id": "draft_b5668473e32c5716b1fb",
+  "content_hash": "b5668473e32c5716b1fb0e5869f7dfffb030a1830213a515294769e8ef7ccc84",
+  "creation_id": "18199925179349156",
+  "caption_sha256": "4fdcb7a13c6a7a5fc313386833852362a35c7b58f6046bca22344fdef898ae9b",
+  "caption": "📣 RECOMENDAÇÕES DA SEMANA • POLITÓMETRO\n\nTrazemos-te a nossa seleção semanal de conteúdos essenciais para compreenderes a política, a história e a economia de Portugal e do mundo.\n\nDesenvolvido por @_.davstrango._ e @luisflmaximo no âmbito do projeto @politiza.te.\n\n📖 LIVRO: The Open Society and Its Enemies (Karl Popper)\nDefesa da sociedade aberta contra projetos políticos fechados, autoritários e hostis ao pluralismo.\n\n🎙️ PODCAST: Reedição do primeiro podcast de Ricardo Araújo Pereira (Isto É Gozar Com Quem Trabalha)\nAnálise sobre reedição do arquivo de podcasts da SIC. O primeiro podcast original de Ricardo Araújo Pereira.\n\n🔎 INVESTIGAÇÃO: Repórter Sábado: O fantasma das burlas digitais que continua a fazer vítimas (NOW Canal)\nEpisódio de investigação do Repórter Sábado sobre burlas digitais e as vítimas destes esquemas.\n\n📰 DESTAQUE: Tempo de vésperas (Helena Matos)\nPorque protege o PS Luís Neves? Porque o convidou Montenegro para o Governo? Estamos a viver as vésperas de um amanhã engendrado nos silêncios do agora. E no medo que tolhe os protagonistas.\n\nQual destes vais espreitar primeiro? Diz-nos nos comentários e aproveita para deixar as tuas próprias sugestões para a próxima semana! 👇\n\n\n#Portugal #PolitizaTe #Recomendacoes #Sugestoes #Politometro #Politica #Livro #Podcast #Investigacao\n",
+  "prepared_at": "2026-08-09T10:21:18.675559+00:00",
+  "graph_api_version": "v25.0",
+  "image_url": "https://raw.githubusercontent.com/politometro/site/d75cb377d1f6f1919f61cee5c298f173c11ea7fd/website/public/current_post.jpg",
+  "story_creation_id": "18199925212349156",
+  "story_state": "prepared",
+  "story_prepared_at": "2026-08-09T10:21:23.078017+00:00",
+  "story_image_url": "https://raw.githubusercontent.com/politometro/site/d75cb377d1f6f1919f61cee5c298f173c11ea7fd/website/public/current_story.jpg"
 }
