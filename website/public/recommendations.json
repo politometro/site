@@ -1,6 +1,50 @@
 {
   "queue": [
     {
+      "id": "web_highlight_280d0bc0-40f3-4f4e-abfc-b34da1e53217",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A Fragilidade da Memória",
+      "link": "https://antonioabreu.substack.com/p/a-fragilidade-da-memoria?r=5m5q4m&utm_campaign=post&utm_medium=web",
+      "authorOrMeta": "",
+      "description": "Sugestao recebida da comunidade para revisao.",
+      "imageUrl": "",
+      "sourcePublishedAt": null,
+      "expiryDate": null,
+      "priority": 3,
+      "createdAt": "2026-08-10T18:39:28.921Z",
+      "status": "pending_approval",
+      "sourceKind": "community_suggestion",
+      "communitySubmission": {
+        "id": "web_highlight_280d0bc0-40f3-4f4e-abfc-b34da1e53217",
+        "sourceKind": "community_suggestion",
+        "type": "highlight",
+        "title": "A Fragilidade da Memória",
+        "link": "https://antonioabreu.substack.com/p/a-fragilidade-da-memoria?r=5m5q4m&utm_campaign=post&utm_medium=web",
+        "createdAt": "2026-08-10T18:39:28.921Z"
+      },
+      "submissionHash": "6029503634f5f11602eb8be7d88ee78188ca1f76b138579b167eb6ad0f6c0e89",
+      "resolutionStatus": "unresolved",
+      "verification": {
+        "status": "unresolved",
+        "provider": "community",
+        "confidence": 0,
+        "checkedAt": "2026-08-10T18:39:28.921Z",
+        "matchedFields": [],
+        "warnings": [
+          "A sugestao aguarda revisao da comunidade."
+        ]
+      },
+      "origin": "website-community",
+      "notificationStatus": "pending",
+      "notificationAttempts": 0,
+      "discordApproval": {
+        "required": true,
+        "status": "pending",
+        "notificationStatus": "pending"
+      }
+    },
+    {
       "id": "web_highlight_3008d0c1-16b0-4876-89f8-290de432f6a8",
       "type": "highlight",
       "category": "Destaque",
