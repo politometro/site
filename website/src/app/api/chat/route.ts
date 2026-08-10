@@ -1,4 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  allowedPineconeIndexOrigin,
+  ChatRequestTooLargeError,
+  GENERIC_CHAT_ERROR,
+  InvalidChatRequestError,
+  MAX_RAG_TEXT_CHARACTERS,
+  readChatMessages,
+  redactSensitiveText,
+  sanitizeRagMetadata,
+  type UserChatMessage,
+} from "@/lib/chatSecurity";
 
 // Shared memory in the Node process to track daily limit exhaustions
 // (Keys are model names, value is the timestamp when it can be retried)
@@ -6,6 +17,17 @@ const modelDailyExhaustionTimes: { [model: string]: number } = {};
 
 // Shared memory to track request counts for rate limiting (100 requests per user per day)
 const requestCounts: { [key: string]: { count: number; day: string } } = {};
+
+type RetrievedSource = {
+  party: string;
+  year: string;
+  category: string;
+};
+
+type PineconeFilter = {
+  category?: { $nin: string[] };
+  party?: { $eq: string };
+};
 
 function retrievalPlanFor(query: string) {
   const normalized = query
@@ -132,19 +154,123 @@ function completionAsSse(text: string) {
   return `data: ${event}\n\ndata: [DONE]\n\n`;
 }
 
+function textFromProviderPayload(payload: unknown) {
+  if (typeof payload !== "object" || payload === null) {
+    return "";
+  }
+
+  const choices = (payload as { choices?: unknown }).choices;
+  if (!Array.isArray(choices) || choices.length === 0) {
+    return "";
+  }
+
+  const firstChoice = choices[0];
+  if (typeof firstChoice !== "object" || firstChoice === null) {
+    return "";
+  }
+
+  const message = (firstChoice as { message?: unknown }).message;
+  if (typeof message === "object" && message !== null) {
+    const content = (message as { content?: unknown }).content;
+    if (typeof content === "string") {
+      return content;
+    }
+  }
+
+  const delta = (firstChoice as { delta?: unknown }).delta;
+  if (typeof delta === "object" && delta !== null) {
+    const content = (delta as { content?: unknown }).content;
+    if (typeof content === "string") {
+      return content;
+    }
+  }
+
+  return "";
+}
+
+function textFromProviderResponse(responseText: string) {
+  let streamedText = "";
+  let sawStreamData = false;
+
+  for (const line of responseText.split(/\r?\n/)) {
+    const trimmedLine = line.trim();
+    if (!trimmedLine.startsWith("data:")) {
+      continue;
+    }
+
+    const data = trimmedLine.slice(5).trim();
+    if (!data || data === "[DONE]") {
+      continue;
+    }
+
+    try {
+      const payload = JSON.parse(data) as unknown;
+      const chunk = textFromProviderPayload(payload);
+      if (chunk) {
+        streamedText += chunk;
+      }
+      sawStreamData = true;
+    } catch {
+      // Ignore non-JSON SSE lines; the final response is still buffered.
+    }
+  }
+
+  if (sawStreamData) {
+    return streamedText;
+  }
+
+  try {
+    return textFromProviderPayload(JSON.parse(responseText) as unknown);
+  } catch {
+    return "";
+  }
+}
+
+async function bufferedProviderCompletion(
+  response: Response,
+  explicitSecrets: readonly (string | undefined)[]
+) {
+  const responseText = await response.text();
+  const completion = stripModelReasoning(
+    textFromProviderResponse(responseText)
+  );
+  return redactSensitiveText(completion, explicitSecrets);
+}
+
 export async function POST(req: NextRequest) {
   try {
-    const { messages } = await req.json();
-    
+    let messages: UserChatMessage[];
+    try {
+      messages = await readChatMessages(req);
+    } catch (err) {
+      if (err instanceof ChatRequestTooLargeError) {
+        return NextResponse.json(
+          { error: "O pedido é demasiado grande." },
+          { status: 413 }
+        );
+      }
+      if (err instanceof InvalidChatRequestError) {
+        return NextResponse.json(
+          { error: "O pedido não é válido." },
+          { status: 400 }
+        );
+      }
+      return NextResponse.json(
+        { error: GENERIC_CHAT_ERROR },
+        { status: 400 }
+      );
+    }
+
     const groqApiKey = process.env.GROQ_API_KEY;
-    const groqModel = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
     const pineconeApiKey = process.env.PINECONE_API_KEY;
     const pineconeIndexName = process.env.PINECONE_INDEX_NAME || "politometro";
+    const configuredPineconeIndexHost = process.env.PINECONE_INDEX_HOST;
+    const hfToken = process.env.HF_TOKEN;
 
     if (!groqApiKey || !pineconeApiKey || !pineconeIndexName || groqApiKey.includes("your_actual")) {
       return NextResponse.json(
-        { error: "Ainda não configurou as chaves de API secretas no ficheiro .env.local do servidor." },
-        { status: 500 }
+        { error: GENERIC_CHAT_ERROR },
+        { status: 503 }
       );
     }
 
@@ -185,12 +311,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Get the last user message
-    const userMessages = messages.filter((m: any) => m.role === "user");
+    const userMessages = messages;
     const lastUserMessage = userMessages[userMessages.length - 1]?.content || "";
     const retrievalPlan = retrievalPlanFor(lastUserMessage);
 
     let contextText = "";
-    let retrievedSources: any[] = [];
+    const retrievedSources: RetrievedSource[] = [];
 
     if (lastUserMessage) {
       try {
@@ -212,11 +338,12 @@ export async function POST(req: NextRequest) {
         }
 
         const indexData = await indexRes.json();
-        const indexHost = String(indexData.host || "")
-          .replace(/^https?:\/\//i, "")
-          .replace(/\/+$/, "");
+        const indexHost = allowedPineconeIndexOrigin(
+          configuredPineconeIndexHost || indexData?.host,
+          configuredPineconeIndexHost
+        );
         if (!indexHost) {
-          throw new Error("PINECONE_INDEX_HOST_MISSING");
+          throw new Error("PINECONE_INDEX_HOST_INVALID");
         }
 
         // Step 2: Generate a query vector with the same model used to build
@@ -225,8 +352,6 @@ export async function POST(req: NextRequest) {
         let queryVector = null;
         let pineconeEmbedStatus = "not_attempted";
         let huggingFaceEmbedStatus = "not_configured";
-        const hfToken = process.env.HF_TOKEN;
-
         if (hfToken) {
           try {
             const hfRes = await fetch("https://router.huggingface.co/hf-inference/models/intfloat/multilingual-e5-large", {
@@ -253,18 +378,15 @@ export async function POST(req: NextRequest) {
                 );
               } else {
                 huggingFaceEmbedStatus = "invalid_response";
-                console.error("Hugging Face API returned non-array data:", hfData);
+                console.error("[API CHAT] Embedding provider returned invalid data.");
               }
             } else {
               huggingFaceEmbedStatus = `http_${hfRes.status}`;
-              console.error(
-                "Hugging Face embedding fallback failed:",
-                hfRes.status
-              );
+              console.error("[API CHAT] Embedding provider unavailable.");
             }
-          } catch (err) {
+          } catch {
             huggingFaceEmbedStatus = "request_failed";
-            console.error("Hugging Face embedding fallback error:", err);
+            console.error("[API CHAT] Embedding provider unavailable.");
           }
         }
 
@@ -310,7 +432,7 @@ export async function POST(req: NextRequest) {
 
         if (queryVector) {
           // Determine if query is regional
-          let filter: any = undefined;
+          let filter: PineconeFilter | undefined;
           const lowerMessage = lastUserMessage.toLowerCase();
           const isRegionalQuery = 
             lowerMessage.includes("açores") || 
@@ -339,7 +461,7 @@ export async function POST(req: NextRequest) {
           }
 
           // Step 3: Query Pinecone index using the vector
-          const queryRes = await fetch(`https://${indexHost}/query`, {
+          const queryRes = await fetch(`${indexHost}/query`, {
             method: "POST",
             headers: {
               "Api-Key": pineconeApiKey,
@@ -361,7 +483,9 @@ export async function POST(req: NextRequest) {
           }
 
           const queryData = await queryRes.json();
-          const matches = queryData.matches || [];
+          const matches = Array.isArray(queryData?.matches)
+            ? queryData.matches
+            : [];
           const maxSources = retrievalPlan.maxSources;
           const maxContextCharacters =
             retrievalPlan.maxContextCharacters;
@@ -369,8 +493,14 @@ export async function POST(req: NextRequest) {
           const sourcesPerYear = new Map<string, number>();
 
           for (const match of matches) {
-            const meta = match.metadata || {};
-            const sourceText = String(meta.text || "")
+            const safeMeta = sanitizeRagMetadata(
+              match?.metadata,
+              Math.min(
+                retrievalPlan.maxCharactersPerSource,
+                MAX_RAG_TEXT_CHARACTERS
+              )
+            );
+            const sourceText = safeMeta.text
               .replace(
                 /^(?:\s*\d+(?:\.\d+)*[.)]?\s*)+/,
                 ""
@@ -381,7 +511,7 @@ export async function POST(req: NextRequest) {
             if (!sourceText) {
               continue;
             }
-            const numericYear = Number(meta.year);
+            const numericYear = Number(safeMeta.year);
             if (
               retrievalPlan.mode === "comparative" &&
               (!Number.isFinite(numericYear) || numericYear < 1975)
@@ -402,13 +532,15 @@ export async function POST(req: NextRequest) {
               continue;
             }
             const sourceKey = [
-              meta.filename,
-              meta.page,
+              safeMeta.party,
+              safeMeta.category,
+              safeMeta.year,
+              sourceText.slice(0, 120),
             ].join("|");
             if (seenSources.has(sourceKey)) {
               continue;
             }
-            const sourceYear = String(meta.year || "sem-ano");
+            const sourceYear = safeMeta.year || "sem-ano";
             const yearCount = sourcesPerYear.get(sourceYear) || 0;
             if (
               retrievalPlan.mode === "comparative" &&
@@ -427,14 +559,14 @@ export async function POST(req: NextRequest) {
             const contextBlock =
               retrievalPlan.mode === "comparative"
                 ? (
-                    `\n[Programa de ${meta.party} para ` +
-                    `${meta.category} de ${meta.year}]\n` +
+                    `\n[Programa de ${safeMeta.party} para ` +
+                    `${safeMeta.category} de ${safeMeta.year}]\n` +
                     `${excerpt}\n`
                   )
                 : (
-                    `\n--- Programa Eleitoral: ${meta.party}, ` +
-                    `${meta.category} ${meta.year} ` +
-                    `(Página ${meta.page}) ---\n${excerpt}\n`
+                    `\n--- Programa Eleitoral: ${safeMeta.party}, ` +
+                    `${safeMeta.category} ${safeMeta.year} ---\n` +
+                    `${excerpt}\n`
                   );
             if (
               retrievedSources.length > 0 &&
@@ -447,12 +579,9 @@ export async function POST(req: NextRequest) {
             seenSources.add(sourceKey);
             sourcesPerYear.set(sourceYear, yearCount + 1);
             retrievedSources.push({
-              party: meta.party,
-              year: meta.year,
-              category: meta.category,
-              filename: meta.filename,
-              page: meta.page,
-              score: match.score,
+              party: safeMeta.party,
+              year: safeMeta.year,
+              category: safeMeta.category,
             });
             contextText += contextBlock;
 
@@ -461,22 +590,16 @@ export async function POST(req: NextRequest) {
             }
           }
         }
-      } catch (err: any) {
-        const ragError = String(err?.message || "RAG_FAILED")
-          .replace(/[^\w= -]/g, "")
-          .slice(0, 120);
-        console.error("Erro RAG Pinecone:", ragError);
+      } catch {
+        console.error("[API CHAT] Retrieval provider unavailable.");
         return NextResponse.json(
           {
-            error:
-              "A pesquisa documental está temporariamente indisponível. " +
-              "Tenta novamente dentro de instantes.",
+            error: GENERIC_CHAT_ERROR,
           },
           {
             status: 503,
             headers: {
               "X-Rag-Status": "unavailable",
-              "X-Rag-Error": ragError,
             },
           }
         );
@@ -527,6 +650,16 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
 - dá apenas as medidas, conclusão ou comparação mais importantes;
 - não incluas saudações, introduções, fontes ou frases de encerramento.` : ""}`;
 
+    const providerSecrets = [groqApiKey, pineconeApiKey, hfToken];
+    const providerSystemPrompt = redactSensitiveText(
+      systemPrompt,
+      providerSecrets
+    );
+    const providerMessages = messages.map((message) => ({
+      role: "user" as const,
+      content: redactSensitiveText(message.content, providerSecrets),
+    }));
+
     // Call Groq API with fallback chain
     const requestedModel = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
     const fallbackChain = Array.from(new Set([
@@ -547,9 +680,8 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
     const modelsToTry = availableChain.length > 0 ? availableChain : fallbackChain;
 
     let groqRes: Response | null = null;
-    let lastErrorText = "";
     let chosenModel = "";
-    let validatedCompletion = "";
+    let bufferedCompletion = "";
     const validateBeforeSending =
       retrievalPlan.mode === "comparative";
 
@@ -565,8 +697,8 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
           body: JSON.stringify({
             model: model,
             messages: [
-              { role: "system", content: systemPrompt },
-              ...messages,
+              { role: "system", content: providerSystemPrompt },
+              ...providerMessages,
             ],
             temperature: 0.15,
             max_completion_tokens: isTwitchClient
@@ -587,68 +719,56 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
         });
 
         if (groqRes.ok) {
-          if (validateBeforeSending) {
-            const completionPayload = await groqRes.json();
-            const completion = stripModelReasoning(
-              String(
-                completionPayload.choices?.[0]?.message?.content || ""
-              )
-            );
-            if (
-              !completionIsUsable(
-                completion,
-                retrievalPlan.requiresMultipleYears
-              )
-            ) {
-              console.warn(
-                `[API CHAT] Model ${model} returned an unusable ` +
-                "comparative completion; trying the next model."
-              );
-              lastErrorText =
-                `Resposta comparativa inválida do modelo ${model}.`;
-              groqRes = null;
-              continue;
-            }
-            validatedCompletion = completion;
-          }
-          chosenModel = model;
-          console.log(
-            `[API CHAT] Successfully generated response using model: ` +
-            chosenModel
+          const completion = await bufferedProviderCompletion(
+            groqRes,
+            providerSecrets
           );
-          break; // Success! Break the loop
+          if (
+            validateBeforeSending &&
+            !completionIsUsable(
+              completion,
+              retrievalPlan.requiresMultipleYears
+            )
+          ) {
+            console.warn(
+              "[API CHAT] Provider returned an unusable completion."
+            );
+            groqRes = null;
+            continue;
+          }
+          bufferedCompletion = completion;
+          chosenModel = model;
+          console.log("[API CHAT] Provider completion received.");
+          break;
         }
 
-        // It failed, inspect the error
-        const errText = await groqRes.clone().text(); // Use clone() so we can read it without locking body
-        lastErrorText = errText;
-        console.error(`[API CHAT] Model ${model} failed: ${groqRes.status} - ${errText}`);
-
-        // Check if this was a daily limit (token or request per day limit)
+        const errText = (await groqRes.clone().text()).slice(0, 2048);
         const errStr = errText.toLowerCase();
-        const isDailyLimit = 
-          errStr.includes("tokens_per_day") || 
-          errStr.includes("requests_per_day") || 
-          errStr.includes("daily") || 
-          errStr.includes("tpd") || 
+        const isDailyLimit =
+          errStr.includes("tokens_per_day") ||
+          errStr.includes("requests_per_day") ||
+          errStr.includes("daily") ||
+          errStr.includes("tpd") ||
           errStr.includes("rpd") ||
-          groqRes.status === 403; // Quota exceeded is sometimes 403 or 429 depending on API
-          
+          groqRes.status === 403;
+
         if (isDailyLimit) {
-          // Blacklist the model for 12 hours
           modelDailyExhaustionTimes[model] = Date.now() + 12 * 60 * 60 * 1000;
-          console.warn(`[API CHAT] Model ${model} blacklisted due to daily limit exhaustion.`);
+          console.warn("[API CHAT] Provider quota unavailable.");
+        } else {
+          console.error("[API CHAT] Provider request failed.");
         }
-      } catch (fetchErr: any) {
-        console.error(`[API CHAT] Fetch error trying model ${model}:`, fetchErr);
-        lastErrorText = fetchErr.message || String(fetchErr);
+        groqRes = null;
+      } catch {
+        console.error("[API CHAT] Provider request failed.");
+        groqRes = null;
       }
     }
 
     if (!groqRes || !groqRes.ok) {
       return NextResponse.json(
-        { error: `Erro na API do Groq (todas as tentativas falharam): ${lastErrorText}` },
-        { status: groqRes ? groqRes.status : 500 }
+        { error: GENERIC_CHAT_ERROR },
+        { status: 502 }
       );
     }
 
@@ -669,17 +789,17 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
     );
     responseHeaders.set("X-Groq-Model", chosenModel);
 
-    const responseBody = validatedCompletion
-      ? completionAsSse(validatedCompletion)
-      : groqRes.body;
+    const responseBody = completionAsSse(
+      redactSensitiveText(bufferedCompletion, providerSecrets)
+    );
 
     return new Response(responseBody, {
       headers: responseHeaders,
     });
-  } catch (err: any) {
-    console.error("Erro na API Chat:", err);
+  } catch {
+    console.error("[API CHAT] Internal request failure.");
     return NextResponse.json(
-      { error: `Erro interno no servidor: ${err.message}` },
+      { error: GENERIC_CHAT_ERROR },
       { status: 500 }
     );
   }
