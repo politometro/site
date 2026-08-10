@@ -13,7 +13,7 @@
       "expiryDate": null,
       "priority": 3,
       "createdAt": "2026-08-10T16:42:54.378Z",
-      "status": "pending_approval",
+      "status": "pending_sent",
       "sourceKind": "community_suggestion",
       "communitySubmission": {
         "id": "web_highlight_39e6e776-6c5f-4071-b5c6-afa9b09dde95",
@@ -36,14 +36,18 @@
         ]
       },
       "origin": "website-community",
-      "notificationStatus": "pending_retry",
-      "notificationAttempts": 1,
+      "notificationStatus": "sent",
+      "notificationAttempts": 2,
       "discordApproval": {
         "required": true,
         "status": "pending",
-        "notificationStatus": "pending"
+        "channelId": "1526189969427796049",
+        "messageId": "1536414965160742923",
+        "sentAt": "2026-08-10T16:44:32.525928+00:00",
+        "payloadHash": "e88b3797876e5816e73e103f5ebec20fbd6fe512a7f08cc8958d181711358e6a"
       },
-      "nextNotificationAttemptAt": "2026-08-10T16:42:55.901Z"
+      "discordMessageId": "1536414965160742923",
+      "discordNotifiedAt": "2026-08-10T16:44:32.525928+00:00"
     },
     {
       "id": "ai_book_a9017ecd74994f8a",
