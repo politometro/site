@@ -37,6 +37,12 @@ from recommendation_resolver import (
     is_eligible_highlight,
     resolve_recommendation,
 )
+from recommendation_approval import (
+    has_verified_discord_approval,
+    is_post_workflow_eligible,
+    pending_discord_state,
+    requires_discord_approval,
+)
 
 
 TARGET_PER_TYPE = 4
@@ -1575,7 +1581,7 @@ def _is_publishable_record(item):
         else True
     )
     return bool(
-        item.get("status") == "queue"
+        is_post_workflow_eligible(item)
         and item.get("resolutionStatus") == "verified"
         and verification.get("status") == "verified"
         and verification.get("entityId")
@@ -1778,6 +1784,81 @@ def _refresh_verified_queue(queue):
     return changed
 
 
+def _enforce_community_approval_gate(queue):
+    """Move queued community items back behind the Discord approval gate."""
+    changed = False
+    for item in queue:
+        if item.get("status") != "queue":
+            continue
+        pending = pending_discord_state(item)
+        if not pending:
+            continue
+        item.update(pending)
+        if pending["notificationStatus"] == "pending_retry":
+            item.setdefault("nextNotificationAttemptAt", _utc_now())
+        changed = True
+        print(f"  [APPROVAL REQUIRED] {item.get('title', '<sem titulo>')}")
+    return changed
+
+
+def _enrich_approved_suggestions(queue):
+    """Resolve approved raw suggestions without dropping their approval proof."""
+    changed = False
+    protected_fields = (
+        "id",
+        "origin",
+        "sourceKind",
+        "createdAt",
+        "communitySubmission",
+        "submissionHash",
+        "notificationStatus",
+        "notificationAttempts",
+        "discordMessageId",
+        "discordNotifiedAt",
+        "discordApproval",
+        "approvedAt",
+        "approvedBy",
+        "approvalMode",
+    )
+    for item in queue:
+        if item.get("status") != "approved_pending_enrichment":
+            continue
+        if (
+            not requires_discord_approval(item)
+            or not has_verified_discord_approval(item)
+            or item.get("type") not in ALLOWED_TYPES
+        ):
+            continue
+        preserved = {
+            field: item.get(field)
+            for field in protected_fields
+            if field in item
+        }
+        try:
+            resolved = resolve_recommendation(dict(item), force=True)
+            resolved.update(preserved)
+            resolved["status"] = "queue"
+            if not _is_publishable_record(resolved):
+                raise ValueError("incomplete verification contract")
+            item.clear()
+            item.update(resolved)
+            item.pop("validationError", None)
+            changed = True
+            print(f"  [ENRICHED/APPROVED] {item.get('title')}")
+        except (
+            ResolutionError,
+            requests.RequestException,
+            OSError,
+            ValueError,
+        ) as exc:
+            message = str(exc)[:500]
+            if item.get("validationError") != message:
+                item["validationError"] = message
+                changed = True
+            print(f"  [WAITING FOR ENRICHMENT] {item.get('title')}: {exc}")
+    return changed
+
+
 def _quarantine_unverified_queue(queue):
     """Upgrade old queue entries or make them explicitly non-publishable."""
     changed = False
@@ -1849,6 +1930,8 @@ def auto_populate():
     history = data.get("history", [])
     groq_key = os.environ.get("GROQ_API_KEY", "")
     changed = _prune_expired_queue(queue)
+    changed |= _enforce_community_approval_gate(queue)
+    changed |= _enrich_approved_suggestions(queue)
     changed |= _refresh_verified_queue(queue)
     changed |= _quarantine_unverified_queue(queue)
     changed |= _recover_recheckable_invalid_queue(queue)

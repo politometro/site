@@ -17,6 +17,11 @@ from publication_schedule import (
     PUBLICATION_TIMEZONE_NAME,
     scheduled_for_draft,
 )
+from recommendation_approval import (
+    community_submission_hash,
+    has_valid_discord_delivery,
+    requires_discord_approval,
+)
 
 # Load environment variables if available
 load_dotenv()
@@ -46,21 +51,30 @@ APPROVER_USER_IDS = _configured_ids("DISCORD_APPROVER_USER_IDS")
 APPROVER_ROLE_IDS = _configured_ids("DISCORD_APPROVER_ROLE_IDS")
 
 
-def _is_authorized_reviewer(user):
-    """Allow configured reviewers or server managers; deny anonymous DMs."""
+def _reviewer_authorization(user):
+    """Return the authorization source for a reviewer, if any."""
     if str(getattr(user, "id", "")) in APPROVER_USER_IDS:
-        return True
+        return {"kind": "configured_user"}
     roles = getattr(user, "roles", []) or []
-    if any(str(getattr(role, "id", "")) in APPROVER_ROLE_IDS for role in roles):
-        return True
+    for role in roles:
+        role_id = str(getattr(role, "id", ""))
+        if role_id in APPROVER_ROLE_IDS:
+            return {"kind": "configured_role", "roleId": role_id}
     permissions = getattr(user, "guild_permissions", None)
-    return bool(
+    if bool(
         permissions
         and (
             getattr(permissions, "administrator", False)
             or getattr(permissions, "manage_guild", False)
         )
-    )
+    ):
+        return {"kind": "server_manager"}
+    return None
+
+
+def _is_authorized_reviewer(user):
+    """Allow configured reviewers or server managers; deny anonymous DMs."""
+    return _reviewer_authorization(user) is not None
 
 
 def _is_expired_recommendation(item):
@@ -102,12 +116,17 @@ _application_commands_synced = False
 _persistent_views_registered = False
 
 RECOMMENDATION_TYPE_CHOICES = [
-    app_commands.Choice(name="Livro", value="book"),
-    app_commands.Choice(name="Podcast / Canal", value="podcast"),
-    app_commands.Choice(name="Filme / Série", value="movie"),
+    app_commands.Choice(name="Livro / Publicação", value="book"),
+    app_commands.Choice(name="Podcast / Áudio", value="podcast"),
+    app_commands.Choice(name="Filme / Série / Vídeo", value="movie"),
+    app_commands.Choice(name="Humor / Arquivo", value="nostalgia"),
+    app_commands.Choice(
+        name="Investigação / Documentário",
+        value="investigation",
+    ),
     app_commands.Choice(name="Destaque / Artigo", value="highlight"),
     app_commands.Choice(
-        name="Sugestão para o Projeto (Politómetro)",
+        name="Ideia / Outro conteúdo",
         value="project",
     ),
 ]
@@ -1472,8 +1491,43 @@ def add_podcast_to_watchlist(item):
     return {"status": "added", "entry": entry}
 
 
-def approve_recommendation(item_id, user, mode="queue"):
+def _recommendation_delivery_error(item, message_id, channel_id):
+    """Bind review actions to the exact delivered card and configured channel."""
+    actual_message_id = str(message_id or "").strip()
+    actual_channel_id = str(channel_id or "").strip()
+    approval = item.get("discordApproval") or {}
+    expected_message_id = str(item.get("discordMessageId") or "").strip()
+    expected_channel_id = str(
+        approval.get("channelId") or CHANNEL_ID or ""
+    ).strip()
+
+    if item.get("status") != "pending_sent":
+        return "A sugestão ainda não foi entregue ou já foi processada."
+    if item.get("notificationStatus") != "sent":
+        return "Não existe comprovativo de entrega desta sugestão no Discord."
+    if not actual_message_id or actual_message_id != expected_message_id:
+        return "Este cartão não corresponde à mensagem de aprovação registada."
+    if str(approval.get("messageId") or "").strip() != actual_message_id:
+        return "O comprovativo de entrega da sugestão é inconsistente."
+    if not actual_channel_id or actual_channel_id != expected_channel_id:
+        return "A aprovação só é válida no canal de revisão configurado."
+    if CHANNEL_ID and actual_channel_id != str(CHANNEL_ID):
+        return "A aprovação só é válida no canal de revisão configurado."
+    if requires_discord_approval(item) and not has_valid_discord_delivery(item):
+        return "O conteúdo deste cartão não corresponde à sugestão registada."
+    return None
+
+
+def approve_recommendation(
+    item_id,
+    user,
+    mode="queue",
+    discord_message_id=None,
+    discord_channel_id=None,
+):
     """Approve one recommendation or convert a whole podcast into a watch."""
+    if not _is_authorized_reviewer(user):
+        return {"ok": False, "error": "Revisor sem autorização."}
     if mode not in {"queue", "watch", "both"}:
         return {"ok": False, "error": "Modo de aprovação inválido."}
     rec_content, rec_sha = get_github_file(
@@ -1499,10 +1553,15 @@ def approve_recommendation(item_id, user, mode="queue"):
     )
     if not item:
         return {"ok": False, "error": f"Item `{item_id}` não encontrado na fila."}
-    if item.get("status") not in {"pending_approval", "pending_sent"}:
+    delivery_error = _recommendation_delivery_error(
+        item,
+        discord_message_id,
+        discord_channel_id,
+    )
+    if delivery_error:
         return {
             "ok": False,
-            "error": "Este cartão já foi processado ou pertence a um estado antigo.",
+            "error": delivery_error,
         }
 
     verification = item.get("verification") or {}
@@ -1514,21 +1573,13 @@ def approve_recommendation(item_id, user, mode="queue"):
         and str(item.get("link") or "").startswith(("http://", "https://"))
         and str(item.get("imageUrl") or "").startswith("/covers/")
     )
-    if not verified:
-        return {
-            "ok": False,
-            "error": (
-                "Esta sugestão ainda não tem identidade, link e imagem "
-                "verificados."
-            ),
-        }
     whole_podcast = _is_whole_podcast(item)
     if mode in {"watch", "both"} and not whole_podcast:
         return {
             "ok": False,
             "error": "A opção de observação exige um podcast completo.",
         }
-    if mode in {"queue", "both"} and _is_expired_recommendation(item):
+    if verified and mode in {"queue", "both"} and _is_expired_recommendation(item):
         return {
             "ok": False,
             "error": (
@@ -1538,17 +1589,49 @@ def approve_recommendation(item_id, user, mode="queue"):
         }
 
     watch_result = None
+    if mode in {"watch", "both"} and not verified:
+        return {
+            "ok": False,
+            "error": "A observação de podcasts exige uma fonte verificada.",
+        }
     if mode in {"watch", "both"}:
         watch_result = add_podcast_to_watchlist(item)
         if not isinstance(watch_result, dict):
             return {"ok": False, "error": str(watch_result)}
 
-    item["status"] = "queue" if mode in {"queue", "both"} else "watching"
+    if mode in {"queue", "both"}:
+        if verified:
+            item["status"] = "queue"
+        elif item.get("type") == "project":
+            item["status"] = "approved"
+        else:
+            item["status"] = "approved_pending_enrichment"
+    else:
+        item["status"] = "watching"
     item["approvalMode"] = mode
-    item["approvedAt"] = datetime.datetime.now(
-        datetime.timezone.utc
-    ).isoformat()
-    item["approvedBy"] = str(getattr(user, "id", ""))
+    approved_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    approved_by = str(getattr(user, "id", "")).strip()
+    reviewer_authorization = _reviewer_authorization(user) or {}
+    item["approvedAt"] = approved_at
+    item["approvedBy"] = approved_by
+    existing_approval = item.get("discordApproval") or {}
+    item["discordApproval"] = {
+        "required": True,
+        "status": "approved",
+        "channelId": str(discord_channel_id or ""),
+        "messageId": str(discord_message_id or ""),
+        "sentAt": existing_approval.get("sentAt")
+        or item.get("discordNotifiedAt"),
+        "payloadHash": community_submission_hash(item),
+        "approvedAt": approved_at,
+        "approvedBy": approved_by,
+        "reviewerAuthorization": reviewer_authorization.get("kind"),
+        "mode": mode,
+    }
+    if reviewer_authorization.get("roleId"):
+        item["discordApproval"]["approvedByRole"] = (
+            reviewer_authorization["roleId"]
+        )
     if watch_result:
         item["watchlistStatus"] = watch_result["status"]
         item["watchlistCollectionId"] = _podcast_collection_id(item)
@@ -1570,6 +1653,8 @@ def approve_recommendation(item_id, user, mode="queue"):
         "title": title,
         "mode": mode,
         "watchlist": watch_result,
+        "queued": item["status"] == "queue",
+        "status": item["status"],
     }
 
 
@@ -1592,6 +1677,12 @@ class PodcastApprovalChoiceView(discord.ui.View):
             self.item_id,
             interaction.user,
             mode,
+            getattr(self.review_message, "id", None),
+            getattr(
+                getattr(self.review_message, "channel", None),
+                "id",
+                None,
+            ),
         )
         if not result.get("ok"):
             await interaction.followup.send(
@@ -1723,6 +1814,8 @@ class RecommendationApprovalView(discord.ui.View):
             item_id,
             interaction.user,
             "queue",
+            getattr(interaction.message, "id", None),
+            getattr(interaction, "channel_id", None),
         )
         if not result.get("ok"):
             await interaction.followup.send(
@@ -1740,8 +1833,13 @@ class RecommendationApprovalView(discord.ui.View):
         await interaction.message.edit(embed=embed, view=None)
         await interaction.followup.send(
             (
-                f"Recomendação **{result['title']}** aprovada e "
-                "adicionada à fila."
+                f"Recomendação **{result['title']}** aprovada e adicionada "
+                "à fila."
+                if result.get("queued")
+                else (
+                    f"Sugestão **{result['title']}** aprovada. Só ficará "
+                    "elegível para posts depois de a fonte ser verificada."
+                )
             ),
             ephemeral=True,
         )
@@ -1782,16 +1880,32 @@ class RecommendationApprovalView(discord.ui.View):
         item_title = ""
         for item in rec_data.get("queue", []):
             if item.get("id") == item_id:
-                if item.get("status") not in {
-                    "pending_approval",
-                    "pending_sent",
-                }:
+                delivery_error = _recommendation_delivery_error(
+                    item,
+                    getattr(interaction.message, "id", None),
+                    getattr(interaction, "channel_id", None),
+                )
+                if delivery_error:
                     await interaction.followup.send(
-                        "Este cartão já foi processado ou pertence a um estado antigo.",
+                        delivery_error,
                         ephemeral=True,
                     )
                     return
                 item["status"] = "skip"
+                rejected_at = datetime.datetime.now(
+                    datetime.timezone.utc
+                ).isoformat()
+                existing_approval = item.get("discordApproval") or {}
+                item["discordApproval"] = {
+                    **existing_approval,
+                    "required": True,
+                    "status": "rejected",
+                    "channelId": str(interaction.channel_id),
+                    "messageId": str(interaction.message.id),
+                    "payloadHash": community_submission_hash(item),
+                    "rejectedAt": rejected_at,
+                    "rejectedBy": str(interaction.user.id),
+                }
                 item_title = item.get("title", item_id)
                 updated = True
                 break

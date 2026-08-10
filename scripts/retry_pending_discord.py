@@ -1,13 +1,21 @@
-"""Retry the durable Discord outbox for verified website suggestions."""
+"""Retry the durable Discord outbox for community suggestions."""
 
 import datetime
+import ipaddress
 import json
 import os
+import re
 import sys
 import time
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import requests
+
+from recommendation_approval import (
+    community_submission_hash,
+    has_valid_submission_contract,
+    requires_discord_approval,
+)
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -63,13 +71,32 @@ def _existing_messages(session, endpoint, headers):
         if not isinstance(messages, list):
             raise RuntimeError("Discord returned an invalid message list.")
         for message in messages:
+            author = message.get("author") or {}
+            component_ids = {
+                component.get("custom_id")
+                for row in message.get("components") or []
+                for component in row.get("components") or []
+                if isinstance(component, dict)
+            }
+            if author.get("bot") is not True or not {
+                "rec_approve",
+                "rec_reject",
+            }.issubset(component_ids):
+                continue
             embeds = message.get("embeds") or []
             for embed in embeds:
                 footer = (embed.get("footer") or {}).get("text", "")
-                if footer.startswith("ID: "):
-                    item_id = footer[4:].split("|", 1)[0].strip()
-                    if item_id and item_id not in found:
-                        found[item_id] = str(message.get("id") or "")
+                match = re.fullmatch(
+                    r"ID: ([^|]+) \| Hash: ([0-9a-f]{64})",
+                    footer.strip(),
+                )
+                if match:
+                    key = (match.group(1).strip(), match.group(2))
+                    if key not in found:
+                        found[key] = {
+                            "messageId": str(message.get("id") or ""),
+                            "sentAt": str(message.get("timestamp") or ""),
+                        }
         if len(messages) < 100:
             break
         before = str(messages[-1].get("id") or "")
@@ -110,6 +137,63 @@ def _strictly_verified(item, now):
     return True
 
 
+def _has_safe_optional_link(item):
+    value = str(item.get("link") or "").strip()
+    if not value:
+        return True
+    try:
+        url = urlparse(value)
+        if url.scheme not in {"http", "https"} or not url.hostname:
+            return False
+        if url.username or url.password:
+            return False
+        hostname = url.hostname.casefold()
+        if hostname == "localhost" or hostname.endswith((".localhost", ".local")):
+            return False
+        try:
+            address = ipaddress.ip_address(hostname)
+        except ValueError:
+            return True
+        return not (
+            address.is_private
+            or address.is_loopback
+            or address.is_link_local
+            or address.is_multicast
+            or address.is_reserved
+            or address.is_unspecified
+        )
+    except (TypeError, ValueError):
+        return False
+
+
+def _is_deliverable_submission(item, now):
+    """Accept only immutable community submissions, verified or unresolved."""
+    if (
+        not requires_discord_approval(item)
+        or not has_valid_submission_contract(item)
+        or item.get("type")
+        not in {
+            "book",
+            "podcast",
+            "movie",
+            "nostalgia",
+            "investigation",
+            "highlight",
+            "project",
+        }
+        or len(str(item.get("title") or "").strip()) < 3
+        or not _has_safe_optional_link(item)
+    ):
+        return False
+    if _strictly_verified(item, now):
+        return True
+    verification = item.get("verification") or {}
+    return bool(
+        item.get("resolutionStatus") == "unresolved"
+        and verification.get("status") == "unresolved"
+    )
+
+
 def _retry_delay(response, attempts):
     if response.status_code == 429:
         retry_after = response.headers.get("Retry-After")
@@ -140,6 +224,8 @@ def _message_payload(item):
         "book": "📚",
         "podcast": "🎙️",
         "movie": "🎬",
+        "nostalgia": "📼",
+        "investigation": "🔎",
         "highlight": "📰",
         "project": "💡",
     }
@@ -147,6 +233,8 @@ def _message_payload(item):
         "book": 0x2E86AB,
         "podcast": 0x8338EC,
         "movie": 0xE63946,
+        "nostalgia": 0x7E22CE,
+        "investigation": 0x0369A1,
         "highlight": 0xF77F00,
         "project": 0x0099FF,
     }
@@ -161,6 +249,10 @@ def _message_payload(item):
         media_type == "podcast"
         and verification_id.startswith("apple:podcast:")
     )
+    is_verified = (
+        item.get("resolutionStatus") == "verified"
+        and verification.get("status") == "verified"
+    )
     fields = [
         {
             "name": "Tipo",
@@ -169,16 +261,23 @@ def _message_payload(item):
         },
         {
             "name": "Autor / Fonte",
-            "value": str(item.get("authorOrMeta") or "N/D")[:1024],
+            "value": str(
+                item.get("authorOrMeta")
+                or "A validar após aprovação"
+            )[:1024],
             "inline": True,
         },
         {
             "name": "Verificação",
-            "value": str(
-                verification.get("source")
-                or verification.get("provider")
-                or "fonte canónica"
-            )[:1024],
+            "value": (
+                str(
+                    verification.get("source")
+                    or verification.get("provider")
+                    or "fonte canónica"
+                )[:1024]
+                if is_verified
+                else "Pendente — ainda não entra no workflow de posts"
+            ),
             "inline": True,
         },
     ]
@@ -206,13 +305,16 @@ def _message_payload(item):
             f"{emojis.get(media_type, '💡')} Sugestão: "
             f"{str(item.get('title') or '')}"
         )[:256],
-        "description": str(item.get("description") or "N/D")[:4096],
+        "description": str(
+            item.get("description")
+            or "Sugestão submetida pela comunidade para análise editorial."
+        )[:4096],
         "color": colours.get(media_type, 0x0099FF),
         "fields": fields,
         "footer": {
             "text": (
                 f"ID: {item.get('id', 'sem-id')} | "
-                "Fonte validada no servidor"
+                f"Hash: {community_submission_hash(item)}"
             )
         },
         "timestamp": item.get("createdAt")
@@ -229,6 +331,7 @@ def _message_payload(item):
     if image_url and media_type != "project":
         embed["thumbnail"] = {"url": image_url}
     return {
+        "allowed_mentions": {"parse": []},
         "embeds": [embed],
         "components": [
             {
@@ -323,11 +426,11 @@ def main():
             changed = True
             _atomic_write(database)
             continue
-        if not _strictly_verified(item, now):
+        if not _is_deliverable_submission(item, now):
             _dead_letter(
                 item,
                 now,
-                "Stored suggestion no longer satisfies the strict verification contract.",
+                "Stored suggestion does not satisfy the immutable submission contract.",
                 kind="validation",
             )
             dead_letters.append(str(item.get("id") or "sem-id"))
@@ -346,7 +449,10 @@ def main():
             _atomic_write(database)
             continue
 
-        message_id = existing.get(str(item.get("id") or ""))
+        payload_hash = community_submission_hash(item)
+        receipt = existing.get((str(item.get("id") or ""), payload_hash))
+        message_id = receipt.get("messageId") if receipt else ""
+        sent_at = receipt.get("sentAt") if receipt else ""
         if not message_id:
             response = session.post(
                 endpoint,
@@ -356,6 +462,7 @@ def main():
             )
             if response.ok:
                 message_id = str(response.json().get("id") or "")
+                sent_at = now.isoformat()
             else:
                 attempts = previous_attempts + 1
                 item["notificationAttempts"] = attempts
@@ -376,13 +483,22 @@ def main():
                 continue
 
         if message_id:
+            sent_at = sent_at or now.isoformat()
             item["status"] = "pending_sent"
             item["notificationStatus"] = "sent"
             item["notificationAttempts"] = (
                 int(item.get("notificationAttempts") or 0) + 1
             )
             item["discordMessageId"] = message_id
-            item["discordNotifiedAt"] = now.isoformat()
+            item["discordNotifiedAt"] = sent_at
+            item["discordApproval"] = {
+                "required": True,
+                "status": "pending",
+                "channelId": channel_id,
+                "messageId": message_id,
+                "sentAt": sent_at,
+                "payloadHash": payload_hash,
+            }
             item.pop("nextNotificationAttemptAt", None)
             item.pop("lastNotificationError", None)
             changed = True
@@ -399,6 +515,7 @@ def main():
             endpoint,
             headers=headers,
             json={
+                "allowed_mentions": {"parse": []},
                 "content": (
                     "⚠️ A entrega de sugestões ficou bloqueada após validação "
                     "ou tentativas limitadas. IDs: "

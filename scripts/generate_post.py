@@ -34,6 +34,10 @@ from recommendation_resolver import (
     probe_verified_source,
     resolve_recommendation,
 )
+from recommendation_approval import (
+    is_post_workflow_eligible,
+    requires_discord_approval,
+)
 
 # --- PATHS ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -159,7 +163,11 @@ def _legacy_get_recommendations_with_valid_covers(queue):
                 pass
         return s
     
-    active_items = [i for i in queue if i.get("status") not in ["published", "skip", "pending_approval"] and score(i) >= 0]
+    active_items = [
+        item
+        for item in queue
+        if is_post_workflow_eligible(item) and score(item) >= 0
+    ]
     active_items.sort(key=lambda x: score(x), reverse=True)
     
     selected = {}
@@ -504,7 +512,7 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
     active_items = [
         item
         for item in queue
-        if item.get("status") == "queue"
+        if is_post_workflow_eligible(item)
         and _item_score(item, now) >= 0
         and (
             item.get("type") != "highlight"
@@ -555,6 +563,13 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
                 resolved = resolve_recommendation(
                     copy.deepcopy(queue_item), force=False
                 )
+                if (
+                    requires_discord_approval(queue_item)
+                    and not is_post_workflow_eligible(resolved)
+                ):
+                    raise ValueError(
+                        "a prova de aprovação Discord não foi preservada"
+                    )
                 if resolved.get("resolutionStatus") != "verified":
                     raise ValueError("o resolvedor não confirmou a entidade")
                 if not resolved.get("link"):
@@ -1024,8 +1039,8 @@ def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
             f"{qkey} não contém um item de um tipo permitido: "
             + ", ".join(allowed_types)
         )
-    if item.get("status") != "queue":
-        raise RuntimeError(f"{qkey} já não está aprovado na fila")
+    if not is_post_workflow_eligible(item):
+        raise RuntimeError(f"{qkey} já não está elegível na fila aprovada")
     if item.get("resolutionStatus") != "verified":
         raise RuntimeError(f"{qkey} não tem resolução verificada")
     verification = item.get("verification") or {}
@@ -1158,6 +1173,16 @@ def commit_approved_draft(
     current_by_id = {item.get("id"): item for item in current_queue}
     selected_ids = {item["id"] for item in quadrants.values()}
     missing_ids = selected_ids.difference(current_by_id)
+    missing_community_ids = {
+        item["id"]
+        for item in quadrants.values()
+        if item["id"] in missing_ids and requires_discord_approval(item)
+    }
+    if missing_community_ids:
+        raise RuntimeError(
+            "Uma sugestão comunitária deixou de existir na fila atual: "
+            + ", ".join(sorted(missing_community_ids))
+        )
     if missing_ids:
         print(
             "[WARN] A fila automática já não contém alguns itens aprovados: "
@@ -1168,6 +1193,22 @@ def commit_approved_draft(
         current = current_by_id.get(reviewed["id"])
         if current is None:
             continue
+        if requires_discord_approval(reviewed):
+            if not is_post_workflow_eligible(current):
+                raise RuntimeError(
+                    f"{qkey} perdeu a aprovação Discord válida"
+                )
+            for field in (
+                "sourceKind",
+                "communitySubmission",
+                "submissionHash",
+                "discordMessageId",
+                "discordApproval",
+            ):
+                if current.get(field) != reviewed.get(field):
+                    raise RuntimeError(
+                        f"{qkey} teve o comprovativo Discord alterado depois da revisão"
+                    )
         for field in (
             "type",
             "status",

@@ -17,6 +17,10 @@ if str(SCRIPTS_DIR) not in sys.path:
 import auto_populate_ai
 import generate_post
 import recover_weekly_generation
+from recommendation_approval import (
+    COMMUNITY_SOURCE_KIND,
+    community_submission_hash,
+)
 
 
 def verified_item(media_type, suffix, status="queue"):
@@ -56,6 +60,91 @@ def verified_item(media_type, suffix, status="queue"):
         item["sourcePublishedAt"] = (now - datetime.timedelta(hours=6)).isoformat()
         item["expiryDate"] = (now + datetime.timedelta(days=3)).isoformat()
     return item
+
+
+def community_book(*, approved=True, status="queue"):
+    item = verified_item("book", "community", status=status)
+    item.update(
+        {
+            "id": "web_book_community",
+            "origin": "website",
+            "sourceKind": COMMUNITY_SOURCE_KIND,
+            "createdAt": "2026-08-10T09:00:00+00:00",
+            "notificationStatus": "sent" if approved else "pending",
+            "discordMessageId": "100000000000000001" if approved else "",
+        }
+    )
+    item["communitySubmission"] = {
+        "id": item["id"],
+        "sourceKind": item["sourceKind"],
+        "type": item["type"],
+        "title": item["title"],
+        "link": item["link"],
+        "createdAt": item["createdAt"],
+    }
+    item["submissionHash"] = community_submission_hash(item)
+    item["discordApproval"] = {
+        "required": True,
+        "status": "approved" if approved else "pending",
+        "channelId": "200000000000000002" if approved else "",
+        "messageId": item["discordMessageId"],
+        "sentAt": "2026-08-10T09:01:00+00:00" if approved else "",
+        "payloadHash": item["submissionHash"],
+        "approvedAt": "2026-08-10T09:10:00+00:00" if approved else "",
+        "approvedBy": "300000000000000003" if approved else "",
+    }
+    return item
+
+
+class CommunityApprovalGateTests(unittest.TestCase):
+    def test_unapproved_community_item_is_not_publishable(self):
+        item = community_book(approved=False)
+
+        self.assertFalse(auto_populate_ai._is_publishable_record(item))
+        with self.assertRaises(RuntimeError):
+            generate_post._validate_publish_item("q1", item)
+
+    def test_valid_discord_approval_allows_verified_item(self):
+        item = community_book(approved=True)
+
+        self.assertTrue(auto_populate_ai._is_publishable_record(item))
+        with mock.patch.object(
+            generate_post,
+            "load_cover_for_item",
+            return_value=Image.new("RGB", (10, 10)),
+        ):
+            generate_post._validate_publish_item("q1", item)
+
+    def test_queue_gate_demotes_community_item_without_proof(self):
+        item = community_book(approved=False)
+        item.pop("discordMessageId", None)
+
+        changed = auto_populate_ai._enforce_community_approval_gate([item])
+
+        self.assertTrue(changed)
+        self.assertEqual(item["status"], "pending_approval")
+        self.assertEqual(item["notificationStatus"], "pending_retry")
+
+    def test_approved_raw_suggestion_is_enriched_before_queueing(self):
+        item = community_book(
+            approved=True,
+            status="approved_pending_enrichment",
+        )
+        item["resolutionStatus"] = "unresolved"
+        item["verification"] = {"status": "unresolved"}
+        resolved = verified_item("book", "resolved")
+
+        with mock.patch.object(
+            auto_populate_ai,
+            "resolve_recommendation",
+            return_value=resolved,
+        ):
+            changed = auto_populate_ai._enrich_approved_suggestions([item])
+
+        self.assertTrue(changed)
+        self.assertEqual(item["status"], "queue")
+        self.assertEqual(item["submissionHash"], community_submission_hash(item))
+        self.assertTrue(auto_populate_ai._is_publishable_record(item))
 
 
 class ZeroStatePopulationTests(unittest.TestCase):

@@ -13,11 +13,17 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import auto_populate_ai
 import discord_reviewer
+from recommendation_approval import (
+    COMMUNITY_SOURCE_KIND,
+    community_submission_hash,
+)
 
 
 def whole_podcast():
-    return {
+    item = {
         "id": "web_podcast_1",
+        "origin": "website",
+        "sourceKind": COMMUNITY_SOURCE_KIND,
         "type": "podcast",
         "title": "Podcast Exemplo",
         "authorOrMeta": "Podcast Exemplo / Jornalista",
@@ -26,6 +32,9 @@ def whole_podcast():
         "imageUrl": "/covers/podcast.jpg",
         "sourceImageUrl": "https://cdn.example.com/podcast.jpg",
         "status": "pending_sent",
+        "notificationStatus": "sent",
+        "discordMessageId": "100000000000000001",
+        "createdAt": "2026-08-10T09:00:00+00:00",
         "resolutionStatus": "verified",
         "verification": {
             "status": "verified",
@@ -34,6 +43,24 @@ def whole_podcast():
             "coverHash": "cover-hash",
         },
     }
+    item["communitySubmission"] = {
+        "id": item["id"],
+        "sourceKind": item["sourceKind"],
+        "type": item["type"],
+        "title": item["title"],
+        "link": item["link"],
+        "createdAt": item["createdAt"],
+    }
+    item["submissionHash"] = community_submission_hash(item)
+    item["discordApproval"] = {
+        "required": True,
+        "status": "pending",
+        "channelId": "200000000000000002",
+        "messageId": item["discordMessageId"],
+        "sentAt": "2026-08-10T09:01:00+00:00",
+        "payloadHash": item["submissionHash"],
+    }
+    return item
 
 
 class DiscordApplicationTests(unittest.TestCase):
@@ -191,14 +218,22 @@ class DiscordApplicationTests(unittest.TestCase):
             "Europe/Lisbon",
         )
 
-    def test_recommendation_command_exposes_same_five_types_as_website(self):
+    def test_recommendation_command_exposes_all_website_types(self):
         choices = {
             choice.value
             for choice in discord_reviewer.RECOMMENDATION_TYPE_CHOICES
         }
         self.assertEqual(
             choices,
-            {"book", "podcast", "movie", "highlight", "project"},
+            {
+                "book",
+                "podcast",
+                "movie",
+                "nostalgia",
+                "investigation",
+                "highlight",
+                "project",
+            },
         )
 
     def test_public_recommendation_errors_hide_service_internals(self):
@@ -255,11 +290,23 @@ class DiscordApplicationTests(unittest.TestCase):
                 "update_github_file",
                 side_effect=fake_update,
             ),
+            mock.patch.object(
+                discord_reviewer,
+                "_is_authorized_reviewer",
+                return_value=True,
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "CHANNEL_ID",
+                200000000000000002,
+            ),
         ):
             result = discord_reviewer.approve_recommendation(
                 "web_podcast_1",
                 SimpleNamespace(id=42),
                 "watch",
+                "100000000000000001",
+                "200000000000000002",
             )
 
         self.assertTrue(result["ok"])
@@ -267,6 +314,63 @@ class DiscordApplicationTests(unittest.TestCase):
         self.assertEqual(stored["status"], "watching")
         self.assertEqual(stored["approvalMode"], "watch")
         self.assertEqual(stored["watchlistCollectionId"], "12345")
+
+    def test_approval_is_bound_to_exact_discord_message(self):
+        database = {"queue": [whole_podcast()], "history": []}
+        with (
+            mock.patch.object(
+                discord_reviewer,
+                "get_github_file",
+                return_value=(json.dumps(database).encode(), "sha"),
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "_is_authorized_reviewer",
+                return_value=True,
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "CHANNEL_ID",
+                200000000000000002,
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "update_github_file",
+            ) as update_mock,
+        ):
+            result = discord_reviewer.approve_recommendation(
+                "web_podcast_1",
+                SimpleNamespace(id=42),
+                "queue",
+                "999999999999999999",
+                "200000000000000002",
+            )
+
+        self.assertFalse(result["ok"])
+        update_mock.assert_not_called()
+
+    def test_approval_helper_rechecks_reviewer_authorization(self):
+        with (
+            mock.patch.object(
+                discord_reviewer,
+                "_is_authorized_reviewer",
+                return_value=False,
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "get_github_file",
+            ) as get_mock,
+        ):
+            result = discord_reviewer.approve_recommendation(
+                "web_podcast_1",
+                SimpleNamespace(id=42),
+                "queue",
+                "100000000000000001",
+                "200000000000000002",
+            )
+
+        self.assertFalse(result["ok"])
+        get_mock.assert_not_called()
 
     def test_watchlist_append_is_idempotent_by_apple_collection_id(self):
         item = whole_podcast()

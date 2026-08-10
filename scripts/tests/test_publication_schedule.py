@@ -46,7 +46,7 @@ class PublicationScheduleTests(unittest.TestCase):
         )
 
         self.assertTrue(at_ten[0])
-        self.assertFalse(at_eleven[0])
+        self.assertTrue(at_eleven[0])
         self.assertEqual(
             at_ten[2].isoformat(),
             "2026-07-19T09:00:00+00:00",
@@ -75,13 +75,14 @@ class PublicationScheduleTests(unittest.TestCase):
             "2027-01-03T10:00:00+00:00",
         )
 
-    def test_window_is_bounded_to_the_target_sunday_ten_o_clock_hour(self):
+    def test_window_starts_at_ten_and_accepts_same_sunday_recovery(self):
         draft = approved_draft("2026-07-18T20:00:00+00:00")
         cases = (
             (datetime.datetime(2026, 7, 18, 9, 30, tzinfo=datetime.timezone.utc), False),
             (datetime.datetime(2026, 7, 19, 8, 59, tzinfo=datetime.timezone.utc), False),
             (datetime.datetime(2026, 7, 19, 9, 59, tzinfo=datetime.timezone.utc), True),
-            (datetime.datetime(2026, 7, 19, 10, 0, tzinfo=datetime.timezone.utc), False),
+            (datetime.datetime(2026, 7, 19, 10, 0, tzinfo=datetime.timezone.utc), True),
+            (datetime.datetime(2026, 7, 19, 18, 0, tzinfo=datetime.timezone.utc), True),
             (datetime.datetime(2026, 7, 26, 9, 0, tzinfo=datetime.timezone.utc), False),
         )
 
@@ -138,7 +139,7 @@ class PublicationScheduleTests(unittest.TestCase):
     def test_manual_override_can_publish_outside_window_without_bypassing_approval(self):
         draft = approved_draft("2026-07-18T20:00:00+00:00")
         outside_window = datetime.datetime(
-            2026, 7, 19, 10, 30, tzinfo=datetime.timezone.utc
+            2026, 7, 20, 10, 30, tzinfo=datetime.timezone.utc
         )
 
         normal = publication_schedule.publication_decision(
