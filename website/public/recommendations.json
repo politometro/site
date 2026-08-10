@@ -897,6 +897,78 @@
         "sourcePublishedAt": "2026-08-07T23:08:43Z",
         "sourceDescription": "A ausência persistente de dados sugere uma escolha política de não os tornar públicos, com implicações relevantes."
       }
+    },
+    {
+      "id": "rss_podcast_42d1feb25c5dd126",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Regresso a 2021: “O engenheiro, o cigarro e o Ronaldo: A santíssima",
+      "editorialTitle": "Regresso a 2021: “O engenheiro, o cigarro e o Ronaldo: A santíssima",
+      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
+      "description": "Análise sobre os temas e questões de regresso a 2021: “o engenheiro, o cigarro e o ronaldo: a santíssima.",
+      "imageUrl": "/covers/podcast_regresso_a_2021___o_engenheiro__o_cigarro_e_o_ronald_ed6318a8_42d1feb25c5d.jpg",
+      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/regresso-a-2021-o-engenheiro-o-cigarro-e-o-ronaldo-a-sant-ssima-trindade-do-futebol-nacional-que-nenhuma-bazuca-comunit-ria-consegue-financiar",
+      "externalId": "4a2875d0-0dee-43db-b881-b49b00c44eaf",
+      "sourceSeriesId": "1585178009",
+      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-09T22:41:57Z",
+      "expiryDate": "2026-08-19T22:41:57Z",
+      "createdAt": "2026-08-10T09:02:35.642423Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
+        "guid": "4a2875d0-0dee-43db-b881-b49b00c44eaf",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/image.jpg?t=1668425400&size=Large",
+        "show": "Isto É Gozar Com Quem Trabalha"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "4a2875d0-0dee-43db-b881-b49b00c44eaf",
+        "score": 1.0,
+        "coverHash": "7cf2e9fe63d6c0f324df402973a58d21a64ce08e1db59a7a7dfe77828a620730",
+        "verifiedAt": "2026-08-10T09:02:39.093591Z",
+        "resolvedTitle": "Regresso a 2021: “O engenheiro, o cigarro e o Ronaldo: A santíssima trindade do futebol nacional que nenhuma bazuca comunitária consegue financiar”",
+        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
+        "sourcePublishedAt": "2026-08-09T22:41:57Z",
+        "sourceDescription": "O verão passou, a realidade ficou — e que realidade. O programa *Isto É Gozar com Quem Trabalha* regressou com o balanço que o país merecia e que ninguém pediu, mas todos precisavam: Cabrita ainda no governo (e a velocidade do carro ainda por apurar), um iraquiano suspeito de terrorismo que recebeu em casa o primeiro-ministro, o vice e o Presidente da…",
+        "editorialDescription": "Análise sobre os temas e questões de regresso a 2021: “o engenheiro, o cigarro e o ronaldo: a santíssima.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "47f6072b2b2f10ae3fac485c91cab67c2ed157c7965f358ece43e9214c74aef4",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "ai_book_6110f2f27e7e44f9",
+      "type": "book",
+      "category": "Livro",
+      "title": "How Democracies Die",
+      "authorOrMeta": "Steven Levitsky, Daniel Ziblatt",
+      "description": "Explica como democracias podem degradar-se por dentro através de normas quebradas, polarização e abuso institucional.",
+      "imageUrl": "/covers/book_how_democracies_die_04053fa8_a229f15169f5.jpg",
+      "link": "https://openlibrary.org/works/OL18139175W",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-08-10T09:02:41.528513Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL18139175W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL18139175W",
+        "score": 1.0,
+        "coverHash": "eb24a840462b8281445c7f57cdf0b10f803c2b9e7c123813542950d4aeadb7a1",
+        "verifiedAt": "2026-08-10T09:02:42.270598Z",
+        "resolvedTitle": "How Democracies Die",
+        "resolvedAuthor": "Steven Levitsky, Daniel Ziblatt",
+        "sourceDescription": "Explica como democracias podem degradar-se por dentro através de normas quebradas, polarização e abuso institucional."
+      }
     }
   ],
   "history": [
