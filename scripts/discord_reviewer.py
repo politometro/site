@@ -1,6 +1,7 @@
 import os
 import json
 import datetime
+import ipaddress
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -12,6 +13,7 @@ import asyncio
 import base64
 import threading
 import time
+import unicodedata
 from dotenv import load_dotenv
 from publication_schedule import (
     PUBLICATION_TIMEZONE_NAME,
@@ -1518,6 +1520,171 @@ def _recommendation_delivery_error(item, message_id, channel_id):
     return None
 
 
+def _recommendation_item_id_from_message(message):
+    if not message or not getattr(message, "embeds", None):
+        return ""
+    footer = message.embeds[0].footer
+    footer_text = str(getattr(footer, "text", "") or "")
+    prefix = footer_text.split("|", 1)[0].strip()
+    return prefix[3:].strip() if prefix.startswith("ID:") else ""
+
+
+def _normalize_recommendation_link(value):
+    """Normalize a reviewer-provided public URL without fetching it."""
+    cleaned = str(value or "").strip()
+    if any(
+        unicodedata.category(character) in {"Cc", "Cf", "Cs", "Co", "Cn"}
+        for character in cleaned
+    ):
+        raise ValueError("O link contém caracteres inválidos.")
+    if not cleaned:
+        return ""
+    if len(cleaned) > 2048 or "<" in cleaned or ">" in cleaned:
+        raise ValueError("O link é demasiado longo ou inválido.")
+    try:
+        parsed = urllib.parse.urlsplit(cleaned)
+        hostname = (parsed.hostname or "").strip(".").casefold()
+        if (
+            parsed.scheme.casefold() not in {"http", "https"}
+            or not hostname
+            or parsed.username is not None
+            or parsed.password is not None
+        ):
+            raise ValueError("O link deve ser HTTP(S), sem credenciais.")
+        if (
+            hostname == "localhost"
+            or hostname == "localhost.localdomain"
+            or hostname.endswith(".localhost")
+            or hostname.endswith(".local")
+        ):
+            raise ValueError("O link aponta para um destino local.")
+        try:
+            address = ipaddress.ip_address(hostname)
+        except ValueError:
+            address = None
+        if address is not None and (
+            address.is_private
+            or address.is_loopback
+            or address.is_link_local
+            or address.is_reserved
+            or address.is_multicast
+            or address.is_unspecified
+        ):
+            raise ValueError("O link aponta para uma rede privada ou reservada.")
+        return urllib.parse.urlunsplit(parsed._replace(fragment=""))
+    except ValueError:
+        raise
+    except (TypeError, UnicodeError) as exc:
+        raise ValueError("O link é inválido.") from exc
+
+
+def update_pending_recommendation_link(
+    item_id,
+    message_id,
+    channel_id,
+    new_link,
+    user,
+):
+    """Edit a pending community link and rebind its Discord proof to it."""
+    if not _is_authorized_reviewer(user):
+        return {"ok": False, "error": "Revisor sem autorização."}
+    try:
+        normalized_link = _normalize_recommendation_link(new_link)
+    except ValueError as exc:
+        return {"ok": False, "error": str(exc)}
+
+    rec_content, rec_sha = get_github_file(
+        "website/public/recommendations.json"
+    )
+    if not rec_content:
+        return {
+            "ok": False,
+            "error": f"Erro ao obter recommendations.json: {rec_sha}",
+        }
+    try:
+        rec_data = json.loads(rec_content.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return {"ok": False, "error": f"recommendations.json inválido: {exc}"}
+
+    item = next(
+        (
+            candidate
+            for candidate in rec_data.get("queue", [])
+            if candidate.get("id") == item_id
+        ),
+        None,
+    )
+    if not item:
+        return {"ok": False, "error": f"Item `{item_id}` não encontrado na fila."}
+    delivery_error = _recommendation_delivery_error(
+        item,
+        message_id,
+        channel_id,
+    )
+    if delivery_error:
+        return {"ok": False, "error": delivery_error}
+    snapshot = item.get("communitySubmission")
+    if not isinstance(snapshot, dict):
+        return {"ok": False, "error": "Esta recomendação não tem snapshot comunitário válido."}
+
+    previous_link = str(snapshot.get("link") or "")
+    if normalized_link == previous_link:
+        return {
+            "ok": True,
+            "changed": False,
+            "link": normalized_link,
+            "hash": item.get("submissionHash", ""),
+        }
+
+    updated_snapshot = dict(snapshot)
+    updated_snapshot["link"] = normalized_link
+    item["communitySubmission"] = updated_snapshot
+    item["link"] = normalized_link
+    updated_hash = community_submission_hash(item)
+    if not updated_hash:
+        return {
+            "ok": False,
+            "error": "Não foi possível atualizar a identidade da recomendação.",
+        }
+    item["submissionHash"] = updated_hash
+
+    delivery = item.get("discordDelivery")
+    if isinstance(delivery, dict):
+        delivery = dict(delivery)
+        delivery["payloadHash"] = updated_hash
+        item["discordDelivery"] = delivery
+    item["discordPayloadHash"] = updated_hash
+    approval = dict(item.get("discordApproval") or {})
+    approval.update(
+        {
+            "required": True,
+            "status": "pending",
+            "payloadHash": updated_hash,
+            "linkEditedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "linkEditedBy": str(getattr(user, "id", "")).strip(),
+        }
+    )
+    item["discordApproval"] = approval
+
+    encoded = json.dumps(
+        rec_data, indent=2, ensure_ascii=False
+    ).encode("utf-8")
+    result = update_github_file(
+        "website/public/recommendations.json",
+        encoded,
+        f"Update recommendation link: {item_id} [bot]",
+        sha=rec_sha,
+    )
+    if result is not True:
+        return {"ok": False, "error": str(result)}
+    return {
+        "ok": True,
+        "changed": True,
+        "link": normalized_link,
+        "hash": updated_hash,
+    }
+
+
 def approve_recommendation(
     item_id,
     user,
@@ -1738,10 +1905,114 @@ class PodcastApprovalChoiceView(discord.ui.View):
 
 
 # ===================== RECOMMENDATION APPROVAL VIEW =====================
+class RecommendationLinkModal(discord.ui.Modal):
+    def __init__(self, item_id, review_message):
+        super().__init__(title="Alterar link")
+        self.item_id = item_id
+        self.review_message = review_message
+        current_link = ""
+        if review_message and review_message.embeds:
+            for field in review_message.embeds[0].fields:
+                if field.name == "Link fornecido":
+                    current_link = str(field.value or "")
+                    break
+        self.link_input = discord.ui.TextInput(
+            label="Novo link (vazio para remover)",
+            placeholder="https://...",
+            default=current_link[:2048],
+            required=False,
+            max_length=2048,
+        )
+        self.add_item(self.link_input)
+
+    async def on_submit(self, interaction: discord.Interaction):
+        await interaction.response.defer(ephemeral=True)
+        message = self.review_message
+        channel_id = getattr(getattr(message, "channel", None), "id", None)
+        result = await asyncio.to_thread(
+            update_pending_recommendation_link,
+            self.item_id,
+            getattr(message, "id", None),
+            channel_id,
+            self.link_input.value,
+            interaction.user,
+        )
+        if not result.get("ok"):
+            await interaction.followup.send(
+                f"❌ {result.get('error')}",
+                ephemeral=True,
+            )
+            return
+
+        if message and message.embeds:
+            embed = message.embeds[0]
+            link = str(result.get("link") or "")
+            link_field_index = next(
+                (
+                    index
+                    for index, field in enumerate(embed.fields)
+                    if field.name == "Link fornecido"
+                ),
+                None,
+            )
+            if link:
+                if link_field_index is None:
+                    embed.add_field(
+                        name="Link fornecido",
+                        value=link[:1024],
+                        inline=False,
+                    )
+                else:
+                    embed.set_field_at(
+                        link_field_index,
+                        name="Link fornecido",
+                        value=link[:1024],
+                        inline=False,
+                    )
+            elif link_field_index is not None:
+                embed.remove_field(link_field_index)
+            embed.set_footer(
+                text=f"ID: {self.item_id} | Hash: {result.get('hash', '')}"
+            )
+            try:
+                await message.edit(embed=embed)
+            except discord.HTTPException:
+                pass
+
+        await interaction.followup.send(
+            "✅ Link atualizado. A recomendação continua pendente de aprovação.",
+            ephemeral=True,
+        )
+
+
 class RecommendationApprovalView(discord.ui.View):
     """Persistent view for approving/rejecting individual AI-generated recommendations."""
     def __init__(self):
         super().__init__(timeout=None)
+
+    @discord.ui.button(
+        label="Alterar link",
+        style=discord.ButtonStyle.secondary,
+        custom_id="rec_edit_link",
+        emoji="🔗",
+    )
+    async def edit_link_button(self, interaction: discord.Interaction, button: discord.ui.Button):
+        if not _is_authorized_reviewer(interaction.user):
+            await interaction.response.send_message(
+                "Não tens permissão para alterar recomendações.",
+                ephemeral=True,
+            )
+            return
+        item_id = _recommendation_item_id_from_message(interaction.message)
+        if not item_id:
+            await interaction.response.send_message(
+                "Erro: não foi possível identificar a recomendação.",
+                ephemeral=True,
+            )
+            return
+        await interaction.response.send_modal(
+            RecommendationLinkModal(item_id, interaction.message)
+        )
 
     @discord.ui.button(label="Aprovar", style=discord.ButtonStyle.success, custom_id="rec_approve", emoji="\u2705")
     async def approve_button(self, interaction: discord.Interaction, button: discord.ui.Button):

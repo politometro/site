@@ -1835,7 +1835,21 @@ def _enrich_approved_suggestions(queue):
             if field in item
         }
         try:
-            resolved = resolve_recommendation(dict(item), force=True)
+            candidate = dict(item)
+            if requires_discord_approval(item):
+                # The submitted title is only a search hint. Once approved,
+                # show the title verified by the resolved source instead of
+                # preserving an arbitrary community label.
+                candidate.pop("editorialTitle", None)
+            resolved = resolve_recommendation(candidate, force=True)
+            if requires_discord_approval(item):
+                verification = resolved.get("verification") or {}
+                canonical_title = str(
+                    verification.get("resolvedTitle") or ""
+                ).strip()
+                if canonical_title:
+                    resolved["title"] = canonical_title
+                resolved.pop("editorialTitle", None)
             resolved.update(preserved)
             resolved["status"] = "queue"
             if not _is_publishable_record(resolved):

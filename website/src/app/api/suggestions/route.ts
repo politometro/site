@@ -1483,6 +1483,13 @@ async function notifyDiscord(item: JsonRecord): Promise<DiscordDeliveryProof | n
             emoji: { name: "❌" },
             custom_id: "rec_reject",
           },
+          {
+            type: 2,
+            style: 2,
+            label: "Alterar link",
+            emoji: { name: "🔗" },
+            custom_id: "rec_edit_link",
+          },
         ],
       },
     ],

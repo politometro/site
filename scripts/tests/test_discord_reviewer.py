@@ -244,6 +244,83 @@ class DiscordApplicationTests(unittest.TestCase):
         self.assertNotIn("servidor", message.lower())
         self.assertIn("tenta novamente", message.lower())
 
+    def test_recommendation_view_exposes_link_edit_button(self):
+        view = discord_reviewer.RecommendationApprovalView()
+        custom_ids = {child.custom_id for child in view.children}
+        self.assertIn("rec_edit_link", custom_ids)
+
+    def test_pending_recommendation_link_edit_rebinds_submission_proof(self):
+        database = {"queue": [whole_podcast()], "history": []}
+        written = {}
+
+        def fake_update(path, content, message, sha=None):
+            written[path] = json.loads(content.decode("utf-8"))
+            return True
+
+        with (
+            mock.patch.object(
+                discord_reviewer,
+                "get_github_file",
+                return_value=(json.dumps(database).encode("utf-8"), "sha"),
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "update_github_file",
+                side_effect=fake_update,
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "_is_authorized_reviewer",
+                return_value=True,
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "CHANNEL_ID",
+                200000000000000002,
+            ),
+        ):
+            result = discord_reviewer.update_pending_recommendation_link(
+                "web_podcast_1",
+                "100000000000000001",
+                "200000000000000002",
+                "https://better.example.org/show",
+                SimpleNamespace(id=42),
+            )
+
+        self.assertTrue(result["ok"])
+        stored = written["website/public/recommendations.json"]["queue"][0]
+        self.assertEqual(stored["link"], "https://better.example.org/show")
+        self.assertEqual(
+            stored["communitySubmission"]["link"],
+            "https://better.example.org/show",
+        )
+        self.assertEqual(
+            stored["submissionHash"],
+            community_submission_hash(stored),
+        )
+        self.assertEqual(
+            stored["discordApproval"]["payloadHash"],
+            stored["submissionHash"],
+        )
+        self.assertEqual(stored["discordApproval"]["status"], "pending")
+
+    def test_pending_recommendation_link_edit_rejects_private_destinations(self):
+        with mock.patch.object(
+            discord_reviewer,
+            "_is_authorized_reviewer",
+            return_value=True,
+        ):
+            result = discord_reviewer.update_pending_recommendation_link(
+                "web_podcast_1",
+                "100000000000000001",
+                "200000000000000002",
+                "http://127.0.0.1/admin",
+                SimpleNamespace(id=42),
+            )
+
+        self.assertFalse(result["ok"])
+        self.assertIn("privada", result["error"])
+
     def test_expired_recommendation_error_suggests_recent_content(self):
         message = discord_reviewer.public_recommendation_error(
             "A fonte foi identificada, mas o prazo de relevância terminou."

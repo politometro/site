@@ -130,9 +130,11 @@ class CommunityApprovalGateTests(unittest.TestCase):
             approved=True,
             status="approved_pending_enrichment",
         )
+        item["editorialTitle"] = "Título submetido pela pessoa"
         item["resolutionStatus"] = "unresolved"
         item["verification"] = {"status": "unresolved"}
         resolved = verified_item("book", "resolved")
+        resolved["verification"]["resolvedTitle"] = "Título canónico revisto"
 
         with mock.patch.object(
             auto_populate_ai,
@@ -143,6 +145,8 @@ class CommunityApprovalGateTests(unittest.TestCase):
 
         self.assertTrue(changed)
         self.assertEqual(item["status"], "queue")
+        self.assertEqual(item["title"], "Título canónico revisto")
+        self.assertNotIn("editorialTitle", item)
         self.assertEqual(item["submissionHash"], community_submission_hash(item))
         self.assertTrue(auto_populate_ai._is_publishable_record(item))
 
