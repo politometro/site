@@ -36,13 +36,14 @@
         ]
       },
       "origin": "website-community",
-      "notificationStatus": "pending",
-      "notificationAttempts": 0,
+      "notificationStatus": "pending_retry",
+      "notificationAttempts": 1,
       "discordApproval": {
         "required": true,
         "status": "pending",
         "notificationStatus": "pending"
-      }
+      },
+      "nextNotificationAttemptAt": "2026-08-10T18:39:30.523Z"
     },
     {
       "id": "web_highlight_3008d0c1-16b0-4876-89f8-290de432f6a8",
