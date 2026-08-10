@@ -85,7 +85,7 @@ export default function SuggestionsPage() {
       setFormStatus(
         notificationSent
           ? "A sugestão foi enviada para o canal de aprovação no Discord. Obrigado pela contribuição."
-          : "A sugestão foi recebida e será entregue no canal de aprovação antes de poder seguir para posts.",
+          : "Recomendação enviada.",
       );
     } catch (error: unknown) {
       console.error(error);
