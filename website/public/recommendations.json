@@ -1,6 +1,50 @@
 {
   "queue": [
     {
+      "id": "web_highlight_eb014926-6107-49d6-a964-22f01ed68e3e",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A Fragilidade da Memória",
+      "link": "",
+      "authorOrMeta": "",
+      "description": "Sugestao recebida da comunidade para revisao.",
+      "imageUrl": "",
+      "sourcePublishedAt": null,
+      "expiryDate": null,
+      "priority": 3,
+      "createdAt": "2026-08-10T18:26:47.132Z",
+      "status": "pending_approval",
+      "sourceKind": "community_suggestion",
+      "communitySubmission": {
+        "id": "web_highlight_eb014926-6107-49d6-a964-22f01ed68e3e",
+        "sourceKind": "community_suggestion",
+        "type": "highlight",
+        "title": "A Fragilidade da Memória",
+        "link": "",
+        "createdAt": "2026-08-10T18:26:47.132Z"
+      },
+      "submissionHash": "b3b276d1f60dd0ea430c08bdffcc66732c45eaf881427f39518335a168821a49",
+      "resolutionStatus": "unresolved",
+      "verification": {
+        "status": "unresolved",
+        "provider": "community",
+        "confidence": 0,
+        "checkedAt": "2026-08-10T18:26:47.132Z",
+        "matchedFields": [],
+        "warnings": [
+          "A sugestao aguarda revisao da comunidade."
+        ]
+      },
+      "origin": "website-community",
+      "notificationStatus": "pending",
+      "notificationAttempts": 0,
+      "discordApproval": {
+        "required": true,
+        "status": "pending",
+        "notificationStatus": "pending"
+      }
+    },
+    {
       "id": "web_highlight_39e6e776-6c5f-4071-b5c6-afa9b09dde95",
       "type": "highlight",
       "category": "Destaque",
