@@ -36,13 +36,14 @@
         ]
       },
       "origin": "website-community",
-      "notificationStatus": "pending",
-      "notificationAttempts": 0,
+      "notificationStatus": "pending_retry",
+      "notificationAttempts": 1,
       "discordApproval": {
         "required": true,
         "status": "pending",
         "notificationStatus": "pending"
-      }
+      },
+      "nextNotificationAttemptAt": "2026-08-10T16:42:55.901Z"
     },
     {
       "id": "ai_book_a9017ecd74994f8a",
