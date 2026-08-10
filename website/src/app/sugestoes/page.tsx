@@ -1,12 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import Header from "@/components/Header";
-import type {
-  RecommendationType,
-  RecommendationVerification,
-  ResolvedRecommendation,
-} from "@/lib/recommendationResolver";
+import type { RecommendationType } from "@/lib/recommendationResolver";
 import styles from "./page.module.css";
 
 const dropdownOptions: Array<{
@@ -14,85 +10,21 @@ const dropdownOptions: Array<{
   icon: string;
   label: string;
 }> = [
-  { value: "book", icon: "📚", label: "Livro" },
-  { value: "podcast", icon: "🎙️", label: "Podcast / Canal" },
-  { value: "movie", icon: "🎬", label: "Filme / Série" },
-  { value: "highlight", icon: "📰", label: "Destaque / Artigo" },
-  {
-    value: "project",
-    icon: "💡",
-    label: "Sugestão para o Projeto (Politómetro)",
-  },
+  { value: "book", icon: "📚", label: "Livro ou publicação" },
+  { value: "podcast", icon: "🎙️", label: "Podcast, canal ou episódio" },
+  { value: "movie", icon: "🎬", label: "Filme, série ou documentário" },
+  { value: "nostalgia", icon: "📼", label: "Nostalgia ou memória" },
+  { value: "investigation", icon: "🔎", label: "Investigação ou reportagem" },
+  { value: "highlight", icon: "📰", label: "Destaque ou artigo" },
+  { value: "project", icon: "💡", label: "Projeto ou melhoria" },
 ];
 
-function isRecord(value: unknown): value is Record<string, unknown> {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
-}
-
-function text(value: unknown): string {
-  return typeof value === "string" ? value : "";
-}
-
-async function responsePayload(
-  response: Response,
-): Promise<Record<string, unknown>> {
-  const payload: unknown = await response.json().catch(() => ({}));
-  return isRecord(payload) ? payload : {};
-}
-
-function payloadError(
-  payload: Record<string, unknown>,
-  fallback: string,
-): string {
-  return text(payload.error) || text(payload.warning) || fallback;
-}
-
-function resolvedFromPayload(
-  value: Record<string, unknown>,
-): ResolvedRecommendation | null {
-  if (
-    !dropdownOptions.some((option) => option.value === value.type) ||
-    value.resolutionStatus !== "verified" ||
-    !text(value.category) ||
-    !text(value.title) ||
-    !isRecord(value.verification)
-  ) {
-    return null;
+function publicSubmissionError(status: number): string {
+  if (status === 429) {
+    return "Recebemos várias sugestões num curto espaço de tempo. Aguarda um pouco e tenta novamente.";
   }
-  return value as unknown as ResolvedRecommendation & {
-    verification: RecommendationVerification;
-  };
-}
-
-function errorMessage(error: unknown): string {
-  return error instanceof Error ? error.message : String(error);
-}
-
-function publicSubmissionError(error: unknown): string {
-  const original = errorMessage(error);
-  const message = original.toLowerCase();
-  if (message.includes("prazo de relevância") || message.includes("expir")) {
-    return "Este conteúdo já não é suficientemente recente para ser recomendado. Escolhe uma publicação mais atual e tenta novamente.";
-  }
-  if (message.includes("já existe") || message.includes("histórico")) {
-    return "Esta sugestão já foi recebida anteriormente. Obrigado pela contribuição.";
-  }
-  if (
-    message.includes("demasiad") ||
-    message.includes("limite") ||
-    message.includes("muitas sugestões")
-  ) {
-    return "Recebemos várias sugestões num curto espaço de tempo. Aguarda um pouco antes de tentares novamente.";
-  }
-  if (
-    message.includes("link indicado") ||
-    message.includes("link fornecido") ||
-    message.includes("apenas pelo título")
-  ) {
-    return original;
-  }
-  if (message.includes("tipo de recomendação")) {
-    return "Seleciona um tipo de conteúdo válido e tenta novamente.";
+  if (status === 413) {
+    return "A sugestão é demasiado longa. Reduz o texto e tenta novamente.";
   }
   return "Não foi possível concluir a submissão neste momento. Confirma os dados e tenta novamente dentro de alguns minutos.";
 }
@@ -121,66 +53,47 @@ export default function SuggestionsPage() {
     dropdownOptions.find((option) => option.value === type) ??
     dropdownOptions[0];
 
-  const handleAddRecommendation = async (event: React.FormEvent) => {
+  const handleAddRecommendation = async (event: FormEvent) => {
     event.preventDefault();
     if (!title.trim()) return;
 
     setIsLoading(true);
-    setFormStatus("A verificar a sugestão…");
+    setFormStatus("A enviar a sugestão para revisão…");
     try {
-      const enrichResponse = await fetch("/api/suggestions/enrich", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, link, type }),
-      });
-      const enrichPayload = await responsePayload(enrichResponse);
-      const resolved = resolvedFromPayload(enrichPayload);
-      if (!enrichResponse.ok || !resolved) {
-        const verification = isRecord(enrichPayload.verification)
-          ? enrichPayload.verification
-          : {};
-        const warning =
-          Array.isArray(verification.warnings) &&
-          typeof verification.warnings[0] === "string"
-            ? verification.warnings[0]
-            : "";
-        throw new Error(
-          warning ||
-            payloadError(
-              enrichPayload,
-              "Não conseguimos confirmar esta sugestão. Revê o título ou adiciona o link direto para o conteúdo.",
-            ),
-        );
-      }
-
-      setFormStatus("A concluir a submissão…");
-      const appendResponse = await fetch("/api/suggestions", {
+      const response = await fetch("/api/suggestions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "append",
-          item: {
-            type: resolved.type,
-            title: resolved.title,
-            link: resolved.link,
-          },
+          item: { type, title, link },
         }),
       });
-      const appendPayload = await responsePayload(appendResponse);
-      if (!appendResponse.ok) {
-        throw new Error(
-          payloadError(appendPayload, "A sugestão não foi recebida."),
-        );
+      const payload: unknown = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(publicSubmissionError(response.status));
       }
+
+      const notificationSent =
+        typeof payload === "object" &&
+        payload !== null &&
+        "notificationSent" in payload &&
+        payload.notificationSent === true;
 
       setTitle("");
       setLink("");
       setFormStatus(
-        `“${resolved.title}” foi recebida com sucesso e será analisada. Obrigado pela contribuição.`,
+        notificationSent
+          ? "A sugestão foi enviada para o canal de aprovação no Discord. Obrigado pela contribuição."
+          : "A sugestão foi recebida e será entregue no canal de aprovação antes de poder seguir para posts.",
       );
     } catch (error: unknown) {
       console.error(error);
-      setFormStatus(publicSubmissionError(error));
+      setFormStatus(
+        error instanceof Error
+          ? error.message
+          : publicSubmissionError(500),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -193,23 +106,27 @@ export default function SuggestionsPage() {
 
       <main className={styles.main}>
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>Sugerir Conteúdo</h1>
+          <h1 className={styles.title}>Sugerir conteúdo</h1>
           <p className={styles.subtitle}>
-            Partilha livros, podcasts, artigos ou melhorias para o próprio
-            projeto do Politómetro.
+            Partilha conteúdos, referências ou melhorias para o próprio projeto
+            do Politómetro. A ligação é opcional e a revisão acontece antes de
+            qualquer publicação.
           </p>
         </div>
 
         <div className={styles.grid}>
           <div className={`${styles.formCard} glass`}>
-            <h2>Adicionar Sugestão</h2>
+            <h2>Adicionar sugestão</h2>
 
             <form onSubmit={handleAddRecommendation} className={styles.form}>
               <div className={styles.inputGroup}>
                 <label className={styles.inputLabel} id="type-label">
                   Tipo
                 </label>
-                <div className={styles.customDropdownContainer} ref={dropdownRef}>
+                <div
+                  className={styles.customDropdownContainer}
+                  ref={dropdownRef}
+                >
                   <button
                     type="button"
                     className={`${styles.select} ${styles.dropdownToggle}`}
@@ -220,7 +137,7 @@ export default function SuggestionsPage() {
                     aria-expanded={isOpen}
                   >
                     <span className={styles.selectedOption}>
-                      <span className={styles.optionIcon}>
+                      <span className={styles.optionIcon} aria-hidden="true">
                         {selectedOption.icon}
                       </span>
                       {selectedOption.label}
@@ -259,7 +176,9 @@ export default function SuggestionsPage() {
                             setIsOpen(false);
                           }}
                         >
-                          <span className={styles.optionIcon}>{option.icon}</span>
+                          <span className={styles.optionIcon} aria-hidden="true">
+                            {option.icon}
+                          </span>
                           <span>{option.label}</span>
                         </button>
                       ))}
@@ -269,8 +188,11 @@ export default function SuggestionsPage() {
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel}>Título</label>
+                <label className={styles.inputLabel} htmlFor="suggestion-title">
+                  Título
+                </label>
                 <input
+                  id="suggestion-title"
                   type="text"
                   placeholder={
                     type === "project"
@@ -281,23 +203,27 @@ export default function SuggestionsPage() {
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                   disabled={isLoading}
+                  maxLength={220}
                   required
                 />
               </div>
 
-              {type !== "project" && (
-                <div className={styles.inputGroup}>
-                  <label className={styles.inputLabel}>Link / URL</label>
-                  <input
-                    type="url"
-                    placeholder="https://…"
-                    className={styles.input}
-                    value={link}
-                    onChange={(event) => setLink(event.target.value)}
-                    disabled={isLoading}
-                  />
-                </div>
-              )}
+              <div className={styles.inputGroup}>
+                <label className={styles.inputLabel} htmlFor="suggestion-link">
+                  Link / URL (opcional)
+                </label>
+                <input
+                  id="suggestion-link"
+                  type="url"
+                  placeholder="https://…"
+                  className={styles.input}
+                  value={link}
+                  onChange={(event) => setLink(event.target.value)}
+                  disabled={isLoading}
+                  maxLength={2048}
+                  inputMode="url"
+                />
+              </div>
 
               <button
                 type="submit"
@@ -305,7 +231,7 @@ export default function SuggestionsPage() {
                 disabled={isLoading || !title.trim()}
               >
                 {isLoading
-                  ? "A validar fontes…"
+                  ? "A enviar…"
                   : `Submeter sugestão ${selectedOption.icon}`}
               </button>
 
