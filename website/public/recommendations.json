@@ -876,7 +876,7 @@
         "status": "verified",
         "source": "podcast-rss",
         "entityId": "1495e121-318b-4673-a700-b49b013b4d4b",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
         "verifiedAt": "2026-08-04T12:22:10.793078Z",
         "resolvedTitle": "Fernando Alexandre conseguiu esclarecer o Parlamento e o país? E o que aconteceu em Ceuta?",
