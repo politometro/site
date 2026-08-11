@@ -31,6 +31,9 @@ PING_EVERYONE = True
 # Determine paths
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
+sys.path.insert(0, SCRIPT_DIR)
+from publication_schedule import is_disabled_post_type
+
 IMAGE_PATH = os.path.join(ROOT_DIR, "website", "public", "current_post.jpg")
 CAPTION_PATH = os.path.join(ROOT_DIR, "website", "public", "current_caption.txt")
 NOTIFICATION_PATH = os.path.join(SCRIPT_DIR, "review_notification.json")
@@ -74,10 +77,6 @@ async def on_ready():
     global SEND_ERROR
     print(f"✅ Ligado como {bot.user} para enviar a proposta semanal...")
     try:
-        channel = bot.get_channel(CHANNEL_ID)
-        if not channel:
-            channel = await bot.fetch_channel(CHANNEL_ID)
-            
         # Load links from review_draft.json
         draft_path = os.path.join(SCRIPT_DIR, "review_draft.json")
         if not os.path.exists(draft_path):
@@ -89,6 +88,14 @@ async def on_ready():
         post_type = draft_data.get("post_type") or "sunday_standard"
         if not draft_id or not content_hash:
             raise ValueError("rascunho sem draft_id/content_hash")
+
+        if is_disabled_post_type(post_type):
+            print("Publicação de nostalgia de quarta-feira desativada; Discord ignorado.")
+            return
+
+        channel = bot.get_channel(CHANNEL_ID)
+        if not channel:
+            channel = await bot.fetch_channel(CHANNEL_ID)
 
         if post_type == "wednesday_nostalgia":
             card_title = "📼 Revisão: Clássicos & Sátira (Quarta-feira 09:00) - Politómetro"

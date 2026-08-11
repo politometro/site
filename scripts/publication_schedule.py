@@ -22,12 +22,17 @@ SUNDAY_WEEKDAY = 6  # Sunday
 SUNDAY_HOUR = 10
 WEDNESDAY_WEEKDAY = 2  # Wednesday
 WEDNESDAY_HOUR = 9
+DISABLED_POST_TYPES = frozenset({"wednesday_nostalgia"})
 
 
 def _get_draft_edition(draft):
     if isinstance(draft, dict):
         return draft.get("post_type") or draft.get("edition") or "sunday_standard"
     return "sunday_standard"
+
+
+def is_disabled_post_type(post_type):
+    return str(post_type or "").strip() in DISABLED_POST_TYPES
 
 
 def _parse_datetime(value):
@@ -87,6 +92,14 @@ def publication_decision(draft, receipt=None, *, now=None, force_now=False):
     if draft.get("is_test"):
         return False, "O rascunho atual é apenas de teste.", None
 
+    edition = _get_draft_edition(draft)
+    if is_disabled_post_type(edition):
+        return (
+            False,
+            "A publicação da nostalgia de quarta-feira está desativada.",
+            None,
+        )
+
     draft_id = str(draft.get("draft_id") or "")
     content_hash = str(draft.get("content_hash") or "")
     approval = draft.get("approval") or {}
@@ -107,7 +120,6 @@ def publication_decision(draft, receipt=None, *, now=None, force_now=False):
     if scheduled_for is None:
         return False, "Não foi possível determinar o agendamento deste rascunho.", None
 
-    edition = _get_draft_edition(draft)
     expected_weekday = WEDNESDAY_WEEKDAY if edition == "wednesday_nostalgia" else SUNDAY_WEEKDAY
     expected_hour = WEDNESDAY_HOUR if edition == "wednesday_nostalgia" else SUNDAY_HOUR
 

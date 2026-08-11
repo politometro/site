@@ -46,8 +46,8 @@ def _timestamp(value):
 
 def _generation_needed(now):
     """Return (needed, reason), rechecking state when a queued job starts."""
-    if now.weekday() not in {1, 5}:
-        return False, "Outside the bounded recovery window (Tuesday/Saturday)."
+    if now.weekday() != 5:
+        return False, "Outside the bounded recovery window (Saturday)."
     cycle_start = now.replace(
         hour=RECOVERY_START_HOUR,
         minute=RECOVERY_START_MINUTE,
@@ -130,7 +130,7 @@ def main():
                 "ref": "main",
                 "inputs": {
                     "recovery_mode": "true",
-                    "post_type": "wednesday_nostalgia" if now.weekday() == 1 else "sunday_standard",
+                    "post_type": "sunday_standard",
                 },
             }
         ).encode("utf-8"),

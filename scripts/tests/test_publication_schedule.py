@@ -136,6 +136,24 @@ class PublicationScheduleTests(unittest.TestCase):
             )[0]
         )
 
+    def test_wednesday_nostalgia_is_disabled_even_with_manual_override(self):
+        draft = approved_draft("2026-08-08T20:00:00+00:00")
+        draft["post_type"] = "wednesday_nostalgia"
+
+        should_publish, reason, scheduled_for = (
+            publication_schedule.publication_decision(
+                draft,
+                now=datetime.datetime(
+                    2026, 8, 12, 10, 0, tzinfo=datetime.timezone.utc
+                ),
+                force_now=True,
+            )
+        )
+
+        self.assertFalse(should_publish)
+        self.assertIn("desativada", reason)
+        self.assertIsNone(scheduled_for)
+
     def test_manual_override_can_publish_outside_window_without_bypassing_approval(self):
         draft = approved_draft("2026-07-18T20:00:00+00:00")
         outside_window = datetime.datetime(

@@ -38,13 +38,7 @@ on:
         options:
           - auto
           - sunday_standard
-          - wednesday_nostalgia
         default: auto
-      recommendation_id:
-        description: 'Optional exact recommendation ID for a single Nostalgia post'
-        required: false
-        type: string
-        default: ''
 
 permissions:
   contents: write
@@ -121,23 +115,23 @@ jobs:
         run: |
           POST_TYPE="${{ inputs.post_type || 'auto' }}"
           if [ "$POST_TYPE" = "auto" ]; then
-            if [ "${{ github.event.schedule }}" = "7,17,27,37,47 19 * * 2" ]; then
-              POST_TYPE="wednesday_nostalgia"
-            else
-              POST_TYPE="sunday_standard"
-            fi
+            POST_TYPE="sunday_standard"
           fi
-          if [ "${{ inputs.test_mode }}" = "true" ]; then
-            python scripts/generate_post.py --review --test --post-type "$POST_TYPE" \
-              --recommendation-id "${{ inputs.recommendation_id }}" \
-              --review-request-id "$REVIEW_REQUEST_ID" \
-              --caption-override-b64 "$CAPTION_OVERRIDE_B64"
-          else
-            python scripts/generate_post.py --review --post-type "$POST_TYPE" \
-              --recommendation-id "${{ inputs.recommendation_id }}" \
-              --review-request-id "$REVIEW_REQUEST_ID" \
-              --caption-override-b64 "$CAPTION_OVERRIDE_B64"
+          if [ "$POST_TYPE" = "wednesday_nostalgia" ]; then
+            echo "Wednesday Nostalgia is disabled; no draft will be generated."
+            exit 0
           fi
+           if [ "${{ inputs.test_mode }}" = "true" ]; then
+             python scripts/generate_post.py --review --test --post-type "$POST_TYPE" \
+               --recommendation-id "${{ inputs.recommendation_id }}" \
+               --review-request-id "$REVIEW_REQUEST_ID" \
+               --caption-override-b64 "$CAPTION_OVERRIDE_B64"
+           else
+             python scripts/generate_post.py --review --post-type "$POST_TYPE" \
+               --recommendation-id "${{ inputs.recommendation_id }}" \
+               --review-request-id "$REVIEW_REQUEST_ID" \
+               --caption-override-b64 "$CAPTION_OVERRIDE_B64"
+           fi
         env:
           GOOGLE_CSE_API_KEY: ${{ secrets.GOOGLE_CSE_API_KEY }}
           GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
