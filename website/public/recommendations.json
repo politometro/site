@@ -493,10 +493,10 @@
       "imageUrl": "/covers/nostalgia_os_contempor_neos_521a192b_f56e4a8f6116.jpg",
       "expiryDate": null,
       "createdAt": "2026-07-20T18:33:14.726608Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "curated-episode-watchlist",
       "externalId": "article:url:81a7f7a34245994bc75df1c6",
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news:www.rtp.pt",
@@ -509,7 +509,8 @@
         "sourcePublishedAt": "2026-05-01T00:00:00Z",
         "sourceDescription": "Os Contemporâneos, um programa de humor com um olhar na sociedade portuguesa!"
       },
-      "sourcePublishedAt": "2026-05-01T00:00:00Z"
+      "sourcePublishedAt": "2026-05-01T00:00:00Z",
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [Os Contemporâneos]: Artigo 'Este episódio não se encontra disponível - RTP Play' não corresponde ao título candidato."
     },
     {
       "type": "investigation",
@@ -931,89 +932,6 @@
       }
     },
     {
-      "id": "rss_highlight_92c26475816d2dae",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Afinal, Salazar era fascista?",
-      "authorOrMeta": "Paulo Pinto",
-      "description": "As acusações de fascismo nas décadas que levamos de regime democrático, já recaíram sobre várias cabeças e partidos, desde Sá Carneiro ao CDS, ao sabor das necessidades revolucionárias.",
-      "imageUrl": "/covers/highlight_afinal__salazar_era_fascista__bfa2a227_0ba97ced2f13.jpg",
-      "link": "https://observador.pt/opiniao/afinal-salazar-era-fascista/",
-      "externalId": "article:url:92c26475816d2dae0ec3026d",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-07T23:12:56Z",
-      "expiryDate": "2026-09-06T23:12:56Z",
-      "createdAt": "2026-08-08T06:26:44.226790Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/afinal-salazar-era-fascista/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2024%2F05%2F08145002%2Fcaptura-de-ecra-2024-05-08-144606.jpg",
-        "categories": [
-          "Salazar",
-          "País",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:92c26475816d2dae0ec3026d",
-        "score": 1,
-        "coverHash": "66d6aeede9584dd0a65f49e73779f6090274ba65e6501640ffe6fdccdf04b030",
-        "verifiedAt": "2026-08-08T06:26:45.360043Z",
-        "resolvedTitle": "Afinal, Salazar era fascista?",
-        "resolvedAuthor": "Paulo Pinto",
-        "sourcePublishedAt": "2026-08-07T23:12:56Z",
-        "sourceDescription": "As acusações de fascismo nas décadas que levamos de regime democrático, já recaíram sobre várias cabeças e partidos, desde Sá Carneiro ao CDS, ao sabor das necessidades revolucionárias."
-      }
-    },
-    {
-      "id": "rss_highlight_4f51a486d04e7c62",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "A lei da rolha na criminalidade associada à imigração",
-      "authorOrMeta": "Nelson Miguel Dias da Silva",
-      "description": "A ausência persistente de dados sugere uma escolha política de não os tornar públicos, com implicações relevantes.",
-      "imageUrl": "/covers/highlight_a_lei_da_rolha_na_criminalidade_associada___imigra_97fd728a_b3e5c64b094a.jpg",
-      "link": "https://observador.pt/opiniao/a-lei-da-rolha-na-criminalidade-associada-a-imigracao/",
-      "externalId": "article:url:4f51a486d04e7c622c5a55be",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-07T23:08:43Z",
-      "expiryDate": "2026-09-06T23:08:43Z",
-      "createdAt": "2026-08-08T06:26:44.227110Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/a-lei-da-rolha-na-criminalidade-associada-a-imigracao/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F06%2F25232515%2Fimage0.jpg",
-        "categories": [
-          "Imigração",
-          "Mundo",
-          "Crime",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:4f51a486d04e7c622c5a55be",
-        "score": 1,
-        "coverHash": "f6e9673ac9e97820f2d64528393169f955a94a81a137e12ffc38c21973d11c0c",
-        "verifiedAt": "2026-08-08T06:26:46.288187Z",
-        "resolvedTitle": "A lei da rolha na criminalidade associada à imigração",
-        "resolvedAuthor": "Nelson Miguel Dias da Silva",
-        "sourcePublishedAt": "2026-08-07T23:08:43Z",
-        "sourceDescription": "A ausência persistente de dados sugere uma escolha política de não os tornar públicos, com implicações relevantes."
-      }
-    },
-    {
       "id": "ai_book_6110f2f27e7e44f9",
       "type": "book",
       "category": "Livro",
@@ -1134,7 +1052,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Do espectáculo da política à política do espectáculo",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Luiz Cabral de Moncada",
       "description": "O espectáculo é uma realidade presente na relação entre o eleitor e o eleito. Manifesta-se durante o período eleitoral e durante o mandato. É permanente.",
       "imageUrl": "/covers/highlight_do_espect_culo_da_pol_tica___pol_tica_do_espect_cu_a4129595_755917da4a2f.jpg",
       "link": "https://observador.pt/opiniao/do-espectaculo-da-politica-a-politica-do-espectaculo/",
@@ -1160,13 +1078,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:94b2b308c047141bdaeef53f",
         "score": 1.0,
         "coverHash": "aaf21ee2489dd2f40974790ce90e8070d6554ad30f05371d1c145f0cb149dbae",
         "verifiedAt": "2026-08-12T05:50:50.578489Z",
         "resolvedTitle": "Do espectáculo da política à política do espectáculo",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Luiz Cabral de Moncada",
         "sourcePublishedAt": "2026-08-11T23:14:05Z",
         "sourceDescription": "O espectáculo é uma realidade presente na relação entre o eleitor e o eleito. Manifesta-se durante o período eleitoral e durante o mandato. É permanente."
       }
@@ -1175,10 +1093,10 @@
       "id": "rss_highlight_f47a636f55f850ab",
       "type": "highlight",
       "category": "Destaque",
-      "title": "Tabaco: nem grandes reformas, nem grandes ideologias...",
-      "authorOrMeta": "observador.pt",
+      "title": "Política do Tabaco: nem grandes reformas, nem grandes ideologias...",
+      "authorOrMeta": "Guilherme Waldemar Oliveira Martins",
       "description": "A evolução natural da política pública terá de ser a transferência das competências operacionais do Programa Nacional para a Prevenção e Controlo do Tabagismo para o ICAD",
-      "imageUrl": "/covers/highlight_tabaco__nem_grandes_reformas__nem_grandes_ideologi_a81c54e3_21ad54eadc47.jpg",
+      "imageUrl": "/covers/highlight_pol_tica_do_tabaco__nem_grandes_reformas__nem_gran_0b351c91_21ad54eadc47.jpg",
       "link": "https://observador.pt/opiniao/politica-do-tabaco-nem-grandes-reformas-nem-grandes-ideologias/",
       "externalId": "article:url:f47a636f55f850ab33bfb98d",
       "priority": 4,
@@ -1200,15 +1118,129 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:f47a636f55f850ab33bfb98d",
-        "score": 1.0,
-        "coverHash": "f74035153d6ac96af5aac57e95b9435fb36c5e992759c30b10c86ae12ab27a7d",
-        "verifiedAt": "2026-08-12T05:50:52.057615Z",
-        "resolvedTitle": "Tabaco: nem grandes reformas, nem grandes ideologias...",
-        "resolvedAuthor": "observador.pt",
+        "score": 0.8762,
+        "coverHash": "077508fdcd2e8bb4817452bb82df991ba7084bd523a68fd390435e265a5d742c",
+        "verifiedAt": "2026-08-13T05:53:19.752028Z",
+        "resolvedTitle": "Política do Tabaco: nem grandes reformas, nem grandes ideologias...",
+        "resolvedAuthor": "Guilherme Waldemar Oliveira Martins",
         "sourcePublishedAt": "2026-08-11T23:12:47Z",
         "sourceDescription": "A evolução natural da política pública terá de ser a transferência das competências operacionais do Programa Nacional para a Prevenção e Controlo do Tabagismo para o ICAD"
+      }
+    },
+    {
+      "id": "rss_highlight_8deeeae74953bdd1",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A política agora é isto",
+      "authorOrMeta": "observador.pt",
+      "description": "Talvez políticos nacionais, criadores de opinião e jornalistas já não acreditem ser possível transformar este país, ou talvez estejam apenas inebriados pela vidinha do dia.",
+      "imageUrl": "/covers/highlight_a_pol_tica_agora___isto_c281f4a2_3b5bf21959a2.jpg",
+      "link": "https://observador.pt/opiniao/a-politica-agora-e-isto/",
+      "externalId": "article:url:8deeeae74953bdd1fe38305b",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-12T23:15:14Z",
+      "expiryDate": "2026-09-11T23:15:14Z",
+      "createdAt": "2026-08-13T05:53:25.868943Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-politica-agora-e-isto/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A466%3Anowe%3A8%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2024%2F05%2F08160758%2Fbb-foto.jpg",
+        "categories": [
+          "Política",
+          "Comportamento",
+          "Sociedade",
+          "Comunicação Social",
+          "Media"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:8deeeae74953bdd1fe38305b",
+        "score": 1.0,
+        "coverHash": "1cb785ebcd63ce30d619032c5fda488c492140e51c00ff4909280247e5795eb7",
+        "verifiedAt": "2026-08-13T05:53:26.118019Z",
+        "resolvedTitle": "A política agora é isto",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-12T23:15:14Z",
+        "sourceDescription": "Talvez políticos nacionais, criadores de opinião e jornalistas já não acreditem ser possível transformar este país, ou talvez estejam apenas inebriados pela vidinha do dia."
+      }
+    },
+    {
+      "id": "rss_highlight_9cc5f95d7395dfbf",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Festa do Pontal - Meio século de histórias",
+      "authorOrMeta": "observador.pt",
+      "description": "O PSD é um partido eclético. Popular na sua génese, interclassista na sua composição, equilibrado e moderado no seu programa.",
+      "imageUrl": "/covers/highlight_festa_do_pontal___meio_s_culo_de_hist_rias_3d51fd42_d9a7fed536d7.jpg",
+      "link": "https://observador.pt/opiniao/festa-do-pontal-meio-seculo-de-historias/",
+      "externalId": "article:url:9cc5f95d7395dfbf0b77c7b8",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-12T23:08:57Z",
+      "expiryDate": "2026-09-11T23:08:57Z",
+      "createdAt": "2026-08-13T05:53:25.870064Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/festa-do-pontal-meio-seculo-de-historias/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A502%3A501%3Anowe%3A1%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F08%2F12231013%2Fwhatsapp-image.jpg",
+        "categories": [
+          "Tribuna Aberta",
+          "Opinião",
+          "Observador",
+          "PSD",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:9cc5f95d7395dfbf0b77c7b8",
+        "score": 1.0,
+        "coverHash": "c2dbb691c4866bad2febbf9720827867bd6a332c879f67079e65375f42fd31a1",
+        "verifiedAt": "2026-08-13T05:53:26.362274Z",
+        "resolvedTitle": "Festa do Pontal - Meio século de histórias",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-12T23:08:57Z",
+        "sourceDescription": "O PSD é um partido eclético. Popular na sua génese, interclassista na sua composição, equilibrado e moderado no seu programa."
+      }
+    },
+    {
+      "type": "nostalgia",
+      "title": "Contra Informação",
+      "authorOrMeta": "arquivos.rtp.pt",
+      "description": "Programa de sátira política, social, cultural e desportiva, protagonizada por bonecos manipulados que caricaturam figuras públicas da sociedade portuguesa e internacional.",
+      "link": "https://arquivos.rtp.pt/conteudos/contra-informacao-577/",
+      "priority": 5,
+      "id": "watch_nostalgia_e0d2d86848704ce0",
+      "category": "Nostalgia",
+      "imageUrl": "/covers/nostalgia_contra_informa__o_e5a6103b_c901ba9b7d81.jpg",
+      "expiryDate": null,
+      "createdAt": "2026-08-13T05:53:26.798645Z",
+      "status": "queue",
+      "sourceHint": "curated-episode-watchlist",
+      "externalId": "article:url:1010c4fa17764b5b8177e456",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news:arquivos.rtp.pt",
+        "entityId": "article:url:1010c4fa17764b5b8177e456",
+        "score": 1.0,
+        "coverHash": "2a548a4b976f63b547b50044b0bbb3b93621d68c00a265ff2fb579bbeb272de8",
+        "verifiedAt": "2026-07-21T11:27:00.832686Z",
+        "resolvedTitle": "Contra Informação",
+        "resolvedAuthor": "arquivos.rtp.pt",
+        "sourceDescription": "Programa de sátira política, social, cultural e desportiva, protagonizada por bonecos manipulados que caricaturam figuras públicas da sociedade portuguesa e internacional."
       }
     }
   ],
