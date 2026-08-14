@@ -1048,88 +1048,6 @@
       }
     },
     {
-      "id": "rss_highlight_94b2b308c047141b",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Do espectáculo da política à política do espectáculo",
-      "authorOrMeta": "Luiz Cabral de Moncada",
-      "description": "O espectáculo é uma realidade presente na relação entre o eleitor e o eleito. Manifesta-se durante o período eleitoral e durante o mandato. É permanente.",
-      "imageUrl": "/covers/highlight_do_espect_culo_da_pol_tica___pol_tica_do_espect_cu_a4129595_755917da4a2f.jpg",
-      "link": "https://observador.pt/opiniao/do-espectaculo-da-politica-a-politica-do-espectaculo/",
-      "externalId": "article:url:94b2b308c047141bdaeef53f",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-11T23:14:05Z",
-      "expiryDate": "2026-09-10T23:14:05Z",
-      "createdAt": "2026-08-12T05:50:49.267311Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/do-espectaculo-da-politica-a-politica-do-espectaculo/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A57%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F25135204%2F20260515-101426.jpg",
-        "categories": [
-          "Política",
-          "Governo",
-          "Teatro",
-          "Cultura"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:94b2b308c047141bdaeef53f",
-        "score": 1.0,
-        "coverHash": "aaf21ee2489dd2f40974790ce90e8070d6554ad30f05371d1c145f0cb149dbae",
-        "verifiedAt": "2026-08-12T05:50:50.578489Z",
-        "resolvedTitle": "Do espectáculo da política à política do espectáculo",
-        "resolvedAuthor": "Luiz Cabral de Moncada",
-        "sourcePublishedAt": "2026-08-11T23:14:05Z",
-        "sourceDescription": "O espectáculo é uma realidade presente na relação entre o eleitor e o eleito. Manifesta-se durante o período eleitoral e durante o mandato. É permanente."
-      }
-    },
-    {
-      "id": "rss_highlight_f47a636f55f850ab",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Política do Tabaco: nem grandes reformas, nem grandes ideologias...",
-      "authorOrMeta": "Guilherme Waldemar Oliveira Martins",
-      "description": "A evolução natural da política pública terá de ser a transferência das competências operacionais do Programa Nacional para a Prevenção e Controlo do Tabagismo para o ICAD",
-      "imageUrl": "/covers/highlight_pol_tica_do_tabaco__nem_grandes_reformas__nem_gran_0b351c91_21ad54eadc47.jpg",
-      "link": "https://observador.pt/opiniao/politica-do-tabaco-nem-grandes-reformas-nem-grandes-ideologias/",
-      "externalId": "article:url:f47a636f55f850ab33bfb98d",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-11T23:12:47Z",
-      "expiryDate": "2026-09-10T23:12:47Z",
-      "createdAt": "2026-08-12T05:50:49.267613Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/politica-do-tabaco-nem-grandes-reformas-nem-grandes-ideologias/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A26%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2024%2F10%2F25174125%2Fgwolivmartins.jpg",
-        "categories": [
-          "Tabaco",
-          "Saúde"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:f47a636f55f850ab33bfb98d",
-        "score": 0.8762,
-        "coverHash": "077508fdcd2e8bb4817452bb82df991ba7084bd523a68fd390435e265a5d742c",
-        "verifiedAt": "2026-08-13T05:53:19.752028Z",
-        "resolvedTitle": "Política do Tabaco: nem grandes reformas, nem grandes ideologias...",
-        "resolvedAuthor": "Guilherme Waldemar Oliveira Martins",
-        "sourcePublishedAt": "2026-08-11T23:12:47Z",
-        "sourceDescription": "A evolução natural da política pública terá de ser a transferência das competências operacionais do Programa Nacional para a Prevenção e Controlo do Tabagismo para o ICAD"
-      }
-    },
-    {
       "id": "rss_highlight_8deeeae74953bdd1",
       "type": "highlight",
       "category": "Destaque",
@@ -1241,6 +1159,88 @@
         "resolvedTitle": "Contra Informação",
         "resolvedAuthor": "arquivos.rtp.pt",
         "sourceDescription": "Programa de sátira política, social, cultural e desportiva, protagonizada por bonecos manipulados que caricaturam figuras públicas da sociedade portuguesa e internacional."
+      }
+    },
+    {
+      "id": "rss_highlight_5468b1fd36dc5df6",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Incêndios Florestais, Neutralidade Carbónica e Deslocalizaçã",
+      "authorOrMeta": "observador.pt",
+      "description": "As políticas climáticas da Europa funcionaram como um gigantesco subsídio ao crescimento chinês e indiano, pago pelos consumidores dos próprios países que as adoptaram.",
+      "imageUrl": "/covers/highlight_inc_ndios_florestais__neutralidade_carb_nica_e_des_e4b1ae76_7c9099bcd89b.jpg",
+      "link": "https://observador.pt/opiniao/incendios-florestais-neutralidade-carbonica-e-deslocalizacao-industrial/",
+      "externalId": "article:url:5468b1fd36dc5df6ee6ff16e",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-13T23:21:23Z",
+      "expiryDate": "2026-09-12T23:21:23Z",
+      "createdAt": "2026-08-14T05:51:21.151441Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/incendios-florestais-neutralidade-carbonica-e-deslocalizacao-industrial/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A4%3A14%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2023%2F09%2F21233403%2Fdaniel-lacalle.jpg",
+        "categories": [
+          "Oficina da Liberdade",
+          "Opinião",
+          "Observador"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:5468b1fd36dc5df6ee6ff16e",
+        "score": 1.0,
+        "coverHash": "75a43085d92ac9cdba6b71a190cd5bec8e3bb88fa396051349d800ae41ca3965",
+        "verifiedAt": "2026-08-14T05:51:30.897141Z",
+        "resolvedTitle": "Incêndios Florestais, Neutralidade Carbónica e Deslocalizaçã",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-13T23:21:23Z",
+        "sourceDescription": "As políticas climáticas da Europa funcionaram como um gigantesco subsídio ao crescimento chinês e indiano, pago pelos consumidores dos próprios países que as adoptaram."
+      }
+    },
+    {
+      "id": "rss_highlight_2e27669a9ba13dfe",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Plano para Vale de S. António: Mais uma oportunidade perdida",
+      "authorOrMeta": "observador.pt",
+      "description": "Será vivendo em dispendiosas torres de 18 pisos, rodeadas por “amplos espaços verdes” que, pela sua manutenção elevada, viram “terras secas de ninguém”, que vamos mitigar a crise da habitação?",
+      "imageUrl": "/covers/highlight_plano_para_vale_de_s__ant_nio__mais_uma_oportunida_cdb88e87_d9a256018b4a.jpg",
+      "link": "https://observador.pt/opiniao/plano-para-vale-de-s-antonio-mais-uma-oportunidade-perdida/",
+      "externalId": "article:url:2e27669a9ba13dfe868463ba",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-13T23:11:03Z",
+      "expiryDate": "2026-09-12T23:11:03Z",
+      "createdAt": "2026-08-14T05:51:21.153132Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/plano-para-vale-de-s-antonio-mais-uma-oportunidade-perdida/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A466%3Anowe%3A0%3A78%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2020%2F12%2F15132721%2Favc-foto.jpg",
+        "categories": [
+          "Habitação e Urbanismo",
+          "País",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:2e27669a9ba13dfe868463ba",
+        "score": 1.0,
+        "coverHash": "2bc9f0a2f26b601ac4a8469206343ae8a683e43ed2c90388bb59097ac85071ff",
+        "verifiedAt": "2026-08-14T05:51:39.152183Z",
+        "resolvedTitle": "Plano para Vale de S. António: Mais uma oportunidade perdida",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-13T23:11:03Z",
+        "sourceDescription": "Será vivendo em dispendiosas torres de 18 pisos, rodeadas por “amplos espaços verdes” que, pela sua manutenção elevada, viram “terras secas de ninguém”, que vamos mitigar a crise da habitação?"
       }
     }
   ],
