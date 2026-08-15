@@ -1108,6 +1108,19 @@ class RecommendationResolverTests(unittest.TestCase):
         )
         self.assertFalse(
             resolver.is_eligible_highlight(
+                title="PSD assinala 50 anos da Festa do Pontal",
+                description=(
+                    "Luís Montenegro falou esta noite aos militantes do PSD "
+                    "na festa que marca a rentrée política social-democrata."
+                ),
+                link=(
+                    "https://www.rtp.pt/noticias/opiniao/autores/"
+                    "psd-assinala-50-anos-da-festa-do-pontal_n789"
+                ),
+            )
+        )
+        self.assertFalse(
+            resolver.is_eligible_highlight(
                 title="Ministério Público abre investigação ao contrato",
                 description="O inquérito foi anunciado esta manhã.",
                 link=(
@@ -1133,6 +1146,54 @@ class RecommendationResolverTests(unittest.TestCase):
                 link="https://expresso.pt/politica/contratos",
             )
         )
+        self.assertTrue(
+            resolver.is_eligible_highlight(
+                title=(
+                    "Festa do Pontal: PSD apresenta proposta para reduzir impostos"
+                ),
+                description=(
+                    "Análise das medidas, do impacto orçamental e das consequências "
+                    "da proposta."
+                ),
+                link="https://www.publico.pt/opiniao/proposta-fiscal",
+            )
+        )
+
+    def test_highlight_page_rejects_protocol_only_editorial_section(self):
+        item = {
+            "type": "highlight",
+            "title": "PSD assinala 50 anos da Festa do Pontal",
+            "authorOrMeta": "RTP",
+        }
+        metadata = {
+            "finalUrl": (
+                "https://www.rtp.pt/noticias/opiniao/autores/"
+                "psd-assinala-50-anos-da-festa-do-pontal_n789"
+            ),
+            "canonical": (
+                "https://www.rtp.pt/noticias/opiniao/autores/"
+                "psd-assinala-50-anos-da-festa-do-pontal_n789"
+            ),
+            "title": item["title"],
+            "image": "https://cdn.example.org/pontal.jpg",
+            "images": ["https://cdn.example.org/pontal.jpg"],
+            "description": (
+                "Luís Montenegro falou aos militantes do PSD na festa que "
+                "marca a rentrée política social-democrata."
+            ),
+            "publishedAt": iso_now(),
+            "authors": ["RTP"],
+            "isbns": [],
+            "schemaTypes": ["newsarticle"],
+            "meta": {"article:section": "Opinião"},
+        }
+        with patch.object(
+            resolver, "_page_metadata", return_value=metadata
+        ):
+            with self.assertRaisesRegex(
+                resolver.ResolutionError, "NEWS_NOT_ALLOWED"
+            ):
+                resolver._validate_highlight_page(item, metadata["canonical"])
 
     def test_highlight_page_rejects_ordinary_news_after_metadata_check(self):
         item = {

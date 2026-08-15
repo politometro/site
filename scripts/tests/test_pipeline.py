@@ -97,6 +97,50 @@ def community_book(*, approved=True, status="queue"):
     return item
 
 
+def community_highlight(*, approved=True, status="queue"):
+    item = verified_item("highlight", "community", status=status)
+    item.update(
+        {
+            "id": "web_highlight_memory",
+            "title": "A Fragilidade da Memória",
+            "authorOrMeta": "António Abreu",
+            "description": (
+                "Entre verdades subjetivas e factos esquecidos, a identidade "
+                "humana pode ser uma ficção convincente."
+            ),
+            "link": "https://antonioabreu.substack.com/p/a-fragilidade-da-memoria",
+            "origin": "website",
+            "sourceKind": COMMUNITY_SOURCE_KIND,
+            "createdAt": "2026-08-10T09:00:00+00:00",
+            "sourcePublishedAt": "2025-09-09T18:01:21Z",
+            "contentLifecycle": "evergreen",
+            "notificationStatus": "sent" if approved else "pending",
+            "discordMessageId": "100000000000000001" if approved else "",
+        }
+    )
+    item.pop("expiryDate", None)
+    item["communitySubmission"] = {
+        "id": item["id"],
+        "sourceKind": item["sourceKind"],
+        "type": item["type"],
+        "title": item["title"],
+        "link": item["link"],
+        "createdAt": item["createdAt"],
+    }
+    item["submissionHash"] = community_submission_hash(item)
+    item["discordApproval"] = {
+        "required": True,
+        "status": "approved" if approved else "pending",
+        "channelId": "200000000000000002" if approved else "",
+        "messageId": item["discordMessageId"],
+        "sentAt": "2026-08-10T09:01:00+00:00" if approved else "",
+        "payloadHash": item["submissionHash"],
+        "approvedAt": "2026-08-10T09:10:00+00:00" if approved else "",
+        "approvedBy": "300000000000000003" if approved else "",
+    }
+    return item
+
+
 class CommunityApprovalGateTests(unittest.TestCase):
     def test_approved_evergreen_article_is_publishable_without_expiry(self):
         item = community_book(approved=True)
@@ -133,6 +177,89 @@ class CommunityApprovalGateTests(unittest.TestCase):
             )
         )
         self.assertEqual(queue, [item])
+
+    def test_approved_community_highlight_precedes_fresher_rss_item(self):
+        community = community_highlight(approved=True)
+        rss = verified_item("highlight", "fresh-rss")
+        rss["priority"] = 4
+        rss["sourcePublishedAt"] = datetime.datetime.now(
+            datetime.timezone.utc
+        ).isoformat()
+        queue = [
+            community,
+            verified_item("book", "approved"),
+            verified_item("podcast", "approved"),
+            verified_item("movie", "approved"),
+            rss,
+        ]
+
+        with (
+            mock.patch.object(
+                generate_post,
+                "resolve_recommendation",
+                side_effect=lambda item, force=False: item,
+            ),
+            mock.patch.object(
+                generate_post,
+                "load_cover_for_item",
+                return_value=Image.new("RGB", (300, 300), "navy"),
+            ),
+            mock.patch.object(
+                generate_post,
+                "_revalidate_reviewed_source",
+                return_value=None,
+            ),
+        ):
+            selected, _ = generate_post.get_recommendations_with_valid_covers(
+                queue,
+                history=[],
+            )
+
+        self.assertEqual(selected["q4"]["id"], community["id"])
+
+    def test_failed_community_highlight_falls_back_to_safe_candidate(self):
+        community = community_highlight(approved=True)
+        fallback = verified_item("highlight", "fallback")
+        queue = [
+            community,
+            verified_item("book", "approved"),
+            verified_item("podcast", "approved"),
+            verified_item("movie", "approved"),
+            fallback,
+        ]
+
+        def fake_resolve(item, force=False):
+            if item["id"] == community["id"]:
+                raise generate_post.ResolutionError(
+                    "HIGHLIGHT_TITLE_MISMATCH",
+                    "a entidade deixou de corresponder",
+                    item=item,
+                )
+            return item
+
+        with (
+            mock.patch.object(
+                generate_post,
+                "resolve_recommendation",
+                side_effect=fake_resolve,
+            ),
+            mock.patch.object(
+                generate_post,
+                "load_cover_for_item",
+                return_value=Image.new("RGB", (300, 300), "navy"),
+            ),
+            mock.patch.object(
+                generate_post,
+                "_revalidate_reviewed_source",
+                return_value=None,
+            ),
+        ):
+            selected, _ = generate_post.get_recommendations_with_valid_covers(
+                queue,
+                history=[],
+            )
+
+        self.assertEqual(selected["q4"]["id"], fallback["id"])
 
     def test_unapproved_community_item_is_not_publishable(self):
         item = community_book(approved=False)
@@ -958,9 +1085,15 @@ class PostQualityGateTests(unittest.TestCase):
         ]
         queue[3].update(
             {
-                "title": "Líder partidário reage às notícias do dia",
-                "description": "A declaração foi feita esta manhã.",
-                "link": "https://www.rtp.pt/noticias/politica/declaracao_n1",
+                "title": "PSD assinala 50 anos da Festa do Pontal",
+                "description": (
+                    "Luís Montenegro falou aos militantes do PSD na festa que "
+                    "marca a rentrée política social-democrata."
+                ),
+                "link": (
+                    "https://www.rtp.pt/noticias/opiniao/autores/"
+                    "psd-assinala-50-anos-da-festa-do-pontal_n789"
+                ),
             }
         )
         queue[4].update(
