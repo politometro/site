@@ -446,7 +446,7 @@
         "status": "verified",
         "source": "youtube:NOW Canal",
         "entityId": "youtube:lChT1gKqjWQ",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "a2bfb1945fb71950b05399b47f5717c5120eaf8a7fe4697d6b91c0310fa58b1b",
         "verifiedAt": "2026-07-20T18:30:31.855270Z",
         "resolvedTitle": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
@@ -893,17 +893,17 @@
       "priority": 3,
       "expiryDate": null,
       "createdAt": "2026-08-04T12:24:58.543131Z",
-      "status": "invalid",
+      "status": "queue",
       "sourceHint": "ai-catalogue-candidate",
       "externalId": "openlibrary:/works/OL1068091W",
-      "resolutionStatus": "rejected",
+      "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
         "source": "openlibrary",
         "entityId": "openlibrary:/works/OL1068091W",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "9fedfbf77400e7093a337c03de678c9e0db03b0c222285b6262e7e49bb01a361",
-        "verifiedAt": "2026-08-04T12:25:56.415692Z",
+        "verifiedAt": "2026-08-15T19:22:30.278226Z",
         "resolvedTitle": "On Liberty",
         "resolvedAuthor": "John Stuart Mill",
         "sourceDescription": "Defesa influente da liberdade individual, do debate público e dos limites do poder social e estatal."
@@ -1179,7 +1179,7 @@
       "sourcePublishedAt": "2026-08-14T23:25:12Z",
       "expiryDate": "2026-09-13T23:25:12Z",
       "createdAt": "2026-08-15T04:52:44.826365Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1190,7 +1190,7 @@
           "Paulo Pedroso e Miguel Poiares Maduro"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:www.rtp.pt",
@@ -1202,7 +1202,8 @@
         "resolvedAuthor": "www.rtp.pt",
         "sourcePublishedAt": "2026-08-14T23:25:12Z",
         "sourceDescription": "Luís Montenegro falou esta noite aos militantes do PSD na festa que marca a rentrée política social-democrata."
-      }
+      },
+      "validationError": "contrato de verificação incompleto"
     },
     {
       "id": "rss_highlight_c9103f4909d06882",
@@ -1925,12 +1926,12 @@
   "readiness": {
     "postType": "sunday_standard",
     "strictCounts": {
-      "book": 6,
+      "book": 7,
       "podcast": 0,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 2,
-      "highlight": 5
+      "highlight": 4
     },
     "missingSlots": [
       "q2/podcast"

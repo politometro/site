@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_dba16bd43adb7a811549",
-  "content_hash": "dba16bd43adb7a811549d38bb9e5bed859ed45115e19cd415f31bdfcd1655d74",
+  "draft_id": "draft_9f5f0071dec865625500",
+  "content_hash": "9f5f0071dec8656255008c1f1eb37e6afe081ad854e221ad758525415703ed8f",
   "post_type": "sunday_standard",
-  "created_at": "2026-08-15T18:54:08.361339+00:00",
+  "created_at": "2026-08-15T19:23:15.626237+00:00",
   "is_test": false,
-  "post_sha256": "3b131f3cee9b8b9005d3ca552f1f0e332aa8476cf4f73d835960ea16a972a3dd",
-  "caption_sha256": "d1be12ebbecc5ea6051aafcb212ab685507e8f2d7c8312c921163051e1c48bf8",
+  "post_sha256": "aa3fece9e28abadf58338d2a61da03e0dbcb806644413804f725978456137cb8",
+  "caption_sha256": "c76d63479c908f636016e270ff86ff3106b3ae54afe8c412195a6b521f760729",
   "approval": {
     "approved": false
   },
@@ -115,42 +115,62 @@
     }
   },
   "q4": {
-    "id": "rss_highlight_e9c134791627766b",
+    "id": "web_highlight_280d0bc0-40f3-4f4e-abfc-b34da1e53217",
     "type": "highlight",
     "category": "Destaque",
-    "title": "PSD assinala 50 anos da Festa do Pontal",
-    "authorOrMeta": "www.rtp.pt",
-    "description": "Luís Montenegro falou esta noite aos militantes do PSD na festa que marca a rentrée política social-democrata.",
-    "imageUrl": "/covers/highlight_psd_assinala_50_anos_da_festa_do_pontal_22d7e13b_75aa8267a127.jpg",
-    "link": "https://www.rtp.pt/noticias/opiniao/paulo-pedroso-e-miguel-maduro/psd-assinala-50-anos-da-festa-do-pontal_1759576",
-    "externalId": "article:url:e9c134791627766b78e76545",
-    "priority": 4,
-    "sourcePublishedAt": "2026-08-14T23:25:12Z",
-    "expiryDate": "2026-09-13T23:25:12Z",
-    "createdAt": "2026-08-15T04:52:44.826365Z",
+    "title": "A Fragilidade da Memória",
+    "link": "https://antonioabreu.substack.com/p/a-fragilidade-da-memoria",
+    "authorOrMeta": "António Abreu",
+    "description": "Entre verdades subjetivas e factos esquecidos, a identidade humana pode não passar de uma ficção convincente.",
+    "imageUrl": "/covers/highlight_a_fragilidade_da_mem_ria_b587d126_9e5be7d3b3b6.jpg",
+    "sourcePublishedAt": "2025-09-09T18:01:21Z",
+    "expiryDate": null,
+    "priority": 3,
+    "createdAt": "2026-08-10T18:39:28.921Z",
     "status": "queue",
-    "sourceHint": "trusted-rss",
-    "_discovery": {
-      "kind": "rss-highlight",
-      "feedUrl": "https://www.rtp.pt/noticias/rss",
-      "guid": "https://www.rtp.pt/noticias/opiniao/paulo-pedroso-e-miguel-maduro/psd-assinala-50-anos-da-festa-do-pontal_1759576",
-      "imageUrl": "https://cdn-images.rtp.pt/noticias/images/default_rtpnoticias.png?w=350&q=50&auto=format",
-      "categories": [
-        "Paulo Pedroso e Miguel Poiares Maduro"
-      ]
+    "contentLifecycle": "evergreen",
+    "sourceKind": "community_suggestion",
+    "communitySubmission": {
+      "id": "web_highlight_280d0bc0-40f3-4f4e-abfc-b34da1e53217",
+      "sourceKind": "community_suggestion",
+      "type": "highlight",
+      "title": "A Fragilidade da Memória",
+      "link": "https://antonioabreu.substack.com/p/a-fragilidade-da-memoria?r=5m5q4m&utm_campaign=post&utm_medium=web",
+      "createdAt": "2026-08-10T18:39:28.921Z"
     },
+    "submissionHash": "6029503634f5f11602eb8be7d88ee78188ca1f76b138579b167eb6ad0f6c0e89",
     "resolutionStatus": "verified",
     "verification": {
       "status": "verified",
-      "source": "news-rss:www.rtp.pt",
-      "entityId": "article:url:e9c134791627766b78e76545",
+      "source": "news:antonioabreu.substack.com",
+      "entityId": "article:url:938f77ab41b406c4029d4ed5",
       "score": 1.0,
-      "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
-      "verifiedAt": "2026-08-15T04:52:45.369110Z",
-      "resolvedTitle": "PSD assinala 50 anos da Festa do Pontal",
-      "resolvedAuthor": "www.rtp.pt",
-      "sourcePublishedAt": "2026-08-14T23:25:12Z",
-      "sourceDescription": "Luís Montenegro falou esta noite aos militantes do PSD na festa que marca a rentrée política social-democrata."
-    }
+      "coverHash": "c104089ece0a25f097dff8c8711d30969d3761e960db3a346bbe24e68901f301",
+      "verifiedAt": "2026-08-15T18:40:08.787427Z",
+      "resolvedTitle": "A Fragilidade da Memória",
+      "resolvedAuthor": "António Abreu",
+      "sourcePublishedAt": "2025-09-09T18:01:21Z",
+      "sourceDescription": "Entre verdades subjetivas e factos esquecidos, a identidade humana pode não passar de uma ficção convincente."
+    },
+    "origin": "website-community",
+    "notificationStatus": "sent",
+    "notificationAttempts": 2,
+    "discordApproval": {
+      "required": true,
+      "status": "approved",
+      "channelId": "1526189969427796049",
+      "messageId": "1536444114831417486",
+      "sentAt": "2026-08-10T18:40:22.343398+00:00",
+      "payloadHash": "6029503634f5f11602eb8be7d88ee78188ca1f76b138579b167eb6ad0f6c0e89",
+      "approvedAt": "2026-08-10T18:42:13.809022+00:00",
+      "approvedBy": "948240528632324107",
+      "mode": "queue"
+    },
+    "discordMessageId": "1536444114831417486",
+    "discordNotifiedAt": "2026-08-10T18:40:22.343398+00:00",
+    "approvalMode": "queue",
+    "approvedAt": "2026-08-10T18:42:13.809022+00:00",
+    "approvedBy": "948240528632324107",
+    "externalId": "article:url:938f77ab41b406c4029d4ed5"
   }
 }
