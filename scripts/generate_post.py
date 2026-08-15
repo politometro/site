@@ -28,6 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from cover_fetcher import load_cover_for_item
 from recommendation_resolver import (
     ResolutionError,
+    is_community_evergreen_highlight,
     is_eligible_highlight,
     is_same_series,
     is_series_recency_restricted,
@@ -308,29 +309,63 @@ REQUIRED_SLOTS_FOR_POST_TYPE = {
 }
 
 REQUIRED_TYPES = REQUIRED_SLOTS_FOR_POST_TYPE["sunday_standard"]
+POST_CONTENT_TYPES = (
+    "book",
+    "podcast",
+    "movie",
+    "investigation",
+    "highlight",
+    "nostalgia",
+)
+SLOT_FALLBACK_ORDER = {
+    "q1": ("movie", "investigation", "highlight", "podcast", "nostalgia"),
+    "q2": ("highlight", "investigation", "movie", "book", "nostalgia"),
+    "q3": ("highlight", "podcast", "book", "nostalgia"),
+    "q4": ("book", "nostalgia"),
+}
 
 
-def _slot_types(qkey, post_type="sunday_standard"):
+def _is_recurring_content(item):
+    return bool(
+        isinstance(item, dict)
+        and (
+            item.get("type") in {"podcast", "nostalgia"}
+            or item.get("sourceSeriesId")
+            or item.get("seriesId")
+        )
+    )
+
+
+def _slot_types(qkey, post_type="sunday_standard", allow_fallback=False):
     if post_type == "wednesday_nostalgia" and qkey == "w1":
-        return ("nostalgia",)
-    if qkey == "q1":
-        return ("book",)
+        primary = ("nostalgia",)
+    elif qkey == "q1":
+        primary = ("book",)
     elif qkey == "q2":
-        return ("podcast",)
+        primary = ("podcast",)
     elif qkey == "q3":
         week = datetime.datetime.now(datetime.timezone.utc).isocalendar().week
         preferred = SUNDAY_Q3_TYPES[week % len(SUNDAY_Q3_TYPES)]
-        return (preferred,) + tuple(
+        primary = (preferred,) + tuple(
             media_type
             for media_type in SUNDAY_Q3_TYPES
             if media_type != preferred
         )
     elif qkey == "q4":
         if post_type == "wednesday_nostalgia":
-            return ("nostalgia",)
+            primary = ("nostalgia",)
         else:
-            return ("highlight", "investigation", "movie", "podcast")
-    return (REQUIRED_TYPES.get(qkey, "highlight"),)
+            primary = ("highlight", "investigation", "movie", "podcast")
+    else:
+        primary = (REQUIRED_TYPES.get(qkey, "highlight"),)
+
+    if not allow_fallback or post_type == "wednesday_nostalgia":
+        return primary
+    return primary + tuple(
+        media_type
+        for media_type in SLOT_FALLBACK_ORDER.get(qkey, POST_CONTENT_TYPES)
+        if media_type not in primary
+    )
 
 TYPE_EMOJIS = {
     "book": "📖",
@@ -403,22 +438,38 @@ def _caption_hashtags(selected, post_type="sunday_standard"):
     return " ".join(final_hashtags)
 
 
-def build_caption(selected, post_type="sunday_standard"):
+def build_caption(
+    selected,
+    post_type="sunday_standard",
+    *,
+    title_chars=110,
+    author_chars=80,
+    description_chars=220,
+):
     sections = []
     for qkey in selected.keys():
         item = selected[qkey]
         emoji = _recommendation_emoji(item)
-        title = _ellipsize(_display_title(item), 110)
-        author = _ellipsize(item.get("authorOrMeta", ""), 80)
+        title = _ellipsize(_display_title(item), title_chars)
+        author = (
+            _ellipsize(item.get("authorOrMeta", ""), author_chars)
+            if author_chars
+            else ""
+        )
         clean_desc = _sanitize_description(
             item.get("description", ""), _display_title(item)
         )
-        description = _compact_text(clean_desc, 220)
-        author_suffix = f" ({author})" if author else ""
-        sections.append(
-            f"{emoji} {item['category'].upper()}: {title}{author_suffix}\n"
-            f"{description}"
+        description = (
+            _compact_text(clean_desc, description_chars)
+            if description_chars
+            else ""
         )
+        author_suffix = f" ({author})" if author else ""
+        category = _ellipsize(item.get("category") or "Recomendação", 32)
+        section = f"{emoji} {category.upper()}: {title}{author_suffix}"
+        if description:
+            section += f"\n{description}"
+        sections.append(section)
 
     if post_type == "wednesday_nostalgia":
         title_line = "📣 RECOMENDAÇÕES DO POLITÓMETRO\n\n"
@@ -446,15 +497,63 @@ def build_caption(selected, post_type="sunday_standard"):
             else "\n\nQual destes vais espreitar primeiro? Diz-nos nos comentários e "
             "aproveita para deixar as tuas próprias sugestões para a próxima semana! 👇\n\n"
         )
-        + "\n"
         + _caption_hashtags(selected, post_type=post_type)
         + "\n"
     )
 
 
+def build_caption_within_limit(
+    selected,
+    post_type="sunday_standard",
+    max_chars=1800,
+):
+    """Compact optional copy progressively; a long caption never aborts a draft."""
+    strategies = (
+        (110, 80, 220),
+        (96, 64, 170),
+        (80, 48, 120),
+        (64, 0, 80),
+        (48, 0, 0),
+    )
+    for index, (title_chars, author_chars, description_chars) in enumerate(
+        strategies
+    ):
+        caption = build_caption(
+            selected,
+            post_type=post_type,
+            title_chars=title_chars,
+            author_chars=author_chars,
+            description_chars=description_chars,
+        )
+        if len(caption) <= max_chars:
+            if index:
+                print(
+                    "  [AUTO-RECOVERY/CAPTION] Legenda compactada de forma "
+                    f"coerente para {len(caption)} caracteres."
+                )
+            return caption
+
+    # Four minimal identification lines plus the fixed intro/hashtags fit far
+    # below the limit. This branch is defensive for malformed oversized input.
+    minimal_selected = dict(list(selected.items())[:4])
+    return build_caption(
+        minimal_selected,
+        post_type=post_type,
+        title_chars=36,
+        author_chars=0,
+        description_chars=0,
+    )
+
+
 def _item_score(item, now):
-    score = item.get("priority", 3)
-    time_sensitive = item.get("type") in {"podcast", "highlight"}
+    try:
+        score = float(item.get("priority", 3))
+    except (TypeError, ValueError):
+        score = 3.0
+    time_sensitive = bool(
+        item.get("type") in {"podcast", "highlight"}
+        and not is_community_evergreen_highlight(item)
+    )
     if time_sensitive and item.get("sourcePublishedAt"):
         try:
             published = datetime.datetime.fromisoformat(
@@ -498,7 +597,8 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
 
     Only explicitly approved `queue` entries can be selected. Ambiguous
     entities and invalid/generic images are skipped in favour of the next
-    candidate. There is deliberately no production placeholder.
+    candidate. Editorial constraints are progressively repaired; source,
+    approval and identity constraints are never bypassed.
     """
     if history is None:
         try:
@@ -507,15 +607,18 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
             history = rec_data.get("history", [])
         except Exception:
             history = []
+    history = [item for item in (history or []) if isinstance(item, dict)]
 
     now = datetime.datetime.now(datetime.timezone.utc)
     active_items = [
         item
         for item in queue
-        if is_post_workflow_eligible(item)
+        if isinstance(item, dict)
+        and is_post_workflow_eligible(item)
         and _item_score(item, now) >= 0
         and (
             item.get("type") != "highlight"
+            or is_community_evergreen_highlight(item)
             or is_eligible_highlight(
                 title=item.get("title"),
                 description=item.get("description"),
@@ -533,78 +636,214 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
     selected = {}
     covers = {}
     seen_cover_hashes = set()
+    selected_item_keys = set()
+    prepared = {}
+    hard_failures = {}
+
+    def item_key(item):
+        stable_id = str(item.get("id") or "").strip()
+        return stable_id or f"object:{id(item)}"
+
+    def prepare_candidate(queue_item):
+        key = item_key(queue_item)
+        if key in prepared:
+            return prepared[key]
+        if key in hard_failures:
+            raise ValueError(hard_failures[key])
+
+        try:
+            resolved = resolve_recommendation(
+                copy.deepcopy(queue_item),
+                force=False,
+            )
+        except (ResolutionError, requests.RequestException) as exc:
+            transient = isinstance(
+                exc, requests.RequestException
+            ) or str(exc).startswith(
+                (
+                    "NETWORK_ERROR",
+                    "HTTP_ERROR",
+                    "BAD_JSON",
+                    "REQUEST_ERROR",
+                )
+            )
+            if not transient:
+                raise
+            print(
+                "  [AUTO-RECOVERY/SOURCE] Falha transitória; "
+                f"a re-resolver '{queue_item.get('title', '<sem título>')}'."
+            )
+            resolved = resolve_recommendation(
+                copy.deepcopy(queue_item),
+                force=True,
+            )
+        if (
+            requires_discord_approval(queue_item)
+            and not is_post_workflow_eligible(resolved)
+        ):
+            raise ValueError("a prova de aprovação Discord não foi preservada")
+        if resolved.get("resolutionStatus") != "verified":
+            raise ValueError("o resolvedor não confirmou a entidade")
+        if not resolved.get("link"):
+            raise ValueError("link canónico em falta")
+        _revalidate_reviewed_source("candidate", resolved)
+
+        cover = load_cover_for_item(resolved)
+        if cover is None:
+            print(
+                "  [AUTO-RECOVERY/COVER] A reconstruir a capa verificada de "
+                f"'{queue_item.get('title', '<sem título>')}'."
+            )
+            resolved = resolve_recommendation(
+                copy.deepcopy(queue_item),
+                force=True,
+            )
+            if (
+                requires_discord_approval(queue_item)
+                and not is_post_workflow_eligible(resolved)
+            ):
+                raise ValueError(
+                    "a prova de aprovação Discord não foi preservada"
+                )
+            if resolved.get("resolutionStatus") != "verified" or not resolved.get(
+                "link"
+            ):
+                raise ValueError("não foi possível reconstruir a entidade/capa")
+            cover = load_cover_for_item(resolved)
+            if cover is None:
+                raise ValueError("capa raster verificada em falta")
+        result = (resolved, cover, _cover_hash(resolved, cover))
+        prepared[key] = result
+        return result
 
     target_slots = REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type, REQUIRED_SLOTS_FOR_POST_TYPE["sunday_standard"])
     for qkey, required_type in target_slots.items():
-        allowed_types = _slot_types(qkey, post_type=post_type)
-        candidates = [
-            item
-            for media_type in allowed_types
-            for item in active_items
-            if item.get("type") == media_type
-        ]
-        failures = []
+        primary_types = _slot_types(qkey, post_type=post_type)
+        flexible_types = _slot_types(
+            qkey,
+            post_type=post_type,
+            allow_fallback=True,
+        )
+        policies = (
+            ("strict", primary_types, True, True, True),
+            ("recency_relaxed", primary_types, False, True, True),
+            ("category_substitution", flexible_types, True, True, True),
+            ("editorial_constraints_relaxed", flexible_types, False, False, True),
+            ("verified_cover_reuse", flexible_types, False, False, False),
+        )
+        failures = set()
+        seen_policies = set()
 
-        for queue_item in candidates:
-            try:
-                if is_series_recency_restricted(queue_item, history, now):
-                    raise ValueError(
-                        "série/podcast recomendado nas últimas 4 semanas (restrição de recência)"
-                    )
-                if any(
-                    is_same_series(queue_item, sel_item)
-                    for sel_item in selected.values()
+        for (
+            policy_name,
+            allowed_types,
+            enforce_recency,
+            enforce_series_diversity,
+            enforce_unique_cover,
+        ) in policies:
+            policy_key = (
+                tuple(allowed_types),
+                enforce_recency,
+                enforce_series_diversity,
+                enforce_unique_cover,
+            )
+            if policy_key in seen_policies:
+                continue
+            seen_policies.add(policy_key)
+            candidates = [
+                item
+                for media_type in allowed_types
+                for item in active_items
+                if item.get("type") == media_type
+                and item_key(item) not in selected_item_keys
+            ]
+
+            for queue_item in candidates:
+                key = item_key(queue_item)
+                if enforce_recency and is_series_recency_restricted(
+                    queue_item,
+                    history,
+                    now,
                 ):
-                    raise ValueError("mesma série/podcast já selecionada no post atual")
-
-                # Prefer the recent identity-bound proof already produced by
-                # population. The resolver refreshes it automatically when its
-                # TTL, link proof or local cover manifest is no longer valid.
-                resolved = resolve_recommendation(
-                    copy.deepcopy(queue_item), force=False
-                )
+                    failures.add(
+                        f"{queue_item.get('title', '<sem título>')}: "
+                        "restrição editorial de recência"
+                    )
+                    continue
                 if (
-                    requires_discord_approval(queue_item)
-                    and not is_post_workflow_eligible(resolved)
-                ):
-                    raise ValueError(
-                        "a prova de aprovação Discord não foi preservada"
+                    enforce_series_diversity
+                    and _is_recurring_content(queue_item)
+                    and any(
+                        _is_recurring_content(selected_item)
+                        and is_same_series(queue_item, selected_item)
+                        for selected_item in selected.values()
                     )
-                if resolved.get("resolutionStatus") != "verified":
-                    raise ValueError("o resolvedor não confirmou a entidade")
-                if not resolved.get("link"):
-                    raise ValueError("link canónico em falta")
-                _revalidate_reviewed_source(qkey, resolved)
+                ):
+                    failures.add(
+                        f"{queue_item.get('title', '<sem título>')}: "
+                        "série já presente no post"
+                    )
+                    continue
 
-                cover = load_cover_for_item(resolved)
-                if cover is None:
-                    raise ValueError("capa raster verificada em falta")
-
-                image_hash = _cover_hash(resolved, cover)
-                if image_hash in seen_cover_hashes:
-                    raise ValueError("imagem duplicada de outra recomendação")
+                try:
+                    resolved, cover, image_hash = prepare_candidate(queue_item)
+                    if enforce_unique_cover and image_hash in seen_cover_hashes:
+                        failures.add(
+                            f"{queue_item.get('title', '<sem título>')}: "
+                            "imagem já usada no post"
+                        )
+                        continue
+                except (
+                    ResolutionError,
+                    requests.RequestException,
+                    OSError,
+                    ValueError,
+                    TypeError,
+                    KeyError,
+                    AttributeError,
+                ) as exc:
+                    failure = f"{queue_item.get('title', '<sem título>')}: {exc}"
+                    failures.add(failure)
+                    if key not in hard_failures:
+                        hard_failures[key] = str(exc)
+                        print(f"  [REJECTED] {failure}")
+                    continue
 
                 # Persist the exact canonical object that is reviewed.
                 queue_item.clear()
                 queue_item.update(resolved)
+                queue_item.pop("selectionRecovery", None)
+                if policy_name != "strict":
+                    queue_item["selectionRecovery"] = {
+                        "slot": qkey,
+                        "mode": policy_name,
+                    }
+                    print(
+                        f"  [AUTO-RECOVERY/{qkey.upper()}] {policy_name}: "
+                        f"'{resolved.get('title', '<sem título>')}'"
+                    )
                 selected[qkey] = queue_item
                 covers[qkey] = cover
+                selected_item_keys.add(key)
                 seen_cover_hashes.add(image_hash)
                 print(
                     f"  -> {qkey.upper()} verified: '{resolved['title']}' "
                     f"({resolved.get('verification', {}).get('source', 'source')})"
                 )
                 break
-            except (ResolutionError, OSError, ValueError) as exc:
-                failure = f"{queue_item.get('title', '<sem título>')}: {exc}"
-                failures.append(failure)
-                print(f"  [REJECTED] {failure}")
+
+            if qkey in selected:
+                break
 
         if qkey not in selected:
-            details = "; ".join(failures) if failures else "nenhum candidato aprovado na fila"
+            details = (
+                "; ".join(sorted(failures))
+                if failures
+                else "nenhum conteúdo aprovado e verificável na fila"
+            )
             raise RuntimeError(
-                f"Não existe uma recomendação {required_type!r} totalmente "
-                f"verificada para {qkey}. {details}"
+                f"Não existe conteúdo seguro para preencher {qkey} depois "
+                f"das recuperações de {required_type!r}. {details}"
             )
 
     return selected, covers
@@ -645,14 +884,17 @@ def _normalise_rendered_text(value):
 
 
 def _require_complete_render(original, lines, qkey, field_name):
-    """Fail review generation instead of silently dropping editorial copy."""
+    """Return explicit compact copy instead of silently dropping or aborting."""
     expected = _normalise_rendered_text(original)
     rendered = _normalise_rendered_text(" ".join(lines))
     if rendered != expected:
-        raise RuntimeError(
-            f"{qkey.upper()} {field_name} não cabe integralmente na imagem. "
-            "Define uma versão editorial mais curta; o texto não será cortado."
+        recovered = rendered or expected
+        print(
+            f"  [AUTO-RECOVERY/{qkey.upper()}] {field_name} compactado "
+            "para caber integralmente na imagem."
         )
+        return recovered
+    return expected
 
 
 def _sanitize_description(description, title=""):
@@ -671,13 +913,13 @@ def _sanitize_description(description, title=""):
             elif text.lower().startswith(norm_title.lower()):
                 text = text[len(norm_title):].strip()
             else:
-                parts = [p.strip() for p in re.split(r"[:|–-]", norm_title) if len(p.strip()) >= 8]
+                parts = [p.strip() for p in re.split(r"[:|–—-]", norm_title) if len(p.strip()) >= 8]
                 for p in parts:
                     if text.startswith(p):
                         text = text[len(p):].strip()
                         break
 
-    text = re.sub(r"^[\s:\-.,;]+", "", text).strip()
+    text = re.sub(r"^[\s:–—\-.,;]+", "", text).strip()
     text = re.sub(r"(?:\.{2,}|…)\s*$", "", text).strip()
     return text or re.sub(r"(?:\.{2,}|…)\s*$", "", str(description or "").strip()).strip()
 
@@ -852,10 +1094,21 @@ def _fit_text_lines(
     max_lines,
 ):
     compact = str(text or "").strip()
+
+    def fits(font, candidate_lines):
+        return bool(
+            candidate_lines
+            and len(candidate_lines) <= max_lines
+            and all(
+                (font.getbbox(line)[2] - font.getbbox(line)[0]) <= max_width
+                for line in candidate_lines
+            )
+        )
+
     for size in range(start_size, min_size - 1, -1):
         font = _load_font(font_path, size)
         lines = wrap_text(draw, compact, font, max_width)
-        if len(lines) <= max_lines:
+        if fits(font, lines):
             return font, lines, max(16, size + 3)
 
     font = _load_font(font_path, min_size)
@@ -869,7 +1122,7 @@ def _fit_text_lines(
         for sentence_end in reversed(sentence_ends):
             complete = compact[:sentence_end].strip()
             complete_lines = wrap_text(draw, complete, font, max_width)
-            if len(complete_lines) <= max_lines:
+            if fits(font, complete_lines):
                 return font, complete_lines, max(15, min_size + 3)
 
         words = compact.rstrip(" .!?").split()
@@ -901,14 +1154,63 @@ def _fit_text_lines(
                 candidate = " ".join(words).rstrip(" ,;:.!?")
             candidate = candidate + "." if candidate else ""
             candidate_lines = wrap_text(draw, candidate, font, max_width)
-            if candidate and len(candidate_lines) <= max_lines:
+            if candidate and fits(font, candidate_lines):
                 lines = candidate_lines
                 break
             if not words:
                 lines = []
                 break
             words.pop()
+    if not fits(font, lines):
+        # Last-resort handling for an unusually long unbroken source token.
+        # It becomes explicit editorial copy and never overflows the card.
+        for end in range(len(compact) - 1, 7, -1):
+            candidate = compact[:end].rstrip(" ,;:.!?…") + "…"
+            candidate_lines = wrap_text(draw, candidate, font, max_width)
+            if fits(font, candidate_lines):
+                lines = candidate_lines
+                break
     return font, lines, max(15, min_size + 3)
+
+
+def _fit_title_for_item(
+    draw,
+    item,
+    qkey,
+    start_size,
+    min_size,
+    max_width,
+    max_lines,
+):
+    """Fit a title and persist any faithful compact version in the draft."""
+    raw_title = _display_title(item) or str(
+        item.get("category") or "Recomendação"
+    ).strip()
+    fitted_font, lines, spacing = _fit_text_lines(
+        draw,
+        raw_title,
+        FONT_BOLD,
+        start_size,
+        min_size,
+        max_width,
+        max_lines,
+    )
+    recovered = _require_complete_render(raw_title, lines, qkey, "título")
+    if recovered != _normalise_rendered_text(raw_title):
+        item["editorialTitle"] = recovered
+        recovery = dict(item.get("renderRecovery") or {})
+        recovery["title"] = "compacted"
+        item["renderRecovery"] = recovery
+        fitted_font, lines, spacing = _fit_text_lines(
+            draw,
+            recovered,
+            FONT_BOLD,
+            start_size,
+            min_size,
+            max_width,
+            max_lines,
+        )
+    return fitted_font, lines, spacing
 
 
 def _fit_text_lines_at_size(draw, text, font_path, size, max_width, max_lines):
@@ -919,6 +1221,17 @@ def _fit_text_lines_at_size(draw, text, font_path, size, max_width, max_lines):
 
 def _fit_fixed_description_lines(draw, text, max_width, max_lines):
     compact = str(text or "").strip()
+
+    def fits(font, candidate_lines):
+        return bool(
+            candidate_lines
+            and len(candidate_lines) <= max_lines
+            and all(
+                (font.getbbox(line)[2] - font.getbbox(line)[0]) <= max_width
+                for line in candidate_lines
+            )
+        )
+
     for size in range(
         DESCRIPTION_FONT_START_SIZE,
         DESCRIPTION_FONT_MIN_SIZE - 1,
@@ -932,7 +1245,7 @@ def _fit_fixed_description_lines(draw, text, max_width, max_lines):
             max_width,
             max_lines,
         )
-        if len(lines) <= max_lines:
+        if fits(font, lines):
             return font, lines, spacing
 
     # If even the minimum readable size does not fit, retain the largest
@@ -946,7 +1259,7 @@ def _fit_fixed_description_lines(draw, text, max_width, max_lines):
     for sentence_end in reversed(sentence_ends):
         candidate = compact[:sentence_end].strip()
         candidate_lines = wrap_text(draw, candidate, font, max_width)
-        if len(candidate_lines) <= max_lines:
+        if fits(font, candidate_lines):
             return font, candidate_lines, spacing
 
     words = compact.rstrip(" .!?").split()
@@ -954,7 +1267,7 @@ def _fit_fixed_description_lines(draw, text, max_width, max_lines):
         candidate = " ".join(words).rstrip(" ,;:.!?")
         candidate = candidate + "." if candidate else ""
         candidate_lines = wrap_text(draw, candidate, font, max_width)
-        if candidate and len(candidate_lines) <= max_lines:
+        if candidate and fits(font, candidate_lines):
             return font, candidate_lines, spacing
         words.pop()
     return font, [], spacing
@@ -1027,12 +1340,11 @@ def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
     required_slots = REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type)
     if not required_slots or qkey not in required_slots:
         raise RuntimeError(f"Slot {qkey} inválido para {post_type}")
-    expected_type = required_slots[qkey]
     now = now or datetime.datetime.now(datetime.timezone.utc)
-    allowed_types = (
-        SUNDAY_Q3_TYPES
-        if post_type == "sunday_standard" and qkey == "q3"
-        else (expected_type,)
+    allowed_types = _slot_types(
+        qkey,
+        post_type=post_type,
+        allow_fallback=True,
     )
     if not isinstance(item, dict) or item.get("type") not in allowed_types:
         raise RuntimeError(
@@ -1040,7 +1352,10 @@ def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
             + ", ".join(allowed_types)
         )
     if not is_post_workflow_eligible(item):
-        raise RuntimeError(f"{qkey} já não está elegível na fila aprovada")
+        raise RuntimeError(
+            f"{qkey} já não está aprovado na fila ou não tem "
+            "aprovação Discord verificável"
+        )
     if item.get("resolutionStatus") != "verified":
         raise RuntimeError(f"{qkey} não tem resolução verificada")
     verification = item.get("verification") or {}
@@ -1065,11 +1380,15 @@ def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
             if isinstance(item.get("_discovery"), dict)
             else []
         ),
-    ):
+    ) and not is_community_evergreen_highlight(item):
         raise RuntimeError(f"{qkey} é uma notícia e não um destaque editorial")
     source_published = _parse_utc_datetime(item.get("sourcePublishedAt"))
     expiry = _parse_utc_datetime(item.get("expiryDate"))
-    if item.get("type") in {"podcast", "highlight"} and (
+    time_sensitive = bool(
+        item.get("type") in {"podcast", "highlight"}
+        and not is_community_evergreen_highlight(item)
+    )
+    if time_sensitive and (
         not source_published
         or not expiry
         or expiry <= source_published
@@ -1082,7 +1401,7 @@ def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
             f"{qkey} expirou em {expiry.isoformat()}; gera uma proposta atualizada"
         )
     if (
-        item.get("type") in {"podcast", "highlight"}
+        time_sensitive
         and expiry
         and expiry
         < now + datetime.timedelta(hours=MIN_PUBLICATION_VALIDITY_HOURS)
@@ -1371,7 +1690,11 @@ def generate_production_post():
     )
     
     slot_keys = list(selected.keys())
-    missing = [q for q in slot_keys if q not in selected]
+    missing = [
+        qkey
+        for qkey in REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type, {})
+        if qkey not in selected
+    ]
     if missing:
         print(f"ERROR: Missing slots: {missing}")
         sys.exit(1)
@@ -1440,18 +1763,15 @@ def generate_production_post():
         )
         
         # 2. Draw Title centered across full width (700px) with larger font (40px -> 26px)
-        raw_title = _display_title(item)
-
-        fitted_title_font, lines, title_spacing = _fit_text_lines(
+        fitted_title_font, lines, title_spacing = _fit_title_for_item(
             draw,
-            raw_title,
-            FONT_BOLD,
+            item,
+            qkey,
             40,
             26,
             700,
             3,
         )
-        _require_complete_render(raw_title, lines, qkey, "título")
         curr_y = 320
         for line in lines:
             bbox = fitted_title_font.getbbox(line)
@@ -1526,16 +1846,15 @@ def generate_production_post():
             title_max_lines = 3 if (qkey in ["q2", "q3", "q4", "w1", "w2"] or len(raw_title) > 55) else 2
 
             max_title_width = 700 if qkey in ["w1", "w2"] else 350
-            fitted_title_font, lines, title_spacing = _fit_text_lines(
+            fitted_title_font, lines, title_spacing = _fit_title_for_item(
                 draw,
-                raw_title,
-                FONT_BOLD,
+                item,
+                qkey,
                 30,
                 18,
                 max_title_width,
                 title_max_lines,
             )
-            _require_complete_render(raw_title, lines, qkey, "título")
             title_lines_map[qkey] = lines
             
             # Draw title
@@ -1631,6 +1950,10 @@ def generate_production_post():
                     "desc_w": desc_w,
                     "max_lines": max_lines,
                     "description": description,
+                    "fallback_description": (
+                        _fallback_description_from_title(item)
+                        or "Recomendação verificada."
+                    ),
                 }
             )
 
@@ -1642,9 +1965,23 @@ def generate_production_post():
                 plan["max_lines"],
             )
             if not desc_lines:
-                raise RuntimeError(
-                    f'{plan["qkey"].upper()} descrição não tem texto renderizável.'
+                print(
+                    f'  [AUTO-RECOVERY/{plan["qkey"].upper()}] '
+                    "descrição substituída por texto fundamentado curto."
                 )
+                fitted_font, desc_lines, spacing = _fit_fixed_description_lines(
+                    draw,
+                    plan["fallback_description"],
+                    plan["desc_w"],
+                    plan["max_lines"],
+                )
+            if not desc_lines:
+                fitted_font = _load_font(
+                    FONT_DESC_BOLD,
+                    DESCRIPTION_FONT_MIN_SIZE,
+                )
+                desc_lines = ["Recomendação verificada."]
+                spacing = max(15, DESCRIPTION_FONT_MIN_SIZE + 3)
             text_block_h = len(desc_lines[: plan["max_lines"]]) * spacing
             dy = plan["cover_y"] + max(0, (plan["cover_h"] - text_block_h) // 2)
 
@@ -1671,11 +2008,11 @@ def generate_production_post():
     print(f"[OK] Native Story image saved to: {story_path}")
     
     # 5. Generate the caption from the exact recommendations in this draft.
-    caption = build_caption(selected, post_type=post_type)
-    if len(caption) > 1800:
-        raise RuntimeError(
-            f"A legenda excede o limite editorial seguro ({len(caption)} caracteres)."
-        )
+    caption = build_caption_within_limit(
+        selected,
+        post_type=post_type,
+        max_chars=1800,
+    )
     
     with open(OUTPUT_CAPTION_PATH, "w", encoding="utf-8") as f:
         f.write(caption)

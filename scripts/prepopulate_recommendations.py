@@ -1,7 +1,3 @@
-import json
-import os
-import sys
-
 recommendations = [
     # --- LIVROS (type: "book") ---
     {
@@ -298,35 +294,17 @@ recommendations = [
     }
 ]
 
-def main():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    root_dir = os.path.dirname(script_dir)
-    rec_file = os.path.join(root_dir, "website", "public", "recommendations.json")
-    
-    # Standard format validation
-    for i in recommendations:
-        assert "id" in i
-        assert "type" in i
-        assert "category" in i
-        assert "title" in i
-        assert "authorOrMeta" in i
-        assert "description" in i
-        assert "imageUrl" in i
-        assert "link" in i
-        assert "priority" in i
-        assert "status" in i
-        
-    print("Validation Success: All real covers configured.")
-    
-    data = {
-        "queue": recommendations,
-        "history": []
-    }
-    
-    with open(rec_file, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, ensure_ascii=False)
-        
-    print("Recreated recommendations.json with real official covers!")
+def main(populator=None):
+    """Compatibility entry point that can no longer bypass verification."""
+    if populator is None:
+        from auto_populate_ai import auto_populate
+
+        populator = auto_populate
+    print(
+        "Legacy seed mode is disabled; running the verified, idempotent "
+        "population workflow instead."
+    )
+    populator()
 
 if __name__ == "__main__":
     main()

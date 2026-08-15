@@ -36,6 +36,10 @@ from typing import Any, Iterable, Mapping, Sequence
 
 import requests
 from PIL import Image, ImageOps, UnidentifiedImageError
+from recommendation_approval import (
+    has_verified_discord_approval,
+    requires_discord_approval,
+)
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -252,6 +256,7 @@ class EntityResolution:
     description: str = ""
     isbn: str = ""
     published_at: str = ""
+    image_candidates: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -331,6 +336,8 @@ def _expiry_for(
     if media_type == "podcast":
         days = _podcast_expiry_days(item)
     elif media_type == "highlight":
+        if is_community_evergreen_highlight(item):
+            return None
         days = int(os.environ.get("HIGHLIGHT_EXPIRY_DAYS", "60"))
     elif media_type == "investigation":
         is_time_sensitive = bool(
@@ -348,6 +355,30 @@ def _expiry_for(
     max_days = 90 if media_type == "investigation" else (60 if media_type == "highlight" else 35)
     days = max(1, min(days, max_days))
     return (parsed + _dt.timedelta(days=days)).isoformat().replace("+00:00", "Z")
+
+
+def is_community_evergreen_highlight(item: Mapping[str, Any]) -> bool:
+    """Return whether a reviewer-approved community article is timeless.
+
+    This explicit lifecycle marker is editorial state added after submission;
+    it cannot substitute for the immutable Discord delivery/approval proof.
+    """
+
+    return bool(
+        isinstance(item, Mapping)
+        and str(item.get("type") or "").casefold() == "highlight"
+        and str(item.get("contentLifecycle") or "").casefold()
+        == "evergreen"
+        and requires_discord_approval(item)
+        and has_verified_discord_approval(item)
+    )
+
+
+def _is_approved_community_item(item: Mapping[str, Any]) -> bool:
+    return bool(
+        requires_discord_approval(item)
+        and has_verified_discord_approval(item)
+    )
 
 
 def is_same_series(item1: Mapping[str, Any], item2: Mapping[str, Any]) -> bool:
@@ -385,14 +416,20 @@ def is_same_series(item1: Mapping[str, Any], item2: Mapping[str, Any]) -> bool:
     title1 = _norm(item1.get("title"))
     title2 = _norm(item2.get("title"))
 
+    def _title_with_separators(value: Any) -> str:
+        s = str(value or "").strip().lower()
+        s = re.sub(r"[^\w\s|–—-]", " ", s)
+        return re.sub(r"\s+", " ", s).strip()
+
     def _extract_show(title_norm: str) -> str:
         parts = re.split(
-            r"\bep\d*|\bepis[óo]dio|\bpart[e\d]*|\b\||\b-", title_norm
+            r"\s*\|\s*|\s+[-–—]\s+|\bep\d*\b|\bepis[óo]dio\b|\bpart[e\d]*\b",
+            title_norm,
         )
         return parts[0].strip() if parts else title_norm
 
-    show1 = _extract_show(title1)
-    show2 = _extract_show(title2)
+    show1 = _extract_show(_title_with_separators(item1.get("title")))
+    show2 = _extract_show(_title_with_separators(item2.get("title")))
     if show1 and show2 and len(show1) >= 4 and show1 == show2:
         return True
 
@@ -415,10 +452,21 @@ def is_series_recency_restricted(
 
     Exclusions:
     - `type == "investigation"` is explicitly excluded (allows multi-part investigations).
+    - Non-recurring items without a series identifier are excluded.
     - Items marked with `high_importance` / `is_high_importance` / `highImportance` are exempted.
     """
     media_type = str(item.get("type") or "").lower()
     if media_type == "investigation":
+        return False
+    recurring_content = bool(
+        media_type in {"podcast", "nostalgia"}
+        or item.get("sourceSeriesId")
+        or item.get("seriesId")
+    )
+    if not recurring_content:
+        # Author/publisher equality is useful supporting evidence for a show,
+        # but must not turn every book by one author or every article from one
+        # newsroom into the same recurring series.
         return False
 
     is_high_importance = bool(
@@ -581,7 +629,7 @@ def is_eligible_highlight(
         )
     )
     if re.match(
-        rf"^(?:{title_pattern})\s*(?::|\||-|–)",
+        rf"^(?:{title_pattern})\s*(?::|\||-|–|—)",
         title_label,
     ):
         return True
@@ -1346,8 +1394,10 @@ def _page_metadata(url: str) -> dict[str, Any]:
     ld_authors: list[str] = []
     ld_descriptions: list[str] = []
     ld_dates: list[str] = []
+    ld_types: list[str] = []
     isbns: list[str] = []
     for obj in ld_objects:
+        ld_types.extend(_value_to_strings(obj.get("@type")))
         ld_names.extend(_value_to_strings(obj.get("headline")))
         ld_names.extend(_value_to_strings(obj.get("name")))
         ld_images.extend(_value_to_strings(obj.get("image")))
@@ -1369,7 +1419,9 @@ def _page_metadata(url: str) -> dict[str, Any]:
     image_candidates = [
         meta.get("og:image:secure_url", ""),
         meta.get("og:image", ""),
+        meta.get("og:image:url", ""),
         meta.get("twitter:image", ""),
+        meta.get("twitter:image:src", ""),
         *ld_images,
     ]
     description_candidates = [
@@ -1389,7 +1441,7 @@ def _page_metadata(url: str) -> dict[str, Any]:
     canonical = _canonicalize_url(canonical)
     _assert_safe_url(canonical)
 
-    image = ""
+    safe_images = []
     for candidate in image_candidates:
         candidate = candidate.strip()
         if not candidate:
@@ -1399,8 +1451,9 @@ def _page_metadata(url: str) -> dict[str, Any]:
             _assert_safe_url(candidate, purpose="image")
         except RecommendationResolutionError:
             continue
-        image = candidate
-        break
+        if candidate not in safe_images:
+            safe_images.append(candidate)
+    image = safe_images[0] if safe_images else ""
 
     title = next(
         (_clean_page_title(candidate) for candidate in title_candidates if candidate.strip()),
@@ -1418,7 +1471,12 @@ def _page_metadata(url: str) -> dict[str, Any]:
         ),
         "",
     )
-    authors = [value.strip() for value in ld_authors if value.strip()]
+    authors = [
+        value.strip()
+        for value in ld_authors
+        if value.strip()
+        and not value.strip().casefold().startswith(("http://", "https://"))
+    ]
     meta_author = meta.get("author", "").strip()
     if meta_author:
         authors.append(meta_author)
@@ -1444,6 +1502,14 @@ def _page_metadata(url: str) -> dict[str, Any]:
         "publishedAt": published_at,
         "authors": list(dict.fromkeys(authors)),
         "isbns": list(dict.fromkeys(clean_isbns)),
+        "images": safe_images,
+        "schemaTypes": list(
+            dict.fromkeys(
+                _normalise_text(value).replace(" ", "")
+                for value in ld_types
+                if _normalise_text(value)
+            )
+        ),
         "meta": meta,
     }
 
@@ -2623,13 +2689,17 @@ def _validate_highlight_page(
     item: Mapping[str, Any], link: str
 ) -> EntityResolution:
     host = _hostname(link)
+    approved_community = _is_approved_community_item(item)
     if _host_in(host, BLOCKED_LINK_HOSTS):
         raise RecommendationResolutionError(
             "DISALLOWED_SOURCE",
             f"Fonte não permitida para destaque: {host}.",
             item=item,
         )
-    if not _host_in(host, TRUSTED_HIGHLIGHT_DOMAINS):
+    if (
+        not _host_in(host, TRUSTED_HIGHLIGHT_DOMAINS)
+        and not approved_community
+    ):
         raise RecommendationResolutionError(
             "DISALLOWED_SOURCE",
             f"Destaque deve vir de jornal/canal autorizado, não {host}.",
@@ -2647,7 +2717,17 @@ def _validate_highlight_page(
         )
     metadata = _page_metadata(link)
     canonical_host = _hostname(metadata["canonical"])
-    if not _host_in(canonical_host, TRUSTED_HIGHLIGHT_DOMAINS):
+    trusted_canonical = _host_in(
+        canonical_host, TRUSTED_HIGHLIGHT_DOMAINS
+    )
+    approved_same_source = bool(
+        approved_community
+        and (
+            _host_matches(canonical_host, host)
+            or _host_matches(host, canonical_host)
+        )
+    )
+    if not trusted_canonical and not approved_same_source:
         raise RecommendationResolutionError(
             "DISALLOWED_SOURCE",
             f"URL canónico saiu da allowlist: {canonical_host}.",
@@ -2670,6 +2750,20 @@ def _validate_highlight_page(
             "parsely-section",
         )
     ]
+    structured_article = bool(
+        set(metadata.get("schemaTypes", ()))
+        & {
+            "article",
+            "newsarticle",
+            "analysisnewsarticle",
+            "reportagenewsarticle",
+            "blogposting",
+        }
+        or _normalise_text(
+            metadata.get("meta", {}).get("og:type", "")
+        )
+        == "article"
+    )
     if (
         str(item.get("type", "")).casefold().strip() == "highlight"
         and not is_eligible_highlight(
@@ -2678,6 +2772,7 @@ def _validate_highlight_page(
             link=metadata["canonical"],
             categories=categories,
         )
+        and not (approved_community and structured_article)
     ):
         raise RecommendationResolutionError(
             "NEWS_NOT_ALLOWED",
@@ -2698,6 +2793,7 @@ def _validate_highlight_page(
         resolved_author=", ".join(metadata["authors"]) or canonical_host,
         description=metadata["description"],
         published_at=metadata["publishedAt"],
+        image_candidates=tuple(metadata.get("images", ())[1:]),
     )
 
 
@@ -3115,7 +3211,11 @@ def _already_verified(
     expiry = _normalise_datetime(
         item.get("expiryDate"), allow_future=True
     )
-    if item.get("type") in {"podcast", "highlight"}:
+    time_sensitive = bool(
+        item.get("type") in {"podcast", "highlight"}
+        and not is_community_evergreen_highlight(item)
+    )
+    if time_sensitive:
         if not _normalise_datetime(item.get("sourcePublishedAt")) or not expiry:
             return None
         if _dt.datetime.fromisoformat(
@@ -3276,7 +3376,22 @@ def resolve_recommendation(
             item=item,
         )
     _assert_safe_url(entity.link)
-    _assert_safe_url(entity.image_url, purpose="image")
+    image_candidates = tuple(
+        dict.fromkeys(
+            candidate
+            for candidate in (
+                entity.image_url,
+                *entity.image_candidates,
+            )
+            if candidate
+        )
+    )
+    if not image_candidates:
+        raise RecommendationResolutionError(
+            "COVER_NOT_FOUND",
+            "A fonte não forneceu qualquer imagem editorial segura.",
+            item=item,
+        )
 
     canonical_title = _clean_page_title(entity.resolved_title)
     if not canonical_title:
@@ -3311,8 +3426,13 @@ def resolve_recommendation(
         resolved_type == "investigation"
         and bool(item.get("is_time_sensitive") or item.get("isTimeSensitive"))
     )
+    is_time_sensitive_highlight = bool(
+        resolved_type == "highlight"
+        and not is_community_evergreen_highlight(item)
+    )
     if (
-        resolved_type in {"podcast", "highlight"}
+        resolved_type == "podcast"
+        or is_time_sensitive_highlight
         or is_time_sensitive_investigation
     ) and not source_published_at:
         raise RecommendationResolutionError(
@@ -3324,7 +3444,8 @@ def resolve_recommendation(
         resolved_type, source_published_at, item
     )
     if (
-        resolved_type in {"podcast", "highlight"}
+        resolved_type == "podcast"
+        or is_time_sensitive_highlight
         or is_time_sensitive_investigation
     ) and not derived_expiry:
         raise RecommendationResolutionError(
@@ -3449,7 +3570,21 @@ def resolve_recommendation(
             except (OSError, ValueError, TypeError, json.JSONDecodeError):
                 pass
 
-    cover = _download_and_normalize_image(entity.image_url)
+    cover = None
+    cover_failures = []
+    for image_url in image_candidates:
+        try:
+            cover = _download_and_normalize_image(image_url)
+            break
+        except (RecommendationResolutionError, requests.RequestException) as exc:
+            cover_failures.append(str(exc)[:240])
+    if cover is None:
+        raise RecommendationResolutionError(
+            "COVER_NOT_FOUND",
+            "Nenhuma imagem social/estruturada passou a validação raster.",
+            item=item,
+            details={"failures": cover_failures},
+        )
     verified_at = _dt.datetime.now(_dt.timezone.utc).isoformat().replace(
         "+00:00", "Z"
     )
@@ -3531,6 +3666,7 @@ __all__ = [
     "discover_highlights",
     "discover_podcast_episodes",
     "is_eligible_highlight",
+    "is_community_evergreen_highlight",
     "load_cover_for_item",
     "probe_verified_source",
     "resolve_recommendation",
