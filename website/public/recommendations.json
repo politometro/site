@@ -222,17 +222,17 @@
       "priority": 3,
       "expiryDate": null,
       "createdAt": "2026-07-18T23:33:07.743672Z",
-      "status": "invalid",
+      "status": "queue",
       "sourceHint": "ai-catalogue-candidate",
       "externalId": "openlibrary:/works/OL10460640W",
-      "resolutionStatus": "rejected",
+      "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
         "source": "openlibrary",
         "entityId": "openlibrary:/works/OL10460640W",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "20dba4637f2082b3cf4c82a5c079eb8f37e59b8094352ede0e0116c2fa7d6c07",
-        "verifiedAt": "2026-07-18T23:33:09.266628Z",
+        "verifiedAt": "2026-08-15T18:52:40.458208Z",
         "resolvedTitle": "The Origins of Totalitarianism",
         "resolvedAuthor": "Hannah Arendt",
         "sourceDescription": "Estudo sobre antissemitismo, imperialismo e regimes totalitários no século XX."
@@ -259,7 +259,7 @@
         "status": "verified",
         "source": "wikidata+imdb",
         "entityId": "imdb:tt0434409",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "1d8b3ad5396081f3b516ae0646395586738122de78f2499e6a498b573d15d637",
         "verifiedAt": "2026-07-18T23:33:13.069598Z",
         "resolvedTitle": "V for Vendetta",
@@ -351,17 +351,17 @@
       "priority": 3,
       "expiryDate": null,
       "createdAt": "2026-07-20T12:29:16.100660Z",
-      "status": "invalid",
+      "status": "queue",
       "sourceHint": "ai-catalogue-candidate",
       "externalId": "openlibrary:/works/OL1168007W",
-      "resolutionStatus": "rejected",
+      "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
         "source": "openlibrary",
         "entityId": "openlibrary:/works/OL1168007W",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "a5651813831697703797327eb6cffa933b63d9e632f89f1d81e37f99a3e5c41e",
-        "verifiedAt": "2026-07-20T12:29:17.546939Z",
+        "verifiedAt": "2026-08-15T18:53:00.632818Z",
         "resolvedTitle": "Animal Farm",
         "resolvedAuthor": "George Orwell",
         "sourceDescription": "Fábula política sobre revolução, poder e a forma como ideais libertadores podem ser capturados por novas elites."
@@ -454,7 +454,8 @@
         "sourcePublishedAt": "2025-11-30T13:00:13Z",
         "sourceDescription": "Vídeo “Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes”, publicado por NOW Canal em 30/11/2025."
       },
-      "sourcePublishedAt": "2025-11-30T13:00:13Z"
+      "sourcePublishedAt": "2025-11-30T13:00:13Z",
+      "editorialTitle": "Repórter Sábado: Advogado acusado de ter corrompido inspetora"
     },
     {
       "type": "nostalgia",
@@ -807,17 +808,17 @@
       "priority": 3,
       "expiryDate": null,
       "createdAt": "2026-07-27T13:46:30.577283Z",
-      "status": "invalid",
+      "status": "queue",
       "sourceHint": "ai-catalogue-candidate",
       "externalId": "openlibrary:/works/OL32342092W",
-      "resolutionStatus": "rejected",
+      "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
         "source": "openlibrary",
         "entityId": "openlibrary:/works/OL32342092W",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "f1d50569f8a560639675b95da70ec4e50f0470975ab8f84a22df4f739bc7ca7a",
-        "verifiedAt": "2026-07-27T13:46:33.369687Z",
+        "verifiedAt": "2026-08-15T18:53:06.253070Z",
         "resolvedTitle": "Democracy in America",
         "resolvedAuthor": "Alexis de Tocqueville",
         "sourceDescription": "Observação fundamental sobre democracia, igualdade, costumes cívicos e instituições nos Estados Unidos."
@@ -892,10 +893,10 @@
       "priority": 3,
       "expiryDate": null,
       "createdAt": "2026-08-04T12:24:58.543131Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "ai-catalogue-candidate",
       "externalId": "openlibrary:/works/OL1068091W",
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "openlibrary",
@@ -906,7 +907,8 @@
         "resolvedTitle": "On Liberty",
         "resolvedAuthor": "John Stuart Mill",
         "sourceDescription": "Defesa influente da liberdade individual, do debate público e dos limites do poder social e estatal."
-      }
+      },
+      "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=On+Liberty&author=John+Stuart+Mill&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Max retries exceeded with url: /search.json?title=On+Liberty&author=John+Stuart+Mill&limit=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='openlibrary.org', port=443) at 0x7fc91e3f2560>, 'Connection to openlibrary.org timed out. (connect timeout=5)'))"
     },
     {
       "id": "ai_book_5fe008c4f4854e1d",
@@ -968,10 +970,10 @@
       "id": "rss_podcast_f886e3e9cf955b02",
       "type": "podcast",
       "category": "Podcast",
-      "title": "O que pretende avaliar a auditoria à PJ? E será esta capaz de",
-      "editorialTitle": "O que pretende avaliar a auditoria à PJ? E será esta capaz de",
+      "title": "O que pretende avaliar a auditoria à PJ? E será esta capaz de esclarecer as polémicas em torno de Luís Neves?",
+      "editorialTitle": "O que pretende avaliar a auditoria à PJ? E será esta capaz",
       "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre os temas e questões de o que pretende avaliar a auditoria à pj? e será esta capaz de.",
+      "description": "Análise sobre os temas e questões de o que pretende avaliar a auditoria à pj? e será esta capaz de esclarecer as polémicas em torno de.",
       "imageUrl": "/covers/podcast_o_que_pretende_avaliar_a_auditoria___pj__e_ser__esta_15b535c3_f886e3e9cf95.jpg",
       "link": "https://omny.fm/shows/linhas-vermelhas/o-que-pretende-avaliar-a-auditoria-pj-e-ser-esta-capaz-de-esclarecer-as-pol-micas-em-torno-de-lu-s-neves",
       "externalId": "0d6857a9-9b41-42b2-9363-b4a2013a2388",
@@ -1002,9 +1004,9 @@
         "resolvedAuthor": "Linhas Vermelhas",
         "sourcePublishedAt": "2026-08-11T16:52:06Z",
         "sourceDescription": "Esta semana, Miguel Prata Roque e Bruno Bobone analisam a auditoria à Polícia Judiciária, pedida pelo atual diretor nacional da PJ e autorizada pela ministra da Justiça, Rita Alarcão Júdice, na sequência das polémicas em torno de Luís Neves, e a decisão do Presidente da República de submeter a Lei do Retorno e Asilo à fiscalização preventiva do Tribunal…",
-        "editorialDescription": "Análise sobre os temas e questões de o que pretende avaliar a auditoria à pj? e será esta capaz de.",
+        "editorialDescription": "Análise sobre os temas e questões de o que pretende avaliar a auditoria à pj? e será esta capaz de esclarecer as polémicas em torno de.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "c8f2c6954e198c15e79140d09f03efa585669698ebd108d5d4afca62bd649ecd",
+        "editorialSourceHash": "201c367fe90d158d9a5ffb69ba00ce392469626b83d130bf5f74cfb26e578031",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1012,8 +1014,8 @@
       "id": "rss_podcast_e114a4613e91738c",
       "type": "podcast",
       "category": "Podcast",
-      "title": "Sugestão de Verão: Joana Marques e Ricardo Araújo Pereira sobre rir de",
-      "editorialTitle": "Sugestão de Verão: Joana Marques e Ricardo Araújo Pereira sobre rir de",
+      "title": "Sugestão de Verão: Joana Marques e Ricardo Araújo Pereira sobre rir de tudo e rir de nada",
+      "editorialTitle": "Sugestão de Verão: Joana Marques e Ricardo Araújo Pereira sobre rir",
       "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
       "description": "Análise sobre reedição do arquivo de podcasts da SIC. O primeiro podcast original de Ricardo Araújo Pereira.",
       "imageUrl": "/covers/podcast_sugest_o_de_ver_o__joana_marques_e_ricardo_ara_jo_pe_be448308_e114a4613e91.jpg",
@@ -1048,7 +1050,7 @@
         "sourceDescription": "Reedição do arquivo de podcasts da SIC. Episódio publicado originalmente em novembro de 2023, de “Coisa Que Não Edifica Nem Destrói”. o primeiro podcast original de Ricardo Araújo Pereira. Ricardo Araújo Pereira discorre chatamente sobre uma personagem fictícia do século XVIII que quer rir de tudo e um bispo real do século IV que não ri de nada.",
         "editorialDescription": "Análise sobre reedição do arquivo de podcasts da SIC. O primeiro podcast original de Ricardo Araújo Pereira.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "2fc3f5e39723c88ed38feeb66587cc15bfff71e37518200b96e3299b8279f066",
+        "editorialSourceHash": "81fe33d91088da92e17c60ca42c03331c3a32b33547af0ed5e8c581f93dac9a1",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1084,10 +1086,10 @@
       "id": "rss_highlight_5468b1fd36dc5df6",
       "type": "highlight",
       "category": "Destaque",
-      "title": "Incêndios Florestais, Neutralidade Carbónica e Deslocalizaçã",
-      "authorOrMeta": "observador.pt",
+      "title": "Incêndios florestais, neutralidade carbónica e deslocalização industrial",
+      "authorOrMeta": "Daniel Lacalle",
       "description": "As políticas climáticas da Europa funcionaram como um gigantesco subsídio ao crescimento chinês e indiano, pago pelos consumidores dos próprios países que as adoptaram.",
-      "imageUrl": "/covers/highlight_inc_ndios_florestais__neutralidade_carb_nica_e_des_e4b1ae76_7c9099bcd89b.jpg",
+      "imageUrl": "/covers/highlight_inc_ndios_florestais__neutralidade_carb_nica_e_des_5f77b65d_7c9099bcd89b.jpg",
       "link": "https://observador.pt/opiniao/incendios-florestais-neutralidade-carbonica-e-deslocalizacao-industrial/",
       "externalId": "article:url:5468b1fd36dc5df6ee6ff16e",
       "priority": 4,
@@ -1110,25 +1112,26 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:5468b1fd36dc5df6ee6ff16e",
-        "score": 1.0,
-        "coverHash": "75a43085d92ac9cdba6b71a190cd5bec8e3bb88fa396051349d800ae41ca3965",
-        "verifiedAt": "2026-08-14T05:51:30.897141Z",
-        "resolvedTitle": "Incêndios Florestais, Neutralidade Carbónica e Deslocalizaçã",
-        "resolvedAuthor": "observador.pt",
+        "score": 0.8572,
+        "coverHash": "2cfd00080ef658b0246e374489623383165f1c66608514728146bbe464a5f2d7",
+        "verifiedAt": "2026-08-15T18:52:35.145886Z",
+        "resolvedTitle": "Incêndios florestais, neutralidade carbónica e deslocalização industrial",
+        "resolvedAuthor": "Daniel Lacalle",
         "sourcePublishedAt": "2026-08-13T23:21:23Z",
         "sourceDescription": "As políticas climáticas da Europa funcionaram como um gigantesco subsídio ao crescimento chinês e indiano, pago pelos consumidores dos próprios países que as adoptaram."
-      }
+      },
+      "editorialTitle": "Incêndios florestais, neutralidade carbónica e deslocalização"
     },
     {
       "id": "rss_highlight_2e27669a9ba13dfe",
       "type": "highlight",
       "category": "Destaque",
-      "title": "Plano para Vale de S. António: Mais uma oportunidade perdida",
-      "authorOrMeta": "observador.pt",
+      "title": "Plano para Vale de S. António: Mais uma oportunidade perdida?",
+      "authorOrMeta": "Augusto Vasco Costa",
       "description": "Será vivendo em dispendiosas torres de 18 pisos, rodeadas por “amplos espaços verdes” que, pela sua manutenção elevada, viram “terras secas de ninguém”, que vamos mitigar a crise da habitação?",
-      "imageUrl": "/covers/highlight_plano_para_vale_de_s__ant_nio__mais_uma_oportunida_cdb88e87_d9a256018b4a.jpg",
+      "imageUrl": "/covers/highlight_plano_para_vale_de_s__ant_nio__mais_uma_oportunida_3495d765_d9a256018b4a.jpg",
       "link": "https://observador.pt/opiniao/plano-para-vale-de-s-antonio-mais-uma-oportunidade-perdida/",
       "externalId": "article:url:2e27669a9ba13dfe868463ba",
       "priority": 4,
@@ -1151,13 +1154,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:2e27669a9ba13dfe868463ba",
         "score": 1.0,
-        "coverHash": "2bc9f0a2f26b601ac4a8469206343ae8a683e43ed2c90388bb59097ac85071ff",
-        "verifiedAt": "2026-08-14T05:51:39.152183Z",
-        "resolvedTitle": "Plano para Vale de S. António: Mais uma oportunidade perdida",
-        "resolvedAuthor": "observador.pt",
+        "coverHash": "92f040db6059dfbd74afdedb5ffd3e3829184740553485537e3d08dae9848233",
+        "verifiedAt": "2026-08-15T18:52:36.275538Z",
+        "resolvedTitle": "Plano para Vale de S. António: Mais uma oportunidade perdida?",
+        "resolvedAuthor": "Augusto Vasco Costa",
         "sourcePublishedAt": "2026-08-13T23:11:03Z",
         "sourceDescription": "Será vivendo em dispendiosas torres de 18 pisos, rodeadas por “amplos espaços verdes” que, pela sua manutenção elevada, viram “terras secas de ninguém”, que vamos mitigar a crise da habitação?"
       }
@@ -1245,6 +1248,53 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-14T23:08:41Z",
         "sourceDescription": "Uma criança com Necessidades Educativas Especiais não pode ser tratada como uma variável que se encaixa quando houver disponibilidade."
+      }
+    },
+    {
+      "id": "rss_podcast_9f0e5a3b04fcd5e9",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Economia está no bom caminho ou é preciso ser mais exigente?",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “Economia está no bom caminho ou é preciso ser mais exigente?” do podcast Fora do Baralho, publicado em 14/08/2026.",
+      "imageUrl": "/covers/podcast_economia_est__no_bom_caminho_ou___preciso_ser_mais_e_fd7f93e8_9f0e5a3b04fc.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/economia-est-no-bom-caminho-ou-preciso-ser-mais-exigente",
+      "externalId": "cf0b1c80-a61a-40d5-a6bd-b4a600ee396b",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-14T18:00:00Z",
+      "expiryDate": "2026-08-24T18:00:00Z",
+      "createdAt": "2026-08-15T18:53:26.660742Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "cf0b1c80-a61a-40d5-a6bd-b4a600ee396b",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "cf0b1c80-a61a-40d5-a6bd-b4a600ee396b",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-08-15T04:52:43.319761Z",
+        "resolvedTitle": "Economia está no bom caminho ou é preciso ser mais exigente?",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-08-14T18:00:00Z",
+        "sourceDescription": "Episódio “Economia está no bom caminho ou é preciso ser mais exigente?” do podcast Fora do Baralho, publicado em 14/08/2026.",
+        "editorialDescription": "Análise sobre episódio “Economia está no bom caminho ou é preciso ser mais exigente?” do podcast Fora do Baralho, publicado em 14/08/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "671f3884b396dd65733607d28323b7f78aacd9937e88de6d681476276a9d115c",
+        "editorialDescriptionProvider": "extractive"
+      },
+      "selectionRecovery": {
+        "slot": "q2",
+        "mode": "recency_relaxed"
       }
     }
   ],
@@ -1871,5 +1921,20 @@
       "publishedDraftId": "draft_b5668473e32c5716b1fb",
       "instagramPostId": "18110044732965759"
     }
-  ]
+  ],
+  "readiness": {
+    "postType": "sunday_standard",
+    "strictCounts": {
+      "book": 6,
+      "podcast": 0,
+      "movie": 4,
+      "nostalgia": 4,
+      "investigation": 2,
+      "highlight": 5
+    },
+    "missingSlots": [
+      "q2/podcast"
+    ],
+    "fallbackRequired": true
+  }
 }

@@ -3,7 +3,7 @@
   "canonicalLink": "https://openlibrary.org/works/OL1168007W",
   "coverHash": "a5651813831697703797327eb6cffa933b63d9e632f89f1d81e37f99a3e5c41e",
   "coverSourceMime": "image/jpeg",
-  "coverSourceUrl": "https://ia801701.us.archive.org/view_archive.php?archive=%2F4%2Fitems%2Fl_covers_0011%2Fl_covers_0011_26.zip&file=0011261770-L.jpg",
+  "coverSourceUrl": "https://ia600505.us.archive.org/view_archive.php?archive=%2F14%2Fitems%2Fl_covers_0011%2Fl_covers_0011_26.zip&file=0011261770-L.jpg",
   "entityId": "openlibrary:/works/OL1168007W",
   "expiryDate": null,
   "height": 500,
@@ -16,6 +16,6 @@
   "title": "Animal Farm",
   "titleNormalized": "animal farm",
   "type": "book",
-  "verifiedAt": "2026-07-20T12:29:17.546939Z",
+  "verifiedAt": "2026-08-15T18:53:00.632818Z",
   "width": 330
 }
