@@ -1613,6 +1613,16 @@ interface OpenLibraryDocument {
   first_publish_year?: number;
 }
 
+function openLibraryWorkUrl(key: string, title: string): string | null {
+  const match = key.trim().match(/^\/works\/(OL\d+W)$/i);
+  if (!match) return null;
+  const workPath = `/works/${match[1].toUpperCase()}`;
+  const slug = title.normalize("NFKC").trim().replace(/\s+/g, "_");
+  return slug
+    ? `https://openlibrary.org${workPath}/${encodeURIComponent(slug)}`
+    : `https://openlibrary.org${workPath}`;
+}
+
 async function resolveBookWithOpenLibrary(title: string): Promise<Candidate | null> {
   const url = new URL("https://openlibrary.org/search.json");
   url.searchParams.set("title", title);
@@ -1646,12 +1656,14 @@ async function resolveBookWithOpenLibrary(title: string): Promise<Candidate | nu
       if (!image) continue;
       const authors = sanitizeText(document.author_name!.slice(0, 4).join(", "), 260);
       const canonicalTitle = sanitizeText(document.title, 300);
+      const canonicalLink = openLibraryWorkUrl(document.key!, canonicalTitle);
+      if (!canonicalLink) continue;
       const year = document.first_publish_year;
       return {
         provider: "openlibrary",
         type: "book",
         title: canonicalTitle,
-        link: `https://openlibrary.org${document.key}`,
+        link: canonicalLink,
         authorOrMeta: authors,
         description: year
           ? `Livro “${canonicalTitle}”, de ${authors}, publicado originalmente em ${year}.`

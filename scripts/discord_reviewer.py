@@ -14,6 +14,7 @@ import base64
 import threading
 import time
 import unicodedata
+import uuid
 from dotenv import load_dotenv
 from publication_schedule import (
     PUBLICATION_TIMEZONE_NAME,
@@ -244,7 +245,7 @@ def update_github_file(file_path, content_bytes, commit_message, sha=None):
     except Exception as e:
         return str(e)
 
-def trigger_github_workflow(workflow_name):
+def trigger_github_workflow(workflow_name, inputs=None):
     """Triggers a GitHub Actions workflow dispatch"""
     if not GITHUB_REPO or not GITHUB_TOKEN:
         return "Erro: GITHUB_REPO ou GITHUB_TOKEN não configurados nos Secrets do Hugging Face."
@@ -254,9 +255,14 @@ def trigger_github_workflow(workflow_name):
         "Authorization": f"token {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
-    payload = {
-        "ref": "main"
+    payload = {"ref": "main"}
+    normalized_inputs = {
+        str(key): str(value)
+        for key, value in (inputs or {}).items()
+        if str(key).strip() and value is not None
     }
+    if normalized_inputs:
+        payload["inputs"] = normalized_inputs
     try:
         r = requests.post(url, json=payload, headers=headers, timeout=15)
         if r.status_code == 204:
@@ -264,6 +270,19 @@ def trigger_github_workflow(workflow_name):
         return f"Status {r.status_code} - {r.text}"
     except Exception as e:
         return str(e)
+
+
+def trigger_review_regeneration(
+    workflow_name="instagram_generate.yml",
+    inputs=None,
+):
+    """Start an intentional replacement with a retry-stable review identity."""
+    workflow_inputs = dict(inputs or {})
+    workflow_inputs["review_request_id"] = uuid.uuid4().hex
+    return trigger_github_workflow(
+        workflow_name,
+        inputs=workflow_inputs,
+    )
 
 # ===================== CHATBOT Q&A API =====================
 def query_politometro_chat(query, user_id="unknown"):
@@ -434,13 +453,41 @@ def search_duckduckgo_link(query):
         print(f"Error searching DDG: {e}")
     return None
 
-async def update_recommendation_field(original_msg_id, quadrant, field_name, new_value):
+def _review_draft_identity_error(
+    draft_data,
+    expected_draft_id="",
+    expected_hash_prefix="",
+):
+    """Reject corrections made from a card that is no longer current."""
+    if expected_draft_id and draft_data.get("draft_id") != expected_draft_id:
+        return "Este cartão já não corresponde ao rascunho atual."
+    content_hash = str(draft_data.get("content_hash") or "")
+    if expected_hash_prefix and not content_hash.startswith(expected_hash_prefix):
+        return "Este cartão já não corresponde ao rascunho atual."
+    return None
+
+
+async def update_recommendation_field(
+    original_msg_id,
+    quadrant,
+    field_name,
+    new_value,
+    expected_draft_id="",
+    expected_hash_prefix="",
+):
     """Helper to update a recommendation field in both draft and main DB, and trigger regeneration."""
     draft_content, draft_sha = get_github_file("scripts/review_draft.json")
     if not draft_content:
         return f"Erro ao obter review_draft.json: {draft_sha}"
         
     draft_data = json.loads(draft_content.decode("utf-8"))
+    identity_error = _review_draft_identity_error(
+        draft_data,
+        expected_draft_id,
+        expected_hash_prefix,
+    )
+    if identity_error:
+        return identity_error
     item = draft_data.get(quadrant)
     if not item:
         return f"Quadrante {quadrant} não encontrado no rascunho."
@@ -463,6 +510,9 @@ async def update_recommendation_field(original_msg_id, quadrant, field_name, new
                 break
         if updated:
             break
+
+    if not updated:
+        return f"Recomendação {item_id} não encontrada na base de dados."
             
     new_rec_bytes = json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8")
     res_db = update_github_file("website/public/recommendations.json", new_rec_bytes, f"Update {field_name} of {item_id} [bot]", sha=rec_sha)
@@ -474,10 +524,59 @@ async def update_recommendation_field(original_msg_id, quadrant, field_name, new
     if res_draft is not True:
         return f"Erro ao salvar review_draft.json: {res_draft}"
         
-    res_wf = trigger_github_workflow("instagram_generate.yml")
+    res_wf = trigger_review_regeneration()
     if res_wf is not True:
         return f"Erro ao acionar workflow: {res_wf}"
-        
+
+    await mark_review_superseded(
+        original_msg_id,
+        "❌ Proposta substituída após correção. A gerar uma nova proposta...",
+    )
+    return True
+
+
+async def replace_review_caption(
+    original_msg_id,
+    caption,
+    expected_draft_id="",
+    expected_hash_prefix="",
+):
+    """Regenerate the exact draft with reviewer-authored caption text."""
+    normalized_caption = str(caption or "").replace("\r\n", "\n").replace(
+        "\r", "\n"
+    ).strip()
+    if not normalized_caption:
+        return "A legenda não pode ficar vazia."
+    if len(normalized_caption) > 2200:
+        return "A legenda excede o limite de 2200 caracteres do Instagram."
+
+    draft_content, draft_sha = get_github_file("scripts/review_draft.json")
+    if not draft_content:
+        return f"Erro ao obter review_draft.json: {draft_sha}"
+    try:
+        draft_data = json.loads(draft_content.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        return f"Rascunho inválido: {exc}"
+    identity_error = _review_draft_identity_error(
+        draft_data,
+        expected_draft_id,
+        expected_hash_prefix,
+    )
+    if identity_error:
+        return identity_error
+
+    encoded_caption = base64.b64encode(
+        normalized_caption.encode("utf-8")
+    ).decode("ascii")
+    workflow = trigger_review_regeneration(
+        inputs={"caption_override_b64": encoded_caption}
+    )
+    if workflow is not True:
+        return f"Erro ao acionar workflow: {workflow}"
+    await mark_review_superseded(
+        original_msg_id,
+        "❌ Proposta substituída após correção da legenda. A gerar uma nova proposta...",
+    )
     return True
 
 
@@ -520,7 +619,13 @@ def _review_cover_name(current_name, cover_bytes):
     return f"{stem}_review_{digest}.jpg"
 
 
-async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
+async def replace_review_cover(
+    original_msg_id,
+    quadrant,
+    raw_image_bytes,
+    expected_draft_id="",
+    expected_hash_prefix="",
+):
     """Persist a corrected cover, manifest and hashes before regeneration."""
     from io import BytesIO
     from PIL import Image, ImageOps, UnidentifiedImageError
@@ -539,6 +644,13 @@ async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
     if not draft_content:
         return f"Erro ao obter review_draft.json: {draft_sha}"
     draft_data = json.loads(draft_content.decode("utf-8"))
+    identity_error = _review_draft_identity_error(
+        draft_data,
+        expected_draft_id,
+        expected_hash_prefix,
+    )
+    if identity_error:
+        return identity_error
     draft_item = draft_data.get(quadrant)
     if not isinstance(draft_item, dict):
         return f"Quadrante {quadrant} não encontrado no rascunho."
@@ -614,7 +726,7 @@ async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
         if result is not True:
             return f"Erro ao guardar {path}: {result}"
 
-    workflow = trigger_github_workflow("instagram_generate.yml")
+    workflow = trigger_review_regeneration()
     return True if workflow is True else f"Erro ao acionar workflow: {workflow}"
 
 
@@ -743,6 +855,16 @@ class RejectionReasonSelect(discord.ui.Select):
                     continue
                 
                 draft_data = json.loads(draft_content.decode("utf-8"))
+                identity_error = _review_draft_identity_error(
+                    draft_data,
+                    self.expected_draft_id,
+                    self.expected_hash_prefix,
+                )
+                if identity_error:
+                    await interaction.followup.send(
+                        f"❌ {identity_error}", ephemeral=True
+                    )
+                    continue
                 quadrants = {k: v for k, v in draft_data.items() if k in ["q1", "q2", "q3", "q4"]}
                 for qkey, item in quadrants.items():
                     if isinstance(item, dict):
@@ -756,7 +878,7 @@ class RejectionReasonSelect(discord.ui.Select):
                     await interaction.followup.send(f"❌ Erro ao atualizar layout no GitHub: {res_draft}", ephemeral=True)
                     continue
 
-                res_wf = trigger_github_workflow("instagram_generate.yml")
+                res_wf = trigger_review_regeneration()
                 if res_wf is True:
                     try:
                         old_msg = await channel.fetch_message(self.original_msg_id)
@@ -768,7 +890,13 @@ class RejectionReasonSelect(discord.ui.Select):
 
             elif reason == "wrong_covers":
                 quadrant_view = discord.ui.View()
-                quadrant_view.add_item(QuadrantSelect(self.original_msg_id))
+                quadrant_view.add_item(
+                    QuadrantSelect(
+                        self.original_msg_id,
+                        self.expected_draft_id,
+                        self.expected_hash_prefix,
+                    )
+                )
                 await interaction.followup.send(
                     "📚 Qual é o quadrante da capa incorreta?",
                     view=quadrant_view,
@@ -776,9 +904,14 @@ class RejectionReasonSelect(discord.ui.Select):
                 )
 
             elif reason == "typo_text":
-                waiting_for_text = True
+                waiting_for_text = {
+                    "original_msg_id": self.original_msg_id,
+                    "expected_draft_id": self.expected_draft_id,
+                    "expected_hash_prefix": self.expected_hash_prefix,
+                    "requester_id": str(interaction.user.id),
+                }
                 await interaction.followup.send(
-                    "✍️ Por favor, **responda a esta mensagem enviando o texto da legenda corrigido**.", 
+                    "✍️ Envia agora o **texto completo da legenda corrigida**.",
                     ephemeral=True
                 )
 
@@ -794,7 +927,13 @@ class RejectionReasonSelect(discord.ui.Select):
 
             elif reason == "bad_links":
                 link_quad_view = discord.ui.View()
-                link_quad_view.add_item(LinkQuadrantSelect(self.original_msg_id))
+                link_quad_view.add_item(
+                    LinkQuadrantSelect(
+                        self.original_msg_id,
+                        self.expected_draft_id,
+                        self.expected_hash_prefix,
+                    )
+                )
                 await interaction.followup.send(
                     "🔗 Qual é o quadrante do link incorreto?",
                     view=link_quad_view,
@@ -813,9 +952,7 @@ class RejectionReasonSelect(discord.ui.Select):
                             f"❌ {rejected}", ephemeral=True
                         )
                         continue
-                    res_wf = trigger_github_workflow(
-                        "instagram_generate.yml"
-                    )
+                    res_wf = trigger_review_regeneration()
                     if res_wf is True:
                         try:
                             old_msg = await channel.fetch_message(
@@ -880,7 +1017,7 @@ class RejectionReasonSelect(discord.ui.Select):
                     await interaction.followup.send(f"❌ Erro ao atualizar recommendations.json: {res_db}", ephemeral=True)
                     continue
 
-                res_wf = trigger_github_workflow("instagram_generate.yml")
+                res_wf = trigger_review_regeneration()
                 if res_wf is True:
                     try:
                         old_msg = await channel.fetch_message(self.original_msg_id)
@@ -908,7 +1045,12 @@ class RejectionReasonView(discord.ui.View):
         )
 
 class LinkQuadrantSelect(discord.ui.Select):
-    def __init__(self, original_msg_id):
+    def __init__(
+        self,
+        original_msg_id,
+        expected_draft_id="",
+        expected_hash_prefix="",
+    ):
         options = [
             discord.SelectOption(label="Quadrante 1 (Superior Esquerdo)", value="q1"),
             discord.SelectOption(label="Quadrante 2 (Superior Direito)", value="q2"),
@@ -917,10 +1059,17 @@ class LinkQuadrantSelect(discord.ui.Select):
         ]
         super().__init__(placeholder="Selecione o quadrante do link incorreto...", options=options)
         self.original_msg_id = original_msg_id
+        self.expected_draft_id = expected_draft_id
+        self.expected_hash_prefix = expected_hash_prefix
 
     async def callback(self, interaction: discord.Interaction):
         quad = self.values[0]
-        view = LinkCorrectionView(self.original_msg_id, quad)
+        view = LinkCorrectionView(
+            self.original_msg_id,
+            quad,
+            self.expected_draft_id,
+            self.expected_hash_prefix,
+        )
         await interaction.response.send_message(
             f"🔗 Como pretendes corrigir o link do quadrante **{quad}**?",
             view=view,
@@ -928,10 +1077,18 @@ class LinkQuadrantSelect(discord.ui.Select):
         )
 
 class LinkCorrectionView(discord.ui.View):
-    def __init__(self, original_msg_id, quadrant):
+    def __init__(
+        self,
+        original_msg_id,
+        quadrant,
+        expected_draft_id="",
+        expected_hash_prefix="",
+    ):
         super().__init__(timeout=120)
         self.original_msg_id = original_msg_id
         self.quadrant = quadrant
+        self.expected_draft_id = expected_draft_id
+        self.expected_hash_prefix = expected_hash_prefix
 
     @discord.ui.button(label="🔍 Pesquisa Automática", style=discord.ButtonStyle.success, custom_id="link_auto_search_item")
     async def auto_search_item(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -966,7 +1123,14 @@ class LinkCorrectionView(discord.ui.View):
             return
             
         await interaction.followup.send(f"✅ Link encontrado: <{found_url}>\nA atualizar no GitHub...", ephemeral=True)
-        res = await update_recommendation_field(self.original_msg_id, self.quadrant, "link", found_url)
+        res = await update_recommendation_field(
+            self.original_msg_id,
+            self.quadrant,
+            "link",
+            found_url,
+            self.expected_draft_id,
+            self.expected_hash_prefix,
+        )
         if res is True:
             await interaction.followup.send(f"🔗 Link do quadrante **{self.quadrant}** atualizado! A regerar proposta...", ephemeral=True)
         else:
@@ -977,7 +1141,9 @@ class LinkCorrectionView(discord.ui.View):
         global waiting_for_link_query
         waiting_for_link_query = {
             "quadrant": self.quadrant,
-            "original_msg_id": self.original_msg_id
+            "original_msg_id": self.original_msg_id,
+            "expected_draft_id": self.expected_draft_id,
+            "expected_hash_prefix": self.expected_hash_prefix,
         }
         await interaction.response.send_message(
             "✍️ Escreve o **termo de pesquisa** para eu tentar encontrar o link correto no DuckDuckGo.",
@@ -989,7 +1155,9 @@ class LinkCorrectionView(discord.ui.View):
         global waiting_for_link_manual
         waiting_for_link_manual = {
             "quadrant": self.quadrant,
-            "original_msg_id": self.original_msg_id
+            "original_msg_id": self.original_msg_id,
+            "expected_draft_id": self.expected_draft_id,
+            "expected_hash_prefix": self.expected_hash_prefix,
         }
         await interaction.response.send_message(
             "✍️ Envia o **link direto** (começando com `http` ou `https`) que queres associar.",
@@ -997,7 +1165,12 @@ class LinkCorrectionView(discord.ui.View):
         )
 
 class QuadrantSelect(discord.ui.Select):
-    def __init__(self, original_msg_id):
+    def __init__(
+        self,
+        original_msg_id,
+        expected_draft_id="",
+        expected_hash_prefix="",
+    ):
         options = [
             discord.SelectOption(label="Quadrante 1 (Superior Esquerdo)", value="q1"),
             discord.SelectOption(label="Quadrante 2 (Superior Direito)", value="q2"),
@@ -1006,10 +1179,17 @@ class QuadrantSelect(discord.ui.Select):
         ]
         super().__init__(placeholder="Selecione o quadrante da capa incorreta...", options=options)
         self.original_msg_id = original_msg_id
+        self.expected_draft_id = expected_draft_id
+        self.expected_hash_prefix = expected_hash_prefix
 
     async def callback(self, interaction: discord.Interaction):
         quad = self.values[0]
-        view = CoverCorrectionView(self.original_msg_id, quad)
+        view = CoverCorrectionView(
+            self.original_msg_id,
+            quad,
+            self.expected_draft_id,
+            self.expected_hash_prefix,
+        )
         await interaction.response.send_message(
             f"📚 Como pretendes corrigir a capa do quadrante **{quad}**?",
             view=view,
@@ -1017,10 +1197,18 @@ class QuadrantSelect(discord.ui.Select):
         )
 
 class CoverCorrectionView(discord.ui.View):
-    def __init__(self, original_msg_id, quadrant):
+    def __init__(
+        self,
+        original_msg_id,
+        quadrant,
+        expected_draft_id="",
+        expected_hash_prefix="",
+    ):
         super().__init__(timeout=120)
         self.original_msg_id = original_msg_id
         self.quadrant = quadrant
+        self.expected_draft_id = expected_draft_id
+        self.expected_hash_prefix = expected_hash_prefix
 
     @discord.ui.button(label="🔍 Pesquisa Automática", style=discord.ButtonStyle.success, custom_id="cover_auto_search_item")
     async def auto_search_item(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -1068,7 +1256,11 @@ class CoverCorrectionView(discord.ui.View):
             image_bytes = bio.getvalue()
             
             result = await replace_review_cover(
-                self.original_msg_id, self.quadrant, image_bytes
+                self.original_msg_id,
+                self.quadrant,
+                image_bytes,
+                self.expected_draft_id,
+                self.expected_hash_prefix,
             )
             if result is True:
                 await mark_review_superseded(
@@ -1086,7 +1278,9 @@ class CoverCorrectionView(discord.ui.View):
         global waiting_for_cover_query
         waiting_for_cover_query = {
             "quadrant": self.quadrant,
-            "original_msg_id": self.original_msg_id
+            "original_msg_id": self.original_msg_id,
+            "expected_draft_id": self.expected_draft_id,
+            "expected_hash_prefix": self.expected_hash_prefix,
         }
         await interaction.response.send_message(
             f"🔍 Escreve o **termo de pesquisa** para eu tentar encontrar a capa do quadrante **{self.quadrant}** automaticamente.",
@@ -1098,7 +1292,9 @@ class CoverCorrectionView(discord.ui.View):
         global waiting_for_image_quadrant
         waiting_for_image_quadrant = {
             "quadrant": self.quadrant,
-            "original_msg_id": self.original_msg_id
+            "original_msg_id": self.original_msg_id,
+            "expected_draft_id": self.expected_draft_id,
+            "expected_hash_prefix": self.expected_hash_prefix,
         }
         await interaction.response.send_message(
             f"📥 Envia a nova imagem de capa em anexo para substituir a capa do quadrante **{self.quadrant}**.",
@@ -2354,16 +2550,26 @@ async def on_message(message):
 
     if is_allowed:
         # 1. Caption text correction
-        if waiting_for_text and message.reference:
+        if (
+            waiting_for_text
+            and str(message.author.id)
+            == waiting_for_text.get("requester_id", "")
+        ):
+            caption_info = waiting_for_text
             await message.channel.typing()
-            content_bytes = message.content.encode("utf-8")
-            res = update_github_file("website/public/current_caption.txt", content_bytes, "Update caption text [bot]")
-            
-            waiting_for_text = False
+            res = await replace_review_caption(
+                caption_info["original_msg_id"],
+                message.content,
+                caption_info.get("expected_draft_id", ""),
+                caption_info.get("expected_hash_prefix", ""),
+            )
             if res is True:
-                await message.reply("✍️ Legenda do post atualizada no GitHub! Podes prosseguir com a aprovação.")
+                waiting_for_text = None
+                await message.reply(
+                    "✍️ Legenda corrigida! Está a ser gerada e enviada uma nova proposta para revisão."
+                )
             else:
-                await message.reply(f"❌ Erro ao guardar legenda no GitHub: {res}")
+                await message.reply(f"❌ Não foi possível corrigir a legenda: {res}")
             return
 
         # 2. Manual link correction
@@ -2378,7 +2584,14 @@ async def on_message(message):
                 return
                 
             await message.reply(f"⏳ A atualizar o link do quadrante **{quad}** no GitHub...")
-            res = await update_recommendation_field(quad_info["original_msg_id"], quad, "link", url_input)
+            res = await update_recommendation_field(
+                quad_info["original_msg_id"],
+                quad,
+                "link",
+                url_input,
+                quad_info.get("expected_draft_id", ""),
+                quad_info.get("expected_hash_prefix", ""),
+            )
             if res is True:
                 await message.reply(f"🔗 Link do quadrante **{quad}** atualizado! A regerar proposta de post no GitHub Actions...")
             else:
@@ -2399,7 +2612,14 @@ async def on_message(message):
                 return
                 
             await message.reply(f"✅ Link encontrado: <{found_url}>\nA atualizar no GitHub...")
-            res = await update_recommendation_field(quad_info["original_msg_id"], quad, "link", found_url)
+            res = await update_recommendation_field(
+                quad_info["original_msg_id"],
+                quad,
+                "link",
+                found_url,
+                quad_info.get("expected_draft_id", ""),
+                quad_info.get("expected_hash_prefix", ""),
+            )
             if res is True:
                 await message.reply(f"🔗 Link do quadrante **{quad}** atualizado! A regerar proposta de post no GitHub Actions...")
             else:
@@ -2450,7 +2670,11 @@ async def on_message(message):
                 image_bytes = bio.getvalue()
                 
                 result = await replace_review_cover(
-                    quad_info["original_msg_id"], quad, image_bytes
+                    quad_info["original_msg_id"],
+                    quad,
+                    image_bytes,
+                    quad_info.get("expected_draft_id", ""),
+                    quad_info.get("expected_hash_prefix", ""),
                 )
                 if result is True:
                     await mark_review_superseded(
@@ -2487,7 +2711,11 @@ async def on_message(message):
                             image_bytes = response.read()
                         
                         result = await replace_review_cover(
-                            quad_info["original_msg_id"], quad, image_bytes
+                            quad_info["original_msg_id"],
+                            quad,
+                            image_bytes,
+                            quad_info.get("expected_draft_id", ""),
+                            quad_info.get("expected_hash_prefix", ""),
                         )
                         if result is True:
                             await mark_review_superseded(

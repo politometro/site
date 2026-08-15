@@ -20,6 +20,8 @@ import datetime
 import re
 import copy
 import hashlib
+import base64
+import binascii
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 import requests
 
@@ -1333,7 +1335,11 @@ def _save_story_asset(post_image, output_path=None):
 
 
 def _draft_content_hash(
-    quadrants, post_sha256, caption_sha256, is_test=False
+    quadrants,
+    post_sha256,
+    caption_sha256,
+    is_test=False,
+    review_request_id="",
 ):
     payload = {
         "quadrants": {key: quadrants[key] for key in sorted(quadrants.keys())},
@@ -1341,10 +1347,34 @@ def _draft_content_hash(
         "caption_sha256": caption_sha256,
         "is_test": bool(is_test),
     }
+    clean_request_id = str(review_request_id or "").strip()
+    if clean_request_id:
+        payload["review_request_id"] = clean_request_id
     encoded = json.dumps(
         payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
+
+
+def _decode_caption_override(encoded_caption):
+    """Decode a workflow-safe caption override and enforce Instagram limits."""
+    value = str(encoded_caption or "").strip()
+    if not value:
+        return ""
+    if len(value) > 12000:
+        raise ValueError("A legenda codificada é demasiado longa.")
+    try:
+        caption = base64.b64decode(value, validate=True).decode("utf-8")
+    except (binascii.Error, UnicodeDecodeError) as exc:
+        raise ValueError("A legenda corrigida não está codificada corretamente.") from exc
+    caption = caption.replace("\r\n", "\n").replace("\r", "\n").strip()
+    if not caption:
+        raise ValueError("A legenda corrigida não pode ficar vazia.")
+    if len(caption) > 2200:
+        raise ValueError(
+            "A legenda corrigida excede o limite de 2200 caracteres do Instagram."
+        )
+    return caption
 
 
 def _parse_utc_datetime(value):
@@ -1505,6 +1535,7 @@ def commit_approved_draft(
         post_sha,
         caption_sha,
         is_test=draft.get("is_test", False),
+        review_request_id=draft.get("review_request_id", ""),
     )
     if expected_hash != content_hash:
         raise RuntimeError("O conteúdo do rascunho não corresponde ao hash aprovado.")
@@ -1650,7 +1681,31 @@ def generate_production_post():
         default="",
         help="Select one specific verified queue item for a single-card edition",
     )
+    parser.add_argument(
+        "--review-request-id",
+        default="",
+        help="Bind an intentional reviewer-requested replacement to a unique ID",
+    )
+    parser.add_argument(
+        "--caption-override-b64",
+        default="",
+        help="Replace the generated caption with reviewer text encoded as base64",
+    )
     args = parser.parse_args()
+
+    review_request_id = str(args.review_request_id or "").strip()
+    if review_request_id and not re.fullmatch(
+        r"[A-Za-z0-9_-]{8,80}", review_request_id
+    ):
+        print("ERROR: Invalid --review-request-id")
+        sys.exit(1)
+    try:
+        caption_override = _decode_caption_override(
+            args.caption_override_b64
+        )
+    except ValueError as exc:
+        print(f"ERROR: {exc}")
+        sys.exit(1)
 
     post_type = args.post_type
     if post_type == "auto":
@@ -2036,6 +2091,8 @@ def generate_production_post():
         post_type=post_type,
         max_chars=1800,
     )
+    if caption_override:
+        caption = caption_override
     
     with open(OUTPUT_CAPTION_PATH, "w", encoding="utf-8") as f:
         f.write(caption)
@@ -2057,6 +2114,7 @@ def generate_production_post():
             post_sha,
             caption_sha,
             is_test=args.test,
+            review_request_id=review_request_id,
         )
         draft_data = {
             "schema_version": 2,
@@ -2070,6 +2128,8 @@ def generate_production_post():
             "approval": {"approved": False},
             **quadrants,
         }
+        if review_request_id:
+            draft_data["review_request_id"] = review_request_id
         with open(DRAFT_FILE, "w", encoding="utf-8") as f:
             json.dump(draft_data, f, indent=2, ensure_ascii=False)
         print(

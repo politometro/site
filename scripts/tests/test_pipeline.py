@@ -1753,6 +1753,49 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
         self.assertIn(("book_approved", True), calls)
 
 
+class ReviewReplacementIdentityTests(unittest.TestCase):
+    def test_review_request_id_changes_hash_but_is_retry_stable(self):
+        quadrants = {"q1": verified_item("book", "identity")}
+        normal = generate_post._draft_content_hash(
+            quadrants,
+            "post-hash",
+            "caption-hash",
+        )
+        first = generate_post._draft_content_hash(
+            quadrants,
+            "post-hash",
+            "caption-hash",
+            review_request_id="review-request-123",
+        )
+        retry = generate_post._draft_content_hash(
+            quadrants,
+            "post-hash",
+            "caption-hash",
+            review_request_id="review-request-123",
+        )
+
+        self.assertNotEqual(normal, first)
+        self.assertEqual(first, retry)
+
+    def test_caption_override_is_utf8_safe_and_limited(self):
+        caption = "Legenda corrigida sobre política.\n#Politómetro"
+        encoded = generate_post.base64.b64encode(
+            caption.encode("utf-8")
+        ).decode("ascii")
+
+        self.assertEqual(
+            generate_post._decode_caption_override(encoded),
+            caption,
+        )
+        with self.assertRaises(ValueError):
+            generate_post._decode_caption_override("not-base64!")
+        too_long = generate_post.base64.b64encode(
+            ("x" * 2201).encode("utf-8")
+        ).decode("ascii")
+        with self.assertRaises(ValueError):
+            generate_post._decode_caption_override(too_long)
+
+
 class ApprovedDraftCommitTests(unittest.TestCase):
     def test_commit_preserves_reviewed_links_and_images(self):
         with tempfile.TemporaryDirectory() as tmp:

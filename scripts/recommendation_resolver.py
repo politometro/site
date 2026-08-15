@@ -1651,6 +1651,26 @@ def _openlibrary_work_key(link: str) -> str:
     return f"/works/{match.group(1).upper()}" if match else ""
 
 
+def _openlibrary_work_url(work_key: str, title: str) -> str:
+    """Build the human-facing Open Library URL without relying on a redirect."""
+    canonical_key = _openlibrary_work_key(
+        urllib.parse.urljoin("https://openlibrary.org", str(work_key or ""))
+    )
+    if not canonical_key:
+        raise RecommendationResolutionError(
+            "BOOK_NOT_FOUND",
+            "O registo Open Library não contém uma chave de obra válida.",
+        )
+    normalized_title = unicodedata.normalize("NFKC", str(title or "")).strip()
+    slug = re.sub(r"\s+", "_", normalized_title)
+    if not slug:
+        return f"https://openlibrary.org{canonical_key}"
+    # Match JavaScript's encodeURIComponent so both ingestion paths persist
+    # exactly the same canonical link.
+    encoded_slug = urllib.parse.quote(slug, safe="-_.!~*'()")
+    return f"https://openlibrary.org{canonical_key}/{encoded_slug}"
+
+
 def _validate_book_page(item: Mapping[str, Any], link: str) -> EntityResolution:
     host = _hostname(link)
     if not _host_in(host, TRUSTED_BOOK_DOMAINS):
@@ -1804,7 +1824,7 @@ def _resolve_book_openlibrary(
         raise RecommendationResolutionError(
             "COVER_NOT_FOUND", "Registo Open Library sem capa.", item=item
         )
-    link = urllib.parse.urljoin("https://openlibrary.org", work_key)
+    link = _openlibrary_work_url(work_key, str(doc.get("title", "")))
     external_id = f"isbn:{isbn}" if isbn else f"openlibrary:{work_key}"
     return EntityResolution(
         link=_canonicalize_url(link),
@@ -3246,7 +3266,17 @@ def validate_cached_cover(item: Mapping[str, Any]) -> bool:
         if not entity_id or manifest.get("entityId") != entity_id:
             return False
         canonical_link = _canonicalize_url(str(item.get("link", "")))
-        if not canonical_link or manifest.get("canonicalLink") != canonical_link:
+        manifest_link = _canonicalize_url(
+            str(manifest.get("canonicalLink", ""))
+        )
+        links_match = manifest_link == canonical_link
+        if not links_match:
+            cached_work_key = _openlibrary_work_key(manifest_link)
+            item_work_key = _openlibrary_work_key(canonical_link)
+            links_match = bool(
+                cached_work_key and cached_work_key == item_work_key
+            )
+        if not canonical_link or not links_match:
             return False
         expected_hash = str(verification.get("coverHash", ""))
         if not expected_hash or manifest.get("coverHash") != expected_hash:
@@ -3357,6 +3387,12 @@ def _already_verified(
         cached = dict(item)
         editorial_title = str(item.get("editorialTitle", "")).strip()
         cached["title"] = editorial_title or canonical_title
+        if str(item.get("type", "")).casefold() == "book":
+            work_key = _openlibrary_work_key(str(item.get("link", "")))
+            if work_key:
+                cached["link"] = _openlibrary_work_url(
+                    work_key, canonical_title
+                )
         if canonical_author:
             cached["authorOrMeta"] = canonical_author
         editorial_description = str(

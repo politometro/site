@@ -1,3 +1,4 @@
+import asyncio
 import json
 import hashlib
 import sys
@@ -89,6 +90,177 @@ class DiscordApplicationTests(unittest.TestCase):
                 "custom_feedback",
             },
         )
+
+    def test_review_regeneration_dispatches_a_unique_request_identity(self):
+        request_id = "a" * 32
+        with (
+            mock.patch.object(
+                discord_reviewer.uuid,
+                "uuid4",
+                return_value=SimpleNamespace(hex=request_id),
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "trigger_github_workflow",
+                return_value=True,
+            ) as trigger,
+        ):
+            result = discord_reviewer.trigger_review_regeneration()
+
+        self.assertTrue(result)
+        trigger.assert_called_once_with(
+            "instagram_generate.yml",
+            inputs={"review_request_id": request_id},
+        )
+
+    def test_caption_correction_regenerates_with_encoded_text(self):
+        request_id = "b" * 32
+        draft = {
+            "draft_id": "draft_current",
+            "content_hash": "current-hash-full",
+        }
+        with (
+            mock.patch.object(
+                discord_reviewer,
+                "get_github_file",
+                return_value=(json.dumps(draft).encode("utf-8"), "sha"),
+            ),
+            mock.patch.object(
+                discord_reviewer.uuid,
+                "uuid4",
+                return_value=SimpleNamespace(hex=request_id),
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "trigger_github_workflow",
+                return_value=True,
+            ) as trigger,
+            mock.patch.object(
+                discord_reviewer,
+                "mark_review_superseded",
+                new=mock.AsyncMock(return_value=True),
+            ) as supersede,
+        ):
+            result = asyncio.run(
+                discord_reviewer.replace_review_caption(
+                    "100",
+                    "Legenda política corrigida.\n#Politómetro",
+                    "draft_current",
+                    "current-hash",
+                )
+            )
+
+        self.assertTrue(result)
+        inputs = trigger.call_args.kwargs["inputs"]
+        self.assertEqual(inputs["review_request_id"], request_id)
+        self.assertEqual(
+            discord_reviewer.base64.b64decode(
+                inputs["caption_override_b64"]
+            ).decode("utf-8"),
+            "Legenda política corrigida.\n#Politómetro",
+        )
+        supersede.assert_awaited_once()
+
+    def test_link_correction_rejects_a_superseded_review_card(self):
+        draft = {
+            "draft_id": "draft_current",
+            "content_hash": "current-hash",
+            "q1": {"id": "book_1", "link": "https://example.com/old"},
+        }
+        with (
+            mock.patch.object(
+                discord_reviewer,
+                "get_github_file",
+                return_value=(json.dumps(draft).encode("utf-8"), "sha"),
+            ),
+            mock.patch.object(discord_reviewer, "update_github_file") as update,
+            mock.patch.object(
+                discord_reviewer, "trigger_review_regeneration"
+            ) as trigger,
+        ):
+            result = asyncio.run(
+                discord_reviewer.update_recommendation_field(
+                    "100",
+                    "q1",
+                    "link",
+                    "https://example.com/new",
+                    "draft_old",
+                    "old-hash",
+                )
+            )
+
+        self.assertIn("já não corresponde", result)
+        update.assert_not_called()
+        trigger.assert_not_called()
+
+    def test_link_correction_requests_new_card_and_closes_old_card(self):
+        draft = {
+            "draft_id": "draft_current",
+            "content_hash": "current-hash-full",
+            "q1": {"id": "book_1", "link": "https://example.com/old"},
+        }
+        database = {
+            "queue": [
+                {"id": "book_1", "link": "https://example.com/old"}
+            ],
+            "history": [],
+        }
+        written = {}
+
+        def fake_get(path):
+            value = (
+                draft
+                if path == "scripts/review_draft.json"
+                else database
+            )
+            return json.dumps(value).encode("utf-8"), f"sha-{path}"
+
+        def fake_update(path, content, message, sha=None):
+            written[path] = json.loads(content.decode("utf-8"))
+            return True
+
+        with (
+            mock.patch.object(
+                discord_reviewer, "get_github_file", side_effect=fake_get
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "update_github_file",
+                side_effect=fake_update,
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "trigger_review_regeneration",
+                return_value=True,
+            ) as trigger,
+            mock.patch.object(
+                discord_reviewer,
+                "mark_review_superseded",
+                new=mock.AsyncMock(return_value=True),
+            ) as supersede,
+        ):
+            result = asyncio.run(
+                discord_reviewer.update_recommendation_field(
+                    "100",
+                    "q1",
+                    "link",
+                    "https://example.com/new",
+                    "draft_current",
+                    "current-hash",
+                )
+            )
+
+        self.assertTrue(result)
+        self.assertEqual(
+            written["scripts/review_draft.json"]["q1"]["link"],
+            "https://example.com/new",
+        )
+        self.assertEqual(
+            written["website/public/recommendations.json"]["queue"][0]["link"],
+            "https://example.com/new",
+        )
+        trigger.assert_called_once_with()
+        supersede.assert_awaited_once()
 
     def test_review_cover_updates_item_and_identity_manifest_hashes(self):
         item = {

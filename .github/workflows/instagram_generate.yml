@@ -21,6 +21,16 @@ on:
         required: false
         type: boolean
         default: false
+      review_request_id:
+        description: 'Internal ID for an intentional reviewer-requested replacement'
+        required: false
+        type: string
+        default: ''
+      caption_override_b64:
+        description: 'Internal base64 caption supplied by an authorized reviewer'
+        required: false
+        type: string
+        default: ''
       post_type:
         description: 'Post edition to generate'
         required: false
@@ -119,15 +129,21 @@ jobs:
           fi
           if [ "${{ inputs.test_mode }}" = "true" ]; then
             python scripts/generate_post.py --review --test --post-type "$POST_TYPE" \
-              --recommendation-id "${{ inputs.recommendation_id }}"
+              --recommendation-id "${{ inputs.recommendation_id }}" \
+              --review-request-id "$REVIEW_REQUEST_ID" \
+              --caption-override-b64 "$CAPTION_OVERRIDE_B64"
           else
             python scripts/generate_post.py --review --post-type "$POST_TYPE" \
-              --recommendation-id "${{ inputs.recommendation_id }}"
+              --recommendation-id "${{ inputs.recommendation_id }}" \
+              --review-request-id "$REVIEW_REQUEST_ID" \
+              --caption-override-b64 "$CAPTION_OVERRIDE_B64"
           fi
         env:
           GOOGLE_CSE_API_KEY: ${{ secrets.GOOGLE_CSE_API_KEY }}
           GOOGLE_CSE_ID: ${{ secrets.GOOGLE_CSE_ID }}
           IMGBB_API_KEY: ${{ secrets.IMGBB_API_KEY }}
+          REVIEW_REQUEST_ID: ${{ inputs.review_request_id || '' }}
+          CAPTION_OVERRIDE_B64: ${{ inputs.caption_override_b64 || '' }}
 
       - name: Commit and Push Generated Post (Review Mode)
         if: ${{ steps.recovery_guard.outputs.run_generation == 'true' }}

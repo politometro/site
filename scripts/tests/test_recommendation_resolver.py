@@ -316,6 +316,41 @@ class RecommendationResolverTests(unittest.TestCase):
             source_description,
         )
 
+    def test_cached_openlibrary_book_upgrades_short_link_to_title_route(self):
+        item = {
+            "type": "book",
+            "title": "The Origins of Totalitarianism",
+            "authorOrMeta": "Hannah Arendt",
+            "description": (
+                "A obra analisa as origens históricas e políticas do "
+                "totalitarismo no século XX."
+            ),
+            "link": "https://openlibrary.org/works/OL10460640W",
+            "imageUrl": "",
+        }
+        result = self.resolve_with(
+            item,
+            self.entity(
+                title="The Origins of Totalitarianism",
+                author="Hannah Arendt",
+                description=item["description"],
+                url="https://openlibrary.org/works/OL10460640W",
+            ),
+        )
+
+        with patch.object(
+            resolver, "probe_verified_source", return_value=True
+        ):
+            cached = resolver._already_verified(result)
+
+        self.assertIsNotNone(cached)
+        self.assertEqual(
+            cached["link"],
+            "https://openlibrary.org/works/OL10460640W/"
+            "The_Origins_of_Totalitarianism",
+        )
+        self.assertTrue(resolver.validate_cached_cover(cached))
+
     def test_forced_resolution_keeps_discord_approved_cover(self):
         item = {
             "type": "book",
@@ -852,10 +887,32 @@ class RecommendationResolverTests(unittest.TestCase):
         ):
             result = resolver._validate_book_page(item, item["link"])
 
-        self.assertEqual(result.link, "https://openlibrary.org/works/OL30827457W")
+        self.assertEqual(
+            result.link,
+            "https://openlibrary.org/works/OL30827457W/1984",
+        )
         self.assertEqual(result.external_id, "isbn:9780451524935")
         self.assertEqual(result.source, "openlibrary")
         self.assertIn("search.json", get_json.call_args.args[0])
+
+    def test_openlibrary_work_url_includes_encoded_title_slug(self):
+        self.assertEqual(
+            resolver._openlibrary_work_url(
+                "/works/OL10460640W",
+                "The Origins of Totalitarianism",
+            ),
+            (
+                "https://openlibrary.org/works/OL10460640W/"
+                "The_Origins_of_Totalitarianism"
+            ),
+        )
+        self.assertEqual(
+            resolver._openlibrary_work_url(
+                "/works/OL1W",
+                "Política & Cidadania",
+            ),
+            "https://openlibrary.org/works/OL1W/Pol%C3%ADtica_%26_Cidadania",
+        )
 
     def test_openlibrary_source_probe_uses_work_json_not_html(self):
         item = {
