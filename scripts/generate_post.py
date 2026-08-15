@@ -36,6 +36,7 @@ from recommendation_resolver import (
     resolve_recommendation,
 )
 from recommendation_approval import (
+    has_verified_discord_approval,
     is_post_workflow_eligible,
     requires_discord_approval,
 )
@@ -583,6 +584,20 @@ def _item_score(item, now):
     return score
 
 
+def _is_priority_community_highlight(item):
+    """Prioritise only community highlights with complete approval/evidence."""
+    verification = item.get("verification") or {}
+    return bool(
+        item.get("type") == "highlight"
+        and requires_discord_approval(item)
+        and has_verified_discord_approval(item)
+        and item.get("resolutionStatus") == "verified"
+        and verification.get("status") == "verified"
+        and verification.get("entityId")
+        and verification.get("coverHash")
+    )
+
+
 def _cover_hash(item, cover):
     verification = item.get("verification") or {}
     cached_hash = verification.get("coverHash")
@@ -757,6 +772,14 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
                 if item.get("type") == media_type
                 and item_key(item) not in selected_item_keys
             ]
+            if qkey == "q4":
+                # The queue records an explicit human editorial decision for
+                # approved community suggestions.  Recent RSS timestamps must
+                # not silently outrank that decision.  Stable sorting keeps the
+                # existing freshness order within both groups.
+                candidates.sort(
+                    key=lambda item: not _is_priority_community_highlight(item)
+                )
 
             for queue_item in candidates:
                 key = item_key(queue_item)

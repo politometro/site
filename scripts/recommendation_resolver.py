@@ -575,6 +575,112 @@ HIGHLIGHT_EDITORIAL_DESCRIPTION_MARKERS = {
     "analise aprofundada",
 }
 
+# Editorial sections sometimes contain short protocol/event reports which are
+# technically opinion pages but are not useful weekly recommendations.  Reject
+# only when independent ceremonial signals agree and the copy contains no
+# concrete policy, accountability or analytical substance.  This deliberately
+# avoids a publisher/title blacklist.
+HIGHLIGHT_PROTOCOL_EVENT_MARKERS = {
+    "aniversario",
+    "cerimonia",
+    "comemoracao",
+    "festa",
+    "homenagem",
+    "inauguracao",
+    "jantar",
+    "rentree",
+    "romaria",
+    "sessao solene",
+}
+HIGHLIGHT_PROTOCOL_ACTION_MARKERS = {
+    "assinala",
+    "assinalou",
+    "celebra",
+    "celebrou",
+    "comemora",
+    "comemorou",
+    "discurso aos militantes",
+    "falou aos militantes",
+    "marca presenca",
+    "marcou presenca",
+    "participa",
+    "participou",
+}
+HIGHLIGHT_PROTOCOL_AUDIENCE_MARKERS = {
+    "aos militantes",
+    "convidados",
+    "militantes do partido",
+    "simpatizantes",
+}
+HIGHLIGHT_SUBSTANTIVE_MARKERS = {
+    "analise",
+    "causas",
+    "consequencias",
+    "contrato",
+    "contratos",
+    "corrupcao",
+    "dados",
+    "decreto",
+    "direitos",
+    "eleicoes",
+    "explica",
+    "fact check",
+    "financiamento",
+    "habitacao",
+    "impacto",
+    "imposto",
+    "impostos",
+    "investigacao",
+    "investimento",
+    "lei",
+    "medida",
+    "medidas",
+    "orcamento",
+    "politica publica",
+    "politicas publicas",
+    "programa eleitoral",
+    "proposta",
+    "reforma",
+    "regulamento",
+    "tribunal",
+    "votacao",
+}
+
+
+def _contains_normalised_marker(text: str, markers: Iterable[str]) -> bool:
+    padded = f" {text} "
+    return any(f" {marker} " in padded for marker in markers)
+
+
+def _is_protocol_only_highlight(
+    *,
+    title: Any,
+    description: Any,
+    categories: Iterable[Any] | None = None,
+) -> bool:
+    evidence = _normalise_text(
+        " ".join(
+            [
+                str(title or ""),
+                str(description or ""),
+                *(str(value or "") for value in (categories or [])),
+            ]
+        )
+    )
+    if _contains_normalised_marker(evidence, HIGHLIGHT_SUBSTANTIVE_MARKERS):
+        return False
+
+    protocol_signal_groups = (
+        HIGHLIGHT_PROTOCOL_EVENT_MARKERS,
+        HIGHLIGHT_PROTOCOL_ACTION_MARKERS,
+        HIGHLIGHT_PROTOCOL_AUDIENCE_MARKERS,
+    )
+    signals = sum(
+        _contains_normalised_marker(evidence, markers)
+        for markers in protocol_signal_groups
+    )
+    return signals >= 2
+
 
 def is_eligible_highlight(
     *,
@@ -591,6 +697,13 @@ def is_eligible_highlight(
     except ValueError:
         return False
     if parsed.scheme not in {"http", "https"}:
+        return False
+
+    if _is_protocol_only_highlight(
+        title=title,
+        description=description,
+        categories=categories,
+    ):
         return False
 
     path_segments = {

@@ -342,6 +342,99 @@ const HIGHLIGHT_EDITORIAL_MARKERS = [
   "debate",
 ];
 
+const HIGHLIGHT_PROTOCOL_EVENT_MARKERS = [
+  "aniversario",
+  "cerimonia",
+  "comemoracao",
+  "festa",
+  "homenagem",
+  "inauguracao",
+  "jantar",
+  "rentree",
+  "romaria",
+  "sessao solene",
+];
+
+const HIGHLIGHT_PROTOCOL_ACTION_MARKERS = [
+  "assinala",
+  "assinalou",
+  "celebra",
+  "celebrou",
+  "comemora",
+  "comemorou",
+  "discurso aos militantes",
+  "falou aos militantes",
+  "marca presenca",
+  "marcou presenca",
+  "participa",
+  "participou",
+];
+
+const HIGHLIGHT_PROTOCOL_AUDIENCE_MARKERS = [
+  "aos militantes",
+  "convidados",
+  "militantes do partido",
+  "simpatizantes",
+];
+
+const HIGHLIGHT_SUBSTANTIVE_MARKERS = [
+  "analise",
+  "causas",
+  "consequencias",
+  "contrato",
+  "contratos",
+  "corrupcao",
+  "dados",
+  "decreto",
+  "direitos",
+  "eleicoes",
+  "explica",
+  "fact check",
+  "financiamento",
+  "habitacao",
+  "impacto",
+  "imposto",
+  "impostos",
+  "investigacao",
+  "investimento",
+  "lei",
+  "medida",
+  "medidas",
+  "orcamento",
+  "politica publica",
+  "politicas publicas",
+  "programa eleitoral",
+  "proposta",
+  "reforma",
+  "regulamento",
+  "tribunal",
+  "votacao",
+];
+
+function containsNormalizedMarker(text: string, markers: readonly string[]): boolean {
+  const padded = ` ${text} `;
+  return markers.some((marker) => padded.includes(` ${marker} `));
+}
+
+function isProtocolOnlyHighlightCandidate(candidate: {
+  title: string;
+  description: string;
+}): boolean {
+  const evidence = normalizeForMatch(
+    `${candidate.title || ""} ${candidate.description || ""}`,
+  );
+  if (containsNormalizedMarker(evidence, HIGHLIGHT_SUBSTANTIVE_MARKERS)) {
+    return false;
+  }
+
+  const signals = [
+    HIGHLIGHT_PROTOCOL_EVENT_MARKERS,
+    HIGHLIGHT_PROTOCOL_ACTION_MARKERS,
+    HIGHLIGHT_PROTOCOL_AUDIENCE_MARKERS,
+  ].filter((markers) => containsNormalizedMarker(evidence, markers)).length;
+  return signals >= 2;
+}
+
 function isEligibleHighlightCandidate(candidate: {
   title: string;
   description: string;
@@ -359,6 +452,9 @@ function isEligibleHighlightCandidate(candidate: {
       ([key, value]) => [normalizeForMatch(key), normalizeForMatch(value)],
     );
   } catch {
+    return false;
+  }
+  if (isProtocolOnlyHighlightCandidate(candidate)) {
     return false;
   }
   const titleLabel = sanitizeText(candidate.title, 400)
