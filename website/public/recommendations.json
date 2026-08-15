@@ -1048,92 +1048,6 @@
       }
     },
     {
-      "id": "rss_highlight_8deeeae74953bdd1",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "A política agora é isto",
-      "authorOrMeta": "observador.pt",
-      "description": "Talvez políticos nacionais, criadores de opinião e jornalistas já não acreditem ser possível transformar este país, ou talvez estejam apenas inebriados pela vidinha do dia.",
-      "imageUrl": "/covers/highlight_a_pol_tica_agora___isto_c281f4a2_3b5bf21959a2.jpg",
-      "link": "https://observador.pt/opiniao/a-politica-agora-e-isto/",
-      "externalId": "article:url:8deeeae74953bdd1fe38305b",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-12T23:15:14Z",
-      "expiryDate": "2026-09-11T23:15:14Z",
-      "createdAt": "2026-08-13T05:53:25.868943Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/a-politica-agora-e-isto/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A466%3Anowe%3A8%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2024%2F05%2F08160758%2Fbb-foto.jpg",
-        "categories": [
-          "Política",
-          "Comportamento",
-          "Sociedade",
-          "Comunicação Social",
-          "Media"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news-rss:observador.pt",
-        "entityId": "article:url:8deeeae74953bdd1fe38305b",
-        "score": 1.0,
-        "coverHash": "1cb785ebcd63ce30d619032c5fda488c492140e51c00ff4909280247e5795eb7",
-        "verifiedAt": "2026-08-13T05:53:26.118019Z",
-        "resolvedTitle": "A política agora é isto",
-        "resolvedAuthor": "observador.pt",
-        "sourcePublishedAt": "2026-08-12T23:15:14Z",
-        "sourceDescription": "Talvez políticos nacionais, criadores de opinião e jornalistas já não acreditem ser possível transformar este país, ou talvez estejam apenas inebriados pela vidinha do dia."
-      }
-    },
-    {
-      "id": "rss_highlight_9cc5f95d7395dfbf",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Festa do Pontal - Meio século de histórias",
-      "authorOrMeta": "observador.pt",
-      "description": "O PSD é um partido eclético. Popular na sua génese, interclassista na sua composição, equilibrado e moderado no seu programa.",
-      "imageUrl": "/covers/highlight_festa_do_pontal___meio_s_culo_de_hist_rias_3d51fd42_d9a7fed536d7.jpg",
-      "link": "https://observador.pt/opiniao/festa-do-pontal-meio-seculo-de-historias/",
-      "externalId": "article:url:9cc5f95d7395dfbf0b77c7b8",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-12T23:08:57Z",
-      "expiryDate": "2026-09-11T23:08:57Z",
-      "createdAt": "2026-08-13T05:53:25.870064Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/festa-do-pontal-meio-seculo-de-historias/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A502%3A501%3Anowe%3A1%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F08%2F12231013%2Fwhatsapp-image.jpg",
-        "categories": [
-          "Tribuna Aberta",
-          "Opinião",
-          "Observador",
-          "PSD",
-          "Política"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news-rss:observador.pt",
-        "entityId": "article:url:9cc5f95d7395dfbf0b77c7b8",
-        "score": 1.0,
-        "coverHash": "c2dbb691c4866bad2febbf9720827867bd6a332c879f67079e65375f42fd31a1",
-        "verifiedAt": "2026-08-13T05:53:26.362274Z",
-        "resolvedTitle": "Festa do Pontal - Meio século de histórias",
-        "resolvedAuthor": "observador.pt",
-        "sourcePublishedAt": "2026-08-12T23:08:57Z",
-        "sourceDescription": "O PSD é um partido eclético. Popular na sua génese, interclassista na sua composição, equilibrado e moderado no seu programa."
-      }
-    },
-    {
       "type": "nostalgia",
       "title": "Contra Informação",
       "authorOrMeta": "arquivos.rtp.pt",
@@ -1241,6 +1155,91 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-13T23:11:03Z",
         "sourceDescription": "Será vivendo em dispendiosas torres de 18 pisos, rodeadas por “amplos espaços verdes” que, pela sua manutenção elevada, viram “terras secas de ninguém”, que vamos mitigar a crise da habitação?"
+      }
+    },
+    {
+      "id": "rss_highlight_e9c134791627766b",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "PSD assinala 50 anos da Festa do Pontal",
+      "authorOrMeta": "www.rtp.pt",
+      "description": "Luís Montenegro falou esta noite aos militantes do PSD na festa que marca a rentrée política social-democrata.",
+      "imageUrl": "/covers/highlight_psd_assinala_50_anos_da_festa_do_pontal_22d7e13b_75aa8267a127.jpg",
+      "link": "https://www.rtp.pt/noticias/opiniao/paulo-pedroso-e-miguel-maduro/psd-assinala-50-anos-da-festa-do-pontal_1759576",
+      "externalId": "article:url:e9c134791627766b78e76545",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-14T23:25:12Z",
+      "expiryDate": "2026-09-13T23:25:12Z",
+      "createdAt": "2026-08-15T04:52:44.826365Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://www.rtp.pt/noticias/rss",
+        "guid": "https://www.rtp.pt/noticias/opiniao/paulo-pedroso-e-miguel-maduro/psd-assinala-50-anos-da-festa-do-pontal_1759576",
+        "imageUrl": "https://cdn-images.rtp.pt/noticias/images/default_rtpnoticias.png?w=350&q=50&auto=format",
+        "categories": [
+          "Paulo Pedroso e Miguel Poiares Maduro"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:www.rtp.pt",
+        "entityId": "article:url:e9c134791627766b78e76545",
+        "score": 1.0,
+        "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
+        "verifiedAt": "2026-08-15T04:52:45.369110Z",
+        "resolvedTitle": "PSD assinala 50 anos da Festa do Pontal",
+        "resolvedAuthor": "www.rtp.pt",
+        "sourcePublishedAt": "2026-08-14T23:25:12Z",
+        "sourceDescription": "Luís Montenegro falou esta noite aos militantes do PSD na festa que marca a rentrée política social-democrata."
+      }
+    },
+    {
+      "id": "rss_highlight_c9103f4909d06882",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Educação para todos. Para quase todos...",
+      "authorOrMeta": "observador.pt",
+      "description": "Uma criança com Necessidades Educativas Especiais não pode ser tratada como uma variável que se encaixa quando houver disponibilidade.",
+      "imageUrl": "/covers/highlight_educa__o_para_todos__para_quase_todos____d31d615e_e3460ecf8f78.jpg",
+      "link": "https://observador.pt/opiniao/educacao-para-todos-para-quase-todos/",
+      "externalId": "article:url:c9103f4909d06882d6902f7d",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-14T23:08:41Z",
+      "expiryDate": "2026-09-13T23:08:41Z",
+      "createdAt": "2026-08-15T04:52:45.023341Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/educacao-para-todos-para-quase-todos/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F08%2F14143750%2Fleonor-crucho.jpg",
+        "categories": [
+          "Tribuna Aberta",
+          "Opinião",
+          "Observador",
+          "Escolas",
+          "Educação",
+          "Inclusão Social",
+          "Sociedade",
+          "Desigualdade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:c9103f4909d06882d6902f7d",
+        "score": 1.0,
+        "coverHash": "7aa6ddbfc3354492f10a32b7c6e118ea9cb2c99fd8eb9fd1030656d770ad976c",
+        "verifiedAt": "2026-08-15T04:52:45.515197Z",
+        "resolvedTitle": "Educação para todos. Para quase todos...",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-14T23:08:41Z",
+        "sourceDescription": "Uma criança com Necessidades Educativas Especiais não pode ser tratada como uma variável que se encaixa quando houver disponibilidade."
       }
     }
   ],
