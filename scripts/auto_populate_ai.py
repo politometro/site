@@ -34,7 +34,9 @@ WATCHLIST_FILE = os.path.join(ROOT_DIR, "website", "public", "watchlist.json")
 sys.path.insert(0, SCRIPT_DIR)
 from recommendation_resolver import (
     ResolutionError,
+    is_community_evergreen_highlight,
     is_eligible_highlight,
+    is_series_recency_restricted,
     resolve_recommendation,
 )
 from recommendation_approval import (
@@ -52,6 +54,36 @@ PODCAST_DESCRIPTION_VERSION = 1
 PODCAST_DESCRIPTION_MIN_CHARS = 70
 PODCAST_DESCRIPTION_MAX_CHARS = 138
 PODCAST_TITLE_MAX_CHARS = 72
+EDITORIAL_TITLE_MAX_CHARS = {
+    "book": 58,
+    "podcast": PODCAST_TITLE_MAX_CHARS,
+    "movie": 58,
+    "nostalgia": 64,
+    "investigation": 64,
+    "highlight": 64,
+}
+EDITORIAL_TRAILING_WORDS = {
+    "a",
+    "as",
+    "com",
+    "da",
+    "das",
+    "de",
+    "do",
+    "dos",
+    "e",
+    "em",
+    "na",
+    "nas",
+    "no",
+    "nos",
+    "o",
+    "os",
+    "ou",
+    "para",
+    "por",
+    "que",
+}
 PODCAST_SUMMARY_MODELS = (
     "llama-3.3-70b-versatile",
     "llama-3.1-8b-instant",
@@ -345,6 +377,13 @@ def _similarity(left, right):
     return SequenceMatcher(None, a, b).ratio()
 
 
+def _safe_int(value, default=0):
+    try:
+        return int(value)
+    except (TypeError, ValueError, OverflowError):
+        return default
+
+
 def _clean_source_text(value, max_chars=360):
     value = html.unescape(re.sub(r"<[^>]+>", " ", str(value or "")))
     value = re.sub(r"\s+", " ", value).strip()
@@ -356,20 +395,94 @@ def _clean_source_text(value, max_chars=360):
 
 def _podcast_editorial_title(value):
     """Build a render-safe label while retaining the RSS title as identity."""
+    return _concise_editorial_title(value, PODCAST_TITLE_MAX_CHARS)
+
+
+def _concise_editorial_title(value, max_chars):
+    """Return faithful short copy, or an empty string when no rewrite is needed."""
     title = re.sub(r"\s+", " ", html.unescape(str(value or ""))).strip()
-    if len(title) <= PODCAST_TITLE_MAX_CHARS:
+    if len(title) <= max_chars:
         return ""
 
-    # Podcast feeds often append a complete guest list to an otherwise useful
-    # episode title. It is metadata rather than the subject readers need on the
-    # recommendation card, so remove it at a natural boundary.
+    # Feeds and publishers often append a complete guest/source list to an
+    # otherwise useful title. It is metadata rather than the subject readers
+    # need on the card, so remove it at a natural boundary.
     concise = re.split(r",\s+com\s+", title, maxsplit=1, flags=re.IGNORECASE)[0]
     concise = concise.strip(" ,;:–-")
-    if 12 <= len(concise) <= PODCAST_TITLE_MAX_CHARS:
+    if 12 <= len(concise) <= max_chars:
         return concise
 
-    shortened = title[:PODCAST_TITLE_MAX_CHARS].rsplit(" ", 1)[0]
-    return shortened.rstrip(" ,;:–-")
+    for separator in (" | ", " — ", " – ", " - "):
+        prefix = title.split(separator, 1)[0].strip(" ,;:–-")
+        if 18 <= len(prefix) <= max_chars:
+            return prefix
+
+    shortened = title[:max_chars].rsplit(" ", 1)[0].rstrip(" ,;:–-")
+    words = shortened.split()
+    while len(words) > 1 and words[-1].casefold() in EDITORIAL_TRAILING_WORDS:
+        words.pop()
+    return " ".join(words).rstrip(" ,;:–-")
+
+
+def _normalise_editorial_title(item):
+    """Ensure every verified content type has render-safe editorial copy."""
+    if not isinstance(item, dict):
+        return False
+    media_type = str(item.get("type") or "").strip().lower()
+    max_chars = EDITORIAL_TITLE_MAX_CHARS.get(media_type, 64)
+    canonical = re.sub(
+        r"\s+", " ", html.unescape(str(item.get("title") or ""))
+    ).strip()
+    verification = item.get("verification")
+    if not isinstance(verification, dict):
+        verification = {}
+    verified_title = re.sub(
+        r"\s+",
+        " ",
+        html.unescape(
+            str(verification.get("resolvedTitle") or "")
+        ),
+    ).strip()
+    changed = False
+    if (
+        verified_title
+        and len(verified_title) > len(canonical)
+        and verified_title.casefold().startswith(canonical.casefold())
+    ):
+        item["title"] = verified_title
+        canonical = verified_title
+        changed = True
+    current = re.sub(
+        r"\s+", " ", html.unescape(str(item.get("editorialTitle") or ""))
+    ).strip()
+    if not canonical:
+        return changed
+    current_words = current.rstrip(" ,;:–-").split()
+    current_incomplete = bool(
+        current_words
+        and current_words[-1].casefold() in EDITORIAL_TRAILING_WORDS
+    )
+    if current and len(current) <= max_chars and not current_incomplete:
+        return changed
+
+    concise = _concise_editorial_title(canonical, max_chars)
+    if not concise:
+        return changed
+    if item.get("editorialTitle") == concise:
+        return changed
+    item["editorialTitle"] = concise
+    return True
+
+
+def _normalise_verified_editorial_titles(queue):
+    changed = False
+    for item in queue:
+        if not isinstance(item, dict):
+            continue
+        if item.get("resolutionStatus") != "verified":
+            continue
+        changed |= _normalise_editorial_title(item)
+    return changed
 
 
 _PODCAST_DESCRIPTION_STOPWORDS = {
@@ -801,18 +914,81 @@ def _write_database(data):
     os.replace(tmp_path, REC_FILE)
 
 
+def _quarantine_malformed_collections(data):
+    """Keep one bad record from crashing population while preserving evidence."""
+    changed = False
+    existing_quarantine = data.get("quarantine")
+    quarantine = existing_quarantine
+    if quarantine is None:
+        quarantine = []
+    elif not isinstance(quarantine, list):
+        quarantine = []
+        data["quarantine"] = quarantine
+        changed = True
+    known = {
+        str(entry.get("id") or "")
+        for entry in quarantine
+        if isinstance(entry, dict)
+    }
+
+    for collection_name in ("queue", "history"):
+        collection = data.get(collection_name)
+        if not isinstance(collection, list):
+            collection = [collection]
+        valid = []
+        for record in collection:
+            if isinstance(record, dict):
+                valid.append(record)
+                continue
+            encoded = json.dumps(
+                record,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            )
+            record_id = "malformed_" + hashlib.sha256(
+                f"{collection_name}:{encoded}".encode("utf-8")
+            ).hexdigest()[:16]
+            if record_id not in known:
+                if "quarantine" not in data:
+                    data["quarantine"] = quarantine
+                quarantine.append(
+                    {
+                        "id": record_id,
+                        "collection": collection_name,
+                        "reason": "malformed_record",
+                        "record": record,
+                    }
+                )
+                known.add(record_id)
+            changed = True
+        if data.get(collection_name) != valid:
+            data[collection_name] = valid
+            changed = True
+    return changed
+
+
 def _identity_sets(items, include_cover_hashes=True):
     titles = set()
     links = set()
     external_ids = set()
     cover_hashes = set()
     for item in items:
+        if not isinstance(item, dict):
+            continue
+        # Rejected/dead editorial candidates must not reserve an identity
+        # forever. Published history still participates, as do pending public
+        # suggestions, so autonomous backfill stays idempotent without being
+        # starved by a transiently invalid record.
+        if item.get("status") in {"invalid", "skip"}:
+            continue
         title = _title_key(item.get("type"), item.get("title"))
         link = (item.get("link") or "").strip()
-        external_id = item.get("externalId") or (
-            item.get("verification") or {}
-        ).get("entityId")
-        cover_hash = (item.get("verification") or {}).get("coverHash")
+        verification = item.get("verification")
+        if not isinstance(verification, dict):
+            verification = {}
+        external_id = item.get("externalId") or verification.get("entityId")
+        cover_hash = verification.get("coverHash")
         if title:
             titles.add(title)
         if link:
@@ -1380,7 +1556,7 @@ def discover_rss_highlight_candidates(seen_links, limit):
             emitted_links.add(link)
     candidates.sort(
         key=lambda item: (
-            int(item.get("_topicScore", 0)),
+            _safe_int(item.get("_topicScore"), 0),
             _parse_datetime(item.get("sourcePublishedAt"))
             or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc),
         ),
@@ -1549,8 +1725,15 @@ def _add_if_verified(
 
 
 def _is_publishable_record(item):
-    verification = item.get("verification") or {}
-    time_sensitive = item.get("type") in {"podcast", "highlight"}
+    if not isinstance(item, dict):
+        return False
+    verification = item.get("verification")
+    if not isinstance(verification, dict):
+        return False
+    time_sensitive = bool(
+        item.get("type") in {"podcast", "highlight"}
+        and not is_community_evergreen_highlight(item)
+    )
     source_published = _parse_datetime(item.get("sourcePublishedAt"))
     expiry = _parse_datetime(item.get("expiryDate"))
     temporal_contract = (
@@ -1567,7 +1750,8 @@ def _is_publishable_record(item):
     )
     discovery = item.get("_discovery")
     editorial_contract = (
-        is_eligible_highlight(
+        is_community_evergreen_highlight(item)
+        or is_eligible_highlight(
             title=item.get("title"),
             description=item.get("description"),
             link=item.get("link"),
@@ -1593,6 +1777,70 @@ def _is_publishable_record(item):
         and editorial_contract
         and not _is_expired(item)
     )
+
+
+def _is_strict_post_candidate(item, history, now=None):
+    """Apply the generator's editorial recency rule during population too."""
+    return bool(
+        _is_publishable_record(item)
+        and not is_series_recency_restricted(
+            item,
+            history or [],
+            now=now,
+        )
+    )
+
+
+def _strict_sunday_slot_deficits(queue, history, now=None):
+    """Return slots that the strict Sunday selector cannot currently fill."""
+    ready = [
+        item
+        for item in queue
+        if isinstance(item, dict)
+        and _is_strict_post_candidate(item, history, now=now)
+    ]
+    counts = {
+        media_type: sum(item.get("type") == media_type for item in ready)
+        for media_type in ALLOWED_TYPES
+    }
+    missing = []
+    if counts["book"] < 1:
+        missing.append("q1/book")
+    if counts["podcast"] < 1:
+        missing.append("q2/podcast")
+
+    # Q3 consumes one movie/investigation. Q4 then prefers a highlight but can
+    # safely use another verified investigation, movie or podcast.
+    available = dict(counts)
+    if available["book"]:
+        available["book"] -= 1
+    if available["podcast"]:
+        available["podcast"] -= 1
+    q3_options = [
+        media_type
+        for media_type in ("movie", "investigation")
+        if available[media_type] > 0
+    ]
+    strict_tail_covered = False
+    for q3_type in q3_options:
+        remaining = dict(available)
+        remaining[q3_type] -= 1
+        if any(
+            remaining[media_type] > 0
+            for media_type in (
+                "highlight",
+                "investigation",
+                "movie",
+                "podcast",
+            )
+        ):
+            strict_tail_covered = True
+            break
+    if not q3_options:
+        missing.append("q3/movie-or-investigation")
+    elif not strict_tail_covered:
+        missing.append("q4/highlight-or-safe-alternative")
+    return missing
 
 
 def _same_podcast_series(item, candidate):
@@ -1699,7 +1947,11 @@ def _upsert_latest_podcast(candidate, queue, history, needed_by_type):
     needed_by_type["podcast"] = max(
         0,
         TARGET_PER_TYPE
-        - sum(_is_publishable_record(item) and item.get("type") == "podcast" for item in queue),
+        - sum(
+            item.get("type") == "podcast"
+            and _is_strict_post_candidate(item, history)
+            for item in queue
+        ),
     )
     print(
         f"  [LATEST/podcast] {resolved.get('sourceSeriesTitle') or resolved.get('authorOrMeta')}: "
@@ -1715,21 +1967,35 @@ def _time_sensitive_sort_key(item):
         tzinfo=datetime.timezone.utc
     )).timestamp()
     # Recency dominates for expiring content; priority is only a tie-breaker.
-    return (timestamp, int(item.get("priority", 3)))
+    return (timestamp, _safe_int(item.get("priority"), 3))
 
 
-def _trim_time_sensitive_pool(queue, media_type, limit=TARGET_PER_TYPE):
+def _trim_time_sensitive_pool(
+    queue,
+    media_type,
+    limit=TARGET_PER_TYPE,
+    history=None,
+):
     eligible = [
         item
         for item in queue
-        if item.get("type") == media_type and _is_publishable_record(item)
+        if item.get("type") == media_type
+        and _is_publishable_record(item)
+        and not is_community_evergreen_highlight(item)
     ]
     if len(eligible) <= limit:
         return False
     keep_ids = {
         item.get("id")
         for item in sorted(
-            eligible, key=_time_sensitive_sort_key, reverse=True
+            eligible,
+            key=lambda item: (
+                not is_series_recency_restricted(item, history or [])
+                if history is not None
+                else True,
+                *_time_sensitive_sort_key(item),
+            ),
+            reverse=True,
         )[:limit]
     }
     before = len(queue)
@@ -1899,29 +2165,45 @@ def _recover_recheckable_invalid_queue(queue):
     """Retry invalid records whose old validation failure is now recoverable."""
     changed = False
     for item in queue:
+        if not isinstance(item, dict):
+            continue
+        error = str(item.get("validationError") or "")
+        recoverable = error.startswith(
+            (
+                "HIGHLIGHT_NOT_FOUND",
+                "HTTP_ERROR",
+                "NETWORK_ERROR",
+                "BAD_JSON",
+                "REQUEST_ERROR",
+                "SOURCE_UNAVAILABLE",
+            )
+        )
+        media_type = item.get("type")
         if (
             item.get("status") != "invalid"
             or item.get("resolutionStatus") != "rejected"
-            or item.get("type") != "highlight"
-            or not str(item.get("link") or "").startswith(("http://", "https://"))
-            or not str(item.get("validationError") or "").startswith(
-                "HIGHLIGHT_NOT_FOUND"
-            )
+            or media_type not in ALLOWED_TYPES
+            or not str(item.get("title") or "").strip()
+            or not recoverable
         ):
             continue
         try:
             resolved = resolve_recommendation(dict(item), force=True)
             resolved["status"] = "queue"
-            resolved["category"] = CATEGORIES["highlight"]
+            resolved["category"] = CATEGORIES[media_type]
+            _normalise_editorial_title(resolved)
             if not _is_publishable_record(resolved):
-                raise ValueError("contrato de verificaÃ§Ã£o incompleto")
+                raise ValueError("contrato de verificação incompleto")
             item.clear()
             item.update(resolved)
             changed = True
-            print(f"  [RECOVERED/highlight] {item.get('title')}")
+            print(f"  [RECOVERED/{media_type}] {item.get('title')}")
         except (ResolutionError, requests.RequestException, OSError, ValueError) as exc:
-            item["validationError"] = str(exc)
-            print(f"  [STILL INVALID/highlight] {item.get('title')}: {exc}")
+            message = str(exc)[:500]
+            if item.get("validationError") != message:
+                item["validationError"] = message
+                changed = True
+            print(f"  [STILL INVALID/{media_type}] {item.get('title')}: {exc}")
     return changed
 
 
@@ -1940,26 +2222,43 @@ def _prune_expired_queue(queue):
 
 def auto_populate():
     data = _load_database()
+    changed = _quarantine_malformed_collections(data)
     queue = data.get("queue", [])
     history = data.get("history", [])
     groq_key = os.environ.get("GROQ_API_KEY", "")
-    changed = _prune_expired_queue(queue)
+    changed |= _prune_expired_queue(queue)
     changed |= _enforce_community_approval_gate(queue)
     changed |= _enrich_approved_suggestions(queue)
     changed |= _refresh_verified_queue(queue)
     changed |= _quarantine_unverified_queue(queue)
     changed |= _recover_recheckable_invalid_queue(queue)
+    changed |= _normalise_verified_editorial_titles(queue)
 
     publishable = [item for item in queue if _is_publishable_record(item)]
-    counts = {
+    strict_publishable = [
+        item
+        for item in publishable
+        if _is_strict_post_candidate(item, history)
+    ]
+    raw_counts = {
         media_type: sum(item.get("type") == media_type for item in publishable)
+        for media_type in ALLOWED_TYPES
+    }
+    counts = {
+        media_type: sum(
+            item.get("type") == media_type for item in strict_publishable
+        )
         for media_type in ALLOWED_TYPES
     }
     needed = {
         media_type: max(0, TARGET_PER_TYPE - counts[media_type])
         for media_type in ALLOWED_TYPES
     }
-    print(f"Verified queue pool: {counts}; target deficits: {needed}")
+    print(
+        "Verified queue pool: "
+        f"{raw_counts}; strict slot-ready pool: {counts}; "
+        f"target deficits: {needed}"
+    )
 
     all_identities = _identity_sets(
         queue + history, include_cover_hashes=False
@@ -1994,7 +2293,11 @@ def auto_populate():
             candidate, queue, history, needed
         )
     changed |= _refresh_podcast_editorial_descriptions(queue, groq_key)
-    changed |= _trim_time_sensitive_pool(queue, "podcast")
+    changed |= _trim_time_sensitive_pool(
+        queue,
+        "podcast",
+        history=history,
+    )
 
     cse_key = os.environ.get("GOOGLE_CSE_API_KEY", "")
     cse_id = os.environ.get("GOOGLE_CSE_ID", "")
@@ -2035,7 +2338,11 @@ def auto_populate():
         )
         changed |= added
         highlights_added += int(added)
-    changed |= _trim_time_sensitive_pool(queue, "highlight")
+    changed |= _trim_time_sensitive_pool(
+        queue,
+        "highlight",
+        history=history,
+    )
 
     # Curated episode URLs are intentionally distinct from programme/channel
     # watch targets. Only an exact, independently verifiable episode can enter
@@ -2060,7 +2367,7 @@ def auto_populate():
             "id": raw.get("id") or f"watch_{media_type}_{uuid.uuid4().hex[:16]}",
             "category": CATEGORIES.get(media_type, media_type.title()),
             "imageUrl": "",
-            "priority": int(raw.get("priority", 3)),
+            "priority": _safe_int(raw.get("priority"), 3),
             "expiryDate": raw.get("expiryDate"),
             "createdAt": raw.get("createdAt") or _utc_now(),
             "status": "queue",
@@ -2129,35 +2436,38 @@ def auto_populate():
             rejected_titles.add(normalised_title)
             changed |= _add_if_verified(candidate, queue, identities, needed)
 
+    changed |= _normalise_verified_editorial_titles(queue)
+
+    remaining_counts = {
+        media_type: sum(
+            item.get("type") == media_type
+            and _is_strict_post_candidate(item, history)
+            for item in queue
+        )
+        for media_type in ALLOWED_TYPES
+    }
+    missing_slots = _strict_sunday_slot_deficits(queue, history)
+    readiness = {
+        "postType": "sunday_standard",
+        "strictCounts": remaining_counts,
+        "missingSlots": missing_slots,
+        "fallbackRequired": bool(missing_slots),
+    }
+    if data.get("readiness") != readiness:
+        data["readiness"] = readiness
+        changed = True
     data["queue"] = queue
     data["history"] = history
     if changed:
         _write_database(data)
 
-    remaining_counts = {
-        media_type: sum(
-            item.get("type") == media_type and _is_publishable_record(item)
-            for item in queue
-        )
-        for media_type in ALLOWED_TYPES
-    }
-    print(f"Final verified queue pool: {remaining_counts}")
-
-    missing_for_post = [
-        media_type
-        for media_type in ("book", "podcast", "highlight")
-        if remaining_counts[media_type] < 1
-    ]
-    if not any(
-        remaining_counts[media_type] >= 1
-        for media_type in ("movie", "nostalgia", "investigation")
-    ):
-        missing_for_post.append("movie/nostalgia/investigation")
-    if missing_for_post:
-        raise RuntimeError(
-            "Não foi possível obter sequer um candidato verificado para: "
-            + ", ".join(missing_for_post)
-            + ". O post não será gerado com conteúdo ambíguo."
+    print(f"Final strict slot-ready pool: {remaining_counts}")
+    if missing_slots:
+        print(
+            "[AUTO-RECOVERY] A população esgotou as fontes estritas para "
+            + ", ".join(missing_slots)
+            + ". O gerador usará apenas alternativas já verificadas e "
+            "submeterá a substituição à revisão normal."
         )
 
     deficits = {
@@ -2167,8 +2477,8 @@ def auto_populate():
     }
     if deficits:
         print(
-            "[WARNING] O post atual está coberto, mas a reserva ainda está "
-            f"abaixo do alvo: {deficits}"
+            "[WARNING] A reserva estritamente utilizável ainda está abaixo "
+            f"do alvo e continuará a ser reposta no próximo preflight: {deficits}"
         )
 
 

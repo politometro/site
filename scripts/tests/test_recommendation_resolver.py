@@ -20,6 +20,10 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 import recommendation_resolver as resolver
+from recommendation_approval import (
+    COMMUNITY_SOURCE_KIND,
+    community_submission_hash,
+)
 
 
 def iso_now() -> str:
@@ -37,6 +41,43 @@ def jpeg_bytes(width: int = 320, height: int = 480) -> bytes:
     output = BytesIO()
     image.save(output, format="JPEG", quality=90)
     return output.getvalue()
+
+
+def approved_community_highlight(*, evergreen: bool = False) -> dict:
+    item = {
+        "id": "web_highlight_memory",
+        "type": "highlight",
+        "title": "A Fragilidade da Memória",
+        "link": "https://author.example.net/p/a-fragilidade-da-memoria",
+        "origin": "website-community",
+        "sourceKind": COMMUNITY_SOURCE_KIND,
+        "createdAt": "2026-08-10T18:39:28.921Z",
+        "status": "approved_pending_enrichment",
+        "notificationStatus": "sent",
+        "discordMessageId": "1536444114831417486",
+    }
+    item["communitySubmission"] = {
+        "id": item["id"],
+        "sourceKind": item["sourceKind"],
+        "type": item["type"],
+        "title": item["title"],
+        "link": item["link"],
+        "createdAt": item["createdAt"],
+    }
+    item["submissionHash"] = community_submission_hash(item)
+    item["discordApproval"] = {
+        "required": True,
+        "status": "approved",
+        "channelId": "1526189969427796049",
+        "messageId": item["discordMessageId"],
+        "sentAt": "2026-08-10T18:40:22+00:00",
+        "payloadHash": item["submissionHash"],
+        "approvedAt": "2026-08-10T18:42:13+00:00",
+        "approvedBy": "948240528632324107",
+    }
+    if evergreen:
+        item["contentLifecycle"] = "evergreen"
+    return item
 
 
 class RecommendationResolverTests(unittest.TestCase):
@@ -707,6 +748,44 @@ class RecommendationResolverTests(unittest.TestCase):
             resolver.is_series_recency_restricted(part2, history)
         )
 
+    def test_same_author_does_not_turn_independent_books_into_a_series(self):
+        history = [
+            {
+                "type": "book",
+                "title": "Animal Farm",
+                "authorOrMeta": "George Orwell",
+                "publishedAt": iso_days_ago(5),
+            }
+        ]
+        candidate = {
+            "type": "book",
+            "title": "1984",
+            "authorOrMeta": "George Orwell",
+        }
+
+        self.assertFalse(
+            resolver.is_series_recency_restricted(candidate, history)
+        )
+
+    def test_same_publisher_does_not_block_independent_highlights(self):
+        history = [
+            {
+                "type": "highlight",
+                "title": "Primeiro artigo de opinião",
+                "authorOrMeta": "RTP",
+                "publishedAt": iso_days_ago(5),
+            }
+        ]
+        candidate = {
+            "type": "highlight",
+            "title": "Segundo artigo de opinião",
+            "authorOrMeta": "RTP",
+        }
+
+        self.assertFalse(
+            resolver.is_series_recency_restricted(candidate, history)
+        )
+
     def test_spoofed_imdb_and_untrusted_catalog_links_are_rejected_before_network(self):
         with self.assertRaisesRegex(
             resolver.ResolutionError, "MOVIE_LINK_NOT_IMDB"
@@ -1081,6 +1160,103 @@ class RecommendationResolverTests(unittest.TestCase):
                 resolver._validate_highlight_page(
                     item, metadata["canonical"]
                 )
+
+    def test_approved_community_article_uses_structured_social_metadata(self):
+        item = approved_community_highlight(evergreen=True)
+        metadata = {
+            "finalUrl": item["link"],
+            "canonical": item["link"],
+            "title": item["title"],
+            "image": "https://cdn.example.net/og.jpg",
+            "images": [
+                "https://cdn.example.net/og.jpg",
+                "https://cdn.example.net/twitter.jpg",
+            ],
+            "description": (
+                "Entre verdades subjetivas e factos esquecidos, a identidade "
+                "humana pode ser uma ficção convincente."
+            ),
+            "publishedAt": iso_days_ago(300),
+            "authors": ["António Abreu"],
+            "isbns": [],
+            "schemaTypes": ["newsarticle"],
+            "meta": {"og:type": "article"},
+        }
+
+        with patch.object(resolver, "_page_metadata", return_value=metadata):
+            entity = resolver._validate_highlight_page(item, item["link"])
+
+        self.assertEqual(entity.image_url, metadata["image"])
+        self.assertEqual(
+            entity.image_candidates,
+            ("https://cdn.example.net/twitter.jpg",),
+        )
+        self.assertEqual(entity.resolved_author, "António Abreu")
+
+    def test_unapproved_untrusted_article_remains_blocked(self):
+        item = approved_community_highlight()
+        item["discordApproval"]["status"] = "pending"
+
+        with self.assertRaisesRegex(
+            resolver.ResolutionError, "DISALLOWED_SOURCE"
+        ):
+            resolver._validate_highlight_page(item, item["link"])
+
+    def test_approved_evergreen_highlight_has_no_artificial_expiry(self):
+        item = approved_community_highlight(evergreen=True)
+        entity = self.entity(
+            media_type="highlight",
+            title=item["title"],
+            author="António Abreu",
+            description=(
+                "Ensaio fundamentado sobre memória, identidade e factos "
+                "esquecidos na vida coletiva."
+            ),
+            published_at=iso_days_ago(300),
+            url=item["link"],
+        )
+
+        resolved = self.resolve_with(item, entity)
+
+        self.assertEqual(resolved["contentLifecycle"], "evergreen")
+        self.assertNotIn("expiryDate", resolved)
+        self.assertTrue(resolved["sourcePublishedAt"])
+
+    def test_cover_download_tries_next_social_image(self):
+        item = approved_community_highlight(evergreen=True)
+        entity = self.entity(
+            media_type="highlight",
+            title=item["title"],
+            author="António Abreu",
+            description=(
+                "Ensaio fundamentado sobre memória, identidade e factos "
+                "esquecidos na vida coletiva."
+            ),
+            published_at=iso_days_ago(300),
+            url=item["link"],
+        )
+        entity = resolver.EntityResolution(
+            **{**entity.__dict__, "image_candidates": ("https://cdn.example.org/fallback.jpg",)}
+        )
+        first_error = resolver.ResolutionError(
+            "HTTP_ERROR", "primeira imagem indisponível", item=item
+        )
+
+        with (
+            patch.object(resolver, "_resolve_entity", return_value=entity),
+            patch.object(resolver, "_assert_safe_url"),
+            patch.object(
+                resolver,
+                "_download_and_normalize_image",
+                side_effect=[first_error, self.cover],
+            ) as download,
+        ):
+            resolved = resolver.resolve_recommendation(item)
+
+        self.assertEqual(download.call_count, 2)
+        self.assertEqual(
+            resolved["verification"]["coverHash"], self.cover.sha256
+        )
 
     def test_svg_unsplash_known_placeholder_and_private_ip_are_blocked(self):
         with self.assertRaisesRegex(

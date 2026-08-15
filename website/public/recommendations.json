@@ -5,15 +5,16 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "A Fragilidade da Memória",
-      "link": "https://antonioabreu.substack.com/p/a-fragilidade-da-memoria?r=5m5q4m&utm_campaign=post&utm_medium=web",
-      "authorOrMeta": "",
-      "description": "Sugestao recebida da comunidade para revisao.",
-      "imageUrl": "",
-      "sourcePublishedAt": null,
+      "link": "https://antonioabreu.substack.com/p/a-fragilidade-da-memoria",
+      "authorOrMeta": "António Abreu",
+      "description": "Entre verdades subjetivas e factos esquecidos, a identidade humana pode não passar de uma ficção convincente.",
+      "imageUrl": "/covers/highlight_a_fragilidade_da_mem_ria_b587d126_9e5be7d3b3b6.jpg",
+      "sourcePublishedAt": "2025-09-09T18:01:21Z",
       "expiryDate": null,
       "priority": 3,
       "createdAt": "2026-08-10T18:39:28.921Z",
-      "status": "approved_pending_enrichment",
+      "status": "queue",
+      "contentLifecycle": "evergreen",
       "sourceKind": "community_suggestion",
       "communitySubmission": {
         "id": "web_highlight_280d0bc0-40f3-4f4e-abfc-b34da1e53217",
@@ -24,16 +25,18 @@
         "createdAt": "2026-08-10T18:39:28.921Z"
       },
       "submissionHash": "6029503634f5f11602eb8be7d88ee78188ca1f76b138579b167eb6ad0f6c0e89",
-      "resolutionStatus": "unresolved",
+      "resolutionStatus": "verified",
       "verification": {
-        "status": "unresolved",
-        "provider": "community",
-        "confidence": 0,
-        "checkedAt": "2026-08-10T18:39:28.921Z",
-        "matchedFields": [],
-        "warnings": [
-          "A sugestao aguarda revisao da comunidade."
-        ]
+        "status": "verified",
+        "source": "news:antonioabreu.substack.com",
+        "entityId": "article:url:938f77ab41b406c4029d4ed5",
+        "score": 1.0,
+        "coverHash": "c104089ece0a25f097dff8c8711d30969d3761e960db3a346bbe24e68901f301",
+        "verifiedAt": "2026-08-15T18:40:08.787427Z",
+        "resolvedTitle": "A Fragilidade da Memória",
+        "resolvedAuthor": "António Abreu",
+        "sourcePublishedAt": "2025-09-09T18:01:21Z",
+        "sourceDescription": "Entre verdades subjetivas e factos esquecidos, a identidade humana pode não passar de uma ficção convincente."
       },
       "origin": "website-community",
       "notificationStatus": "sent",
@@ -44,6 +47,7 @@
         "channelId": "1526189969427796049",
         "messageId": "1536444114831417486",
         "sentAt": "2026-08-10T18:40:22.343398+00:00",
+        "payloadHash": "6029503634f5f11602eb8be7d88ee78188ca1f76b138579b167eb6ad0f6c0e89",
         "approvedAt": "2026-08-10T18:42:13.809022+00:00",
         "approvedBy": "948240528632324107",
         "mode": "queue"
@@ -52,7 +56,8 @@
       "discordNotifiedAt": "2026-08-10T18:40:22.343398+00:00",
       "approvalMode": "queue",
       "approvedAt": "2026-08-10T18:42:13.809022+00:00",
-      "approvedBy": "948240528632324107"
+      "approvedBy": "948240528632324107",
+      "externalId": "article:url:938f77ab41b406c4029d4ed5"
     },
     {
       "id": "web_highlight_3008d0c1-16b0-4876-89f8-290de432f6a8",

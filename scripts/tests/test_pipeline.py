@@ -16,6 +16,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import auto_populate_ai
 import generate_post
+import prepopulate_recommendations
 import recover_weekly_generation
 from recommendation_approval import (
     COMMUNITY_SOURCE_KIND,
@@ -97,6 +98,42 @@ def community_book(*, approved=True, status="queue"):
 
 
 class CommunityApprovalGateTests(unittest.TestCase):
+    def test_approved_evergreen_article_is_publishable_without_expiry(self):
+        item = community_book(approved=True)
+        item.update(
+            {
+                "type": "highlight",
+                "category": "Destaque",
+                "title": "A Fragilidade da Memória",
+                "description": (
+                    "Entre factos esquecidos e verdades subjetivas, este "
+                    "ensaio explora a identidade humana."
+                ),
+                "link": "https://author.example.net/p/memoria",
+                "sourcePublishedAt": "2025-09-09T18:01:21Z",
+                "expiryDate": None,
+                "contentLifecycle": "evergreen",
+            }
+        )
+        item["communitySubmission"].update(
+            {
+                "type": item["type"],
+                "title": item["title"],
+                "link": item["link"],
+            }
+        )
+        item["submissionHash"] = community_submission_hash(item)
+        item["discordApproval"]["payloadHash"] = item["submissionHash"]
+
+        self.assertTrue(auto_populate_ai._is_publishable_record(item))
+        queue = [item]
+        self.assertFalse(
+            auto_populate_ai._trim_time_sensitive_pool(
+                queue, "highlight", limit=0, history=[]
+            )
+        )
+        self.assertEqual(queue, [item])
+
     def test_unapproved_community_item_is_not_publishable(self):
         item = community_book(approved=False)
 
@@ -152,6 +189,27 @@ class CommunityApprovalGateTests(unittest.TestCase):
 
 
 class ZeroStatePopulationTests(unittest.TestCase):
+    def test_legacy_seed_entrypoint_uses_verified_population(self):
+        populator = mock.Mock()
+
+        prepopulate_recommendations.main(populator=populator)
+
+        populator.assert_called_once_with()
+
+    def test_malformed_record_is_quarantined_without_losing_valid_queue(self):
+        valid = verified_item("book", "valid")
+        data = {"queue": [valid, "bad-record"], "history": None}
+
+        changed = auto_populate_ai._quarantine_malformed_collections(data)
+
+        self.assertTrue(changed)
+        self.assertEqual(data["queue"], [valid])
+        self.assertEqual(data["history"], [])
+        self.assertEqual(
+            {entry["collection"] for entry in data["quarantine"]},
+            {"queue", "history"},
+        )
+
     def test_podcast_discovery_uses_supplied_atom_feed_links(self):
         published = (
             datetime.datetime.now(datetime.timezone.utc)
@@ -479,6 +537,70 @@ class RollingFreshnessTests(unittest.TestCase):
 
         self.assertFalse(auto_populate_ai._is_publishable_record(item))
 
+    def test_recently_used_series_does_not_count_as_slot_ready_reserve(self):
+        now = datetime.datetime.now(datetime.timezone.utc)
+        candidate = verified_item("podcast", "current")
+        candidate["sourceSeriesId"] = "show-recent"
+        history_item = copy.deepcopy(candidate)
+        history_item.update(
+            {
+                "id": "podcast_previous",
+                "status": "published",
+                "publishedAt": (now - datetime.timedelta(days=7)).isoformat(),
+            }
+        )
+
+        self.assertTrue(auto_populate_ai._is_publishable_record(candidate))
+        self.assertFalse(
+            auto_populate_ai._is_strict_post_candidate(
+                candidate,
+                [history_item],
+                now=now,
+            )
+        )
+
+    def test_nostalgia_alone_does_not_claim_to_cover_sunday_q3(self):
+        queue = [
+            verified_item("book", "ready"),
+            verified_item("podcast", "ready"),
+            verified_item("nostalgia", "ready"),
+            verified_item("highlight", "ready"),
+        ]
+
+        missing = auto_populate_ai._strict_sunday_slot_deficits(queue, [])
+
+        self.assertIn("q3/movie-or-investigation", missing)
+
+    def test_transiently_invalid_item_is_re_resolved_in_same_preflight(self):
+        item = verified_item("book", "transient", status="invalid")
+        item["resolutionStatus"] = "rejected"
+        item["validationError"] = "HTTP_ERROR: HTTP 503 temporário"
+        recovered = verified_item("book", "transient")
+
+        with mock.patch.object(
+            auto_populate_ai,
+            "resolve_recommendation",
+            return_value=copy.deepcopy(recovered),
+        ):
+            changed = auto_populate_ai._recover_recheckable_invalid_queue([item])
+
+        self.assertTrue(changed)
+        self.assertEqual(item["status"], "queue")
+        self.assertEqual(item["resolutionStatus"], "verified")
+
+    def test_invalid_identity_does_not_starve_backfill(self):
+        invalid = verified_item("book", "retry", status="invalid")
+        invalid["resolutionStatus"] = "rejected"
+
+        titles, links, external_ids, cover_hashes = auto_populate_ai._identity_sets(
+            [invalid]
+        )
+
+        self.assertEqual(
+            (titles, links, external_ids, cover_hashes),
+            (set(), set(), set(), set()),
+        )
+
 
 class RecoveryWindowTests(unittest.TestCase):
     def test_weekly_generation_has_redundant_independent_schedules(self):
@@ -494,6 +616,7 @@ class RecoveryWindowTests(unittest.TestCase):
         ).read_text(encoding="utf-8")
 
         self.assertIn("0 16 * * 6", generate_workflow)
+        self.assertIn("20 4,12 * * *", preflight_workflow)
         self.assertIn("12,32,47 19 * * 6", preflight_workflow)
         self.assertIn(
             "python scripts/recover_weekly_generation.py",
@@ -607,14 +730,111 @@ class PostQualityGateTests(unittest.TestCase):
         self.assertIn("Título editorial curto", caption)
         self.assertNotIn("Título canónico muito extenso", caption)
 
-    def test_render_gate_rejects_silently_truncated_copy(self):
-        with self.assertRaisesRegex(RuntimeError, "não cabe integralmente"):
-            generate_post._require_complete_render(
-                "A ideia completa não pode desaparecer",
-                ["A ideia completa"],
-                "q2",
-                "título",
+    def test_render_gate_promotes_compact_copy_instead_of_aborting(self):
+        recovered = generate_post._require_complete_render(
+            "A ideia completa não pode desaparecer",
+            ["A ideia completa"],
+            "q2",
+            "título",
+        )
+
+        self.assertEqual(recovered, "A ideia completa")
+
+    def test_long_titles_are_normalised_for_every_content_type(self):
+        for media_type in auto_populate_ai.ALLOWED_TYPES:
+            item = verified_item(media_type, "long-title")
+            item["title"] = (
+                "Um título canónico muito longo que preserva a identidade da "
+                "obra mas precisa de uma formulação editorial curta no cartão"
             )
+
+            changed = auto_populate_ai._normalise_editorial_title(item)
+
+            self.assertTrue(changed, media_type)
+            self.assertLessEqual(
+                len(item["editorialTitle"]),
+                auto_populate_ai.EDITORIAL_TITLE_MAX_CHARS[media_type],
+            )
+            self.assertIn("muito longo", item["title"])
+
+    def test_verified_full_title_repairs_an_old_dangling_truncation(self):
+        item = verified_item("podcast", "canonical")
+        item["title"] = "Debate sobre o futuro da democracia e o papel de"
+        item["editorialTitle"] = item["title"]
+        item["verification"]["resolvedTitle"] = (
+            "Debate sobre o futuro da democracia e o papel de todas as "
+            "instituições portuguesas"
+        )
+
+        changed = auto_populate_ai._normalise_editorial_title(item)
+
+        self.assertTrue(changed)
+        self.assertTrue(item["title"].endswith("instituições portuguesas"))
+        self.assertNotEqual(item["editorialTitle"].split()[-1].casefold(), "de")
+
+    def test_title_fit_persists_the_rendered_editorial_copy(self):
+        canvas = Image.new("RGB", (400, 200), "white")
+        draw = generate_post.ImageDraw.Draw(canvas)
+        item = {
+            "title": (
+                "Este título é deliberadamente muito extenso para o pequeno "
+                "espaço disponível no cartão editorial"
+            ),
+            "category": "Destaque",
+        }
+
+        _, lines, _ = generate_post._fit_title_for_item(
+            draw,
+            item,
+            "q4",
+            30,
+            18,
+            120,
+            2,
+        )
+
+        self.assertEqual(item["editorialTitle"], " ".join(lines))
+        self.assertEqual(item["renderRecovery"]["title"], "compacted")
+
+    def test_unbroken_long_title_is_compacted_without_overflow(self):
+        canvas = Image.new("RGB", (400, 200), "white")
+        draw = generate_post.ImageDraw.Draw(canvas)
+        item = {"title": "Democracia" * 40, "category": "Livro"}
+
+        font, lines, _ = generate_post._fit_title_for_item(
+            draw,
+            item,
+            "q1",
+            30,
+            18,
+            120,
+            2,
+        )
+
+        self.assertTrue(lines)
+        self.assertLessEqual(len(lines), 2)
+        self.assertTrue(
+            all(
+                font.getbbox(line)[2] - font.getbbox(line)[0] <= 120
+                for line in lines
+            )
+        )
+
+    def test_caption_is_compacted_instead_of_blocking_generation(self):
+        selected = {}
+        for qkey, media_type in generate_post.REQUIRED_TYPES.items():
+            item = verified_item(media_type, f"caption-{qkey}")
+            item["title"] = "Título editorial " * 20
+            item["authorOrMeta"] = "Autor e metadados " * 20
+            item["description"] = (
+                "Primeira frase fundamentada com contexto político. " * 30
+            )
+            selected[qkey] = item
+
+        caption = generate_post.build_caption_within_limit(selected)
+
+        self.assertLessEqual(len(caption), 1800)
+        self.assertIn("#Portugal", caption)
 
     def test_compact_text_keeps_largest_complete_prefix_without_ellipsis(self):
         text = (
@@ -1057,6 +1277,8 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
         self.assertNotIn("🏛️ FILME:", caption)
         self.assertNotIn("🔎 DESTAQUE:", caption)
         self.assertIn("Qual destes vais espreitar primeiro?", caption)
+        self.assertIn("\n\n#Portugal", caption)
+        self.assertNotIn("\n\n\n#Portugal", caption)
         self.assertIn(
             "#Portugal #PolitizaTe #Recomendacoes #Sugestoes "
             "#Politometro #Politica #Livro #Podcast #Filme",
@@ -1168,6 +1390,44 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             all(item["id"].endswith("_approved") for item in selected.values())
         )
 
+    def test_unapproved_website_item_cannot_displace_editorial_candidate(self):
+        community_book = verified_item("book", "community")
+        community_book.update(
+            {
+                "id": "web_book_community",
+                "origin": "website",
+                "priority": 99,
+            }
+        )
+        queue = [
+            community_book,
+            verified_item("book", "editorial"),
+            verified_item("podcast", "approved"),
+            verified_item("movie", "approved"),
+            verified_item("highlight", "approved"),
+        ]
+
+        with (
+            mock.patch.object(
+                generate_post,
+                "resolve_recommendation",
+                side_effect=lambda item, force=False: item,
+            ),
+            mock.patch.object(
+                generate_post,
+                "load_cover_for_item",
+                return_value=Image.new("RGB", (300, 300), "navy"),
+            ),
+            mock.patch.object(
+                generate_post, "_revalidate_reviewed_source", return_value=None
+            ),
+        ):
+            selected, _ = generate_post.get_recommendations_with_valid_covers(
+                queue
+            )
+
+        self.assertEqual(selected["q1"]["id"], "book_editorial")
+
     def test_duplicate_cover_falls_back_to_next_verified_candidate(self):
         queue = [
             verified_item("book", "approved"),
@@ -1236,6 +1496,128 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             )
 
         self.assertEqual(selected["q2"]["id"], "podcast_latest")
+
+    def test_recency_exhaustion_recovers_with_verified_podcast(self):
+        now = datetime.datetime.now(datetime.timezone.utc)
+        podcast = verified_item("podcast", "current")
+        podcast["sourceSeriesId"] = "series-current"
+        history_item = copy.deepcopy(podcast)
+        history_item.update(
+            {
+                "id": "podcast_previous",
+                "status": "published",
+                "publishedAt": (now - datetime.timedelta(days=7)).isoformat(),
+            }
+        )
+        queue = [
+            verified_item("book", "approved"),
+            podcast,
+            verified_item("movie", "approved"),
+            verified_item("highlight", "approved"),
+        ]
+
+        with (
+            mock.patch.object(
+                generate_post,
+                "resolve_recommendation",
+                side_effect=lambda item, force=False: item,
+            ),
+            mock.patch.object(
+                generate_post,
+                "load_cover_for_item",
+                return_value=Image.new("RGB", (300, 300), "navy"),
+            ),
+            mock.patch.object(
+                generate_post, "_revalidate_reviewed_source", return_value=None
+            ),
+        ):
+            selected, _ = generate_post.get_recommendations_with_valid_covers(
+                queue,
+                history=[history_item],
+            )
+
+        self.assertEqual(selected["q2"]["id"], "podcast_current")
+        self.assertEqual(
+            selected["q2"]["selectionRecovery"]["mode"],
+            "recency_relaxed",
+        )
+
+    def test_missing_category_uses_another_verified_content_type(self):
+        queue = [
+            verified_item("book", "approved"),
+            verified_item("highlight", "substitute"),
+            verified_item("movie", "approved"),
+            verified_item("investigation", "approved"),
+        ]
+
+        with (
+            mock.patch.object(
+                generate_post,
+                "resolve_recommendation",
+                side_effect=lambda item, force=False: item,
+            ),
+            mock.patch.object(
+                generate_post,
+                "load_cover_for_item",
+                return_value=Image.new("RGB", (300, 300), "navy"),
+            ),
+            mock.patch.object(
+                generate_post, "_revalidate_reviewed_source", return_value=None
+            ),
+        ):
+            selected, _ = generate_post.get_recommendations_with_valid_covers(
+                queue,
+                history=[],
+            )
+
+        self.assertEqual(selected["q2"]["type"], "highlight")
+        self.assertEqual(
+            selected["q2"]["selectionRecovery"]["mode"],
+            "category_substitution",
+        )
+        self.assertEqual(len({item["id"] for item in selected.values()}), 4)
+
+    def test_transient_source_failure_is_retried_before_substitution(self):
+        queue = [
+            verified_item("book", "approved"),
+            verified_item("podcast", "approved"),
+            verified_item("movie", "approved"),
+            verified_item("highlight", "approved"),
+        ]
+        calls = []
+
+        def fake_resolve(item, force=False):
+            calls.append((item["id"], force))
+            if item["id"] == "book_approved" and not force:
+                raise generate_post.ResolutionError(
+                    "NETWORK_ERROR",
+                    "falha temporária",
+                    item=item,
+                )
+            return item
+
+        with (
+            mock.patch.object(
+                generate_post,
+                "resolve_recommendation",
+                side_effect=fake_resolve,
+            ),
+            mock.patch.object(
+                generate_post,
+                "load_cover_for_item",
+                return_value=Image.new("RGB", (300, 300), "navy"),
+            ),
+            mock.patch.object(
+                generate_post, "_revalidate_reviewed_source", return_value=None
+            ),
+        ):
+            selected, _ = generate_post.get_recommendations_with_valid_covers(
+                queue,
+                history=[],
+            )
+
+        self.assertEqual(selected["q1"]["id"], "book_approved")
+        self.assertIn(("book_approved", True), calls)
 
 
 class ApprovedDraftCommitTests(unittest.TestCase):
