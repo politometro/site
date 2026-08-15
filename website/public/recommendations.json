@@ -960,11 +960,12 @@
         "entityId": "openlibrary:/works/OL18139175W",
         "score": 0.94,
         "coverHash": "eb24a840462b8281445c7f57cdf0b10f803c2b9e7c123813542950d4aeadb7a1",
-        "verifiedAt": "2026-08-10T09:02:42.270598Z",
+        "verifiedAt": "2026-08-15T19:43:43.687746Z",
         "resolvedTitle": "How Democracies Die",
         "resolvedAuthor": "Steven Levitsky, Daniel Ziblatt",
         "sourceDescription": "Explica como democracias podem degradar-se por dentro através de normas quebradas, polarização e abuso institucional."
-      }
+      },
+      "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=How+Democracies+Die&author=Steven+Levitsky%2C+Daniel+Ziblatt&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Max retries exceeded with url: /search.json?title=How+Democracies+Die&author=Steven+Levitsky%2C+Daniel+Ziblatt&limit=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='openlibrary.org', port=443) at 0x7f5e797dc490>, 'Connection to openlibrary.org timed out. (connect timeout=5)'))"
     },
     {
       "id": "rss_podcast_f886e3e9cf955b02",
