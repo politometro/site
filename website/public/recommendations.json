@@ -1174,6 +1174,77 @@
         "sourcePublishedAt": "2026-08-15T23:21:56Z",
         "sourceDescription": "A força dos evangélicos é não internalizarmos, como agora se diz em linguagem psico-emotiva, o nojo que sentem de nós. Venha esse nojo dos partidos políticos, da imprensa ou de qualquer outro lugar"
       }
+    },
+    {
+      "id": "rss_podcast_9307cd252eafad7b",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Pós-PRR, vamos andar de cheque em cheque? - Ouvintes",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “Pós-PRR, vamos andar de cheque em cheque? - Ouvintes” do podcast Fora do Baralho, publicado em 16/08/2026.",
+      "imageUrl": "/covers/podcast_p_s_prr__vamos_andar_de_cheque_em_cheque____ouvintes_86814f57_9307cd252eaf.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/p-s-prr-vamos-andar-de-cheque-em-cheque-ouvintes",
+      "externalId": "f9dfd83f-e3d8-4340-92e6-b4a600efb0a3",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-16T05:00:00Z",
+      "expiryDate": "2026-08-19T05:00:00Z",
+      "createdAt": "2026-08-16T13:06:07.574212Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "f9dfd83f-e3d8-4340-92e6-b4a600efb0a3",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "f9dfd83f-e3d8-4340-92e6-b4a600efb0a3",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-08-16T13:06:08.412157Z",
+        "resolvedTitle": "Pós-PRR, vamos andar de cheque em cheque? - Ouvintes",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-08-16T05:00:00Z",
+        "sourceDescription": "Episódio “Pós-PRR, vamos andar de cheque em cheque? - Ouvintes” do podcast Fora do Baralho, publicado em 16/08/2026.",
+        "editorialDescription": "Análise sobre episódio “Pós-PRR, vamos andar de cheque em cheque? - Ouvintes” do podcast Fora do Baralho, publicado em 16/08/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "fca4f1dff2798b3dac5b5f0dadcf5a2717fef9ef364b00d954f892d289fd3e67",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "ai_movie_3fae760969554c16",
+      "type": "movie",
+      "category": "Filme",
+      "title": "The Battle of Algiers",
+      "authorOrMeta": "Gillo Pontecorvo",
+      "description": "Retrato duro de colonialismo, resistência, repressão e guerra urbana pela independência.",
+      "imageUrl": "/covers/movie_the_battle_of_algiers_3db2e629_f4673f76b399.jpg",
+      "link": "https://www.imdb.com/title/tt0058946/",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-08-16T13:06:10.955345Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "imdb:tt0058946",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "wikidata+imdb",
+        "entityId": "imdb:tt0058946",
+        "score": 1.0,
+        "coverHash": "179792d3a9ddda06cb0bc1556fcaf437ea398800da04c4c25358b91bb89a7ec1",
+        "verifiedAt": "2026-08-16T13:06:12.000043Z",
+        "resolvedTitle": "The Battle of Algiers",
+        "resolvedAuthor": "Gillo Pontecorvo",
+        "sourceDescription": "Retrato duro de colonialismo, resistência, repressão e guerra urbana pela independência."
+      }
     }
   ],
   "history": [
@@ -1978,12 +2049,12 @@
   "readiness": {
     "postType": "sunday_standard",
     "strictCounts": {
-      "book": 7,
+      "book": 6,
       "podcast": 0,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 2,
-      "highlight": 5
+      "highlight": 4
     },
     "missingSlots": [
       "q2/podcast"
