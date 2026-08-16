@@ -1126,47 +1126,6 @@
       "editorialTitle": "Incêndios florestais, neutralidade carbónica e deslocalização"
     },
     {
-      "id": "rss_highlight_2e27669a9ba13dfe",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Plano para Vale de S. António: Mais uma oportunidade perdida?",
-      "authorOrMeta": "Augusto Vasco Costa",
-      "description": "Será vivendo em dispendiosas torres de 18 pisos, rodeadas por “amplos espaços verdes” que, pela sua manutenção elevada, viram “terras secas de ninguém”, que vamos mitigar a crise da habitação?",
-      "imageUrl": "/covers/highlight_plano_para_vale_de_s__ant_nio__mais_uma_oportunida_3495d765_d9a256018b4a.jpg",
-      "link": "https://observador.pt/opiniao/plano-para-vale-de-s-antonio-mais-uma-oportunidade-perdida/",
-      "externalId": "article:url:2e27669a9ba13dfe868463ba",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-13T23:11:03Z",
-      "expiryDate": "2026-09-12T23:11:03Z",
-      "createdAt": "2026-08-14T05:51:21.153132Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/plano-para-vale-de-s-antonio-mais-uma-oportunidade-perdida/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A466%3Anowe%3A0%3A78%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2020%2F12%2F15132721%2Favc-foto.jpg",
-        "categories": [
-          "Habitação e Urbanismo",
-          "País",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:2e27669a9ba13dfe868463ba",
-        "score": 1.0,
-        "coverHash": "92f040db6059dfbd74afdedb5ffd3e3829184740553485537e3d08dae9848233",
-        "verifiedAt": "2026-08-15T18:52:36.275538Z",
-        "resolvedTitle": "Plano para Vale de S. António: Mais uma oportunidade perdida?",
-        "resolvedAuthor": "Augusto Vasco Costa",
-        "sourcePublishedAt": "2026-08-13T23:11:03Z",
-        "sourceDescription": "Será vivendo em dispendiosas torres de 18 pisos, rodeadas por “amplos espaços verdes” que, pela sua manutenção elevada, viram “terras secas de ninguém”, que vamos mitigar a crise da habitação?"
-      }
-    },
-    {
       "id": "rss_highlight_e9c134791627766b",
       "type": "highlight",
       "category": "Destaque",
@@ -1211,7 +1170,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Educação para todos. Para quase todos...",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Leonor Crucho",
       "description": "Uma criança com Necessidades Educativas Especiais não pode ser tratada como uma variável que se encaixa quando houver disponibilidade.",
       "imageUrl": "/covers/highlight_educa__o_para_todos__para_quase_todos____d31d615e_e3460ecf8f78.jpg",
       "link": "https://observador.pt/opiniao/educacao-para-todos-para-quase-todos/",
@@ -1241,13 +1200,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:c9103f4909d06882d6902f7d",
         "score": 1.0,
         "coverHash": "7aa6ddbfc3354492f10a32b7c6e118ea9cb2c99fd8eb9fd1030656d770ad976c",
         "verifiedAt": "2026-08-15T04:52:45.515197Z",
         "resolvedTitle": "Educação para todos. Para quase todos...",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Leonor Crucho",
         "sourcePublishedAt": "2026-08-14T23:08:41Z",
         "sourceDescription": "Uma criança com Necessidades Educativas Especiais não pode ser tratada como uma variável que se encaixa quando houver disponibilidade."
       }
@@ -1258,7 +1217,7 @@
       "category": "Podcast",
       "title": "Economia está no bom caminho ou é preciso ser mais exigente?",
       "authorOrMeta": "Fora do Baralho",
-      "description": "Análise sobre episódio “Economia está no bom caminho ou é preciso ser mais exigente?” do podcast Fora do Baralho, publicado em 14/08/2026.",
+      "description": "Análise sobre os temas e questões de economia está no bom caminho ou é preciso ser mais exigente.",
       "imageUrl": "/covers/podcast_economia_est__no_bom_caminho_ou___preciso_ser_mais_e_fd7f93e8_9f0e5a3b04fc.jpg",
       "link": "https://omny.fm/shows/fora-do-baralho/economia-est-no-bom-caminho-ou-preciso-ser-mais-exigente",
       "externalId": "cf0b1c80-a61a-40d5-a6bd-b4a600ee396b",
@@ -1288,15 +1247,95 @@
         "resolvedTitle": "Economia está no bom caminho ou é preciso ser mais exigente?",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-08-14T18:00:00Z",
-        "sourceDescription": "Episódio “Economia está no bom caminho ou é preciso ser mais exigente?” do podcast Fora do Baralho, publicado em 14/08/2026.",
-        "editorialDescription": "Análise sobre episódio “Economia está no bom caminho ou é preciso ser mais exigente?” do podcast Fora do Baralho, publicado em 14/08/2026.",
+        "sourceDescription": "Análise sobre episódio “Economia está no bom caminho ou é preciso ser mais exigente?” do podcast Fora do Baralho, publicado em 14/08/2026.",
+        "editorialDescription": "Análise sobre os temas e questões de economia está no bom caminho ou é preciso ser mais exigente.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "671f3884b396dd65733607d28323b7f78aacd9937e88de6d681476276a9d115c",
+        "editorialSourceHash": "1b1fc6e864a1860a9fdc0fc984dd3082c98d14220ddb1c0d73605d42a659bb77",
         "editorialDescriptionProvider": "extractive"
       },
       "selectionRecovery": {
         "slot": "q2",
         "mode": "recency_relaxed"
+      }
+    },
+    {
+      "id": "rss_highlight_eabfd1b87529e98a",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Senhoras conservadoras",
+      "authorOrMeta": "observador.pt",
+      "description": "Que um conservador prefira distanciar-se disto a saudá-lo só tem um nome: pedantismo. Em última análise, trata-se de um almoço inofensivo cujo grande pecado é ser apenas um pouco ridículo.",
+      "imageUrl": "/covers/highlight_senhoras_conservadoras_8cdb24b7_f85de4f5d5e4.jpg",
+      "link": "https://observador.pt/opiniao/senhoras-conservadoras/",
+      "externalId": "article:url:eabfd1b87529e98ab9be070a",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-15T23:24:32Z",
+      "expiryDate": "2026-09-14T23:24:32Z",
+      "createdAt": "2026-08-16T04:55:37.730141Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/senhoras-conservadoras/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2644%3A2644%3Anowe%3A661%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F04%2F23150527%2Fjporfirio-retratos-redacao-2026-01-16.jpg",
+        "categories": [
+          "Feminismo",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:eabfd1b87529e98ab9be070a",
+        "score": 1.0,
+        "coverHash": "6263ee1b54529be92940bae114ac4d3f815ff7de837459174006c45c50fc7289",
+        "verifiedAt": "2026-08-16T04:55:39.126138Z",
+        "resolvedTitle": "Senhoras conservadoras",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-15T23:24:32Z",
+        "sourceDescription": "Que um conservador prefira distanciar-se disto a saudá-lo só tem um nome: pedantismo. Em última análise, trata-se de um almoço inofensivo cujo grande pecado é ser apenas um pouco ridículo."
+      }
+    },
+    {
+      "id": "rss_highlight_fb063f8ce7322343",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "O Chega não tem nojo de mim",
+      "authorOrMeta": "observador.pt",
+      "description": "A força dos evangélicos é não internalizarmos, como agora se diz em linguagem psico-emotiva, o nojo que sentem de nós. Venha esse nojo dos partidos políticos, da imprensa ou de qualquer outro lugar",
+      "imageUrl": "/covers/highlight_o_chega_n_o_tem_nojo_de_mim_e9dba53d_2958c07894c5.jpg",
+      "link": "https://observador.pt/opiniao/o-chega-nao-tem-nojo-de-mim/",
+      "externalId": "article:url:fb063f8ce732234390c3b699",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-15T23:21:56Z",
+      "expiryDate": "2026-09-14T23:21:56Z",
+      "createdAt": "2026-08-16T04:55:37.730426Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/o-chega-nao-tem-nojo-de-mim/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1941%3A1940%3Anowe%3A488%3A542%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170600%2Ftiago-cavaco.jpg",
+        "categories": [
+          "Partido Chega",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:fb063f8ce732234390c3b699",
+        "score": 1.0,
+        "coverHash": "dcb6b90a7cf78fbddf8657e13c607e6d75c89c4f20160d12c7ba1d131a731511",
+        "verifiedAt": "2026-08-16T04:55:40.466285Z",
+        "resolvedTitle": "O Chega não tem nojo de mim",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-15T23:21:56Z",
+        "sourceDescription": "A força dos evangélicos é não internalizarmos, como agora se diz em linguagem psico-emotiva, o nojo que sentem de nós. Venha esse nojo dos partidos políticos, da imprensa ou de qualquer outro lugar"
       }
     }
   ],
@@ -1932,7 +1971,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 2,
-      "highlight": 4
+      "highlight": 5
     },
     "missingSlots": [
       "q2/podcast"
