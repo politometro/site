@@ -1,6 +1,6 @@
 {
   "cacheVersion": 2,
-  "canonicalLink": "https://openlibrary.org/works/OL1068091W",
+  "canonicalLink": "https://openlibrary.org/works/OL1068091W/On_Liberty",
   "coverHash": "9fedfbf77400e7093a337c03de678c9e0db03b0c222285b6262e7e49bb01a361",
   "coverSourceMime": "image/jpeg",
   "coverSourceUrl": "https://ia601009.us.archive.org/view_archive.php?archive=%2F12%2Fitems%2Folcovers96%2Folcovers96-L.zip&file=966821-L.jpg",
@@ -16,6 +16,6 @@
   "title": "On Liberty",
   "titleNormalized": "on liberty",
   "type": "book",
-  "verifiedAt": "2026-08-15T19:22:30.278226Z",
+  "verifiedAt": "2026-08-17T13:13:34.174387Z",
   "width": 284
 }

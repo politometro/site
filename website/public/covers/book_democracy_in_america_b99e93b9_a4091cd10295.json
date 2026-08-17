@@ -1,6 +1,6 @@
 {
   "cacheVersion": 2,
-  "canonicalLink": "https://openlibrary.org/works/OL32342092W",
+  "canonicalLink": "https://openlibrary.org/works/OL32342092W/Democracy_in_America",
   "coverHash": "f1d50569f8a560639675b95da70ec4e50f0470975ab8f84a22df4f739bc7ca7a",
   "coverSourceMime": "image/jpeg",
   "coverSourceUrl": "https://ia601909.us.archive.org/view_archive.php?archive=%2F31%2Fitems%2Fl_covers_0013%2Fl_covers_0013_28.zip&file=0013281409-L.jpg",
@@ -16,6 +16,6 @@
   "title": "Democracy in America",
   "titleNormalized": "democracy in america",
   "type": "book",
-  "verifiedAt": "2026-08-15T18:53:06.253070Z",
+  "verifiedAt": "2026-08-17T13:13:15.857759Z",
   "width": 350
 }

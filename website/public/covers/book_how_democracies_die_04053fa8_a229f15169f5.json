@@ -1,9 +1,9 @@
 {
   "cacheVersion": 2,
-  "canonicalLink": "https://openlibrary.org/works/OL18139175W",
+  "canonicalLink": "https://openlibrary.org/works/OL18139175W/How_Democracies_Die",
   "coverHash": "eb24a840462b8281445c7f57cdf0b10f803c2b9e7c123813542950d4aeadb7a1",
   "coverSourceMime": "image/jpeg",
-  "coverSourceUrl": "https://ia902809.us.archive.org/view_archive.php?archive=%2F18%2Fitems%2Fl_covers_0008%2Fl_covers_0008_31.zip&file=0008311412-L.jpg",
+  "coverSourceUrl": "https://ia802809.us.archive.org/view_archive.php?archive=%2F18%2Fitems%2Fl_covers_0008%2Fl_covers_0008_31.zip&file=0008311412-L.jpg",
   "entityId": "openlibrary:/works/OL18139175W",
   "expiryDate": null,
   "height": 500,
@@ -16,6 +16,6 @@
   "title": "How Democracies Die",
   "titleNormalized": "how democracies die",
   "type": "book",
-  "verifiedAt": "2026-08-15T19:43:43.687746Z",
+  "verifiedAt": "2026-08-17T13:13:43.086907Z",
   "width": 423
 }
