@@ -854,50 +854,6 @@
       "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=How+Democracies+Die&author=Steven+Levitsky%2C+Daniel+Ziblatt&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Max retries exceeded with url: /search.json?title=How+Democracies+Die&author=Steven+Levitsky%2C+Daniel+Ziblatt&limit=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='openlibrary.org', port=443) at 0x7f2e1a704d60>, 'Connection to openlibrary.org timed out. (connect timeout=5)'))"
     },
     {
-      "id": "rss_podcast_f886e3e9cf955b02",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "O que pretende avaliar a auditoria à PJ? E será esta capaz de esclarecer as polémicas em torno de Luís Neves?",
-      "editorialTitle": "O que pretende avaliar a auditoria à PJ? E será esta capaz",
-      "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre os temas e questões de o que pretende avaliar a auditoria à pj? e será esta capaz de esclarecer as polémicas em torno de.",
-      "imageUrl": "/covers/podcast_o_que_pretende_avaliar_a_auditoria___pj__e_ser__esta_15b535c3_f886e3e9cf95.jpg",
-      "link": "https://omny.fm/shows/linhas-vermelhas/o-que-pretende-avaliar-a-auditoria-pj-e-ser-esta-capaz-de-esclarecer-as-pol-micas-em-torno-de-lu-s-neves",
-      "externalId": "0d6857a9-9b41-42b2-9363-b4a2013a2388",
-      "sourceSeriesId": "1596904063",
-      "sourceSeriesTitle": "Linhas Vermelhas",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-11T16:52:06Z",
-      "expiryDate": "2026-08-21T16:52:06Z",
-      "createdAt": "2026-08-11T19:38:14.946586Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
-        "guid": "0d6857a9-9b41-42b2-9363-b4a2013a2388",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
-        "show": "Linhas Vermelhas"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "0d6857a9-9b41-42b2-9363-b4a2013a2388",
-        "score": 1.0,
-        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
-        "verifiedAt": "2026-08-11T19:38:19.525936Z",
-        "resolvedTitle": "O que pretende avaliar a auditoria à PJ? E será esta capaz de esclarecer as polémicas em torno de Luís Neves?",
-        "resolvedAuthor": "Linhas Vermelhas",
-        "sourcePublishedAt": "2026-08-11T16:52:06Z",
-        "sourceDescription": "Esta semana, Miguel Prata Roque e Bruno Bobone analisam a auditoria à Polícia Judiciária, pedida pelo atual diretor nacional da PJ e autorizada pela ministra da Justiça, Rita Alarcão Júdice, na sequência das polémicas em torno de Luís Neves, e a decisão do Presidente da República de submeter a Lei do Retorno e Asilo à fiscalização preventiva do Tribunal…",
-        "editorialDescription": "Análise sobre os temas e questões de o que pretende avaliar a auditoria à pj? e será esta capaz de esclarecer as polémicas em torno de.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "201c367fe90d158d9a5ffb69ba00ce392469626b83d130bf5f74cfb26e578031",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "type": "nostalgia",
       "title": "Contra Informação",
       "authorOrMeta": "arquivos.rtp.pt",
@@ -1021,7 +977,7 @@
       "sourcePublishedAt": "2026-08-16T05:00:00Z",
       "expiryDate": "2026-08-19T05:00:00Z",
       "createdAt": "2026-08-16T13:06:07.574212Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1030,7 +986,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1046,7 +1002,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "78408a58f1a5aa704f9c89b7ce56899c80df75dbe1b3fc863db8518b6483a75a",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Pós-PRR, vamos andar de cheque em cheque? - Ouvintes]: Conteúdo expira em 2026-08-19T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "ai_movie_3fae760969554c16",
@@ -1125,7 +1082,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "A democracia também se constrói fora da política",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Ricardo Garcia",
       "description": "As fundações podem ser uma espécie de capital paciente da democracia.",
       "imageUrl": "/covers/highlight_a_democracia_tamb_m_se_constr_i_fora_da_pol_tica_c3218220_76d54ca99a12.jpg",
       "link": "https://observador.pt/opiniao/a-democracia-tambem-se-constroi-fora-da-politica/",
@@ -1152,13 +1109,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:58fc086826edf9849cb46205",
         "score": 1.0,
         "coverHash": "ee5641468f4664f59c94c46f4716b50e559346ebffa2e0e347df7ed32090286c",
         "verifiedAt": "2026-08-17T05:07:26.966779Z",
         "resolvedTitle": "A democracia também se constrói fora da política",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Ricardo Garcia",
         "sourcePublishedAt": "2026-08-16T23:06:22Z",
         "sourceDescription": "As fundações podem ser uma espécie de capital paciente da democracia."
       }
@@ -1242,6 +1199,49 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-17T23:01:36Z",
         "sourceDescription": "Num contexto marcado pelo envelhecimento da população, pela escassez de trabalhadores e pela crescente competição pelo talento, a qualificação dos recursos deixa de ser apenas política educativa"
+      }
+    },
+    {
+      "id": "rss_podcast_fc7b939356b685a3",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "As entrelinhas de José Luís Carneiro sobre o novo Orçamento de Estado",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre josé Luís Carneiro parece ter deixado nas entrelinhas que o aval do Orçamento de Estado depende de si.",
+      "imageUrl": "/covers/podcast_as_entrelinhas_de_jos__lu_s_carneiro_sobre_o_novo_or_8382317f_fc7b939356b6.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/as-entrelinhas-de-jos-lu-s-carneiro-sobre-o-novo-or-amento-de-estado",
+      "externalId": "2dbd2c67-3a5d-4edf-a625-b4a9013617a3",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-18T09:00:00Z",
+      "expiryDate": "2026-08-28T09:00:00Z",
+      "createdAt": "2026-08-18T13:37:31.515585Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "2dbd2c67-3a5d-4edf-a625-b4a9013617a3",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "2dbd2c67-3a5d-4edf-a625-b4a9013617a3",
+        "score": 1.0,
+        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
+        "verifiedAt": "2026-08-18T13:37:34.182119Z",
+        "resolvedTitle": "As entrelinhas de José Luís Carneiro sobre o novo Orçamento de Estado",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-08-18T09:00:00Z",
+        "sourceDescription": "José Luís Carneiro parece ter deixado nas entrelinhas que o aval do Orçamento de Estado depende de si. Luís Montenegro e o líder do PS discursaram assentes sob diferentes pontos de partida. O primeiro-ministro apresentou o presente e o futuro do Governo, José Luís Carneiro trouxe a viabilização do OE para cima da mesa de debates.",
+        "editorialDescription": "Análise sobre josé Luís Carneiro parece ter deixado nas entrelinhas que o aval do Orçamento de Estado depende de si.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "a7c5b94a9beb0c9623497fcc03eaf1e80bf1ee851f842a4c3068f38ee126416d",
+        "editorialDescriptionProvider": "extractive"
       }
     }
   ],
