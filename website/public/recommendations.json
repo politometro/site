@@ -966,52 +966,6 @@
       "validationError": "contrato de verificação incompleto"
     },
     {
-      "id": "rss_highlight_c9103f4909d06882",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Educação para todos. Para quase todos...",
-      "authorOrMeta": "Leonor Crucho",
-      "description": "Uma criança com Necessidades Educativas Especiais não pode ser tratada como uma variável que se encaixa quando houver disponibilidade.",
-      "imageUrl": "/covers/highlight_educa__o_para_todos__para_quase_todos____d31d615e_e3460ecf8f78.jpg",
-      "link": "https://observador.pt/opiniao/educacao-para-todos-para-quase-todos/",
-      "externalId": "article:url:c9103f4909d06882d6902f7d",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-14T23:08:41Z",
-      "expiryDate": "2026-09-13T23:08:41Z",
-      "createdAt": "2026-08-15T04:52:45.023341Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/educacao-para-todos-para-quase-todos/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F08%2F14143750%2Fleonor-crucho.jpg",
-        "categories": [
-          "Tribuna Aberta",
-          "Opinião",
-          "Observador",
-          "Escolas",
-          "Educação",
-          "Inclusão Social",
-          "Sociedade",
-          "Desigualdade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:c9103f4909d06882d6902f7d",
-        "score": 1.0,
-        "coverHash": "7aa6ddbfc3354492f10a32b7c6e118ea9cb2c99fd8eb9fd1030656d770ad976c",
-        "verifiedAt": "2026-08-15T04:52:45.515197Z",
-        "resolvedTitle": "Educação para todos. Para quase todos...",
-        "resolvedAuthor": "Leonor Crucho",
-        "sourcePublishedAt": "2026-08-14T23:08:41Z",
-        "sourceDescription": "Uma criança com Necessidades Educativas Especiais não pode ser tratada como uma variável que se encaixa quando houver disponibilidade."
-      }
-    },
-    {
       "id": "rss_highlight_eabfd1b87529e98a",
       "type": "highlight",
       "category": "Destaque",
@@ -1052,52 +1006,12 @@
       }
     },
     {
-      "id": "rss_highlight_fb063f8ce7322343",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "O Chega não tem nojo de mim",
-      "authorOrMeta": "Tiago de Oliveira Cavaco",
-      "description": "A força dos evangélicos é não internalizarmos, como agora se diz em linguagem psico-emotiva, o nojo que sentem de nós. Venha esse nojo dos partidos políticos, da imprensa ou de qualquer outro lugar",
-      "imageUrl": "/covers/highlight_o_chega_n_o_tem_nojo_de_mim_e9dba53d_2958c07894c5.jpg",
-      "link": "https://observador.pt/opiniao/o-chega-nao-tem-nojo-de-mim/",
-      "externalId": "article:url:fb063f8ce732234390c3b699",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-15T23:21:56Z",
-      "expiryDate": "2026-09-14T23:21:56Z",
-      "createdAt": "2026-08-16T04:55:37.730426Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/o-chega-nao-tem-nojo-de-mim/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1941%3A1940%3Anowe%3A488%3A542%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170600%2Ftiago-cavaco.jpg",
-        "categories": [
-          "Partido Chega",
-          "Política"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:fb063f8ce732234390c3b699",
-        "score": 1.0,
-        "coverHash": "dcb6b90a7cf78fbddf8657e13c607e6d75c89c4f20160d12c7ba1d131a731511",
-        "verifiedAt": "2026-08-16T04:55:40.466285Z",
-        "resolvedTitle": "O Chega não tem nojo de mim",
-        "resolvedAuthor": "Tiago de Oliveira Cavaco",
-        "sourcePublishedAt": "2026-08-15T23:21:56Z",
-        "sourceDescription": "A força dos evangélicos é não internalizarmos, como agora se diz em linguagem psico-emotiva, o nojo que sentem de nós. Venha esse nojo dos partidos políticos, da imprensa ou de qualquer outro lugar"
-      }
-    },
-    {
       "id": "rss_podcast_9307cd252eafad7b",
       "type": "podcast",
       "category": "Podcast",
       "title": "Pós-PRR, vamos andar de cheque em cheque? - Ouvintes",
       "authorOrMeta": "Fora do Baralho",
-      "description": "Análise sobre os temas e questões de pós-prr, vamos andar de cheque em cheque? - ouvintes.",
+      "description": "Análise sobre análise sobre os temas e questões de pós-prr, vamos andar de cheque em cheque?",
       "imageUrl": "/covers/podcast_p_s_prr__vamos_andar_de_cheque_em_cheque____ouvintes_86814f57_9307cd252eaf.jpg",
       "link": "https://omny.fm/shows/fora-do-baralho/p-s-prr-vamos-andar-de-cheque-em-cheque-ouvintes",
       "externalId": "f9dfd83f-e3d8-4340-92e6-b4a600efb0a3",
@@ -1127,10 +1041,10 @@
         "resolvedTitle": "Pós-PRR, vamos andar de cheque em cheque? - Ouvintes",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-08-16T05:00:00Z",
-        "sourceDescription": "Análise sobre episódio “Pós-PRR, vamos andar de cheque em cheque? - Ouvintes” do podcast Fora do Baralho, publicado em 16/08/2026.",
-        "editorialDescription": "Análise sobre os temas e questões de pós-prr, vamos andar de cheque em cheque? - ouvintes.",
+        "sourceDescription": "Análise sobre os temas e questões de pós-prr, vamos andar de cheque em cheque? - ouvintes.",
+        "editorialDescription": "Análise sobre análise sobre os temas e questões de pós-prr, vamos andar de cheque em cheque?",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "aad94a98c5099d2c2d703aba1950b598e6c96522e61823dc40857e69a70aab05",
+        "editorialSourceHash": "78408a58f1a5aa704f9c89b7ce56899c80df75dbe1b3fc863db8518b6483a75a",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1247,6 +1161,87 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-16T23:06:22Z",
         "sourceDescription": "As fundações podem ser uma espécie de capital paciente da democracia."
+      }
+    },
+    {
+      "id": "rss_highlight_32085618feef3a08",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Inúmeros Migrantes, Péssimos Políticos, e a culpa é da bola",
+      "authorOrMeta": "observador.pt",
+      "description": "Perante o maior colapso fronteiriço da Europa recente, cinco partidos de famílias políticas opostas descobriram o mesmo alvo: o Mundial de 2030",
+      "imageUrl": "/covers/highlight_in_meros_migrantes__p_ssimos_pol_ticos__e_a_culpa__1c72aa5b_d96884330485.jpg",
+      "link": "https://observador.pt/opiniao/inumeros-migrantes-pessimos-politicos-e-a-culpa-e-do-futebol/",
+      "externalId": "article:url:32085618feef3a0825166226",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-17T23:15:04Z",
+      "expiryDate": "2026-09-16T23:15:04Z",
+      "createdAt": "2026-08-18T04:57:31.096704Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/inumeros-migrantes-pessimos-politicos-e-a-culpa-e-do-futebol/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A490%3A490%3Anowe%3A75%3A42%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2023%2F07%2F02233827%2Ffrancisco-cudell.jpg",
+        "categories": [
+          "Futebol",
+          "Desporto"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:32085618feef3a0825166226",
+        "score": 1.0,
+        "coverHash": "146049938e9d1cbb1721dbd9f73d0af7eed1da9d3587df8b1f49b60e1ae7041a",
+        "verifiedAt": "2026-08-18T04:57:32.050008Z",
+        "resolvedTitle": "Inúmeros Migrantes, Péssimos Políticos, e a culpa é da bola",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-17T23:15:04Z",
+        "sourceDescription": "Perante o maior colapso fronteiriço da Europa recente, cinco partidos de famílias políticas opostas descobriram o mesmo alvo: o Mundial de 2030"
+      }
+    },
+    {
+      "id": "rss_highlight_20ee972f11840c50",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Desafios de uma sociedade com formação superior",
+      "authorOrMeta": "observador.pt",
+      "description": "Num contexto marcado pelo envelhecimento da população, pela escassez de trabalhadores e pela crescente competição pelo talento, a qualificação dos recursos deixa de ser apenas política educativa",
+      "imageUrl": "/covers/highlight_desafios_de_uma_sociedade_com_forma__o_superior_050b1ed7_12715d2e8888.jpg",
+      "link": "https://observador.pt/opiniao/desafios-de-uma-sociedade-com-formacao-superior/",
+      "externalId": "article:url:20ee972f11840c50ec869ade",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-17T23:01:36Z",
+      "expiryDate": "2026-09-16T23:01:36Z",
+      "createdAt": "2026-08-18T04:57:31.098260Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/desafios-de-uma-sociedade-com-formacao-superior/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A468%3A468%3Anowe%3A88%3A23%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2023%2F01%2F27210239%2Ffoto-o-oservador-2.jpg",
+        "categories": [
+          "Tribuna Aberta",
+          "Opinião",
+          "Observador"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:20ee972f11840c50ec869ade",
+        "score": 1.0,
+        "coverHash": "ec52aaf8fe064e74bcfc2145b71b74d1ff6703eeaf880ffab8f19782d5c10d2b",
+        "verifiedAt": "2026-08-18T04:57:34.555363Z",
+        "resolvedTitle": "Desafios de uma sociedade com formação superior",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-17T23:01:36Z",
+        "sourceDescription": "Num contexto marcado pelo envelhecimento da população, pela escassez de trabalhadores e pela crescente competição pelo talento, a qualificação dos recursos deixa de ser apenas política educativa"
       }
     }
   ],
