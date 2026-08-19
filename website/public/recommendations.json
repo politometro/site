@@ -922,46 +922,6 @@
       "validationError": "contrato de verificação incompleto"
     },
     {
-      "id": "rss_highlight_eabfd1b87529e98a",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Senhoras conservadoras",
-      "authorOrMeta": "Carlos Maria Bobone",
-      "description": "Que um conservador prefira distanciar-se disto a saudá-lo só tem um nome: pedantismo. Em última análise, trata-se de um almoço inofensivo cujo grande pecado é ser apenas um pouco ridículo.",
-      "imageUrl": "/covers/highlight_senhoras_conservadoras_8cdb24b7_f85de4f5d5e4.jpg",
-      "link": "https://observador.pt/opiniao/senhoras-conservadoras/",
-      "externalId": "article:url:eabfd1b87529e98ab9be070a",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-15T23:24:32Z",
-      "expiryDate": "2026-09-14T23:24:32Z",
-      "createdAt": "2026-08-16T04:55:37.730141Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/senhoras-conservadoras/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2644%3A2644%3Anowe%3A661%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F04%2F23150527%2Fjporfirio-retratos-redacao-2026-01-16.jpg",
-        "categories": [
-          "Feminismo",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:eabfd1b87529e98ab9be070a",
-        "score": 1.0,
-        "coverHash": "6263ee1b54529be92940bae114ac4d3f815ff7de837459174006c45c50fc7289",
-        "verifiedAt": "2026-08-16T04:55:39.126138Z",
-        "resolvedTitle": "Senhoras conservadoras",
-        "resolvedAuthor": "Carlos Maria Bobone",
-        "sourcePublishedAt": "2026-08-15T23:24:32Z",
-        "sourceDescription": "Que um conservador prefira distanciar-se disto a saudá-lo só tem um nome: pedantismo. Em última análise, trata-se de um almoço inofensivo cujo grande pecado é ser apenas um pouco ridículo."
-      }
-    },
-    {
       "id": "rss_podcast_9307cd252eafad7b",
       "type": "podcast",
       "category": "Podcast",
@@ -1124,10 +1084,10 @@
       "id": "rss_highlight_32085618feef3a08",
       "type": "highlight",
       "category": "Destaque",
-      "title": "Inúmeros Migrantes, Péssimos Políticos, e a culpa é da bola",
-      "authorOrMeta": "observador.pt",
+      "title": "Inúmeros Migrantes, Péssimos Políticos, e a culpa é do Futebol",
+      "authorOrMeta": "Francisco Cudell",
       "description": "Perante o maior colapso fronteiriço da Europa recente, cinco partidos de famílias políticas opostas descobriram o mesmo alvo: o Mundial de 2030",
-      "imageUrl": "/covers/highlight_in_meros_migrantes__p_ssimos_pol_ticos__e_a_culpa__1c72aa5b_d96884330485.jpg",
+      "imageUrl": "/covers/highlight_in_meros_migrantes__p_ssimos_pol_ticos__e_a_culpa__70429587_d96884330485.jpg",
       "link": "https://observador.pt/opiniao/inumeros-migrantes-pessimos-politicos-e-a-culpa-e-do-futebol/",
       "externalId": "article:url:32085618feef3a0825166226",
       "priority": 4,
@@ -1149,13 +1109,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:32085618feef3a0825166226",
-        "score": 1.0,
-        "coverHash": "146049938e9d1cbb1721dbd9f73d0af7eed1da9d3587df8b1f49b60e1ae7041a",
-        "verifiedAt": "2026-08-18T04:57:32.050008Z",
-        "resolvedTitle": "Inúmeros Migrantes, Péssimos Políticos, e a culpa é da bola",
-        "resolvedAuthor": "observador.pt",
+        "score": 0.8769,
+        "coverHash": "3079a4f8552405be4a747b20b6a09884168a4d509baa514b54026a9f8ab37ece",
+        "verifiedAt": "2026-08-19T04:57:36.983824Z",
+        "resolvedTitle": "Inúmeros Migrantes, Péssimos Políticos, e a culpa é do Futebol",
+        "resolvedAuthor": "Francisco Cudell",
         "sourcePublishedAt": "2026-08-17T23:15:04Z",
         "sourceDescription": "Perante o maior colapso fronteiriço da Europa recente, cinco partidos de famílias políticas opostas descobriram o mesmo alvo: o Mundial de 2030"
       }
@@ -1165,7 +1125,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Desafios de uma sociedade com formação superior",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "António Edmundo Ribeiro",
       "description": "Num contexto marcado pelo envelhecimento da população, pela escassez de trabalhadores e pela crescente competição pelo talento, a qualificação dos recursos deixa de ser apenas política educativa",
       "imageUrl": "/covers/highlight_desafios_de_uma_sociedade_com_forma__o_superior_050b1ed7_12715d2e8888.jpg",
       "link": "https://observador.pt/opiniao/desafios-de-uma-sociedade-com-formacao-superior/",
@@ -1190,13 +1150,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:20ee972f11840c50ec869ade",
         "score": 1.0,
         "coverHash": "ec52aaf8fe064e74bcfc2145b71b74d1ff6703eeaf880ffab8f19782d5c10d2b",
         "verifiedAt": "2026-08-18T04:57:34.555363Z",
         "resolvedTitle": "Desafios de uma sociedade com formação superior",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "António Edmundo Ribeiro",
         "sourcePublishedAt": "2026-08-17T23:01:36Z",
         "sourceDescription": "Num contexto marcado pelo envelhecimento da população, pela escassez de trabalhadores e pela crescente competição pelo talento, a qualificação dos recursos deixa de ser apenas política educativa"
       }
@@ -1242,6 +1202,49 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "a7c5b94a9beb0c9623497fcc03eaf1e80bf1ee851f842a4c3068f38ee126416d",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_9012f547088ea53a",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Inquietações num mundo em mudança (I)",
+      "authorOrMeta": "observador.pt",
+      "description": "Não é largamente maioritária entre os europeus a opção de que a política de educação deve defender os nossos valores históricos, civilizacionais e culturais e rejeitar o wokismo e seus derivados?",
+      "imageUrl": "/covers/highlight_inquieta__es_num_mundo_em_mudan_a__i__3614c978_8fe0d1a023b6.jpg",
+      "link": "https://observador.pt/opiniao/inquietacoes-num-mundo-em-mudanca-i/",
+      "externalId": "article:url:9012f547088ea53ab6ceeaf2",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-18T23:04:39Z",
+      "expiryDate": "2026-09-17T23:04:39Z",
+      "createdAt": "2026-08-19T04:57:42.036990Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/inquietacoes-num-mundo-em-mudanca-i/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2018%2F08%2F02220145%2F21830001_467x467_acf_cropped.jpg",
+        "categories": [
+          "Tribuna Aberta",
+          "Opinião",
+          "Observador",
+          "Mundo",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:9012f547088ea53ab6ceeaf2",
+        "score": 1.0,
+        "coverHash": "1e3d52ae7b6818f1f0db2314617b9da3d18480959743b9ee4f496f24edf29f62",
+        "verifiedAt": "2026-08-19T04:57:42.179303Z",
+        "resolvedTitle": "Inquietações num mundo em mudança (I)",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-18T23:04:39Z",
+        "sourceDescription": "Não é largamente maioritária entre os europeus a opção de que a política de educação deve defender os nossos valores históricos, civilizacionais e culturais e rejeitar o wokismo e seus derivados?"
       }
     }
   ],
