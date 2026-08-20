@@ -994,49 +994,6 @@
       }
     },
     {
-      "id": "rss_highlight_58fc086826edf984",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "A democracia também se constrói fora da política",
-      "authorOrMeta": "Ricardo Garcia",
-      "description": "As fundações podem ser uma espécie de capital paciente da democracia.",
-      "imageUrl": "/covers/highlight_a_democracia_tamb_m_se_constr_i_fora_da_pol_tica_c3218220_76d54ca99a12.jpg",
-      "link": "https://observador.pt/opiniao/a-democracia-tambem-se-constroi-fora-da-politica/",
-      "externalId": "article:url:58fc086826edf9849cb46205",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-16T23:06:22Z",
-      "expiryDate": "2026-09-15T23:06:22Z",
-      "createdAt": "2026-08-17T05:07:26.074929Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/a-democracia-tambem-se-constroi-fora-da-politica/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A124%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F08%2F12122027%2Fwhatsapp-image-2026-08-11-at-180809.jpg",
-        "categories": [
-          "Tribuna Aberta",
-          "Opinião",
-          "Observador",
-          "Democracia",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:58fc086826edf9849cb46205",
-        "score": 1.0,
-        "coverHash": "ee5641468f4664f59c94c46f4716b50e559346ebffa2e0e347df7ed32090286c",
-        "verifiedAt": "2026-08-17T05:07:26.966779Z",
-        "resolvedTitle": "A democracia também se constrói fora da política",
-        "resolvedAuthor": "Ricardo Garcia",
-        "sourcePublishedAt": "2026-08-16T23:06:22Z",
-        "sourceDescription": "As fundações podem ser uma espécie de capital paciente da democracia."
-      }
-    },
-    {
       "id": "rss_highlight_32085618feef3a08",
       "type": "highlight",
       "category": "Destaque",
@@ -1067,54 +1024,13 @@
         "status": "verified",
         "source": "news:observador.pt",
         "entityId": "article:url:32085618feef3a0825166226",
-        "score": 0.8769,
+        "score": 1.0,
         "coverHash": "3079a4f8552405be4a747b20b6a09884168a4d509baa514b54026a9f8ab37ece",
         "verifiedAt": "2026-08-19T04:57:36.983824Z",
         "resolvedTitle": "Inúmeros Migrantes, Péssimos Políticos, e a culpa é do Futebol",
         "resolvedAuthor": "Francisco Cudell",
         "sourcePublishedAt": "2026-08-17T23:15:04Z",
         "sourceDescription": "Perante o maior colapso fronteiriço da Europa recente, cinco partidos de famílias políticas opostas descobriram o mesmo alvo: o Mundial de 2030"
-      }
-    },
-    {
-      "id": "rss_highlight_20ee972f11840c50",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Desafios de uma sociedade com formação superior",
-      "authorOrMeta": "António Edmundo Ribeiro",
-      "description": "Num contexto marcado pelo envelhecimento da população, pela escassez de trabalhadores e pela crescente competição pelo talento, a qualificação dos recursos deixa de ser apenas política educativa",
-      "imageUrl": "/covers/highlight_desafios_de_uma_sociedade_com_forma__o_superior_050b1ed7_12715d2e8888.jpg",
-      "link": "https://observador.pt/opiniao/desafios-de-uma-sociedade-com-formacao-superior/",
-      "externalId": "article:url:20ee972f11840c50ec869ade",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-17T23:01:36Z",
-      "expiryDate": "2026-09-16T23:01:36Z",
-      "createdAt": "2026-08-18T04:57:31.098260Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/desafios-de-uma-sociedade-com-formacao-superior/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A468%3A468%3Anowe%3A88%3A23%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2023%2F01%2F27210239%2Ffoto-o-oservador-2.jpg",
-        "categories": [
-          "Tribuna Aberta",
-          "Opinião",
-          "Observador"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:20ee972f11840c50ec869ade",
-        "score": 1.0,
-        "coverHash": "ec52aaf8fe064e74bcfc2145b71b74d1ff6703eeaf880ffab8f19782d5c10d2b",
-        "verifiedAt": "2026-08-18T04:57:34.555363Z",
-        "resolvedTitle": "Desafios de uma sociedade com formação superior",
-        "resolvedAuthor": "António Edmundo Ribeiro",
-        "sourcePublishedAt": "2026-08-17T23:01:36Z",
-        "sourceDescription": "Num contexto marcado pelo envelhecimento da população, pela escassez de trabalhadores e pela crescente competição pelo talento, a qualificação dos recursos deixa de ser apenas política educativa"
       }
     },
     {
@@ -1165,7 +1081,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Inquietações num mundo em mudança (I)",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Fernando Faria de Oliveira",
       "description": "Não é largamente maioritária entre os europeus a opção de que a política de educação deve defender os nossos valores históricos, civilizacionais e culturais e rejeitar o wokismo e seus derivados?",
       "imageUrl": "/covers/highlight_inquieta__es_num_mundo_em_mudan_a__i__3614c978_8fe0d1a023b6.jpg",
       "link": "https://observador.pt/opiniao/inquietacoes-num-mundo-em-mudanca-i/",
@@ -1192,13 +1108,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:9012f547088ea53ab6ceeaf2",
         "score": 1.0,
         "coverHash": "1e3d52ae7b6818f1f0db2314617b9da3d18480959743b9ee4f496f24edf29f62",
         "verifiedAt": "2026-08-19T04:57:42.179303Z",
         "resolvedTitle": "Inquietações num mundo em mudança (I)",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Fernando Faria de Oliveira",
         "sourcePublishedAt": "2026-08-18T23:04:39Z",
         "sourceDescription": "Não é largamente maioritária entre os europeus a opção de que a política de educação deve defender os nossos valores históricos, civilizacionais e culturais e rejeitar o wokismo e seus derivados?"
       }
@@ -1243,8 +1159,88 @@
         "sourceDescription": "Reedição do arquivo de podcasts da SIC. Episódio publicado originalmente em janeiro de 2025, de “Coisa Que Não Edifica Nem Destrói”. o primeiro podcast original de Ricardo Araújo Pereira. Ricardo Araújo Pereira fala na companhia de sete outras pessoas sobre sátira política.",
         "editorialDescription": "Análise sobre ricardo Araújo Pereira fala na companhia de sete outras pessoas sobre sátira política.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "5257f61c6f04f6e6d8591dd0c282a0fa1e0b057defebc9b652ec0d0f8e01fead",
+        "editorialSourceHash": "a6390919ac39f7eecc559c91b7ccfc6cadbab73d1f33f274c212a368bfedee9d",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_b1b50ef04bc19afc",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A imigração ilegal é uma das maiores ameaças à democracia",
+      "authorOrMeta": "observador.pt",
+      "description": "O que está a acontecer em Ceuta é um exemplo claro sobre a natureza da imigração ilegal. Nenhum dos imigrantes que entrou em Ceuta é legal. São todos ilegais.",
+      "imageUrl": "/covers/highlight_a_imigra__o_ilegal___uma_das_maiores_amea_as___dem_2d78b063_06c7cb8bde67.jpg",
+      "link": "https://observador.pt/opiniao/a-imigracao-ilegal-e-uma-das-maiores-ameacas-a-democracia/",
+      "externalId": "article:url:b1b50ef04bc19afcf079add7",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-19T23:25:17Z",
+      "expiryDate": "2026-09-18T23:25:17Z",
+      "createdAt": "2026-08-20T04:59:20.149606Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-imigracao-ilegal-e-uma-das-maiores-ameacas-a-democracia/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2666%3A2665%3Anowe%3A0%3A503%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170547%2Fjoao-marques-de-almeida.jpg",
+        "categories": [
+          "Imigração",
+          "Mundo"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:b1b50ef04bc19afcf079add7",
+        "score": 1.0,
+        "coverHash": "5333c2dfbbf3895a50a6fa48096a040af763f2741a3f6c3293569245dcb0ca10",
+        "verifiedAt": "2026-08-20T04:59:20.689838Z",
+        "resolvedTitle": "A imigração ilegal é uma das maiores ameaças à democracia",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-19T23:25:17Z",
+        "sourceDescription": "O que está a acontecer em Ceuta é um exemplo claro sobre a natureza da imigração ilegal. Nenhum dos imigrantes que entrou em Ceuta é legal. São todos ilegais."
+      }
+    },
+    {
+      "id": "rss_highlight_effcb0c6779b9397",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Mulheres conservadoras",
+      "authorOrMeta": "observador.pt",
+      "description": "Eu não sei o que são mulheres conservadoras, o que sei é que não me sinto nada confortável numa sociedade que quer ostracizar pessoas pelo simples crime de pensar e dizer coisas diferentes das minhas",
+      "imageUrl": "/covers/highlight_mulheres_conservadoras_7b3ffbf9_d5a51ee65f74.jpg",
+      "link": "https://observador.pt/opiniao/mulheres-conservadoras/",
+      "externalId": "article:url:effcb0c6779b93972b3d53f5",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-19T23:20:29Z",
+      "expiryDate": "2026-09-18T23:20:29Z",
+      "createdAt": "2026-08-20T04:59:20.151103Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/mulheres-conservadoras/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2015%2F10%2Ffoto_hpsantos.jpg",
+        "categories": [
+          "Feminismo",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:effcb0c6779b93972b3d53f5",
+        "score": 1.0,
+        "coverHash": "15044fb2543024f5f669c46cd38c6acd305d411f3c8e2a25b73409769604d7d4",
+        "verifiedAt": "2026-08-20T04:59:21.049010Z",
+        "resolvedTitle": "Mulheres conservadoras",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-19T23:20:29Z",
+        "sourceDescription": "Eu não sei o que são mulheres conservadoras, o que sei é que não me sinto nada confortável numa sociedade que quer ostracizar pessoas pelo simples crime de pensar e dizer coisas diferentes das minhas"
       }
     }
   ],
