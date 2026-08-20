@@ -994,46 +994,6 @@
       }
     },
     {
-      "id": "rss_highlight_32085618feef3a08",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Inúmeros Migrantes, Péssimos Políticos, e a culpa é do Futebol",
-      "authorOrMeta": "Francisco Cudell",
-      "description": "Perante o maior colapso fronteiriço da Europa recente, cinco partidos de famílias políticas opostas descobriram o mesmo alvo: o Mundial de 2030",
-      "imageUrl": "/covers/highlight_in_meros_migrantes__p_ssimos_pol_ticos__e_a_culpa__70429587_d96884330485.jpg",
-      "link": "https://observador.pt/opiniao/inumeros-migrantes-pessimos-politicos-e-a-culpa-e-do-futebol/",
-      "externalId": "article:url:32085618feef3a0825166226",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-17T23:15:04Z",
-      "expiryDate": "2026-09-16T23:15:04Z",
-      "createdAt": "2026-08-18T04:57:31.096704Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/inumeros-migrantes-pessimos-politicos-e-a-culpa-e-do-futebol/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A490%3A490%3Anowe%3A75%3A42%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2023%2F07%2F02233827%2Ffrancisco-cudell.jpg",
-        "categories": [
-          "Futebol",
-          "Desporto"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:32085618feef3a0825166226",
-        "score": 1.0,
-        "coverHash": "3079a4f8552405be4a747b20b6a09884168a4d509baa514b54026a9f8ab37ece",
-        "verifiedAt": "2026-08-19T04:57:36.983824Z",
-        "resolvedTitle": "Inúmeros Migrantes, Péssimos Políticos, e a culpa é do Futebol",
-        "resolvedAuthor": "Francisco Cudell",
-        "sourcePublishedAt": "2026-08-17T23:15:04Z",
-        "sourceDescription": "Perante o maior colapso fronteiriço da Europa recente, cinco partidos de famílias políticas opostas descobriram o mesmo alvo: o Mundial de 2030"
-      }
-    },
-    {
       "id": "rss_podcast_fc7b939356b685a3",
       "type": "podcast",
       "category": "Podcast",
@@ -1241,6 +1201,50 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-19T23:20:29Z",
         "sourceDescription": "Eu não sei o que são mulheres conservadoras, o que sei é que não me sinto nada confortável numa sociedade que quer ostracizar pessoas pelo simples crime de pensar e dizer coisas diferentes das minhas"
+      }
+    },
+    {
+      "id": "rss_highlight_acf92d50a1143ee5",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Futuro da intermodalidade na Península Ibérica em debate",
+      "authorOrMeta": "observador.pt",
+      "description": "Promovido pelo município de Soure, a APAT e a Associação Espanhola do Transporte, o encontro estimulará a integração dos diferentes meios de transporte e o contributo para uma cadeia logística eficaz.",
+      "imageUrl": "/covers/highlight_futuro_da_intermodalidade_na_pen_nsula_ib_rica_em__da0ec491_fe0199f574ec.jpg",
+      "link": "https://observador.pt/2026/08/20/conferencia-iberica-debate-em-soure-oportunidades-e-desafios-da-intermodalidade/",
+      "externalId": "article:url:acf92d50a1143ee5fa531071",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-20T10:28:47Z",
+      "expiryDate": "2026-09-19T10:28:47Z",
+      "createdAt": "2026-08-20T13:18:39.730597Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/2026/08/20/conferencia-iberica-debate-em-soure-oportunidades-e-desafios-da-intermodalidade/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:3840:2159:nowe:0:97/q:70/plain/https://s3.observador.pt/wp-content/uploads/2026/08/20111647/estacao-alfarelos-granja-ulmeiro.jpg",
+        "categories": [
+          "Coimbra",
+          "País",
+          "Sociedade",
+          "Debate",
+          "Transportes",
+          "Economia"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:acf92d50a1143ee5fa531071",
+        "score": 1.0,
+        "coverHash": "18de6604e82afe4e17f6d19e1ee0edd419fc5d65fcecdd5dbf11f91ec62cb6a4",
+        "verifiedAt": "2026-08-20T13:18:39.906770Z",
+        "resolvedTitle": "Futuro da intermodalidade na Península Ibérica em debate",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-20T10:28:47Z",
+        "sourceDescription": "Promovido pelo município de Soure, a APAT e a Associação Espanhola do Transporte, o encontro estimulará a integração dos diferentes meios de transporte e o contributo para uma cadeia logística eficaz."
       }
     }
   ],
