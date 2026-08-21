@@ -1037,49 +1037,6 @@
       }
     },
     {
-      "id": "rss_highlight_9012f547088ea53a",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Inquietações num mundo em mudança (I)",
-      "authorOrMeta": "Fernando Faria de Oliveira",
-      "description": "Não é largamente maioritária entre os europeus a opção de que a política de educação deve defender os nossos valores históricos, civilizacionais e culturais e rejeitar o wokismo e seus derivados?",
-      "imageUrl": "/covers/highlight_inquieta__es_num_mundo_em_mudan_a__i__3614c978_8fe0d1a023b6.jpg",
-      "link": "https://observador.pt/opiniao/inquietacoes-num-mundo-em-mudanca-i/",
-      "externalId": "article:url:9012f547088ea53ab6ceeaf2",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-18T23:04:39Z",
-      "expiryDate": "2026-09-17T23:04:39Z",
-      "createdAt": "2026-08-19T04:57:42.036990Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/inquietacoes-num-mundo-em-mudanca-i/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2018%2F08%2F02220145%2F21830001_467x467_acf_cropped.jpg",
-        "categories": [
-          "Tribuna Aberta",
-          "Opinião",
-          "Observador",
-          "Mundo",
-          "Política"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:9012f547088ea53ab6ceeaf2",
-        "score": 1.0,
-        "coverHash": "1e3d52ae7b6818f1f0db2314617b9da3d18480959743b9ee4f496f24edf29f62",
-        "verifiedAt": "2026-08-19T04:57:42.179303Z",
-        "resolvedTitle": "Inquietações num mundo em mudança (I)",
-        "resolvedAuthor": "Fernando Faria de Oliveira",
-        "sourcePublishedAt": "2026-08-18T23:04:39Z",
-        "sourceDescription": "Não é largamente maioritária entre os europeus a opção de que a política de educação deve defender os nossos valores históricos, civilizacionais e culturais e rejeitar o wokismo e seus derivados?"
-      }
-    },
-    {
       "id": "rss_podcast_3a06e3ff218f2e3a",
       "type": "podcast",
       "category": "Podcast",
@@ -1128,7 +1085,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "A imigração ilegal é uma das maiores ameaças à democracia",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "João Marques de Almeida",
       "description": "O que está a acontecer em Ceuta é um exemplo claro sobre a natureza da imigração ilegal. Nenhum dos imigrantes que entrou em Ceuta é legal. São todos ilegais.",
       "imageUrl": "/covers/highlight_a_imigra__o_ilegal___uma_das_maiores_amea_as___dem_2d78b063_06c7cb8bde67.jpg",
       "link": "https://observador.pt/opiniao/a-imigracao-ilegal-e-uma-das-maiores-ameacas-a-democracia/",
@@ -1152,13 +1109,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:b1b50ef04bc19afcf079add7",
         "score": 1.0,
         "coverHash": "5333c2dfbbf3895a50a6fa48096a040af763f2741a3f6c3293569245dcb0ca10",
         "verifiedAt": "2026-08-20T04:59:20.689838Z",
         "resolvedTitle": "A imigração ilegal é uma das maiores ameaças à democracia",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "João Marques de Almeida",
         "sourcePublishedAt": "2026-08-19T23:25:17Z",
         "sourceDescription": "O que está a acontecer em Ceuta é um exemplo claro sobre a natureza da imigração ilegal. Nenhum dos imigrantes que entrou em Ceuta é legal. São todos ilegais."
       }
@@ -1168,7 +1125,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Mulheres conservadoras",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Henrique Pereira dos Santos",
       "description": "Eu não sei o que são mulheres conservadoras, o que sei é que não me sinto nada confortável numa sociedade que quer ostracizar pessoas pelo simples crime de pensar e dizer coisas diferentes das minhas",
       "imageUrl": "/covers/highlight_mulheres_conservadoras_7b3ffbf9_d5a51ee65f74.jpg",
       "link": "https://observador.pt/opiniao/mulheres-conservadoras/",
@@ -1192,13 +1149,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:effcb0c6779b93972b3d53f5",
         "score": 1.0,
         "coverHash": "15044fb2543024f5f669c46cd38c6acd305d411f3c8e2a25b73409769604d7d4",
         "verifiedAt": "2026-08-20T04:59:21.049010Z",
         "resolvedTitle": "Mulheres conservadoras",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Henrique Pereira dos Santos",
         "sourcePublishedAt": "2026-08-19T23:20:29Z",
         "sourceDescription": "Eu não sei o que são mulheres conservadoras, o que sei é que não me sinto nada confortável numa sociedade que quer ostracizar pessoas pelo simples crime de pensar e dizer coisas diferentes das minhas"
       }
@@ -1246,6 +1203,46 @@
         "sourcePublishedAt": "2026-08-20T10:28:47Z",
         "sourceDescription": "Promovido pelo município de Soure, a APAT e a Associação Espanhola do Transporte, o encontro estimulará a integração dos diferentes meios de transporte e o contributo para uma cadeia logística eficaz."
       }
+    },
+    {
+      "id": "rss_highlight_50d606325e9b45d3",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Contraponto. A saúde da democracia e o fantasma dos corte nas pensões",
+      "authorOrMeta": "www.rtp.pt",
+      "description": "Ana Pedrosa Augusto e Nuno Artur Silva discutem o relatório sobre a democracia em 2026 e o discurso de André Ventura na rentrée do Chega.",
+      "imageUrl": "/covers/highlight_contraponto__a_sa_de_da_democracia_e_o_fantasma_do_15be7718_791b8c03368e.jpg",
+      "link": "https://www.rtp.pt/noticias/opiniao/nuno-silva-e-ana-augusto/contraponto-a-saude-da-democracia-e-o-fantasma-dos-corte-nas-pensoes_1760688",
+      "externalId": "article:url:50d606325e9b45d3e4f2f018",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-20T22:16:49Z",
+      "expiryDate": "2026-09-19T22:16:49Z",
+      "createdAt": "2026-08-21T04:59:51.779154Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://www.rtp.pt/noticias/rss",
+        "guid": "https://www.rtp.pt/noticias/opiniao/nuno-silva-e-ana-augusto/contraponto-a-saude-da-democracia-e-o-fantasma-dos-corte-nas-pensoes_1760688",
+        "imageUrl": "https://cdn-images.rtp.pt/noticias/images/default_rtpnoticias.png?w=350&q=50&auto=format",
+        "categories": [
+          "Nuno Artur Silva e Ana Pedrosa Augusto"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:www.rtp.pt",
+        "entityId": "article:url:50d606325e9b45d3e4f2f018",
+        "score": 1.0,
+        "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
+        "verifiedAt": "2026-08-21T04:59:53.102522Z",
+        "resolvedTitle": "Contraponto. A saúde da democracia e o fantasma dos corte nas pensões",
+        "resolvedAuthor": "www.rtp.pt",
+        "sourcePublishedAt": "2026-08-20T22:16:49Z",
+        "sourceDescription": "Ana Pedrosa Augusto e Nuno Artur Silva discutem o relatório sobre a democracia em 2026 e o discurso de André Ventura na rentrée do Chega."
+      },
+      "editorialTitle": "Contraponto. A saúde da democracia e o fantasma dos corte"
     }
   ],
   "history": [
