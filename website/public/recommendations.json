@@ -406,7 +406,7 @@
       "type": "investigation",
       "title": "A Prova dos Factos",
       "authorOrMeta": "www.rtp.pt",
-      "description": "Procurar a verdade, obriga a confrontar, investigar, perguntar.Estes são tempos de muitas opiniões e diferentes ângulos sobre os factos. E em cada",
+      "description": "Episódio do programa de investigação da RTP, coordenado por Rita Marrafa de Carvalho e apresentado por Mariana Flor.",
       "link": "https://www.rtp.pt/play/p16129/e942040/a-prova-dos-factos",
       "priority": 5,
       "id": "watch_investigation_f9407280e49e4d98",
@@ -422,7 +422,7 @@
         "status": "verified",
         "source": "news:www.rtp.pt",
         "entityId": "article:url:68e27129abb3cd93eb83cc24",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "bf471e4274c14701c48933e17db9803b0b2d91fd393ae49837259f3534a58ce0",
         "verifiedAt": "2026-07-20T18:33:17.710301Z",
         "resolvedTitle": "A Prova dos Factos",
@@ -1179,7 +1179,7 @@
       "sourcePublishedAt": "2026-08-20T22:16:49Z",
       "expiryDate": "2026-09-19T22:16:49Z",
       "createdAt": "2026-08-21T04:59:51.779154Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1190,7 +1190,7 @@
           "Nuno Artur Silva e Ana Pedrosa Augusto"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news:www.rtp.pt",
@@ -1203,7 +1203,8 @@
         "sourcePublishedAt": "2026-08-20T22:16:49Z",
         "sourceDescription": "Ana Pedrosa Augusto e Nuno Artur Silva discutem o relatório sobre a democracia em 2026 e o discurso de André Ventura na rentrée do Chega."
       },
-      "editorialTitle": "Contraponto. A saúde da democracia e o fantasma dos corte"
+      "editorialTitle": "Contraponto. A saúde da democracia e o fantasma dos corte",
+      "validationError": "SOURCE_MISMATCH [Contraponto. A saúde da democracia e o fantasma dos corte nas pensões]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
       "id": "rss_podcast_7022e6d3b164f0e9",
@@ -1246,6 +1247,10 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "5a24b48461951f741180b927a9f48d43530e447bba0704111c1e179c9b31be53",
         "editorialDescriptionProvider": "extractive"
+      },
+      "selectionRecovery": {
+        "slot": "q2",
+        "mode": "recency_relaxed"
       }
     },
     {
@@ -2140,7 +2145,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 2,
-      "highlight": 4
+      "highlight": 3
     },
     "missingSlots": [
       "q2/podcast"
