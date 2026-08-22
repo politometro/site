@@ -1121,46 +1121,6 @@
       }
     },
     {
-      "id": "rss_highlight_effcb0c6779b9397",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Mulheres conservadoras",
-      "authorOrMeta": "Henrique Pereira dos Santos",
-      "description": "Eu não sei o que são mulheres conservadoras, o que sei é que não me sinto nada confortável numa sociedade que quer ostracizar pessoas pelo simples crime de pensar e dizer coisas diferentes das minhas",
-      "imageUrl": "/covers/highlight_mulheres_conservadoras_7b3ffbf9_d5a51ee65f74.jpg",
-      "link": "https://observador.pt/opiniao/mulheres-conservadoras/",
-      "externalId": "article:url:effcb0c6779b93972b3d53f5",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-19T23:20:29Z",
-      "expiryDate": "2026-09-18T23:20:29Z",
-      "createdAt": "2026-08-20T04:59:20.151103Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/mulheres-conservadoras/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2015%2F10%2Ffoto_hpsantos.jpg",
-        "categories": [
-          "Feminismo",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:effcb0c6779b93972b3d53f5",
-        "score": 1.0,
-        "coverHash": "15044fb2543024f5f669c46cd38c6acd305d411f3c8e2a25b73409769604d7d4",
-        "verifiedAt": "2026-08-20T04:59:21.049010Z",
-        "resolvedTitle": "Mulheres conservadoras",
-        "resolvedAuthor": "Henrique Pereira dos Santos",
-        "sourcePublishedAt": "2026-08-19T23:20:29Z",
-        "sourceDescription": "Eu não sei o que são mulheres conservadoras, o que sei é que não me sinto nada confortável numa sociedade que quer ostracizar pessoas pelo simples crime de pensar e dizer coisas diferentes das minhas"
-      }
-    },
-    {
       "id": "rss_highlight_acf92d50a1143ee5",
       "type": "highlight",
       "category": "Destaque",
@@ -1174,7 +1134,7 @@
       "sourcePublishedAt": "2026-08-20T10:28:47Z",
       "expiryDate": "2026-09-19T10:28:47Z",
       "createdAt": "2026-08-20T13:18:39.730597Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1190,7 +1150,7 @@
           "Economia"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -1202,7 +1162,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-20T10:28:47Z",
         "sourceDescription": "Promovido pelo município de Soure, a APAT e a Associação Espanhola do Transporte, o encontro estimulará a integração dos diferentes meios de transporte e o contributo para uma cadeia logística eficaz."
-      }
+      },
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [Futuro da intermodalidade na Península Ibérica em debate]: Artigo 'Conferência ibérica debate em Soure oportunidades e desafios da intermodalidade' não corresponde ao título candidato."
     },
     {
       "id": "rss_highlight_50d606325e9b45d3",
@@ -1243,6 +1204,133 @@
         "sourceDescription": "Ana Pedrosa Augusto e Nuno Artur Silva discutem o relatório sobre a democracia em 2026 e o discurso de André Ventura na rentrée do Chega."
       },
       "editorialTitle": "Contraponto. A saúde da democracia e o fantasma dos corte"
+    },
+    {
+      "id": "rss_podcast_7022e6d3b164f0e9",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Montenegro a apanhar bonés? E devia apostar na vitimização?",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre e devia apostar na vitimização?” do podcast Fora do Baralho, publicado em 21/08/2026.",
+      "imageUrl": "/covers/podcast_montenegro_a_apanhar_bon_s__e_devia_apostar_na_vitim_ffbacd3c_7022e6d3b164.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/montenegro-a-apanhar-bon-s-e-devia-apostar-na-vitimiza-o",
+      "externalId": "601b0fba-b08a-450d-b172-b4ad01446d5b",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-21T20:57:32Z",
+      "expiryDate": "2026-08-31T20:57:32Z",
+      "createdAt": "2026-08-22T04:58:03.212927Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "601b0fba-b08a-450d-b172-b4ad01446d5b",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "601b0fba-b08a-450d-b172-b4ad01446d5b",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-08-22T04:58:04.054105Z",
+        "resolvedTitle": "Montenegro a apanhar bonés? E devia apostar na vitimização?",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-08-21T20:57:32Z",
+        "sourceDescription": "Episódio “Montenegro a apanhar bonés? E devia apostar na vitimização?” do podcast Fora do Baralho, publicado em 21/08/2026.",
+        "editorialDescription": "Análise sobre e devia apostar na vitimização?” do podcast Fora do Baralho, publicado em 21/08/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "5a24b48461951f741180b927a9f48d43530e447bba0704111c1e179c9b31be53",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_c775ed5fdf15554a",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Este governo está sempre a esconder-se debaixo da cama",
+      "authorOrMeta": "observador.pt",
+      "description": "Os protestos depois de se conhecer o estudo sobre as pensões assustaram o governo, que fugiu tomado por tremeliques e suores frios. Montenegro guardou a ambição na mesma gaveta onde esconde a coragem.",
+      "imageUrl": "/covers/highlight_este_governo_est__sempre_a_esconder_se_debaixo_da__2f2e5347_f062cd9fbf5d.jpg",
+      "link": "https://observador.pt/opiniao/este-governo-esta-sempre-a-esconder-se-debaixo-da-cama/",
+      "externalId": "article:url:c775ed5fdf15554a55c68ffc",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-21T23:25:09Z",
+      "expiryDate": "2026-09-20T23:25:09Z",
+      "createdAt": "2026-08-22T04:58:05.357239Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/este-governo-esta-sempre-a-esconder-se-debaixo-da-cama/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2124%3A2124%3Anowe%3A955%3A75%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F04%2F23151538%2Fjporfirio-retratos-redacao-2026-01-81-scaled.jpg",
+        "categories": [
+          "Pensões",
+          "Segurança Social",
+          "Economia",
+          "Governo",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:c775ed5fdf15554a55c68ffc",
+        "score": 1.0,
+        "coverHash": "3d77a998923e5c6952a2bcd07bfd95500ed139f8ac0766a002a92847957dc386",
+        "verifiedAt": "2026-08-22T04:58:05.523590Z",
+        "resolvedTitle": "Este governo está sempre a esconder-se debaixo da cama",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-21T23:25:09Z",
+        "sourceDescription": "Os protestos depois de se conhecer o estudo sobre as pensões assustaram o governo, que fugiu tomado por tremeliques e suores frios. Montenegro guardou a ambição na mesma gaveta onde esconde a coragem."
+      }
+    },
+    {
+      "id": "rss_highlight_8f1c0b9f96183204",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Autoconstrução, a montanha pariu um rato",
+      "authorOrMeta": "observador.pt",
+      "description": "O Governo deu um passo importante. Talvez o mais significativo nesta matéria dos últimos anos. Mas ficou a meio do caminho.",
+      "imageUrl": "/covers/highlight_autoconstru__o__a_montanha_pariu_um_rato_a1f43f39_f50a5c06ab9b.jpg",
+      "link": "https://observador.pt/opiniao/autoconstrucao-a-montanha-pariu-um-rato/",
+      "externalId": "article:url:8f1c0b9f961832046aa78ec7",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-21T23:04:37Z",
+      "expiryDate": "2026-09-20T23:04:37Z",
+      "createdAt": "2026-08-22T04:58:05.362463Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/autoconstrucao-a-montanha-pariu-um-rato/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1142%3A1142%3Anowe%3A49%3A118%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2023%2F10%2F13130907%2F202304.jpg",
+        "categories": [
+          "Tribuna Aberta",
+          "Opinião",
+          "Observador"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:8f1c0b9f961832046aa78ec7",
+        "score": 1.0,
+        "coverHash": "cfb9a3bdb9c8770b9b9c63ca2a037c1dfe6e22ef627965b2e237d2afa35a18fe",
+        "verifiedAt": "2026-08-22T04:58:05.696374Z",
+        "resolvedTitle": "Autoconstrução, a montanha pariu um rato",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-21T23:04:37Z",
+        "sourceDescription": "O Governo deu um passo importante. Talvez o mais significativo nesta matéria dos últimos anos. Mas ficou a meio do caminho."
+      }
     }
   ],
   "history": [
