@@ -8,7 +8,14 @@
   "post_sha256": "35648067d8c64832b8eed596cac60b7788ca9e27d2f510947432a4c7eef0e55d",
   "caption_sha256": "ed5af63b4ff324656d27afe4cf4e5b588a3dff248a7f6e7d60fce3147c66ff84",
   "approval": {
-    "approved": false
+    "approved": true,
+    "draft_id": "draft_6cfa7938d59a9ab99ce2",
+    "content_hash": "6cfa7938d59a9ab99ce2e11c25d2143fdca84f5308e56954af1d1b2f97d43729",
+    "approved_at": "2026-08-22T22:02:09.537093+00:00",
+    "approved_by_id": "602275316156727296",
+    "approved_by_name": "MaNmAxImO",
+    "scheduled_for": "2026-08-23T09:00:00+00:00",
+    "scheduled_timezone": "Europe/Lisbon"
   },
   "q1": {
     "id": "ai_book_c39c996580464759",
