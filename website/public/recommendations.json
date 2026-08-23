@@ -1112,7 +1112,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Autoconstrução, a montanha pariu um rato",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Joaquim Nogueira de Almeida",
       "description": "O Governo deu um passo importante. Talvez o mais significativo nesta matéria dos últimos anos. Mas ficou a meio do caminho.",
       "imageUrl": "/covers/highlight_autoconstru__o__a_montanha_pariu_um_rato_a1f43f39_f50a5c06ab9b.jpg",
       "link": "https://observador.pt/opiniao/autoconstrucao-a-montanha-pariu-um-rato/",
@@ -1137,13 +1137,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:8f1c0b9f961832046aa78ec7",
         "score": 1.0,
         "coverHash": "cfb9a3bdb9c8770b9b9c63ca2a037c1dfe6e22ef627965b2e237d2afa35a18fe",
         "verifiedAt": "2026-08-22T04:58:05.696374Z",
         "resolvedTitle": "Autoconstrução, a montanha pariu um rato",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Joaquim Nogueira de Almeida",
         "sourcePublishedAt": "2026-08-21T23:04:37Z",
         "sourceDescription": "O Governo deu um passo importante. Talvez o mais significativo nesta matéria dos últimos anos. Mas ficou a meio do caminho."
       }
@@ -1227,6 +1227,49 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-22T23:03:05Z",
         "sourceDescription": "O PCP tem direito de existir, mas temos de pensar qual o sentido de termos um partido com tendências totalitárias, agarrado a ideias do passado e que pouco contribui para o desenvolvimento do país"
+      }
+    },
+    {
+      "id": "rss_podcast_c0be4eaa630c0102",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "A Segurança Social é uma “ilusão”? — Ouvintes",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “A Segurança Social é uma “ilusão”? — Ouvintes” do podcast Fora do Baralho, publicado em 23/08/2026.",
+      "imageUrl": "/covers/podcast_a_seguran_a_social___uma__ilus_o_____ouvintes_724b5445_c0be4eaa630c.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/a-seguran-a-social-uma-ilus-o-ouvintes",
+      "externalId": "c5688863-b187-462c-8808-b4ad013aae1b",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-23T05:00:00Z",
+      "expiryDate": "2026-08-26T05:00:00Z",
+      "createdAt": "2026-08-23T13:07:57.048657Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "c5688863-b187-462c-8808-b4ad013aae1b",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "c5688863-b187-462c-8808-b4ad013aae1b",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-08-23T13:07:58.292584Z",
+        "resolvedTitle": "A Segurança Social é uma “ilusão”? — Ouvintes",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-08-23T05:00:00Z",
+        "sourceDescription": "Episódio “A Segurança Social é uma “ilusão”? — Ouvintes” do podcast Fora do Baralho, publicado em 23/08/2026.",
+        "editorialDescription": "Análise sobre episódio “A Segurança Social é uma “ilusão”? — Ouvintes” do podcast Fora do Baralho, publicado em 23/08/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "cabd2e39f5f3b554f6798a606739335e3e3ed8551ab75b6f7cac91266aa30a94",
+        "editorialDescriptionProvider": "extractive"
       }
     }
   ],
@@ -2193,12 +2236,12 @@
   "readiness": {
     "postType": "sunday_standard",
     "strictCounts": {
-      "book": 6,
+      "book": 5,
       "podcast": 0,
       "movie": 4,
       "nostalgia": 4,
-      "investigation": 2,
-      "highlight": 4
+      "investigation": 1,
+      "highlight": 3
     },
     "missingSlots": [
       "q2/podcast"
