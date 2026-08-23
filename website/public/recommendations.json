@@ -406,7 +406,7 @@
       "type": "investigation",
       "title": "A Prova dos Factos",
       "authorOrMeta": "www.rtp.pt",
-      "description": "Episódio do programa de investigação da RTP, coordenado por Rita Marrafa de Carvalho e apresentado por Mariana Flor.",
+      "description": "Procurar a verdade, obriga a confrontar, investigar, perguntar.Estes são tempos de muitas opiniões e diferentes ângulos sobre os factos. E em cada",
       "link": "https://www.rtp.pt/play/p16129/e942040/a-prova-dos-factos",
       "priority": 5,
       "id": "watch_investigation_f9407280e49e4d98",
@@ -1081,46 +1081,6 @@
       }
     },
     {
-      "id": "rss_highlight_b1b50ef04bc19afc",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "A imigração ilegal é uma das maiores ameaças à democracia",
-      "authorOrMeta": "João Marques de Almeida",
-      "description": "O que está a acontecer em Ceuta é um exemplo claro sobre a natureza da imigração ilegal. Nenhum dos imigrantes que entrou em Ceuta é legal. São todos ilegais.",
-      "imageUrl": "/covers/highlight_a_imigra__o_ilegal___uma_das_maiores_amea_as___dem_2d78b063_06c7cb8bde67.jpg",
-      "link": "https://observador.pt/opiniao/a-imigracao-ilegal-e-uma-das-maiores-ameacas-a-democracia/",
-      "externalId": "article:url:b1b50ef04bc19afcf079add7",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-19T23:25:17Z",
-      "expiryDate": "2026-09-18T23:25:17Z",
-      "createdAt": "2026-08-20T04:59:20.149606Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/a-imigracao-ilegal-e-uma-das-maiores-ameacas-a-democracia/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2666%3A2665%3Anowe%3A0%3A503%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170547%2Fjoao-marques-de-almeida.jpg",
-        "categories": [
-          "Imigração",
-          "Mundo"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:b1b50ef04bc19afcf079add7",
-        "score": 1.0,
-        "coverHash": "5333c2dfbbf3895a50a6fa48096a040af763f2741a3f6c3293569245dcb0ca10",
-        "verifiedAt": "2026-08-20T04:59:20.689838Z",
-        "resolvedTitle": "A imigração ilegal é uma das maiores ameaças à democracia",
-        "resolvedAuthor": "João Marques de Almeida",
-        "sourcePublishedAt": "2026-08-19T23:25:17Z",
-        "sourceDescription": "O que está a acontecer em Ceuta é um exemplo claro sobre a natureza da imigração ilegal. Nenhum dos imigrantes que entrou em Ceuta é legal. São todos ilegais."
-      }
-    },
-    {
       "id": "rss_highlight_acf92d50a1143ee5",
       "type": "highlight",
       "category": "Destaque",
@@ -1335,6 +1295,87 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-21T23:04:37Z",
         "sourceDescription": "O Governo deu um passo importante. Talvez o mais significativo nesta matéria dos últimos anos. Mas ficou a meio do caminho."
+      }
+    },
+    {
+      "id": "rss_highlight_e350555d266a7823",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Não fazer nada",
+      "authorOrMeta": "observador.pt",
+      "description": "Perante um estudo que encomendou sobre a segurança social com recomendações de mudanças necessárias, o governo decide não fazer nada. Para não perder votos, Luís Montenegro faz-nos perder tudo.",
+      "imageUrl": "/covers/highlight_n_o_fazer_nada_a33a76f5_1038e06bf96c.jpg",
+      "link": "https://observador.pt/opiniao/nao-fazer-nada/",
+      "externalId": "article:url:e350555d266a782372cb365d",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-22T23:22:52Z",
+      "expiryDate": "2026-09-21T23:22:52Z",
+      "createdAt": "2026-08-23T04:57:57.926754Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/nao-fazer-nada/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2224%3A2224%3Anowe%3A226%3A374%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170541%2Fandre-amaral.jpg",
+        "categories": [
+          "Governo",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:e350555d266a782372cb365d",
+        "score": 1.0,
+        "coverHash": "19d90940e35bc60cfba5065c45d97a56b2f61ef8c2ef6710ebe9d7fad315deb3",
+        "verifiedAt": "2026-08-23T04:57:58.078332Z",
+        "resolvedTitle": "Não fazer nada",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-22T23:22:52Z",
+        "sourceDescription": "Perante um estudo que encomendou sobre a segurança social com recomendações de mudanças necessárias, o governo decide não fazer nada. Para não perder votos, Luís Montenegro faz-nos perder tudo."
+      }
+    },
+    {
+      "id": "rss_highlight_4c5056369aa18d48",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "O PCP não é um partido normal. Mas Portugal normaliza-o",
+      "authorOrMeta": "observador.pt",
+      "description": "O PCP tem direito de existir, mas temos de pensar qual o sentido de termos um partido com tendências totalitárias, agarrado a ideias do passado e que pouco contribui para o desenvolvimento do país",
+      "imageUrl": "/covers/highlight_o_pcp_n_o___um_partido_normal__mas_portugal_normal_b952c57a_482a4564b486.jpg",
+      "link": "https://observador.pt/opiniao/o-pcp-nao-e-um-partido-normal-mas-portugal-normaliza-o/",
+      "externalId": "article:url:4c5056369aa18d48668369ab",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-22T23:03:05Z",
+      "expiryDate": "2026-09-21T23:03:05Z",
+      "createdAt": "2026-08-23T04:57:57.929546Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/o-pcp-nao-e-um-partido-normal-mas-portugal-normaliza-o/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A500%3A500%3Anowe%3A0%3A121%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F09%2F15162634%2Fimage0.jpeg",
+        "categories": [
+          "Tribuna Aberta",
+          "Opinião",
+          "Observador"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:4c5056369aa18d48668369ab",
+        "score": 1.0,
+        "coverHash": "eaa3fcde6d92e234787a3014d42598ff97764100eef1c76198e8740888f25eff",
+        "verifiedAt": "2026-08-23T04:57:58.235828Z",
+        "resolvedTitle": "O PCP não é um partido normal. Mas Portugal normaliza-o",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-22T23:03:05Z",
+        "sourceDescription": "O PCP tem direito de existir, mas temos de pensar qual o sentido de termos um partido com tendências totalitárias, agarrado a ideias do passado e que pouco contribui para o desenvolvimento do país"
       }
     }
   ],
@@ -2145,7 +2186,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 2,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [
       "q2/podcast"
