@@ -1191,7 +1191,7 @@
       "category": "Podcast",
       "title": "A Segurança Social é uma “ilusão”? — Ouvintes",
       "authorOrMeta": "Fora do Baralho",
-      "description": "Análise sobre episódio “A Segurança Social é uma “ilusão”? — Ouvintes” do podcast Fora do Baralho, publicado em 23/08/2026.",
+      "description": "Análise sobre análise sobre episódio “A Segurança Social é uma “ilusão”? — Ouvintes” do podcast Fora do Baralho, publicado em 23/08/2026.",
       "imageUrl": "/covers/podcast_a_seguran_a_social___uma__ilus_o_____ouvintes_724b5445_c0be4eaa630c.jpg",
       "link": "https://omny.fm/shows/fora-do-baralho/a-seguran-a-social-uma-ilus-o-ouvintes",
       "externalId": "c5688863-b187-462c-8808-b4ad013aae1b",
@@ -1221,10 +1221,10 @@
         "resolvedTitle": "A Segurança Social é uma “ilusão”? — Ouvintes",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-08-23T05:00:00Z",
-        "sourceDescription": "Episódio “A Segurança Social é uma “ilusão”? — Ouvintes” do podcast Fora do Baralho, publicado em 23/08/2026.",
-        "editorialDescription": "Análise sobre episódio “A Segurança Social é uma “ilusão”? — Ouvintes” do podcast Fora do Baralho, publicado em 23/08/2026.",
+        "sourceDescription": "Análise sobre episódio “A Segurança Social é uma “ilusão”? — Ouvintes” do podcast Fora do Baralho, publicado em 23/08/2026.",
+        "editorialDescription": "Análise sobre análise sobre episódio “A Segurança Social é uma “ilusão”? — Ouvintes” do podcast Fora do Baralho, publicado em 23/08/2026.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "cabd2e39f5f3b554f6798a606739335e3e3ed8551ab75b6f7cac91266aa30a94",
+        "editorialSourceHash": "291c615f74d13f2e1a565f345b4c6b22018208f54636718799ea8405bfcfb74d",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1268,7 +1268,7 @@
         "sourceDescription": "Regresso a 2021. As eleições autárquicas eram descritas como a \"festa da democracia\". No entanto, o programa da SIC focou-se naqueles que, nessa festa, \"beberam demais\". A primeira questão de Ricardo Araújo Pereira foi direta: quem acordaria com a pior ressaca?",
         "editorialDescription": "Análise sobre as eleições autárquicas eram descritas como a \"festa da democracia\".",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "4837930d157e83129e105129666ba6612ba064b93f2e652db6f94e61e2203011",
+        "editorialSourceHash": "e67a6817680bd7090ffa0ebc0866577971025eb4f94b7a1837524d8cfcfa5890",
         "editorialDescriptionProvider": "extractive"
       }
     },
