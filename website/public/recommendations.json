@@ -978,50 +978,6 @@
       }
     },
     {
-      "id": "rss_podcast_3a06e3ff218f2e3a",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Sugestão de Verão: sobre sátira política, com Cátia Domingues, Cláudio Almeida, Guilherme Fonseca, Joana Marques, Manuel Cardoso, Miguel Góis, José Diogo Quintela e Ricardo Araújo Pereira",
-      "editorialTitle": "Sugestão de Verão: sobre sátira política",
-      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Análise sobre ricardo Araújo Pereira fala na companhia de sete outras pessoas sobre sátira política.",
-      "imageUrl": "/covers/podcast_sugest_o_de_ver_o__sobre_s_tira_pol_tica__com_c_tia__96190d85_3a06e3ff218f.jpg",
-      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/sugest-o-de-ver-o-sobre-s-tira-pol-tica-com-c-tia-domingues-cl-udio-almeida-guilherme-fonseca-joana-marques-manuel-cardoso-miguel-g-is-jos-diogo-quintela-e-ricardo-ara-jo-pereira",
-      "externalId": "16b3fefd-4d0b-4cae-bb69-b49e00ae7f7d",
-      "sourceSeriesId": "1585178009",
-      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-19T05:00:00Z",
-      "expiryDate": "2026-08-29T05:00:00Z",
-      "createdAt": "2026-08-19T13:17:20.155486Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
-        "guid": "16b3fefd-4d0b-4cae-bb69-b49e00ae7f7d",
-        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/16b3fefd-4d0b-4cae-bb69-b49e00ae7f7d/image.jpg?t=1786012743&size=Large",
-        "show": "Isto É Gozar Com Quem Trabalha"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "16b3fefd-4d0b-4cae-bb69-b49e00ae7f7d",
-        "score": 1.0,
-        "coverHash": "1b98f45b5bb9cfdc5c5f2fbbba90a118eb5051ecc8c8166af828d2c2d0e0e4fb",
-        "verifiedAt": "2026-08-19T13:17:22.878107Z",
-        "resolvedTitle": "Sugestão de Verão: sobre sátira política, com Cátia Domingues, Cláudio Almeida, Guilherme Fonseca, Joana Marques, Manuel Cardoso, Miguel Góis, José Diogo Quintela e Ricardo Araújo Pereira",
-        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
-        "sourcePublishedAt": "2026-08-19T05:00:00Z",
-        "sourceDescription": "Reedição do arquivo de podcasts da SIC. Episódio publicado originalmente em janeiro de 2025, de “Coisa Que Não Edifica Nem Destrói”. o primeiro podcast original de Ricardo Araújo Pereira. Ricardo Araújo Pereira fala na companhia de sete outras pessoas sobre sátira política.",
-        "editorialDescription": "Análise sobre ricardo Araújo Pereira fala na companhia de sete outras pessoas sobre sátira política.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "a6390919ac39f7eecc559c91b7ccfc6cadbab73d1f33f274c212a368bfedee9d",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_acf92d50a1143ee5",
       "type": "highlight",
       "category": "Destaque",
@@ -1153,7 +1109,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Não fazer nada",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "André Abrantes Amaral",
       "description": "Perante um estudo que encomendou sobre a segurança social com recomendações de mudanças necessárias, o governo decide não fazer nada. Para não perder votos, Luís Montenegro faz-nos perder tudo.",
       "imageUrl": "/covers/highlight_n_o_fazer_nada_a33a76f5_1038e06bf96c.jpg",
       "link": "https://observador.pt/opiniao/nao-fazer-nada/",
@@ -1177,13 +1133,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:e350555d266a782372cb365d",
         "score": 1.0,
         "coverHash": "19d90940e35bc60cfba5065c45d97a56b2f61ef8c2ef6710ebe9d7fad315deb3",
         "verifiedAt": "2026-08-23T04:57:58.078332Z",
         "resolvedTitle": "Não fazer nada",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "André Abrantes Amaral",
         "sourcePublishedAt": "2026-08-22T23:22:52Z",
         "sourceDescription": "Perante um estudo que encomendou sobre a segurança social com recomendações de mudanças necessárias, o governo decide não fazer nada. Para não perder votos, Luís Montenegro faz-nos perder tudo."
       }
@@ -1193,7 +1149,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "O PCP não é um partido normal. Mas Portugal normaliza-o",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Pedro Serra da Silva",
       "description": "O PCP tem direito de existir, mas temos de pensar qual o sentido de termos um partido com tendências totalitárias, agarrado a ideias do passado e que pouco contribui para o desenvolvimento do país",
       "imageUrl": "/covers/highlight_o_pcp_n_o___um_partido_normal__mas_portugal_normal_b952c57a_482a4564b486.jpg",
       "link": "https://observador.pt/opiniao/o-pcp-nao-e-um-partido-normal-mas-portugal-normaliza-o/",
@@ -1218,13 +1174,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:4c5056369aa18d48668369ab",
         "score": 1.0,
         "coverHash": "eaa3fcde6d92e234787a3014d42598ff97764100eef1c76198e8740888f25eff",
         "verifiedAt": "2026-08-23T04:57:58.235828Z",
         "resolvedTitle": "O PCP não é um partido normal. Mas Portugal normaliza-o",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Pedro Serra da Silva",
         "sourcePublishedAt": "2026-08-22T23:03:05Z",
         "sourceDescription": "O PCP tem direito de existir, mas temos de pensar qual o sentido de termos um partido com tendências totalitárias, agarrado a ideias do passado e que pouco contribui para o desenvolvimento do país"
       }
@@ -1270,6 +1226,90 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "cabd2e39f5f3b554f6798a606739335e3e3ed8551ab75b6f7cac91266aa30a94",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_507dd010fcee162c",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Regresso a 2021: A \"festa da democracia\" e a ressaca que não lembra a ninguém",
+      "editorialTitle": "Regresso a 2021: A \"festa da democracia\" e a ressaca que não lembra",
+      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
+      "description": "Análise sobre as eleições autárquicas eram descritas como a \"festa da democracia\".",
+      "imageUrl": "/covers/podcast_regresso_a_2021__a__festa_da_democracia__e_a_ressaca_917f57da_507dd010fcee.jpg",
+      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/regresso-a-2021-a-festa-da-democracia-e-a-ressaca-que-n-o-lembra-a-ningu-m",
+      "externalId": "5619cadc-fa5f-4d8a-8653-b49b00c4c29d",
+      "sourceSeriesId": "1585178009",
+      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-23T18:34:17Z",
+      "expiryDate": "2026-09-02T18:34:17Z",
+      "createdAt": "2026-08-24T05:07:07.064951Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
+        "guid": "5619cadc-fa5f-4d8a-8653-b49b00c4c29d",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/image.jpg?t=1668425400&size=Large",
+        "show": "Isto É Gozar Com Quem Trabalha"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "5619cadc-fa5f-4d8a-8653-b49b00c4c29d",
+        "score": 1.0,
+        "coverHash": "7cf2e9fe63d6c0f324df402973a58d21a64ce08e1db59a7a7dfe77828a620730",
+        "verifiedAt": "2026-08-24T05:07:10.674244Z",
+        "resolvedTitle": "Regresso a 2021: A \"festa da democracia\" e a ressaca que não lembra a ninguém",
+        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
+        "sourcePublishedAt": "2026-08-23T18:34:17Z",
+        "sourceDescription": "Regresso a 2021. As eleições autárquicas eram descritas como a \"festa da democracia\". No entanto, o programa da SIC focou-se naqueles que, nessa festa, \"beberam demais\". A primeira questão de Ricardo Araújo Pereira foi direta: quem acordaria com a pior ressaca?",
+        "editorialDescription": "Análise sobre as eleições autárquicas eram descritas como a \"festa da democracia\".",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "4837930d157e83129e105129666ba6612ba064b93f2e652db6f94e61e2203011",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_f0977879ca273dbc",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A Europa chamou-lhes extremistas. Depois deu-lhes razão",
+      "authorOrMeta": "observador.pt",
+      "description": "A alternativa não é entre ingenuidade multicultural e etnocentrismo primário. A alternativa é entre uma democracia adulta, capaz de discutir os seus limites, ou uma democracia infantilizada",
+      "imageUrl": "/covers/highlight_a_europa_chamou_lhes_extremistas__depois_deu_lhes__faeb944c_9f4998b9b0c1.jpg",
+      "link": "https://observador.pt/opiniao/a-europa-chamou-lhes-extremistas-depois-deu-lhes-razao/",
+      "externalId": "article:url:f0977879ca273dbc08e05a88",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-23T23:10:51Z",
+      "expiryDate": "2026-09-22T23:10:51Z",
+      "createdAt": "2026-08-24T05:07:11.412759Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-europa-chamou-lhes-extremistas-depois-deu-lhes-razao/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F06%2F25232515%2Fimage0.jpg",
+        "categories": [
+          "Extrema Direita",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:f0977879ca273dbc08e05a88",
+        "score": 1.0,
+        "coverHash": "f6e9673ac9e97820f2d64528393169f955a94a81a137e12ffc38c21973d11c0c",
+        "verifiedAt": "2026-08-24T05:07:11.567830Z",
+        "resolvedTitle": "A Europa chamou-lhes extremistas. Depois deu-lhes razão",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-23T23:10:51Z",
+        "sourceDescription": "A alternativa não é entre ingenuidade multicultural e etnocentrismo primário. A alternativa é entre uma democracia adulta, capaz de discutir os seus limites, ou uma democracia infantilizada"
       }
     }
   ],
@@ -2241,7 +2281,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 1,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [
       "q2/podcast"
