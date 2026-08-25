@@ -1064,47 +1064,6 @@
       "validationError": "SOURCE_MISMATCH [Contraponto. A saúde da democracia e o fantasma dos corte nas pensões]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
-      "id": "rss_highlight_8f1c0b9f96183204",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Autoconstrução, a montanha pariu um rato",
-      "authorOrMeta": "Joaquim Nogueira de Almeida",
-      "description": "O Governo deu um passo importante. Talvez o mais significativo nesta matéria dos últimos anos. Mas ficou a meio do caminho.",
-      "imageUrl": "/covers/highlight_autoconstru__o__a_montanha_pariu_um_rato_a1f43f39_f50a5c06ab9b.jpg",
-      "link": "https://observador.pt/opiniao/autoconstrucao-a-montanha-pariu-um-rato/",
-      "externalId": "article:url:8f1c0b9f961832046aa78ec7",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-21T23:04:37Z",
-      "expiryDate": "2026-09-20T23:04:37Z",
-      "createdAt": "2026-08-22T04:58:05.362463Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/autoconstrucao-a-montanha-pariu-um-rato/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1142%3A1142%3Anowe%3A49%3A118%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2023%2F10%2F13130907%2F202304.jpg",
-        "categories": [
-          "Tribuna Aberta",
-          "Opinião",
-          "Observador"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:8f1c0b9f961832046aa78ec7",
-        "score": 1.0,
-        "coverHash": "cfb9a3bdb9c8770b9b9c63ca2a037c1dfe6e22ef627965b2e237d2afa35a18fe",
-        "verifiedAt": "2026-08-22T04:58:05.696374Z",
-        "resolvedTitle": "Autoconstrução, a montanha pariu um rato",
-        "resolvedAuthor": "Joaquim Nogueira de Almeida",
-        "sourcePublishedAt": "2026-08-21T23:04:37Z",
-        "sourceDescription": "O Governo deu um passo importante. Talvez o mais significativo nesta matéria dos últimos anos. Mas ficou a meio do caminho."
-      }
-    },
-    {
       "id": "rss_highlight_e350555d266a7823",
       "type": "highlight",
       "category": "Destaque",
@@ -1145,47 +1104,6 @@
       }
     },
     {
-      "id": "rss_highlight_4c5056369aa18d48",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "O PCP não é um partido normal. Mas Portugal normaliza-o",
-      "authorOrMeta": "Pedro Serra da Silva",
-      "description": "O PCP tem direito de existir, mas temos de pensar qual o sentido de termos um partido com tendências totalitárias, agarrado a ideias do passado e que pouco contribui para o desenvolvimento do país",
-      "imageUrl": "/covers/highlight_o_pcp_n_o___um_partido_normal__mas_portugal_normal_b952c57a_482a4564b486.jpg",
-      "link": "https://observador.pt/opiniao/o-pcp-nao-e-um-partido-normal-mas-portugal-normaliza-o/",
-      "externalId": "article:url:4c5056369aa18d48668369ab",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-22T23:03:05Z",
-      "expiryDate": "2026-09-21T23:03:05Z",
-      "createdAt": "2026-08-23T04:57:57.929546Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/o-pcp-nao-e-um-partido-normal-mas-portugal-normaliza-o/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A500%3A500%3Anowe%3A0%3A121%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F09%2F15162634%2Fimage0.jpeg",
-        "categories": [
-          "Tribuna Aberta",
-          "Opinião",
-          "Observador"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:4c5056369aa18d48668369ab",
-        "score": 1.0,
-        "coverHash": "eaa3fcde6d92e234787a3014d42598ff97764100eef1c76198e8740888f25eff",
-        "verifiedAt": "2026-08-23T04:57:58.235828Z",
-        "resolvedTitle": "O PCP não é um partido normal. Mas Portugal normaliza-o",
-        "resolvedAuthor": "Pedro Serra da Silva",
-        "sourcePublishedAt": "2026-08-22T23:03:05Z",
-        "sourceDescription": "O PCP tem direito de existir, mas temos de pensar qual o sentido de termos um partido com tendências totalitárias, agarrado a ideias do passado e que pouco contribui para o desenvolvimento do país"
-      }
-    },
-    {
       "id": "rss_podcast_c0be4eaa630c0102",
       "type": "podcast",
       "category": "Podcast",
@@ -1201,7 +1119,7 @@
       "sourcePublishedAt": "2026-08-23T05:00:00Z",
       "expiryDate": "2026-08-26T05:00:00Z",
       "createdAt": "2026-08-23T13:07:57.048657Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1210,7 +1128,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1226,7 +1144,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "291c615f74d13f2e1a565f345b4c6b22018208f54636718799ea8405bfcfb74d",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [A Segurança Social é uma “ilusão”? — Ouvintes]: Conteúdo expira em 2026-08-26T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_podcast_507dd010fcee162c",
@@ -1310,6 +1229,90 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-23T23:10:51Z",
         "sourceDescription": "A alternativa não é entre ingenuidade multicultural e etnocentrismo primário. A alternativa é entre uma democracia adulta, capaz de discutir os seus limites, ou uma democracia infantilizada"
+      }
+    },
+    {
+      "id": "rss_highlight_69cdbdbfa3819d81",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A cobardia moderna",
+      "authorOrMeta": "observador.pt",
+      "description": "Montenegro podia ter escolhido construir uma maioria política e social reformista, mas nunca o conseguirá, porque não está, nunca esteve, sequer interessado em construí-la.",
+      "imageUrl": "/covers/highlight_a_cobardia_moderna_dfe296c7_aabeb02d72da.jpg",
+      "link": "https://observador.pt/opiniao/a-cobardia-moderna/",
+      "externalId": "article:url:69cdbdbfa3819d812080c2b4",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-24T23:25:54Z",
+      "expiryDate": "2026-09-23T23:25:54Z",
+      "createdAt": "2026-08-25T05:00:16.762657Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-cobardia-moderna/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A4%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2024%2F07%2F15145446%2Fnunogpocas.jpg",
+        "categories": [
+          "Luís Montenegro",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:69cdbdbfa3819d812080c2b4",
+        "score": 1.0,
+        "coverHash": "1ecaa7c9e81c833a22f207176ca0e6b19354e3eb9ce9af733c7243db3e8d73f1",
+        "verifiedAt": "2026-08-25T05:00:16.920292Z",
+        "resolvedTitle": "A cobardia moderna",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-24T23:25:54Z",
+        "sourceDescription": "Montenegro podia ter escolhido construir uma maioria política e social reformista, mas nunca o conseguirá, porque não está, nunca esteve, sequer interessado em construí-la."
+      }
+    },
+    {
+      "id": "rss_highlight_21f5e9253783d7ce",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "As legislativas de 2028",
+      "authorOrMeta": "observador.pt",
+      "description": "A aprovação do OE2027 está quase garantida, mas, no ano seguinte, será provável Carneiro ceder à tentação de provocar crise política. Já Ventura está sempre pronto para ela. Seguro pouco poderá fazer.",
+      "imageUrl": "/covers/highlight_as_legislativas_de_2028_ea145183_7c50389e88e6.jpg",
+      "link": "https://observador.pt/opiniao/as-legislativas-de-2028/",
+      "externalId": "article:url:21f5e9253783d7ce116409cd",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-24T23:22:05Z",
+      "expiryDate": "2026-09-23T23:22:05Z",
+      "createdAt": "2026-08-25T05:00:16.763086Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/as-legislativas-de-2028/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2414%3A2414%3Anowe%3A74%3A952%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170559%2Frui-pedro-antunes.jpg",
+        "categories": [
+          "Orçamento do Estado",
+          "Economia",
+          "PSD",
+          "Política",
+          "PS",
+          "Partido Chega"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:21f5e9253783d7ce116409cd",
+        "score": 1.0,
+        "coverHash": "091614f66c8e38f4d50dce0197adfe04107fef54e87ab6ea019930c916fd002c",
+        "verifiedAt": "2026-08-25T05:00:17.070774Z",
+        "resolvedTitle": "As legislativas de 2028",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-24T23:22:05Z",
+        "sourceDescription": "A aprovação do OE2027 está quase garantida, mas, no ano seguinte, será provável Carneiro ceder à tentação de provocar crise política. Já Ventura está sempre pronto para ela. Seguro pouco poderá fazer."
       }
     }
   ],
