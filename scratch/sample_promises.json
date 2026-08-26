@@ -1,0 +1,1232 @@
+{
+  "program_promises": [
+    {
+      "id": "promise_7e47fc06c6114d5d0ef4",
+      "party": "CDS-PP",
+      "statement": "A redução da produção agrícola e pecuária, adicionada à massa monetária entesourada, constituem uma mistura explosiva que espera apenas um detonador.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 27,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.099659Z",
+      "updatedAt": "2026-08-26T14:52:14.890912Z"
+    },
+    {
+      "id": "promise_000be9022924c138bc8b",
+      "party": "CDS-PP",
+      "statement": "Importa garantir substancialmente a livre manifestação dessas correntes políticas, sendo dever da autoridade assegurar que elas possam reunir-se no exercício dos seus direitos legítimos, sem agressões, nem boicotes promovidos por qualquer minoria mais ousada.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 43,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.143106Z",
+      "updatedAt": "2026-08-26T14:52:14.899825Z"
+    },
+    {
+      "id": "promise_45b5fe06cae4b7d94676",
+      "party": "CDS-PP",
+      "statement": "É criar serviços nacionais noutras zonas do País, para que Portugal não dependa para tudo de um só centro.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 50,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.165207Z",
+      "updatedAt": "2026-08-26T14:52:14.901865Z"
+    },
+    {
+      "id": "promise_26d44b896d7d94c505dc",
+      "party": "CDS-PP",
+      "statement": "É criar e dinamizar projectos de desenvolvimento nas zonas do interior.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 50,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.165993Z",
+      "updatedAt": "2026-08-26T14:52:14.903174Z"
+    },
+    {
+      "id": "promise_facda21e4097539eff3c",
+      "party": "CDS-PP",
+      "statement": "É criar aqui novas instituições escolares e de investigação e estabelecimentos hospitalares com os devidos requisitos.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 50,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.166142Z",
+      "updatedAt": "2026-08-26T14:52:14.904057Z"
+    },
+    {
+      "id": "promise_7bc08f722da756be5735",
+      "party": "CDS-PP",
+      "statement": "É criar localmente indústriais de transformação dos produtos locais.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 50,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.166243Z",
+      "updatedAt": "2026-08-26T14:52:14.904780Z"
+    },
+    {
+      "id": "promise_c64ffd62de11ec00e052",
+      "party": "CDS-PP",
+      "statement": "Importa defender as instituições escolares daqueles que as agridem, seja por inconsciência, seja por deliberada prática política.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 53,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.174707Z",
+      "updatedAt": "2026-08-26T14:52:14.904903Z"
+    },
+    {
+      "id": "promise_04b6e14356dcd3b3c7d5",
+      "party": "CDS-PP",
+      "statement": "A participação concreta das populações locais terá de ser garantida de modo a que o Serviço Nacional de Saúde corresponda, efectivamente, aos interesses e necessidades de todos e, em especial, dos mais desfavorecidos.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 56,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.185414Z",
+      "updatedAt": "2026-08-26T14:52:14.914500Z"
+    },
+    {
+      "id": "promise_9fa0c8a6b5171d367146",
+      "party": "CDS-PP",
+      "statement": "3.°- Criação de novas formas de protecção de grupos particularmente desfavorecidos em função de conjuntura económica de crise.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 58,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.191215Z",
+      "updatedAt": "2026-08-26T14:52:14.916023Z"
+    },
+    {
+      "id": "promise_c49fc02a42171a07203c",
+      "party": "CDS-PP",
+      "statement": "Propomos uma sociedade possível para um povo que existe e tem oito séculos de História: o Povo Português.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 66,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.213475Z",
+      "updatedAt": "2026-08-26T14:52:14.916147Z"
+    },
+    {
+      "id": "promise_67138b469bf732d77456",
+      "party": "CDS-PP",
+      "statement": "Como política global que é, permite-nos afirmar concretamente o que nos propomos neste domínio.",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 67,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.215280Z",
+      "updatedAt": "2026-08-26T14:52:14.916212Z"
+    },
+    {
+      "id": "promise_2ad3dea18cf9823bc546",
+      "party": "CDS-PP",
+      "statement": "O que nos propomos num grande esforço de construção da nossa Economia é o seguinte:",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 67,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.215496Z",
+      "updatedAt": "2026-08-26T14:52:14.916512Z"
+    },
+    {
+      "id": "promise_bcefab7746bb6e6c90d3",
+      "party": "CDS-PP",
+      "statement": "Estabelecer leques salariais adaptados aos problemas do nosso país que, motivando os quadros técnicos, façam dessa motivação um factor constante de melhoria dos salários mais baixos;",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 67,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.216236Z",
+      "updatedAt": "2026-08-26T14:52:14.916861Z"
+    },
+    {
+      "id": "promise_dc1d047c555bb1603b41",
+      "party": "CDS-PP",
+      "statement": "Garantir mercados às actividades produtivas em recessão, transformando os financiamentos feitos em valores activos para a Nação;",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 67,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.217118Z",
+      "updatedAt": "2026-08-26T14:52:14.917205Z"
+    },
+    {
+      "id": "promise_f6176a5a184cc8872fd4",
+      "party": "CDS-PP",
+      "statement": "Rever o esquema de Abono de Família e de todas as formas de salário indirecto dentro do lema: «A cada um também segundo as suas necessidades».",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 67,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.217316Z",
+      "updatedAt": "2026-08-26T14:52:14.918887Z"
+    },
+    {
+      "id": "promise_2c632f542cca601766e6",
+      "party": "CDS-PP",
+      "statement": "Defender a nossa Balança de Pagamentos fomentando a criação de actividades que incrementem a nossa exportação ou que reduzam as importações;",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 67,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.217493Z",
+      "updatedAt": "2026-08-26T14:52:14.919305Z"
+    },
+    {
+      "id": "promise_9c8cca0b3c56df810a4c",
+      "party": "CDS-PP",
+      "statement": "Criar nos próximos 2 anos 250000 novos postos de trabalho;",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 68,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.218072Z",
+      "updatedAt": "2026-08-26T14:52:14.919839Z"
+    },
+    {
+      "id": "promise_8ec7efba1a73fbbfae67",
+      "party": "CDS-PP",
+      "statement": "Aumentar a produtividade, aproximando-a dos níveis europeus e contribuindo, assim, para reais melhorias dos níveis de remuneração dos trabalhadores;",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 68,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.218882Z",
+      "updatedAt": "2026-08-26T14:52:14.920463Z"
+    },
+    {
+      "id": "promise_2198a42875245f9ee3c7",
+      "party": "CDS-PP",
+      "statement": "Criar uma máquina governamental que ultrapasse as burocracias e seja o elemento motor de toda a administração pública;",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 68,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:45:09.219095Z",
+      "updatedAt": "2026-08-26T14:52:14.928321Z"
+    },
+    {
+      "id": "promise_d4cfee972ceb57e69a99",
+      "party": "CDS-PP",
+      "statement": "Lançar imediatamente um amplo plano de novos empreendimentos turísticos, de instalações hospitalares e escolares, de habitações e de grandes empreitadas de obras públicas;",
+      "origin": "programa_eleitoral",
+      "source": {
+        "type": "programa_eleitoral",
+        "title": "CDS 1976.pdf",
+        "filename": "CDS 1976.pdf",
+        "relPath": "Legislativas\\Legislativas 1976\\CDS 1976.pdf",
+        "page": 68,
+        "year": 1976
+      },
+      "entities": [],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [
+        {
+          "initiativeId": "ini_90c0f3242ae0020480ec",
+          "bid": "5675",
+          "number": "23/VII/1",
+          "title": "Alteração do regime jurídico das empreitadas de obras públicas.",
+          "authors": [
+            "CDS-PP"
+          ],
+          "submittedAt": "1995-11-22T00:00:00Z",
+          "sourceUrl": "https://www.parlamento.pt/ActividadeParlamentar/Paginas/DetalheIniciativa.aspx?ACT_TP=INI&BID=5675",
+          "score": 0.2773,
+          "sharedTerms": [
+            "empreitadas",
+            "obras",
+            "publicas"
+          ],
+          "matchKind": "aproximada",
+          "approximate": true,
+          "authorRelation": "mesmo_partido",
+          "authorRelationLabel": "Apresentada pelo mesmo partido",
+          "reviewRequired": true,
+          "voteIds": [
+            "vote_49a8c7829c2483821d94",
+            "vote_87de1026877e563a9010"
+          ]
+        },
+        {
+          "initiativeId": "ini_a476c2df7f27d080571a",
+          "bid": "4355",
+          "number": "136/VII/4",
+          "title": "Sobre empreitadas de obras públicas e às aquisições de bens e serviços",
+          "authors": [],
+          "submittedAt": "1999-06-25T00:00:00Z",
+          "sourceUrl": "https://www.parlamento.pt/ActividadeParlamentar/Paginas/DetalheIniciativa.aspx?ACT_TP=INI&BID=4355",
+          "score": 0.2773,
+          "sharedTerms": [
+            "empreitadas",
+            "obras",
+            "publicas"
+          ],
+          "matchKind": "aproximada",
+          "approximate": true,
+          "authorRelation": "nao_publicada",
+          "authorRelationLabel": "Autoria não publicada",
+          "reviewRequired": true,
+          "voteIds": [
+            "vote_983c0d4bc9de674e16b1"
+          ]
+        }
+      ],
+      "createdAt": "2026-08-26T14:45:09.219492Z",
+      "updatedAt": "2026-08-26T14:52:14.935528Z"
+    }
+  ],
+  "news_promises": [
+    {
+      "id": "promise_ec9304381ac5395c9578",
+      "party": "GOVERNO",
+      "statement": "A confederação também propõe ao Governo a revisão da carreira especial de vigilante da natureza, valorizando as condições remuneratórias, \"adequando-as à exigência e responsabilidade das funções desempenhadas\", criando perspetivas de progressão na carreira, e melhorando as condições de trabalho, incluindo disponibilização de uniformes e equipamentos de proteção individual.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Associações de ambiente pedem contratação urgente de vigilantes",
+        "url": "https://www.noticiasaominuto.com/pais/3031535/associacoes-de-ambiente-pedem-contratacao-urgente-de-vigilantes",
+        "publisher": "Notícias ao Minuto",
+        "publishedAt": "2026-08-03T14:33:54Z",
+        "articleId": "news_8e716f4fb96c97398f96"
+      },
+      "entities": [
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.413941Z",
+      "updatedAt": "2026-08-26T14:52:57.867298Z"
+    },
+    {
+      "id": "promise_9aa94ffba974a7ce826f",
+      "party": "PCP",
+      "statement": "O dirigente do PCP Jorge Pires afirmou hoje que a reentrada do Estado no capital da REN deixa \"muita coisa por explicar\" e defendeu que esta decisão não vai aumentar a influência estatal no setor elétrico.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "PCP diz que há explicações por dar e dúvida de impacto do Estado na REN",
+        "url": "https://www.noticiasaominuto.com/politica/3037693/pcp-diz-que-ha-explicacoes-por-dar-e-duvida-de-impacto-do-estado-na-ren",
+        "publisher": "Notícias ao Minuto",
+        "publishedAt": "2026-08-17T15:25:43Z",
+        "articleId": "news_0ac2d5c6bebdd7abb085"
+      },
+      "entities": [
+        {
+          "id": "ESTADO",
+          "kind": "institution",
+          "name": "Estado e Administração Pública"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "MAS",
+          "kind": "party",
+          "name": "Movimento Alternativa Socialista"
+        },
+        {
+          "id": "PCP",
+          "kind": "party",
+          "name": "Partido Comunista Português"
+        },
+        {
+          "id": "luis-montenegro",
+          "kind": "person",
+          "name": "Luís Montenegro",
+          "affiliations": [
+            "PSD"
+          ]
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.467715Z",
+      "updatedAt": "2026-08-26T14:52:57.867552Z"
+    },
+    {
+      "id": "promise_3018c114d8d7084c942e",
+      "party": "PSD",
+      "statement": "Montenegro abordou também a injeção de 3,2 milhões de euros na TAP e prometeu recuperar o valor total investido.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "\"Estado vai adquirir 13,7 da REN\", diz Montenegro",
+        "url": "https://www.cmjornal.pt/politica/detalhe/montenegro-anuncia-passe-ferroviario-verde-para-transportes-urbanos-das-areas-metropolitanas-do-porto-e-lisboa",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-14T17:58:58Z",
+        "articleId": "news_85878ddc5bb94641dd70"
+      },
+      "entities": [
+        {
+          "id": "ESTADO",
+          "kind": "institution",
+          "name": "Estado e Administração Pública"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "SEGURANCA-SOCIAL",
+          "kind": "institution",
+          "name": "Segurança Social e Trabalho"
+        },
+        {
+          "id": "PSD",
+          "kind": "party",
+          "name": "Partido Social Democrata"
+        },
+        {
+          "id": "luis-montenegro",
+          "kind": "person",
+          "name": "Luís Montenegro",
+          "affiliations": [
+            "PSD"
+          ]
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.504007Z",
+      "updatedAt": "2026-08-26T14:52:57.867631Z"
+    },
+    {
+      "id": "promise_1e9d124bcc2fe3908fd7",
+      "party": "GOVERNO",
+      "statement": "O Governo vai aumentar o desconto no ISP na próxima semana, em 2,1 cêntimos por litro para o gasóleo e em 1,4 cêntimos para a gasolina, segundo uma portaria esta sexta-feira publicada em Diário da República.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Governo aumenta desconto no ISP para gasóleo e gasolina",
+        "url": "https://www.cmjornal.pt/economia/detalhe/20260814-193745-governo-aumenta-desconto-no-isp-para-gasoleo-e-gasolina",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-14T19:34:10Z",
+        "articleId": "news_171e871ea9ddbeec8ed6"
+      },
+      "entities": [
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.508436Z",
+      "updatedAt": "2026-08-26T14:52:57.867883Z"
+    },
+    {
+      "id": "promise_063a538252af50b2b42c",
+      "party": "GOVERNO",
+      "statement": "O Governo quer reduzir os atrasos nos tribunais administrativos e fiscais, dando mais poderes ao Conselho Superior dos Tribunais e Fiscais.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Governo quer travar atrasos nos tribunais e criar juízos para a imigração",
+        "url": "https://www.cmjornal.pt/sociedade/detalhe/governo-quer-travar-atrasos-nos-tribunais-e-criar-juizos-para-a-imigracao",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-12T13:00:51Z",
+        "articleId": "news_d4ed20b2c8170f62168a"
+      },
+      "entities": [
+        {
+          "id": "PARLAMENTO",
+          "kind": "institution",
+          "name": "Assembleia da República"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "JUSTICA",
+          "kind": "institution",
+          "name": "Justiça e Ministério Público"
+        },
+        {
+          "id": "MAS",
+          "kind": "party",
+          "name": "Movimento Alternativa Socialista"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.532562Z",
+      "updatedAt": "2026-08-26T14:52:57.868360Z"
+    },
+    {
+      "id": "promise_65d4845ec90d1997f4ba",
+      "party": "PSD",
+      "statement": "Montenegro promete \"transparência absoluta\" na compra de fragatas e apoia processo de Melo a Ventura.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Montenegro promete \"transparência absoluta\" na compra de fragatas e apoia processo de Melo a Ventura",
+        "url": "https://www.cmjornal.pt/politica/detalhe/montenegro-promete-transparencia-absoluta-na-compra-de-fragatas-e-apoia-processo-de-melo-a-ventura",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-12T13:29:11Z",
+        "articleId": "news_f11641054c9c768d5355"
+      },
+      "entities": [
+        {
+          "id": "ESTADO",
+          "kind": "institution",
+          "name": "Estado e Administração Pública"
+        },
+        {
+          "id": "FORCAS-SEGURANCA",
+          "kind": "institution",
+          "name": "Forças de Segurança e Defesa"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "CHEGA",
+          "kind": "party",
+          "name": "CHEGA"
+        },
+        {
+          "id": "andre-ventura",
+          "kind": "person",
+          "name": "André Ventura",
+          "affiliations": [
+            "CHEGA"
+          ]
+        },
+        {
+          "id": "luis-montenegro",
+          "kind": "person",
+          "name": "Luís Montenegro",
+          "affiliations": [
+            "PSD"
+          ]
+        },
+        {
+          "id": "nuno-melo",
+          "kind": "person",
+          "name": "Nuno Melo",
+          "affiliations": [
+            "CDS-PP"
+          ]
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.538490Z",
+      "updatedAt": "2026-08-26T14:52:57.868492Z"
+    },
+    {
+      "id": "promise_d9346caa6937af9f6aaf",
+      "party": "PSD",
+      "statement": "Montenegro promete 'transparência absoluta' na compra de fragatas e apoia processo de Melo a Ventura O primeiro-ministro assegurou hoje que o Governo trata a aquisição de fragatas a Itália com \"clareza e transparência absoluta\" e considerou \"totalmente legítimo\" que o ministro da Defesa processe o líder do Chega e o jornal 24Horas.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Montenegro promete \"transparência absoluta\" na compra de fragatas e apoia processo de Melo a Ventura",
+        "url": "https://www.cmjornal.pt/politica/detalhe/montenegro-promete-transparencia-absoluta-na-compra-de-fragatas-e-apoia-processo-de-melo-a-ventura",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-12T13:29:11Z",
+        "articleId": "news_f11641054c9c768d5355"
+      },
+      "entities": [
+        {
+          "id": "ESTADO",
+          "kind": "institution",
+          "name": "Estado e Administração Pública"
+        },
+        {
+          "id": "FORCAS-SEGURANCA",
+          "kind": "institution",
+          "name": "Forças de Segurança e Defesa"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "CHEGA",
+          "kind": "party",
+          "name": "CHEGA"
+        },
+        {
+          "id": "andre-ventura",
+          "kind": "person",
+          "name": "André Ventura",
+          "affiliations": [
+            "CHEGA"
+          ]
+        },
+        {
+          "id": "luis-montenegro",
+          "kind": "person",
+          "name": "Luís Montenegro",
+          "affiliations": [
+            "PSD"
+          ]
+        },
+        {
+          "id": "nuno-melo",
+          "kind": "person",
+          "name": "Nuno Melo",
+          "affiliations": [
+            "CDS-PP"
+          ]
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.544339Z",
+      "updatedAt": "2026-08-26T14:52:57.868702Z"
+    },
+    {
+      "id": "promise_f90629417b852f4c249e",
+      "party": "GOVERNO",
+      "statement": "O Brasil vai reforçar na sexta-feira, em Manaus, o debate sobre as oportunidades do acordo Mercosul-União Europeia (UE), face às tensões comerciais com os Estados Unidos (EUA) e à aposta na diversificação dos mercados de exportação.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Brasil reforça debate sobre acordo UE-Mercosul face a tensão comercial com EUA",
+        "url": "https://www.cmjornal.pt/economia/detalhe/brasil-reforca-debate-sobre-acordo-ue-mercosul-face-a-tensao-comercial-com-eua",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-12T09:04:10Z",
+        "articleId": "news_da7cca306a1cd451cc1f"
+      },
+      "entities": [
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "UNIAO-EUROPEIA",
+          "kind": "institution",
+          "name": "União Europeia e Órgãos Europeus"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-26T14:46:10.545845Z",
+      "updatedAt": "2026-08-26T14:52:57.869452Z"
+    },
+    {
+      "id": "promise_1a95f1f4627b5ebb8360",
+      "party": "CHEGA",
+      "statement": "Chega propõe limitar indemnizações em casos de legítima defesa para travar crimes graves.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Chega propõe limitar indemnizações em casos de legítima defesa para travar crimes graves",
+        "url": "https://www.cmjornal.pt/politica/detalhe/chega-propoe-limitar-indemnizacoes-em-casos-de-legitima-defesa-para-travar-crimes-graves",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-06T12:34:10Z",
+        "articleId": "news_5d03a2c1254dde9eb2fc"
+      },
+      "entities": [
+        {
+          "id": "PARLAMENTO",
+          "kind": "institution",
+          "name": "Assembleia da República"
+        },
+        {
+          "id": "CHEGA",
+          "kind": "party",
+          "name": "CHEGA"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.612700Z",
+      "updatedAt": "2026-08-26T14:52:57.869627Z"
+    },
+    {
+      "id": "promise_ca8d4d655ba141f9d3f7",
+      "party": "CHEGA",
+      "statement": "O Chega divulgou esta quinta-feira um projeto de lei no qual propõe que quem seja ferido no âmbito da prática de um crime grave, tendo a outra pessoa agido em legítima defesa, não tenha direito a receber uma indemnização.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Chega propõe limitar indemnizações em casos de legítima defesa para travar crimes graves",
+        "url": "https://www.cmjornal.pt/politica/detalhe/chega-propoe-limitar-indemnizacoes-em-casos-de-legitima-defesa-para-travar-crimes-graves",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-06T12:34:10Z",
+        "articleId": "news_5d03a2c1254dde9eb2fc"
+      },
+      "entities": [
+        {
+          "id": "PARLAMENTO",
+          "kind": "institution",
+          "name": "Assembleia da República"
+        },
+        {
+          "id": "CHEGA",
+          "kind": "party",
+          "name": "CHEGA"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.615816Z",
+      "updatedAt": "2026-08-26T14:52:57.885778Z"
+    },
+    {
+      "id": "promise_5fad35631ab07523133e",
+      "party": "GOVERNO",
+      "statement": "Ministro promete vagas adicionais no superior para alunos prejudicados.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Ministro promete vagas adicionais no superior para alunos prejudicados",
+        "url": "https://www.cmjornal.pt/sociedade/detalhe/ministro-promete-vagas-adicionais-no-superior-para-alunos-prejudicados",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-05T19:26:49Z",
+        "articleId": "news_42a8f2cd9b6c600359de"
+      },
+      "entities": [
+        {
+          "id": "EDUCACAO",
+          "kind": "institution",
+          "name": "Educação e Ensino"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "fernando-alexandre",
+          "kind": "person",
+          "name": "Fernando Alexandre",
+          "affiliations": [
+            "PSD"
+          ]
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.619568Z",
+      "updatedAt": "2026-08-26T14:52:57.886211Z"
+    },
+    {
+      "id": "promise_b8b812336acd8365d2d3",
+      "party": "GOVERNO",
+      "statement": "Segundo uma nota do MJ, a entrada em funções dos 47 novos conservadores e o reforço de mais 66 em setembro, num total de 113 novos funcionários este ano vai reforçar a capacidade de resposta das conservatórias do IRN em todo o país, sobretudo na zona do Porto.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Governo dá posse a 47 novos conservadores",
+        "url": "https://www.cmjornal.pt/politica/detalhe/governo-da-posse-a-47-novos-conservadores",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-04T20:34:11Z",
+        "articleId": "news_adb44e728153081d2312"
+      },
+      "entities": [
+        {
+          "id": "ESTADO",
+          "kind": "institution",
+          "name": "Estado e Administração Pública"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.632985Z",
+      "updatedAt": "2026-08-26T14:52:57.886564Z"
+    },
+    {
+      "id": "promise_bf5c4f57bf459ce09e28",
+      "party": "PS",
+      "statement": "Num projeto submetido esta terça-feira na Assembleia da República, o Grupo Parlamentar do PS propõe que os deputados manifestem a sua \"solidariedade com o Reino de Espanha, as autoridades espanholas e a população de Ceuta, na sequência da violação da sua integridade territorial através da entrada massiva de migrantes no seu território\"",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "PS apresenta voto de solidariedade com Ceuta e condena exploração política por extremistas",
+        "url": "https://www.cmjornal.pt/politica/detalhe/ps-apresenta-voto-de-solidariedade-com-ceuta-e-condena-exploracao-politica-por-extremistas",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-04T17:14:11Z",
+        "articleId": "news_039e34e489ced04ba8bd"
+      },
+      "entities": [
+        {
+          "id": "PARLAMENTO",
+          "kind": "institution",
+          "name": "Assembleia da República"
+        },
+        {
+          "id": "PS",
+          "kind": "party",
+          "name": "Partido Socialista"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.642705Z",
+      "updatedAt": "2026-08-26T14:52:57.889547Z"
+    },
+    {
+      "id": "promise_d7c30dd0173c1df267c6",
+      "party": "PSD",
+      "statement": "Montenegro quer garantir médicos nos centros de saúde seja com gestão pública ou privada.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Montenegro quer garantir médicos nos centros de saúde seja com gestão pública ou privada",
+        "url": "https://www.cmjornal.pt/politica/detalhe/montenegro-quer-garantir-medicos-nos-centros-de-saude-seja-com-gestao-publica-ou-privada",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-08-04T16:39:10Z",
+        "articleId": "news_de88b09312efe809bf6a"
+      },
+      "entities": [
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "MAS",
+          "kind": "party",
+          "name": "Movimento Alternativa Socialista"
+        },
+        {
+          "id": "luis-montenegro",
+          "kind": "person",
+          "name": "Luís Montenegro",
+          "affiliations": [
+            "PSD"
+          ]
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.645688Z",
+      "updatedAt": "2026-08-26T14:52:57.889869Z"
+    },
+    {
+      "id": "promise_e3791c2c2d4043d43b8b",
+      "party": "CHEGA",
+      "statement": "\"Perante os acontecimentos em Ceuta, que o Chega considera constituírem uma verdadeira invasão migratória, e face à entrada de um elevado número de migrantes irregulares em poucas horas, o Grupo Parlamentar do Chega dará entrada, ainda hoje, de uma iniciativa que propõe a suspensão temporária da aplicação do Acordo de Schengen e a reposição imediata do controlo nas fronteiras terrestres com Espanha\", anunciou o partido",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Chega quer reposição do controlo nas fronteiras com Espanha após chegada de migrantes a Ceuta",
+        "url": "https://www.cmjornal.pt/politica/detalhe/chega-quer-reposicao-do-controlo-nas-fronteiras-com-espanha-apos-chegada-de-migrantes-a-ceuta",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-07-31T12:14:11Z",
+        "articleId": "news_a4b0accff76c3de4760a"
+      },
+      "entities": [
+        {
+          "id": "PARLAMENTO",
+          "kind": "institution",
+          "name": "Assembleia da República"
+        },
+        {
+          "id": "CHEGA",
+          "kind": "party",
+          "name": "CHEGA"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.667940Z",
+      "updatedAt": "2026-08-26T14:52:57.890423Z"
+    },
+    {
+      "id": "promise_637c077148e088cb01af",
+      "party": "GOVERNO",
+      "statement": "Governo comprometeu-se a aplicar uma nova redução extraordinária e temporária no ISP, sempre que se verifique um aumento do preço dos combustíveis superior a 10 cêntimos.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Gasóleo deverá subir dois cêntimos e gasolina baixar um cêntimo na próxima semana",
+        "url": "https://www.cmjornal.pt/economia/detalhe/gasoleo-devera-subir-dois-centimos-e-gasolina-baixar-um-centimo-na-proxima-semana",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-07-31T11:39:11Z",
+        "articleId": "news_f75f0b306b2594d50ae2"
+      },
+      "entities": [
+        {
+          "id": "REGULADORES",
+          "kind": "institution",
+          "name": "Entidades Reguladoras e Energia"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.670533Z",
+      "updatedAt": "2026-08-26T14:52:57.890616Z"
+    },
+    {
+      "id": "promise_0ea6766ca8030bc4da7b",
+      "party": "GOVERNO",
+      "statement": "Podcasts, Videocast e Programas sobre principais acontecimentos do País e do Mundo A informação do País e do mundo em primeiro lugar Notícias em primeira mão, entrevistas, fotos e vídeos dos seus famosos Versão online da revista de fim de semana do jornal Correio da Manhã Governo comprometeu-se a aplicar uma nova redução extraordinária e temporária no ISP, sempre que se verifique um aumento do preço dos combustíveis superior a 10 cêntimos.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Gasóleo deverá subir dois cêntimos e gasolina baixar um cêntimo na próxima semana",
+        "url": "https://www.cmjornal.pt/economia/detalhe/gasoleo-devera-subir-dois-centimos-e-gasolina-baixar-um-centimo-na-proxima-semana",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-07-31T11:39:11Z",
+        "articleId": "news_f75f0b306b2594d50ae2"
+      },
+      "entities": [
+        {
+          "id": "REGULADORES",
+          "kind": "institution",
+          "name": "Entidades Reguladoras e Energia"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.677466Z",
+      "updatedAt": "2026-08-26T14:52:57.890903Z"
+    },
+    {
+      "id": "promise_ffa5ba8ce2c1155f7a7d",
+      "party": "PS",
+      "statement": "Um estudo encomendado pela Confederação Empresarial de Portugal (CIP) e pelo Instituto Amaro da Costa propõe que, em vez tentar reformar vários setores ao mesmo tempo, o Governo concentre os seus esforços em “garantir que, no prazo de 90 dias após a entrada de um processo, os tribunais profiram uma decisão”",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Estudo da CIP propõe decisões dos tribunais em 90 dias",
+        "url": "https://www.cmjornal.pt/politica/detalhe/estudo-da-cip-propoe-decisoes-dos-tribunais-em-90-dias",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-07-30T23:30:25Z",
+        "articleId": "news_c166b522cdf7cfcc3316"
+      },
+      "entities": [
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "SEGURANCA-SOCIAL",
+          "kind": "institution",
+          "name": "Segurança Social e Trabalho"
+        },
+        {
+          "id": "antonio-costa",
+          "kind": "person",
+          "name": "António Costa",
+          "affiliations": [
+            "PS"
+          ]
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.689196Z",
+      "updatedAt": "2026-08-26T14:52:57.891254Z"
+    },
+    {
+      "id": "promise_578f0ac0c12baf8c017c",
+      "party": "CHEGA",
+      "statement": "O presidente do Chega confirmou esta quarta-feira que a Polícia Judiciária lhe pediu imagens do seu gabinete no Parlamento antes da alegada invasão e disse que o partido vai reforçar as medidas de segurança e defendeu que também a Assembleia o deve fazer.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Ventura confirma que PJ lhe pediu imagens do gabinete e defende segurança \"mais apertada\" na assembleia",
+        "url": "https://www.cmjornal.pt/politica/detalhe/ventura-confirma-que-pj-lhe-pediu-imagens-do-gabinete-e-defende-seguranca-mais-apertada-na-assembleia",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-07-29T20:14:10Z",
+        "articleId": "news_1a182f8d140e8fe8fcf0"
+      },
+      "entities": [
+        {
+          "id": "PARLAMENTO",
+          "kind": "institution",
+          "name": "Assembleia da República"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "JUSTICA",
+          "kind": "institution",
+          "name": "Justiça e Ministério Público"
+        },
+        {
+          "id": "CHEGA",
+          "kind": "party",
+          "name": "CHEGA"
+        },
+        {
+          "id": "andre-ventura",
+          "kind": "person",
+          "name": "André Ventura",
+          "affiliations": [
+            "CHEGA"
+          ]
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.719077Z",
+      "updatedAt": "2026-08-26T14:52:57.891623Z"
+    },
+    {
+      "id": "promise_ec7ea24eda2d8017b4a9",
+      "party": "GOVERNO",
+      "statement": "Para o grupo de extrema-direita, a falta de explicações por parte de Luís Neves compromete a sua credibilidade e a do Governo.",
+      "origin": "noticia",
+      "source": {
+        "type": "noticia",
+        "title": "Chega quer comissão para avaliar mandatos de Luís Neves na PJ e apurar responsabilidades de quem o nomeou",
+        "url": "https://www.cmjornal.pt/politica/detalhe/chega-quer-comissao-para-avaliar-mandatos-de-luis-neves-na-pj-e-apurar-responsabilidades-de-quem-o-nomeou",
+        "publisher": "CMTV / Correio da Manhã",
+        "publishedAt": "2026-07-29T09:56:40Z",
+        "articleId": "news_eed713f86ac393b45e78"
+      },
+      "entities": [
+        {
+          "id": "PARLAMENTO",
+          "kind": "institution",
+          "name": "Assembleia da República"
+        },
+        {
+          "id": "GOVERNO",
+          "kind": "institution",
+          "name": "Governo"
+        },
+        {
+          "id": "JUSTICA",
+          "kind": "institution",
+          "name": "Justiça e Ministério Público"
+        },
+        {
+          "id": "CHEGA",
+          "kind": "party",
+          "name": "CHEGA"
+        }
+      ],
+      "status": "por_verificar",
+      "reviewRequired": true,
+      "proposalMatches": [],
+      "createdAt": "2026-08-20T12:58:26.734940Z",
+      "updatedAt": "2026-08-26T14:52:57.891690Z"
+    }
+  ]
+}

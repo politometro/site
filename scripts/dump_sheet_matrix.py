@@ -4,6 +4,8 @@ import os
 
 wb = openpyxl.load_workbook("Polítólogo Português.xlsx", data_only=True)
 sheet = wb.active
+if sheet is None:
+    raise RuntimeError("O livro Excel não tem uma folha ativa.")
 
 # Parse headers
 headers = []

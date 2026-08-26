@@ -1,5 +1,4 @@
 import { createHash, randomUUID } from "node:crypto";
-import { isIP } from "node:net";
 import fs from "node:fs";
 import path from "node:path";
 import { NextRequest, NextResponse } from "next/server";
@@ -7,8 +6,14 @@ import {
   categoryForType,
   isRecommendationType,
   normalizePublicUrl,
+  prepareRecommendationCover,
+  resolutionErrorMessage,
+  resolveRecommendation,
   sanitizeText,
+  titleSimilarity,
+  validateResolvedRecommendation,
   type RecommendationType,
+  type ResolvedRecommendation,
 } from "@/lib/recommendationResolver";
 import { checkRecommendationRateLimit } from "@/lib/recommendationRateLimit";
 
@@ -48,43 +53,17 @@ interface ReplacePayload {
   history?: unknown;
 }
 
-interface CommunitySubmissionSnapshot {
-  readonly id: string;
-  readonly sourceKind: "community_suggestion";
-  readonly type: RecommendationType;
-  readonly title: string;
-  readonly link: string;
-  readonly createdAt: string;
-}
-
-interface DiscordDeliveryProof {
-  channelId: string;
+interface DiscordDelivery {
   messageId: string;
+  channelId: string;
   sentAt: string;
-  payloadHash: string;
 }
 
 const STORAGE_RELATIVE_PATH = "website/public/recommendations.json";
-const COMMUNITY_SOURCE_KIND = "community_suggestion" as const;
-const COMMUNITY_ORIGINS = new Set([
-  "community",
-  "discord",
-  "discord-command",
-  "website",
-  "website-community",
-]);
-const COMMUNITY_RESOLUTION_STATUSES = new Set([
-  "unresolved",
-  "verified",
-  "rejected",
-]);
 const MAX_REQUEST_BYTES = 1_000_000;
-const MAX_LINK_LENGTH = 2_048;
 const MAX_RECORDS_PER_LIST = 1_000;
 const MAX_STORAGE_RETRIES = 3;
 const DISCORD_RETRY_EVENT = "deliver-pending-suggestions";
-const INVISIBLE_OR_CONTROL_CHARACTERS =
-  /[\u0000-\u001F\u007F-\u009F\p{Cf}\p{Cs}\p{Co}\p{Cn}]/gu;
 
 class ApiError extends Error {
   constructor(
@@ -103,227 +82,68 @@ class StorageConflictError extends Error {
   }
 }
 
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
 function emptyDatabase(): RecommendationDatabase {
   return { queue: [], history: [] };
-}
-
-function isJsonRecord(value: unknown): value is JsonRecord {
-  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
-}
-
-function stripInvisibleOrControlCharacters(value: string): string {
-  return value.replace(INVISIBLE_OR_CONTROL_CHARACTERS, "");
-}
-
-function sanitizeSubmissionText(value: unknown, maxLength = 600): string {
-  return stripInvisibleOrControlCharacters(sanitizeText(value, maxLength))
-    .replace(/\s+/gu, " ")
-    .trim()
-    .slice(0, maxLength);
-}
-
-function sanitizeIdentifier(value: unknown, position: string): string {
-  const identifier = sanitizeSubmissionText(value, 140);
-  if (!identifier || !/^[A-Za-z0-9][A-Za-z0-9_.:-]*$/u.test(identifier)) {
-    throw new ApiError(`${position}: identificador invalido.`, 400);
-  }
-  return identifier;
-}
-
-function isForbiddenLiteralHostname(hostname: string): boolean {
-  const host = hostname.toLocaleLowerCase().replace(/^\[|\]$/gu, "");
-  if (
-    host === "localhost" ||
-    host === "localhost.localdomain" ||
-    host.endsWith(".localhost") ||
-    host.endsWith(".local")
-  ) {
-    return true;
-  }
-
-  const mappedIpv4 = host.match(/^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/u)?.[1];
-  if (mappedIpv4) return isForbiddenLiteralHostname(mappedIpv4);
-
-  const family = isIP(host);
-  if (family === 6) {
-    return (
-      host === "::" ||
-      host === "::1" ||
-      host.startsWith("fc") ||
-      host.startsWith("fd") ||
-      host.startsWith("fe8") ||
-      host.startsWith("fe9") ||
-      host.startsWith("fea") ||
-      host.startsWith("feb") ||
-      host.startsWith("ff")
-    );
-  }
-  if (family !== 4) return false;
-
-  const octets = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/u);
-  if (!octets) return true;
-  const [a, b, c] = octets.slice(1).map(Number);
-  if ([a, b, c, Number(octets[4])].some((octet) => octet < 0 || octet > 255)) {
-    return true;
-  }
-
-  return (
-    a === 0 ||
-    a === 10 ||
-    a === 127 ||
-    (a === 100 && b >= 64 && b <= 127) ||
-    (a === 169 && b === 254) ||
-    (a === 172 && b >= 16 && b <= 31) ||
-    (a === 192 && b === 0 && c === 0) ||
-    (a === 192 && b === 0 && c === 2) ||
-    (a === 192 && b === 168) ||
-    (a === 198 && (b === 18 || b === 19)) ||
-    (a === 198 && b === 51 && c === 100) ||
-    (a === 203 && b === 0 && c === 113) ||
-    a >= 224
-  );
-}
-
-function normalizePublicSubmissionLink(
-  value: unknown,
-  position = "link",
-): string {
-  if (value === undefined || value === null) return "";
-  if (typeof value !== "string") {
-    throw new ApiError(`${position}: link invalido.`, 400);
-  }
-
-  const cleaned = stripInvisibleOrControlCharacters(value).trim();
-  if (!cleaned) return "";
-  if (cleaned.length > MAX_LINK_LENGTH || /[<>]/u.test(cleaned)) {
-    throw new ApiError(`${position}: link invalido.`, 400);
-  }
-
-  const normalized = normalizePublicUrl(cleaned);
-  if (!normalized) throw new ApiError(`${position}: link invalido.`, 400);
-
-  try {
-    const parsed = new URL(normalized);
-    if (
-      (parsed.protocol !== "http:" && parsed.protocol !== "https:") ||
-      parsed.username ||
-      parsed.password ||
-      isForbiddenLiteralHostname(parsed.hostname)
-    ) {
-      throw new ApiError(`${position}: link invalido.`, 400);
-    }
-    return normalized;
-  } catch (error: unknown) {
-    if (error instanceof ApiError) throw error;
-    throw new ApiError(`${position}: link invalido.`, 400);
-  }
-}
-
-function validTimestamp(value: unknown): value is string {
-  return (
-    typeof value === "string" &&
-    value.length <= 80 &&
-    Number.isFinite(new Date(value).getTime())
-  );
-}
-
-function requireTimestamp(value: unknown, position: string): string {
-  if (!validTimestamp(value)) {
-    throw new ApiError(`${position}: data invalida.`, 400);
-  }
-  return value;
-}
-
-function submissionHash(snapshot: CommunitySubmissionSnapshot): string {
-  const canonicalPayload = JSON.stringify([
-    "approval-v1",
-    snapshot.id,
-    snapshot.sourceKind,
-    snapshot.type,
-    snapshot.title,
-    snapshot.link,
-    snapshot.createdAt,
-  ]);
-  return createHash("sha256").update(canonicalPayload, "utf8").digest("hex");
-}
-
-function isSubmissionHash(value: unknown): value is string {
-  return typeof value === "string" && /^[a-f0-9]{64}$/u.test(value);
-}
-
-function isCommunityRecord(value: JsonRecord): boolean {
-  const origin =
-    typeof value.origin === "string"
-      ? value.origin.trim().toLocaleLowerCase()
-      : "";
-  const id =
-    typeof value.id === "string" ? value.id.trim().toLocaleLowerCase() : "";
-  return (
-    value.sourceKind === COMMUNITY_SOURCE_KIND ||
-    "communitySubmission" in value ||
-    "submissionHash" in value ||
-    COMMUNITY_ORIGINS.has(origin) ||
-    id.startsWith("web_") ||
-    id.startsWith("discord_")
-  );
 }
 
 function parseRecommendations(content: string): RecommendationDatabase {
   let parsed: unknown;
   try {
-    parsed = JSON.parse(content || "{}");
+    parsed = JSON.parse(content || "{}") as unknown;
   } catch {
     throw new ApiError(
-      "O ficheiro recommendations.json esta corrompido; a escrita foi bloqueada.",
+      "O ficheiro recommendations.json está corrompido; a escrita foi bloqueada.",
       500,
     );
   }
-
-  let database: RecommendationDatabase;
   if (Array.isArray(parsed)) {
     if (parsed.some((item) => !isJsonRecord(item))) {
       throw new ApiError(
-        "A lista legacy contem registos invalidos; a escrita foi bloqueada.",
+        "A lista legacy contém registos inválidos; a escrita foi bloqueada.",
         500,
       );
     }
-    database = { queue: parsed, history: [] };
-  } else {
-    if (!isJsonRecord(parsed)) {
-      throw new ApiError("O ficheiro recommendations.json nao e um objeto.", 500);
-    }
-    if (
-      (parsed.queue !== undefined && !Array.isArray(parsed.queue)) ||
-      (parsed.history !== undefined && !Array.isArray(parsed.history))
-    ) {
-      throw new ApiError(
-        "queue/history tem um formato invalido em recommendations.json.",
-        500,
-      );
-    }
-    if (
-      (Array.isArray(parsed.queue) &&
-        parsed.queue.some((item) => !isJsonRecord(item))) ||
-      (Array.isArray(parsed.history) &&
-        parsed.history.some((item) => !isJsonRecord(item)))
-    ) {
-      throw new ApiError(
-        "recommendations.json contem registos invalidos; a escrita foi bloqueada.",
-        500,
-      );
-    }
-    database = {
-      queue: Array.isArray(parsed.queue)
-        ? parsed.queue.filter(isJsonRecord)
-        : [],
-      history: Array.isArray(parsed.history)
-        ? parsed.history.filter(isJsonRecord)
-        : [],
+    return {
+      queue: parsed,
+      history: [],
     };
   }
+  if (!isJsonRecord(parsed)) {
+    throw new ApiError("O ficheiro recommendations.json não é um objeto.", 500);
+  }
+  if (
+    (parsed.queue !== undefined && !Array.isArray(parsed.queue)) ||
+    (parsed.history !== undefined && !Array.isArray(parsed.history))
+  ) {
+    throw new ApiError(
+      "queue/history têm um formato inválido em recommendations.json.",
+      500,
+    );
+  }
+  if (
+    (Array.isArray(parsed.queue) && parsed.queue.some((item) => !isJsonRecord(item))) ||
+    (Array.isArray(parsed.history) &&
+      parsed.history.some((item) => !isJsonRecord(item)))
+  ) {
+    throw new ApiError(
+      "recommendations.json contém registos inválidos; a escrita foi bloqueada.",
+      500,
+    );
+  }
+  return {
+    queue: Array.isArray(parsed.queue) ? parsed.queue.filter(isJsonRecord) : [],
+    history: Array.isArray(parsed.history)
+      ? parsed.history.filter(isJsonRecord)
+      : [],
+  };
+}
 
-  assertStoredCommunityRecords(database);
-  return database;
+function isJsonRecord(value: unknown): value is JsonRecord {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
 }
 
 function githubConfig(): GitHubConfig | null {
@@ -337,26 +157,15 @@ function githubConfig(): GitHubConfig | null {
   };
 }
 
-function githubFileUrl(
-  config: GitHubConfig,
-  relativePath: string,
-  includeRef: boolean,
-): string {
-  const encodedPath = relativePath
-    .split("/")
-    .map((segment) => encodeURIComponent(segment))
-    .join("/");
-  const base = `https://api.github.com/repos/${config.repo}/contents/${encodedPath}`;
-  return includeRef
-    ? `${base}?ref=${encodeURIComponent(config.branch)}`
-    : base;
+function githubContentsUrl(config: GitHubConfig, includeRef: boolean): string {
+  return githubFileUrl(config, STORAGE_RELATIVE_PATH, includeRef);
 }
 
 async function dispatchDiscordRetryWorkflow(): Promise<boolean> {
   const config = githubConfig();
   if (!config) {
     console.warn(
-      "[suggestions API] Recuperacao imediata indisponivel: GitHub nao configurado.",
+      "[suggestions API] Recuperação imediata indisponível: GitHub não configurado.",
     );
     return false;
   }
@@ -380,22 +189,37 @@ async function dispatchDiscordRetryWorkflow(): Promise<boolean> {
     );
     if (response.ok) return true;
     console.error(
-      `[suggestions API] Nao foi possivel iniciar a recuperacao imediata (HTTP ${response.status}).`,
+      `[suggestions API] Não foi possível iniciar a recuperação imediata (HTTP ${response.status}).`,
       sanitizeText(await response.text(), 500),
     );
   } catch (error: unknown) {
     console.error(
-      "[suggestions API] Falha ao iniciar a recuperacao imediata:",
+      "[suggestions API] Falha ao iniciar a recuperação imediata:",
       error,
     );
   }
   return false;
 }
 
+function githubFileUrl(
+  config: GitHubConfig,
+  relativePath: string,
+  includeRef: boolean,
+): string {
+  const encodedPath = relativePath
+    .split("/")
+    .map((segment) => encodeURIComponent(segment))
+    .join("/");
+  const base = `https://api.github.com/repos/${config.repo}/contents/${encodedPath}`;
+  return includeRef
+    ? `${base}?ref=${encodeURIComponent(config.branch)}`
+    : base;
+}
+
 async function readGitHubSnapshot(
   config: GitHubConfig,
 ): Promise<StorageSnapshot> {
-  const response = await fetch(githubFileUrl(config, STORAGE_RELATIVE_PATH, true), {
+  const response = await fetch(githubContentsUrl(config, true), {
     headers: {
       Authorization: `Bearer ${config.token}`,
       Accept: "application/vnd.github+json",
@@ -410,7 +234,7 @@ async function readGitHubSnapshot(
   }
   if (!response.ok) {
     throw new ApiError(
-      `Nao foi possivel ler a fila no GitHub (HTTP ${response.status}).`,
+      `Não foi possível ler a fila no GitHub (HTTP ${response.status}).`,
       502,
     );
   }
@@ -420,14 +244,12 @@ async function readGitHubSnapshot(
     sha?: unknown;
   };
   if (typeof payload.content !== "string") {
-    throw new ApiError("O ficheiro da fila no GitHub e invalido.", 502);
+    throw new ApiError("O ficheiro da fila no GitHub é inválido.", 502);
   }
 
   return {
     database: parseRecommendations(
-      Buffer.from(payload.content.replace(/\s/gu, ""), "base64").toString(
-        "utf-8",
-      ),
+      Buffer.from(payload.content.replace(/\s/g, ""), "base64").toString("utf-8"),
     ),
     sha: typeof payload.sha === "string" ? payload.sha : null,
     source: "github",
@@ -467,7 +289,7 @@ async function writeGitHubDatabase(
   };
   if (sha) body.sha = sha;
 
-  const response = await fetch(githubFileUrl(config, STORAGE_RELATIVE_PATH, false), {
+  const response = await fetch(githubContentsUrl(config, false), {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${config.token}`,
@@ -483,8 +305,9 @@ async function writeGitHubDatabase(
     throw new StorageConflictError();
   }
   if (!response.ok) {
+    const details = sanitizeText(await response.text(), 500);
     throw new ApiError(
-      `Nao foi possivel guardar a fila no GitHub (HTTP ${response.status}).`,
+      `Não foi possível guardar a fila no GitHub (HTTP ${response.status})${details ? `: ${details}` : "."}`,
       502,
     );
   }
@@ -495,6 +318,199 @@ async function writeGitHubDatabase(
   return typeof payload.content?.sha === "string"
     ? payload.content.sha
     : null;
+}
+
+async function ensureGitHubAsset(
+  config: GitHubConfig,
+  relativePath: string,
+  bytes: Uint8Array,
+): Promise<void> {
+  for (let attempt = 0; attempt < MAX_STORAGE_RETRIES; attempt += 1) {
+    const current = await fetch(githubFileUrl(config, relativePath, true), {
+      headers: {
+        Authorization: `Bearer ${config.token}`,
+        Accept: "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28",
+        "Cache-Control": "no-cache",
+      },
+      cache: "no-store",
+    });
+
+    let sha: string | null = null;
+    if (current.ok) {
+      const payload = (await current.json()) as {
+        content?: unknown;
+        sha?: unknown;
+      };
+      sha = typeof payload.sha === "string" ? payload.sha : null;
+      if (typeof payload.content === "string") {
+        const existing = Buffer.from(
+          payload.content.replace(/\s/g, ""),
+          "base64",
+        );
+        if (existing.equals(Buffer.from(bytes))) return;
+      }
+    } else if (current.status !== 404) {
+      throw new ApiError(
+        `Não foi possível verificar ${relativePath} no GitHub (HTTP ${current.status}).`,
+        502,
+      );
+    }
+
+    const body: Record<string, unknown> = {
+      message: `Store verified recommendation asset ${path.basename(relativePath)}`,
+      content: Buffer.from(bytes).toString("base64"),
+      branch: config.branch,
+    };
+    if (sha) body.sha = sha;
+    const response = await fetch(githubFileUrl(config, relativePath, false), {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${config.token}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+      body: JSON.stringify(body),
+      cache: "no-store",
+    });
+    if (response.ok) return;
+    if (
+      (response.status === 409 || response.status === 422) &&
+      attempt < MAX_STORAGE_RETRIES - 1
+    ) {
+      continue;
+    }
+    throw new ApiError(
+      `Não foi possível guardar ${relativePath} no GitHub (HTTP ${response.status}).`,
+      502,
+    );
+  }
+}
+
+function normalizeManifestTitle(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/\p{Diacritic}/gu, "")
+    .toLocaleLowerCase()
+    .replace(/https?:\/\/\S+/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function canonicalManifestUrl(value: string): string {
+  const normalized = normalizePublicUrl(value);
+  if (!normalized) return "";
+  const url = new URL(normalized);
+  const query = new URLSearchParams();
+  for (const [key, queryValue] of url.searchParams) {
+    const lowered = key.toLocaleLowerCase();
+    if (
+      lowered.startsWith("utm_") ||
+      ["fbclid", "gclid", "srsltid", "ref", "ref_"].includes(lowered)
+    ) {
+      continue;
+    }
+    query.append(key, queryValue);
+  }
+  const port =
+    url.port &&
+    !(
+      (url.protocol === "https:" && url.port === "443") ||
+      (url.protocol === "http:" && url.port === "80")
+    )
+      ? `:${url.port}`
+      : "";
+  const queryString = query.toString();
+  return `${url.protocol}//${url.hostname.toLocaleLowerCase()}${port}${url.pathname || "/"}${queryString ? `?${queryString}` : ""}`;
+}
+
+type ResolvedForStorage = ResolvedRecommendation & {
+  sourceImageUrl?: string;
+};
+
+async function persistRecommendationCover(
+  resolved: ResolvedRecommendation,
+): Promise<ResolvedForStorage> {
+  if (resolved.type === "project") return resolved;
+
+  const prepared = await prepareRecommendationCover(resolved.imageUrl);
+  const coverHash = createHash("sha256")
+    .update(prepared.bytes)
+    .digest("hex");
+  const entityId =
+    resolved.verification.entityId ||
+    resolved.verification.externalId ||
+    resolved.link;
+  if (!entityId) {
+    throw new ApiError("A recomendação não tem uma identidade verificável.", 422);
+  }
+  const key = createHash("sha256")
+    .update(
+      `${resolved.type}|${normalizeManifestTitle(resolved.title)}|${entityId}|${coverHash}`,
+    )
+    .digest("hex")
+    .slice(0, 32);
+  const verifiedAt = new Date().toISOString();
+  const publicImageUrl = `/covers/${key}.jpg`;
+  const manifest = {
+    cacheVersion: 2,
+    type: resolved.type,
+    title: resolved.title,
+    titleNormalized: normalizeManifestTitle(resolved.title),
+    canonicalLink: canonicalManifestUrl(resolved.link),
+    entityId,
+    source: resolved.verification.provider,
+    score: resolved.verification.confidence,
+    coverHash,
+    coverSourceUrl: prepared.sourceUrl,
+    coverSourceMime: prepared.sourceMime,
+    width: prepared.width,
+    height: prepared.height,
+    verifiedAt,
+    resolvedTitle: resolved.title,
+    resolvedAuthor: resolved.authorOrMeta,
+    sourcePublishedAt: resolved.sourcePublishedAt,
+    expiryDate: resolved.expiryDate,
+  };
+  const manifestBytes = Buffer.from(
+    JSON.stringify(manifest, null, 2),
+    "utf-8",
+  );
+  const config = githubConfig();
+  if (config) {
+    await ensureGitHubAsset(
+      config,
+      `website/public/covers/${key}.jpg`,
+      prepared.bytes,
+    );
+    await ensureGitHubAsset(
+      config,
+      `website/public/covers/${key}.json`,
+      manifestBytes,
+    );
+  } else {
+    const coversDirectory = path.join(process.cwd(), "public", "covers");
+    fs.mkdirSync(coversDirectory, { recursive: true });
+    fs.writeFileSync(path.join(coversDirectory, `${key}.jpg`), prepared.bytes);
+    fs.writeFileSync(path.join(coversDirectory, `${key}.json`), manifestBytes);
+  }
+
+  return {
+    ...resolved,
+    imageUrl: publicImageUrl,
+    sourceImageUrl: prepared.sourceUrl,
+    verification: {
+      ...resolved.verification,
+      status: "verified",
+      source: resolved.verification.provider,
+      entityId,
+      score: resolved.verification.confidence,
+      coverHash,
+      verifiedAt,
+    },
+  };
 }
 
 function writeLocalDatabase(database: RecommendationDatabase): void {
@@ -546,10 +562,7 @@ async function mutateDatabase<T>(
       throw error;
     }
   }
-  throw new ApiError(
-    "Nao foi possivel atualizar a fila apos varias tentativas.",
-    409,
-  );
+  throw new ApiError("Não foi possível atualizar a fila após várias tentativas.", 409);
 }
 
 function activeHistory(history: JsonRecord[]): JsonRecord[] {
@@ -575,38 +588,10 @@ function queueWithExpiryState(queue: JsonRecord[]): JsonRecord[] {
   );
 }
 
-function assertContentLength(req: NextRequest): void {
-  const rawContentLength = req.headers.get("content-length");
-  if (!rawContentLength) return;
-  const contentLength = Number(rawContentLength);
+function assertRequestSize(req: NextRequest): void {
+  const contentLength = Number(req.headers.get("content-length") || "0");
   if (Number.isFinite(contentLength) && contentLength > MAX_REQUEST_BYTES) {
     throw new ApiError("O pedido excede o tamanho permitido.", 413);
-  }
-}
-
-async function readJsonBody(req: NextRequest): Promise<unknown> {
-  assertContentLength(req);
-
-  let body: ArrayBuffer;
-  try {
-    body = await req.arrayBuffer();
-  } catch {
-    throw new ApiError("Nao foi possivel ler o pedido.", 400);
-  }
-  if (body.byteLength > MAX_REQUEST_BYTES) {
-    throw new ApiError("O pedido excede o tamanho permitido.", 413);
-  }
-
-  let text: string;
-  try {
-    text = new TextDecoder("utf-8", { fatal: true }).decode(body);
-  } catch {
-    throw new ApiError("O pedido tem uma codificacao invalida.", 400);
-  }
-  try {
-    return JSON.parse(text) as unknown;
-  } catch {
-    throw new ApiError("O pedido tem um formato invalido.", 400);
   }
 }
 
@@ -625,684 +610,108 @@ function isFullReplaceAuthorized(req: NextRequest): boolean {
   );
 }
 
-function reviewerText(value: unknown): string {
-  if (typeof value === "string" || typeof value === "number") {
-    return sanitizeSubmissionText(String(value), 180);
-  }
-  if (!isJsonRecord(value)) return "";
-  for (const key of ["id", "displayName", "username", "name"] as const) {
-    const result = reviewerText(value[key]);
-    if (result) return result;
-  }
-  return "";
-}
-
-function optionalSafeText(
-  value: unknown,
-  maxLength: number,
-  position: string,
-): string | undefined {
-  if (value === undefined || value === null) return undefined;
-  if (typeof value !== "string" && typeof value !== "number") {
-    throw new ApiError(`${position}: valor invalido.`, 400);
-  }
-  const result = sanitizeSubmissionText(String(value), maxLength);
-  if (!result) throw new ApiError(`${position}: valor invalido.`, 400);
-  return result;
-}
-
-function optionalDiscordId(
-  value: unknown,
-  position: string,
-): string | undefined {
-  if (value === undefined || value === null || value === "") return undefined;
-  if (typeof value !== "string") {
-    throw new ApiError(`${position}: identificador Discord invalido.`, 400);
-  }
-  const identifier = stripInvisibleOrControlCharacters(value).trim();
-  if (!/^\d+$/u.test(identifier)) {
-    throw new ApiError(`${position}: identificador Discord invalido.`, 400);
-  }
-  return identifier;
-}
-
-function sanitizeJsonValue(value: unknown, depth = 0): unknown {
-  if (depth > 8) return null;
-  if (typeof value === "string") return sanitizeSubmissionText(value, 4_096);
-  if (
-    value === null ||
-    typeof value === "boolean" ||
-    (typeof value === "number" && Number.isFinite(value))
-  ) {
-    return value;
-  }
-  if (Array.isArray(value)) {
-    return value
-      .map((entry) => sanitizeJsonValue(entry, depth + 1))
-      .filter((entry) => entry !== undefined);
-  }
-  if (!isJsonRecord(value)) return null;
-
-  const result: JsonRecord = {};
-  for (const [key, entry] of Object.entries(value)) {
-    if (key === "__proto__" || key === "constructor" || key === "prototype") {
-      continue;
-    }
-    const safeEntry = sanitizeJsonValue(entry, depth + 1);
-    if (safeEntry !== undefined) result[key] = safeEntry;
-  }
-  return result;
-}
-
-function normalizeOptionalTimestamp(
-  value: unknown,
-  position: string,
-): string | null {
-  if (value === undefined || value === null || value === "") return null;
-  return new Date(requireTimestamp(value, position)).toISOString();
-}
-
-function normalizeImageUrl(value: unknown, position: string): string {
-  if (value === undefined || value === null || value === "") return "";
-  if (typeof value !== "string") {
-    throw new ApiError(`${position}: imageUrl invalido.`, 400);
-  }
-  const cleaned = stripInvisibleOrControlCharacters(value).trim();
-  if (!cleaned) return "";
-  if (/^\/covers\/[A-Za-z0-9_-]+\.jpg$/u.test(cleaned)) return cleaned;
-  return normalizePublicSubmissionLink(cleaned, position);
-}
-
-function validateDiscordDelivery(
-  value: unknown,
-  position: string,
-  expectedHash: string,
-): DiscordDeliveryProof {
-  if (!isJsonRecord(value)) {
-    throw new ApiError(`${position}: prova de entrega invalida.`, 400);
-  }
-  const channelId = optionalDiscordId(value.channelId, `${position}.channelId`);
-  const messageId = optionalDiscordId(value.messageId, `${position}.messageId`);
-  const sentAt = requireTimestamp(value.sentAt, `${position}.sentAt`);
-  const payloadHash =
-    typeof value.payloadHash === "string" ? value.payloadHash : "";
-  if (!channelId || !messageId || !isSubmissionHash(payloadHash)) {
-    throw new ApiError(`${position}: prova de entrega invalida.`, 400);
-  }
-  if (payloadHash !== expectedHash) {
-    throw new ApiError(`${position}: hash de entrega invalido.`, 400);
-  }
-  return { channelId, messageId, sentAt, payloadHash };
-}
-
-function validateDiscordApproval(
-  value: unknown,
-  position: string,
-): JsonRecord {
-  if (!isJsonRecord(value)) {
-    throw new ApiError(`${position}: aprovacao Discord invalida.`, 400);
-  }
-  if (value.required !== undefined && typeof value.required !== "boolean") {
-    throw new ApiError(`${position}.required: valor invalido.`, 400);
-  }
-
-  const normalized: JsonRecord = {
-    required: value.required === true,
-    status: sanitizeSubmissionText(value.status, 40) || "pending",
-    notificationStatus:
-      sanitizeSubmissionText(value.notificationStatus, 40) || "pending",
-  };
-
-  for (const field of ["channelId", "messageId"] as const) {
-    const safeValue = optionalDiscordId(value[field], `${position}.${field}`);
-    if (safeValue !== undefined) normalized[field] = safeValue;
-  }
-
-  for (const field of ["sentAt", "approvedAt", "reviewedAt"] as const) {
-    const snakeCaseField = field.replace(/[A-Z]/gu, (letter) => `_${letter.toLowerCase()}`);
-    const rawValue = value[field] ?? value[snakeCaseField];
-    if (rawValue !== undefined) {
-      normalized[field] = requireTimestamp(rawValue, `${position}.${field}`);
-    }
-  }
-
-  if (value.payloadHash !== undefined) {
-    if (!isSubmissionHash(value.payloadHash)) {
-      throw new ApiError(`${position}.payloadHash: hash invalido.`, 400);
-    }
-    normalized.payloadHash = value.payloadHash;
-  }
-
-  const reviewerValue =
-    value.approvedBy ?? value.reviewer ?? value.reviewedBy ?? value.reviewerId;
-  if (reviewerValue !== undefined) {
-    const reviewer = reviewerText(reviewerValue);
-    const reviewerId = optionalDiscordId(reviewer, `${position}.approvedBy`);
-    if (!reviewerId) {
-      throw new ApiError(`${position}.approvedBy: valor invalido.`, 400);
-    }
-    normalized.reviewer = reviewerId;
-    normalized.approvedBy = reviewerId;
-  }
-
-  const approvedByRole = optionalDiscordId(
-    value.approvedByRole,
-    `${position}.approvedByRole`,
-  );
-  if (approvedByRole !== undefined) normalized.approvedByRole = approvedByRole;
-
-  const reviewerAuthorization = optionalSafeText(
-    value.reviewerAuthorization,
-    80,
-    `${position}.reviewerAuthorization`,
-  );
-  if (reviewerAuthorization !== undefined) {
-    normalized.reviewerAuthorization = reviewerAuthorization;
-  }
-
-  const mode = optionalSafeText(value.mode, 20, `${position}.mode`);
-  if (mode !== undefined) normalized.mode = mode;
-
-  for (const field of ["rejectedAt", "rejectedBy"] as const) {
-    const safeValue =
-      field === "rejectedBy"
-        ? optionalDiscordId(value[field], `${position}.${field}`)
-        : value[field] === undefined
-          ? undefined
-          : requireTimestamp(value[field], `${position}.${field}`);
-    if (safeValue !== undefined) normalized[field] = safeValue;
-  }
-
-  return normalized;
-}
-
-function sameDelivery(
-  left: DiscordDeliveryProof,
-  right: DiscordDeliveryProof,
-): boolean {
-  return (
-    left.channelId === right.channelId &&
-    left.messageId === right.messageId &&
-    left.sentAt === right.sentAt &&
-    left.payloadHash === right.payloadHash
+function requiresDiscordApproval(item: JsonRecord): boolean {
+  const approval = isJsonRecord(item.discordApproval)
+    ? item.discordApproval
+    : null;
+  const origin = sanitizeText(item.origin, 80).toLocaleLowerCase();
+  const id = sanitizeText(item.id, 140).toLocaleLowerCase();
+  return Boolean(
+    approval?.required === true ||
+      ["community", "discord", "discord-command", "website"].includes(origin) ||
+      id.startsWith("web_") ||
+      id.startsWith("discord_"),
   );
 }
 
-function assertApprovedCommunityRecord(
-  approval: JsonRecord | undefined,
-  delivery: DiscordDeliveryProof | undefined,
-  expectedHash: string,
-  notificationStatus: string,
-  topLevelMessageId: string,
-  position: string,
-): void {
-  if (!approval || !delivery) {
-    throw new ApiError(
-      `${position}: uma sugestao da comunidade so pode entrar na fila apos aprovacao Discord verificavel.`,
-      400,
-    );
-  }
-  if (
-    approval.required !== true ||
-    approval.status !== "approved" ||
-    approval.channelId !== delivery.channelId ||
-    approval.messageId !== delivery.messageId ||
-    approval.notificationStatus !== "sent" ||
-    notificationStatus !== "sent" ||
-    topLevelMessageId !== delivery.messageId ||
-    approval.payloadHash !== expectedHash ||
-    delivery.payloadHash !== expectedHash ||
-    !validTimestamp(approval.sentAt) ||
-    !validTimestamp(approval.approvedAt) ||
-    !reviewerText(approval.reviewer ?? approval.approvedBy)
-  ) {
-    throw new ApiError(
-      `${position}: aprovacao Discord incompleta ou inconsistente.`,
-      400,
-    );
-  }
-  if (
-    approval.sentAt !== undefined &&
-    approval.sentAt !== delivery.sentAt
-  ) {
-    throw new ApiError(
-      `${position}: timestamp de entrega Discord inconsistente.`,
-      400,
-    );
-  }
-  if (
-    new Date(approval.approvedAt as string).getTime() <
-    new Date(approval.sentAt as string).getTime()
-  ) {
-    throw new ApiError(
-      `${position}: a aprovacao Discord precede a entrega.`,
-      400,
-    );
-  }
-}
-
-function validateCommunityRecord(value: JsonRecord, position: string): JsonRecord {
-  if (value.sourceKind !== COMMUNITY_SOURCE_KIND) {
-    throw new ApiError(`${position}: sourceKind invalido.`, 400);
-  }
-  if (!isJsonRecord(value.communitySubmission)) {
-    throw new ApiError(`${position}: snapshot da comunidade invalido.`, 400);
-  }
-
-  const snapshotValue = value.communitySubmission;
-  const snapshotKeys = Object.keys(snapshotValue).sort();
-  const requiredSnapshotKeys = [
-    "createdAt",
-    "id",
-    "link",
-    "sourceKind",
-    "title",
-    "type",
-  ];
-  if (
-    snapshotKeys.length !== requiredSnapshotKeys.length ||
-    snapshotKeys.some((key, index) => key !== requiredSnapshotKeys[index])
-  ) {
-    throw new ApiError(`${position}: snapshot da comunidade invalido.`, 400);
-  }
-
-  const snapshotId = sanitizeIdentifier(
-    snapshotValue.id,
-    `${position}.communitySubmission.id`,
+function hasDiscordApprovalProof(item: JsonRecord): boolean {
+  if (!requiresDiscordApproval(item)) return true;
+  const approval = isJsonRecord(item.discordApproval)
+    ? item.discordApproval
+    : null;
+  if (!approval) return false;
+  const messageId = sanitizeText(approval.messageId, 100);
+  return Boolean(
+    approval.required === true &&
+      approval.status === "approved" &&
+      messageId &&
+      sanitizeText(approval.channelId, 100) &&
+      messageId === sanitizeText(item.discordMessageId, 100) &&
+      item.notificationStatus === "sent" &&
+      sanitizeText(approval.sentAt, 100) &&
+      sanitizeText(approval.approvedAt, 100) &&
+      sanitizeText(approval.approvedBy, 100),
   );
-  if (snapshotValue.id !== snapshotId) {
-    throw new ApiError(`${position}: id do snapshot foi alterado.`, 400);
-  }
-  if (
-    snapshotValue.sourceKind !== COMMUNITY_SOURCE_KIND ||
-    !isRecommendationType(snapshotValue.type)
-  ) {
-    throw new ApiError(`${position}: snapshot da comunidade invalido.`, 400);
-  }
-  const snapshotTitle = sanitizeSubmissionText(snapshotValue.title, 220);
-  if (
-    typeof snapshotValue.title !== "string" ||
-    snapshotValue.title !== snapshotTitle ||
-    snapshotTitle.length < 3
-  ) {
-    throw new ApiError(`${position}: titulo do snapshot invalido.`, 400);
-  }
-  const snapshotLink = normalizePublicSubmissionLink(
-    snapshotValue.link,
-    `${position}.communitySubmission.link`,
-  );
-  if (snapshotValue.link !== snapshotLink) {
-    throw new ApiError(`${position}: link do snapshot foi alterado.`, 400);
-  }
-  const snapshotCreatedAt = requireTimestamp(
-    snapshotValue.createdAt,
-    `${position}.communitySubmission.createdAt`,
-  );
-  const snapshot: CommunitySubmissionSnapshot = {
-    id: snapshotId,
-    sourceKind: COMMUNITY_SOURCE_KIND,
-    type: snapshotValue.type,
-    title: snapshotTitle,
-    link: snapshotLink,
-    createdAt: snapshotCreatedAt,
-  };
-  const expectedHash = submissionHash(snapshot);
-  if (value.submissionHash !== expectedHash) {
-    throw new ApiError(`${position}: submissionHash invalido.`, 400);
-  }
-
-  const id = sanitizeIdentifier(value.id, `${position}.id`);
-  const title = sanitizeSubmissionText(value.title, 220);
-  const link = normalizePublicSubmissionLink(value.link, `${position}.link`);
-  const createdAt = requireTimestamp(value.createdAt, `${position}.createdAt`);
-  if (
-    id !== snapshot.id ||
-    value.id !== id ||
-    value.type !== snapshot.type ||
-    createdAt !== snapshot.createdAt
-  ) {
-    throw new ApiError(
-      `${position}: identidade do snapshot nao corresponde ao registo.`,
-      400,
-    );
-  }
-  if (typeof value.title !== "string" || value.title !== title) {
-    throw new ApiError(`${position}: titulo invalido.`, 400);
-  }
-  if (title.length < 3) {
-    throw new ApiError(`${position}: titulo demasiado curto.`, 400);
-  }
-  if (value.link !== link) {
-    throw new ApiError(`${position}: link invalido.`, 400);
-  }
-
-  const rawApproval = isJsonRecord(value.discordApproval)
-    ? value.discordApproval
-    : undefined;
-  const approvalContainsDelivery = Boolean(
-    rawApproval?.channelId &&
-      rawApproval.messageId &&
-      rawApproval.sentAt &&
-      rawApproval.payloadHash,
-  );
-  const rawDelivery =
-    value.discordDelivery ??
-    value.discordDeliveryProof ??
-    (approvalContainsDelivery ? rawApproval : undefined);
-  const delivery = rawDelivery
-    ? validateDiscordDelivery(
-        rawDelivery,
-        `${position}.discordDelivery`,
-        expectedHash,
-      )
-    : undefined;
-  if (value.discordDelivery && value.discordDeliveryProof) {
-    const alias = validateDiscordDelivery(
-      value.discordDeliveryProof,
-      `${position}.discordDeliveryProof`,
-      expectedHash,
-    );
-    if (!delivery || !sameDelivery(delivery, alias)) {
-      throw new ApiError(`${position}: provas Discord inconsistentes.`, 400);
-    }
-  }
-
-  const approval = rawApproval
-    ? validateDiscordApproval(
-        value.discordApproval,
-        `${position}.discordApproval`,
-      )
-    : undefined;
-  const topLevelNotificationStatus = sanitizeSubmissionText(
-    value.notificationStatus,
-    40,
-  );
-  if (
-    approval &&
-    rawApproval &&
-    rawApproval.notificationStatus === undefined &&
-    topLevelNotificationStatus === "sent"
-  ) {
-    approval.notificationStatus = "sent";
-  }
-  if (approval && delivery) {
-    if (
-      (approval.channelId !== undefined &&
-        approval.channelId !== delivery.channelId) ||
-      (approval.messageId !== undefined &&
-        approval.messageId !== delivery.messageId) ||
-      (approval.sentAt !== undefined && approval.sentAt !== delivery.sentAt) ||
-      (approval.payloadHash !== undefined &&
-        approval.payloadHash !== delivery.payloadHash)
-    ) {
-      throw new ApiError(
-        `${position}: prova e aprovacao Discord inconsistentes.`,
-        400,
-      );
-    }
-  }
-  if (
-    approval?.payloadHash !== undefined &&
-    approval.payloadHash !== expectedHash
-  ) {
-    throw new ApiError(`${position}: hash da aprovacao Discord invalido.`, 400);
-  }
-  if (approval?.notificationStatus === "sent" && !delivery) {
-    throw new ApiError(`${position}: notificacao Discord sem prova de entrega.`, 400);
-  }
-
-  const notificationStatus =
-    topLevelNotificationStatus || (delivery ? "sent" : "pending");
-  const status = sanitizeSubmissionText(value.status, 60) || "pending_approval";
-  const topLevelMessageId = optionalDiscordId(
-    value.discordMessageId,
-    `${position}.discordMessageId`,
-  );
-  if (delivery && topLevelMessageId && topLevelMessageId !== delivery.messageId) {
-    throw new ApiError(`${position}: messageId Discord inconsistente.`, 400);
-  }
-
-  const approvedProof = (() => {
-    try {
-      assertApprovedCommunityRecord(
-        approval,
-        delivery,
-        expectedHash,
-        notificationStatus,
-        topLevelMessageId || "",
-        position,
-      );
-      return true;
-    } catch {
-      return false;
-    }
-  })();
-  if (
-    approval?.status === "approved" &&
-    !approvedProof
-  ) {
-    throw new ApiError(`${position}: aprovacao Discord invalida.`, 400);
-  }
-  if (
-    ["approved", "approved_pending_enrichment"].includes(status) &&
-    !approvedProof
-  ) {
-    throw new ApiError(`${position}: estado aprovado sem prova Discord valida.`, 400);
-  }
-  if (!approvedProof && (title !== snapshot.title || link !== snapshot.link)) {
-    throw new ApiError(
-      `${position}: uma sugestao pendente nao pode alterar o snapshot apresentado.`,
-      400,
-    );
-  }
-  if (status === "queue") {
-    assertApprovedCommunityRecord(
-      approval,
-      delivery,
-      expectedHash,
-      notificationStatus,
-      topLevelMessageId || "",
-      position,
-    );
-  }
-
-  const attempts =
-    typeof value.notificationAttempts === "number" &&
-    Number.isInteger(value.notificationAttempts) &&
-    value.notificationAttempts >= 0
-      ? value.notificationAttempts
-      : 0;
-  const preserveEditorialFields = approvedProof;
-  const safeRecord = preserveEditorialFields
-    ? sanitizeJsonValue(value)
-    : {};
-  if (!isJsonRecord(safeRecord)) {
-    throw new ApiError(`${position}: registo editorial invalido.`, 400);
-  }
-
-  let normalized: JsonRecord;
-  if (preserveEditorialFields) {
-    const resolutionStatus =
-      sanitizeSubmissionText(value.resolutionStatus, 40) || "unresolved";
-    if (!COMMUNITY_RESOLUTION_STATUSES.has(resolutionStatus)) {
-      throw new ApiError(`${position}: resolutionStatus invalido.`, 400);
-    }
-    const safeVerification = sanitizeJsonValue(value.verification);
-    if (
-      resolutionStatus === "verified" &&
-      !isJsonRecord(safeVerification)
-    ) {
-      throw new ApiError(`${position}: verification invalida.`, 400);
-    }
-    const sourcePublishedAt = normalizeOptionalTimestamp(
-      value.sourcePublishedAt,
-      `${position}.sourcePublishedAt`,
-    );
-    const expiryDate = normalizeOptionalTimestamp(
-      value.expiryDate,
-      `${position}.expiryDate`,
-    );
-    normalized = {
-      ...safeRecord,
-      id,
-      type: snapshot.type,
-      category:
-        sanitizeSubmissionText(value.category, 80) ||
-        categoryForType(snapshot.type),
-      title,
-      link,
-      authorOrMeta: sanitizeSubmissionText(value.authorOrMeta, 260),
-      description: sanitizeSubmissionText(value.description, 1_000),
-      imageUrl: normalizeImageUrl(value.imageUrl, `${position}.imageUrl`),
-      sourcePublishedAt,
-      expiryDate,
-      priority:
-        typeof value.priority === "number" && Number.isFinite(value.priority)
-          ? value.priority
-          : 3,
-      createdAt,
-      status,
-      sourceKind: COMMUNITY_SOURCE_KIND,
-      communitySubmission: snapshot,
-      submissionHash: expectedHash,
-      resolutionStatus,
-      verification: isJsonRecord(safeVerification)
-        ? safeVerification
-        : { status: resolutionStatus },
-      origin:
-        sanitizeSubmissionText(value.origin, 80) || "website-community",
-      notificationStatus,
-      notificationAttempts: attempts,
-    };
-    if ("sourceImageUrl" in value) {
-      normalized.sourceImageUrl = normalizeImageUrl(
-        value.sourceImageUrl,
-        `${position}.sourceImageUrl`,
-      );
-    }
-  } else {
-    normalized = {
-      id,
-      type: snapshot.type,
-      category: categoryForType(snapshot.type),
-      title,
-      link,
-      authorOrMeta: "",
-      description: "Sugestao recebida da comunidade para revisao.",
-      imageUrl: "",
-      sourcePublishedAt: null,
-      expiryDate: null,
-      priority: 3,
-      createdAt,
-      status,
-      sourceKind: COMMUNITY_SOURCE_KIND,
-      communitySubmission: snapshot,
-      submissionHash: expectedHash,
-      resolutionStatus: "unresolved",
-      verification: {
-        status: "unresolved",
-        provider: "community",
-        confidence: 0,
-        checkedAt: createdAt,
-        matchedFields: [],
-        warnings: ["A sugestao aguarda revisao da comunidade."],
-      },
-      origin: "website-community",
-      notificationStatus,
-      notificationAttempts: attempts,
-    };
-  }
-
-  if (delivery) {
-    normalized.discordDelivery = delivery;
-    normalized.discordChannelId = delivery.channelId;
-    normalized.discordMessageId = delivery.messageId;
-    normalized.discordNotifiedAt = delivery.sentAt;
-    normalized.discordPayloadHash = delivery.payloadHash;
-  }
-  if (approval) {
-    normalized.discordApproval = approval;
-  } else if (delivery) {
-    normalized.discordApproval = {
-      required: true,
-      status: "pending",
-      channelId: delivery.channelId,
-      messageId: delivery.messageId,
-      sentAt: delivery.sentAt,
-      notificationStatus: "sent",
-      payloadHash: delivery.payloadHash,
-    };
-  }
-  return normalized;
-}
-
-function assertStoredCommunityRecords(database: RecommendationDatabase): void {
-  for (const [listName, records] of [
-    ["queue", database.queue],
-    ["history", database.history],
-  ] as const) {
-    records.forEach((record, index) => {
-      if (isCommunityRecord(record)) {
-        validateCommunityRecord(record, `${listName}[${index}]`);
-      }
-    });
-  }
 }
 
 function validateReplaceRecord(value: unknown, position: string): JsonRecord {
   if (!isJsonRecord(value)) {
-    throw new ApiError(`${position}: registo invalido.`, 400);
+    throw new ApiError(`${position}: registo inválido.`, 400);
   }
-  if (isCommunityRecord(value)) return validateCommunityRecord(value, position);
-
-  const id = sanitizeSubmissionText(value.id, 140);
-  const title = sanitizeSubmissionText(value.title, 220);
+  const id = sanitizeText(value.id, 140);
+  const title = sanitizeText(value.title, 220);
   if (!id || title.length < 3 || !isRecommendationType(value.type)) {
-    throw new ApiError(`${position}: id, tipo ou titulo invalido.`, 400);
+    throw new ApiError(`${position}: id, tipo ou título inválido.`, 400);
   }
 
-  const link = normalizePublicSubmissionLink(value.link, `${position}.link`);
-  const rawImage =
-    typeof value.imageUrl === "string"
-      ? stripInvisibleOrControlCharacters(value.imageUrl).trim()
-      : "";
-  const validLocalCover = /^\/covers\/[A-Za-z0-9_-]+\.jpg$/u.test(rawImage);
-  const imageUrl =
-    !rawImage || validLocalCover
-      ? rawImage
-      : normalizePublicUrl(rawImage) ||
-        (() => {
-          throw new ApiError(`${position}: imageUrl invalido.`, 400);
-        })();
-
-  const dates: Record<"sourcePublishedAt" | "expiryDate", string | null> = {
-    sourcePublishedAt: null,
-    expiryDate: null,
-  };
+  const rawLink = value.link;
+  if (rawLink !== undefined && rawLink !== "" && !normalizePublicUrl(rawLink)) {
+    throw new ApiError(`${position}: link não é um URL público válido.`, 400);
+  }
+  const rawImage = value.imageUrl;
+  const validLocalCover =
+    typeof rawImage === "string" &&
+    /^\/covers\/[a-f0-9_-]+\.jpg$/i.test(rawImage);
+  if (
+    rawImage !== undefined &&
+    rawImage !== "" &&
+    !validLocalCover &&
+    !normalizePublicUrl(rawImage)
+  ) {
+    throw new ApiError(`${position}: imageUrl não é válido.`, 400);
+  }
   for (const field of ["sourcePublishedAt", "expiryDate"] as const) {
     const raw = value[field];
-    if (raw === undefined || raw === null || raw === "") continue;
-    dates[field] = new Date(requireTimestamp(raw, `${position}.${field}`)).toISOString();
+    if (
+      raw !== undefined &&
+      raw !== null &&
+      (typeof raw !== "string" ||
+        !Number.isFinite(new Date(raw).getTime()))
+    ) {
+      throw new ApiError(`${position}: ${field} não é uma data válida.`, 400);
+    }
   }
 
   const normalized: JsonRecord = {
     ...value,
     id,
     type: value.type,
-    category: sanitizeSubmissionText(value.category, 80) || categoryForType(value.type),
+    category:
+      sanitizeText(value.category, 80) || categoryForType(value.type),
     title,
-    link,
-    authorOrMeta: sanitizeSubmissionText(value.authorOrMeta, 260),
-    description: sanitizeSubmissionText(value.description, 1_000),
-    imageUrl,
-    sourcePublishedAt: dates.sourcePublishedAt,
-    expiryDate: dates.expiryDate,
+    link: typeof value.link === "string" ? value.link.trim() : "",
+    authorOrMeta: sanitizeText(value.authorOrMeta, 260),
+    description: sanitizeText(value.description, 1_000),
+    imageUrl: typeof value.imageUrl === "string" ? value.imageUrl.trim() : "",
+    sourcePublishedAt:
+      typeof value.sourcePublishedAt === "string"
+        ? new Date(value.sourcePublishedAt).toISOString()
+        : null,
+    expiryDate:
+      typeof value.expiryDate === "string"
+        ? new Date(value.expiryDate).toISOString()
+        : null,
   };
-  if (typeof value.status === "string") {
-    normalized.status = sanitizeSubmissionText(value.status, 60);
-  }
-  if (typeof value.sourceKind === "string") {
-    normalized.sourceKind = sanitizeSubmissionText(value.sourceKind, 80);
+  if (
+    position.startsWith("queue[") &&
+    normalized.status === "queue" &&
+    requiresDiscordApproval(normalized) &&
+    !hasDiscordApprovalProof(normalized)
+  ) {
+    throw new ApiError(
+      `${position}: uma sugestão comunitária não pode entrar na fila sem aprovação Discord verificável.`,
+      400,
+    );
   }
   return position.startsWith("queue[") && isExpiredRecord(normalized)
     ? { ...normalized, status: "expired" }
@@ -1314,13 +723,13 @@ function validateReplacement(
   historyValue: unknown,
 ): RecommendationDatabase {
   if (!Array.isArray(queueValue) || !Array.isArray(historyValue)) {
-    throw new ApiError("queue e history tem de ser listas.", 400);
+    throw new ApiError("queue e history têm de ser listas.", 400);
   }
   if (
     queueValue.length > MAX_RECORDS_PER_LIST ||
     historyValue.length > MAX_RECORDS_PER_LIST
   ) {
-    throw new ApiError("A fila excede o numero maximo de registos.", 413);
+    throw new ApiError("A fila excede o número máximo de registos.", 413);
   }
   return {
     queue: queueValue.map((item, index) =>
@@ -1332,77 +741,122 @@ function validateReplacement(
   };
 }
 
-function createCommunitySuggestion(
+function verificationExternalId(item: JsonRecord): string {
+  if (!isJsonRecord(item.verification)) return "";
+  return sanitizeText(item.verification.externalId, 180);
+}
+
+function isDuplicate(
+  existing: JsonRecord,
+  recommendation: ResolvedRecommendation,
+): boolean {
+  if (existing.type !== recommendation.type) return false;
+
+  const incomingExternalId = recommendation.verification.externalId ?? "";
+  const existingExternalId = verificationExternalId(existing);
+  if (
+    incomingExternalId &&
+    existingExternalId &&
+    incomingExternalId === existingExternalId
+  ) {
+    return true;
+  }
+
+  const existingLink = normalizePublicUrl(existing.link);
+  if (existingLink && existingLink === recommendation.link) return true;
+
+  const existingTitle = sanitizeText(existing.title, 220);
+  const existingAuthor = sanitizeText(existing.authorOrMeta, 260);
+  const incomingAuthor = sanitizeText(recommendation.authorOrMeta, 260);
+  return (
+    titleSimilarity(existingTitle, recommendation.title) >= 0.97 &&
+    (!existingAuthor ||
+      !incomingAuthor ||
+      titleSimilarity(existingAuthor, incomingAuthor) >= 0.8)
+  );
+}
+
+function createStoredRecommendation(
+  resolved: ResolvedRecommendation,
+): JsonRecord {
+  return {
+    id: `web_${resolved.type}_${randomUUID()}`,
+    ...resolved,
+    priority: 3,
+    createdAt: new Date().toISOString(),
+    status: "pending_approval",
+    origin: "website",
+    notificationStatus: "pending",
+    discordApproval: {
+      required: true,
+      status: "pending",
+    },
+  };
+}
+
+function unresolvedSubmission(
   type: RecommendationType,
   title: string,
   link: string,
-): JsonRecord {
-  const id = `web_${type}_${randomUUID()}`;
-  const createdAt = new Date().toISOString();
-  const snapshot: CommunitySubmissionSnapshot = {
-    id,
-    sourceKind: COMMUNITY_SOURCE_KIND,
-    type,
-    title,
-    link,
-    createdAt,
-  };
-  const hash = submissionHash(snapshot);
+): ResolvedRecommendation {
   return {
-    id,
     type,
     category: categoryForType(type),
     title,
     link,
     authorOrMeta: "",
-    description: "Sugestao recebida da comunidade para revisao.",
+    description: "",
     imageUrl: "",
     sourcePublishedAt: null,
     expiryDate: null,
-    priority: 3,
-    createdAt,
-    status: "pending_approval",
-    sourceKind: COMMUNITY_SOURCE_KIND,
-    communitySubmission: snapshot,
-    submissionHash: hash,
     resolutionStatus: "unresolved",
     verification: {
       status: "unresolved",
-      provider: "community",
+      provider: "community-submission",
       confidence: 0,
-      checkedAt: createdAt,
-      matchedFields: [],
-      warnings: ["A sugestao aguarda revisao da comunidade."],
-    },
-    origin: "website-community",
-    notificationStatus: "pending",
-    notificationAttempts: 0,
-    discordApproval: {
-      required: true,
-      status: "pending",
-      notificationStatus: "pending",
+      checkedAt: new Date().toISOString(),
+      canonicalUrl: link || undefined,
+      matchedFields: link ? ["title", "submitted-link"] : ["title"],
+      warnings: [],
     },
   };
 }
 
-function truncateDiscord(value: unknown, maxLength: number): string {
-  return sanitizeSubmissionText(value, maxLength) || "N/D";
+async function resolveSubmission(
+  type: RecommendationType,
+  title: string,
+  link: string,
+): Promise<ResolvedRecommendation> {
+  try {
+    const resolved = await resolveRecommendation({ type, title, link });
+    if (validateResolvedRecommendation(resolved)) {
+      // Project ideas do not need enrichment, but their optional public link
+      // must still be retained for the Discord reviewer.
+      return type === "project" && link ? { ...resolved, link } : resolved;
+    }
+  } catch {
+    // Source enrichment is best-effort at intake. The raw, sanitised
+    // suggestion still has to reach Discord and can be enriched after review.
+  }
+  return unresolvedSubmission(type, title, link);
 }
 
-async function notifyDiscord(item: JsonRecord): Promise<DiscordDeliveryProof | null> {
+function truncateDiscord(value: unknown, maxLength: number): string {
+  return sanitizeText(value, maxLength) || "N/D";
+}
+
+async function notifyDiscord(item: JsonRecord): Promise<DiscordDelivery | null> {
+  if (isExpiredRecord(item)) {
+    console.warn(
+      "[suggestions API] Sugestão expirada; notificação de aprovação bloqueada.",
+    );
+    return null;
+  }
   const token = process.env.DISCORD_BOT_TOKEN?.trim();
   const channelId = process.env.DISCORD_REVIEW_CHANNEL_ID?.trim();
-  const itemId = sanitizeSubmissionText(item.id, 140);
-  const payloadHash = typeof item.submissionHash === "string" ? item.submissionHash : "";
-  if (
-    !token ||
-    !channelId ||
-    !/^\d+$/u.test(channelId) ||
-    !itemId ||
-    !isSubmissionHash(payloadHash)
-  ) {
+  if (!token || !channelId) {
     console.warn(
-      "[suggestions API] Discord nao configurado ou sugestao sem identidade; entrega adiada.",
+      "[suggestions API] Discord não configurado; sugestão mantida em pending_approval.",
     );
     return null;
   }
@@ -1427,44 +881,94 @@ async function notifyDiscord(item: JsonRecord): Promise<DiscordDeliveryProof | n
     project: 0x0099ff,
   };
 
+  const link = normalizePublicUrl(item.link);
+  const imageUrl =
+    normalizePublicUrl(item.sourceImageUrl) || normalizePublicUrl(item.imageUrl);
+  const verification = isJsonRecord(item.verification)
+    ? item.verification
+    : {};
+  const verificationId = sanitizeText(
+    verification.externalId || verification.entityId,
+    180,
+  );
+  const isWholePodcast =
+    type === "podcast" && verificationId.startsWith("apple:podcast:");
+  const confidence =
+    typeof verification.confidence === "number"
+      ? `${Math.round(verification.confidence * 100)}%`
+      : "N/D";
+  const isVerified =
+    item.resolutionStatus === "verified" &&
+    verification.status === "verified";
+
   const fields: Array<{ name: string; value: string; inline: boolean }> = [
     {
       name: "Tipo",
-      value: truncateDiscord(categoryForType(type), 1_024),
+      value: truncateDiscord(item.category || type, 1_024),
       inline: true,
     },
     {
-      name: "Estado",
-      value: "Sugestao nao resolvida; requer revisao.",
+      name: "Autor / Fonte",
+      value: isVerified
+        ? truncateDiscord(item.authorOrMeta, 1_024)
+        : "A validar após aprovação",
+      inline: true,
+    },
+    {
+      name: "Verificação",
+      value: isVerified
+        ? `${truncateDiscord(verification.provider, 80)} · ${confidence}`
+        : "Pendente — a sugestão ainda não entra no workflow de posts",
       inline: true,
     },
   ];
-  const link = typeof item.link === "string" ? item.link : "";
   if (link) {
+    fields.push({ name: "Link canónico", value: link, inline: false });
+  }
+  if (typeof item.expiryDate === "string") {
     fields.push({
-      name: "Link fornecido",
-      value: truncateDiscord(link, 1_024),
+      name: "Prazo de aprovação",
+      value: new Date(item.expiryDate).toLocaleDateString("pt-PT"),
+      inline: true,
+    });
+  }
+  if (isWholePodcast) {
+    fields.push({
+      name: "Opções ao aprovar",
+      value:
+        "Recomendar uma vez · acompanhar episódios recentes · ou fazer ambos",
       inline: false,
     });
   }
 
   const embed: JsonRecord = {
     title: truncateDiscord(
-      `${typeEmojis[type]} Sugestao: ${truncateDiscord(item.title, 220)}`,
+      `${typeEmojis[type]} Sugestão: ${truncateDiscord(item.title, 220)}`,
       256,
     ),
-    description: "Submissao da comunidade para revisao antes de qualquer publicacao.",
+    description: isVerified
+      ? truncateDiscord(item.description, 4_096)
+      : "Sugestão submetida pela comunidade para análise editorial.",
     color: typeColors[type],
     fields,
     footer: {
-      text: `ID: ${itemId} | Hash: ${payloadHash}`,
+      text: truncateDiscord(
+        `ID: ${item.id || "sem-id"} | Aprovação obrigatória`,
+        2_048,
+      ),
     },
-    timestamp: typeof item.createdAt === "string" ? item.createdAt : undefined,
+    timestamp:
+      typeof item.createdAt === "string"
+        ? item.createdAt
+        : new Date().toISOString(),
   };
+  if (imageUrl && type !== "project") {
+    embed.thumbnail = { url: imageUrl };
+  }
 
   const messageBody = JSON.stringify({
-    embeds: [embed],
     allowed_mentions: { parse: [] },
+    embeds: [embed],
     components: [
       {
         type: 1,
@@ -1472,7 +976,7 @@ async function notifyDiscord(item: JsonRecord): Promise<DiscordDeliveryProof | n
           {
             type: 2,
             style: 3,
-            label: "Aprovar",
+            label: isWholePodcast ? "Escolher aprovação" : "Aprovar",
             emoji: { name: "✅" },
             custom_id: "rec_approve",
           },
@@ -1482,13 +986,6 @@ async function notifyDiscord(item: JsonRecord): Promise<DiscordDeliveryProof | n
             label: "Rejeitar",
             emoji: { name: "❌" },
             custom_id: "rec_reject",
-          },
-          {
-            type: 2,
-            style: 2,
-            label: "Alterar link",
-            emoji: { name: "🔗" },
-            custom_id: "rec_edit_link",
           },
         ],
       },
@@ -1511,24 +1008,23 @@ async function notifyDiscord(item: JsonRecord): Promise<DiscordDeliveryProof | n
       );
       if (response.ok) {
         const delivered = (await response.json()) as { id?: unknown };
-        if (
-          typeof delivered.id !== "string" ||
-          !/^\d+$/u.test(delivered.id)
-        ) {
-          return null;
-        }
-        return {
-          channelId,
-          messageId: delivered.id,
-          sentAt: new Date().toISOString(),
-          payloadHash,
-        };
+        return typeof delivered.id === "string"
+          ? {
+              messageId: delivered.id,
+              channelId,
+              sentAt: new Date().toISOString(),
+            }
+          : null;
       }
 
+      const details = sanitizeText(await response.text(), 500);
       console.error(
-        `[suggestions API] Discord respondeu com HTTP ${response.status}.`,
-        sanitizeText(await response.text(), 500),
+        `[suggestions API] Discord respondeu com HTTP ${response.status}:`,
+        details,
       );
+      // A 429 is an explicit non-delivery and is safe to retry. A 5xx can be
+      // ambiguous, so the durable outbox will search Discord by item ID before
+      // attempting it again; retrying here could create duplicate cards.
       const retryable = response.status === 429;
       if (!retryable || attempt === 3) return null;
       const retryAfterHeader = Number(response.headers.get("retry-after"));
@@ -1537,6 +1033,8 @@ async function notifyDiscord(item: JsonRecord): Promise<DiscordDeliveryProof | n
         : attempt * 500;
       await new Promise((resolve) => setTimeout(resolve, retryAfterMs));
     } catch (error: unknown) {
+      // An ambiguous network failure may have delivered the message; retrying
+      // could create duplicate approval cards.
       console.error("[suggestions API] Falha ao notificar o Discord:", error);
       return null;
     }
@@ -1546,37 +1044,79 @@ async function notifyDiscord(item: JsonRecord): Promise<DiscordDeliveryProof | n
 
 async function appendSuggestion(payload: AppendPayload) {
   if (!payload.item || !isRecommendationType(payload.item.type)) {
-    throw new ApiError("Tipo de recomendacao invalido.", 400);
+    throw new ApiError("Tipo de recomendação inválido.", 400);
   }
 
-  const title = sanitizeSubmissionText(payload.item.title, 220);
+  const title = sanitizeText(payload.item.title, 220);
   if (title.length < 3) {
-    throw new ApiError("O titulo da sugestao e invalido.", 400);
+    throw new ApiError("O título deve ter pelo menos 3 caracteres.", 400);
   }
-  const link = normalizePublicSubmissionLink(payload.item.link);
-  const storedItem = createCommunitySuggestion(payload.item.type, title, link);
+  const rawLink =
+    typeof payload.item.link === "string" ? payload.item.link.trim() : "";
+  const normalizedLink = rawLink ? normalizePublicUrl(rawLink) : "";
+  if (rawLink && !normalizedLink) {
+    throw new ApiError("O link deve ser um URL HTTP(S) público e válido.", 400);
+  }
+  const resolved = await resolveSubmission(
+    payload.item.type,
+    title,
+    normalizedLink || "",
+  );
 
-  // Persist the unresolved, sanitized submission before the external delivery.
-  // The only network request below is the Discord review notification itself;
-  // the submitted URL is never resolved, fetched, or used as an image source.
+  const current = await readStorageSnapshot();
+  if (
+    [...current.database.queue, ...current.database.history].some((item) =>
+      isDuplicate(item, resolved),
+    )
+  ) {
+    throw new ApiError(
+      "Esta recomendação já existe na fila ou no histórico.",
+      409,
+    );
+  }
+
+  let readyToStore: ResolvedForStorage = resolved;
+  if (validateResolvedRecommendation(resolved)) {
+    try {
+      readyToStore = await persistRecommendationCover(resolved);
+    } catch {
+      readyToStore = unresolvedSubmission(
+        payload.item.type,
+        title,
+        normalizedLink || "",
+      );
+    }
+  }
+  const storedItem = createStoredRecommendation(readyToStore);
   const persisted = await mutateDatabase((database) => {
+    const duplicate = [...database.queue, ...database.history].some((item) =>
+      isDuplicate(item, readyToStore),
+    );
+    if (duplicate) {
+      throw new ApiError(
+        "Esta recomendação já existe na fila ou no histórico.",
+        409,
+      );
+    }
     database.queue.unshift(storedItem);
     return storedItem;
   });
 
-  const delivery = await notifyDiscord(storedItem);
-  const notificationSent = Boolean(delivery);
+  const discordDelivery = await notifyDiscord(storedItem);
+  const notificationSent = Boolean(discordDelivery);
   let finalItem = storedItem;
   let finalSha = persisted.sha;
   let statusPersisted = false;
 
-  if (delivery) {
+  if (notificationSent) {
     try {
       const marked = await mutateDatabase((database) => {
-        const index = database.queue.findIndex((item) => item.id === storedItem.id);
+        const index = database.queue.findIndex(
+          (item) => item.id === storedItem.id,
+        );
         if (index < 0) {
           throw new ApiError(
-            "A sugestao desapareceu da fila antes de ser marcada.",
+            "A sugestão desapareceu da fila antes de ser marcada.",
             409,
           );
         }
@@ -1584,33 +1124,20 @@ async function appendSuggestion(payload: AppendPayload) {
         if (current.status !== "pending_approval") {
           return { item: current, changed: false };
         }
-        const currentApproval = isJsonRecord(current.discordApproval)
-          ? current.discordApproval
-          : {};
         const updated = {
           ...current,
           status: "pending_sent",
           notificationStatus: "sent",
           notificationAttempts:
-            (typeof current.notificationAttempts === "number"
-              ? current.notificationAttempts
-              : 0) + 1,
-          discordDelivery: delivery,
-          discordChannelId: delivery.channelId,
-          discordMessageId: delivery.messageId,
-          discordNotifiedAt: delivery.sentAt,
-          discordPayloadHash: delivery.payloadHash,
+            Number(current.notificationAttempts || 0) + 1,
+          discordMessageId: discordDelivery!.messageId,
+          discordNotifiedAt: discordDelivery!.sentAt,
           discordApproval: {
             required: true,
-            status:
-              currentApproval.status === "approved"
-                ? "approved"
-                : "pending",
-            channelId: delivery.channelId,
-            messageId: delivery.messageId,
-            notificationStatus: "sent",
-            sentAt: delivery.sentAt,
-            payloadHash: delivery.payloadHash,
+            status: "pending",
+            channelId: discordDelivery!.channelId,
+            messageId: discordDelivery!.messageId,
+            sentAt: discordDelivery!.sentAt,
           },
         };
         database.queue[index] = updated;
@@ -1621,23 +1148,23 @@ async function appendSuggestion(payload: AppendPayload) {
       statusPersisted = marked.result.changed;
     } catch (error: unknown) {
       console.error(
-        "[suggestions API] Discord foi notificado, mas a prova de entrega nao pode ser persistida:",
+        "[suggestions API] Discord foi notificado, mas pending_sent não pôde ser persistido:",
         error,
       );
     }
-  } else {
+  }
+  if (!notificationSent) {
     try {
       const retryState = await mutateDatabase((database) => {
-        const index = database.queue.findIndex((item) => item.id === storedItem.id);
+        const index = database.queue.findIndex(
+          (item) => item.id === storedItem.id,
+        );
         if (index < 0) return { item: storedItem, changed: false };
         const current = database.queue[index];
         if (current.status !== "pending_approval") {
           return { item: current, changed: false };
         }
-        const attempts =
-          (typeof current.notificationAttempts === "number"
-            ? current.notificationAttempts
-            : 0) + 1;
+        const attempts = Number(current.notificationAttempts || 0) + 1;
         const updated = {
           ...current,
           notificationStatus: "pending_retry",
@@ -1652,12 +1179,12 @@ async function appendSuggestion(payload: AppendPayload) {
       const retryQueued = await dispatchDiscordRetryWorkflow();
       if (!retryQueued) {
         console.warn(
-          "[suggestions API] A sugestao ficou na fila duravel para a proxima recuperacao.",
+          "[suggestions API] A sugestão ficou na fila durável para a próxima recuperação.",
         );
       }
     } catch (error: unknown) {
       console.error(
-        "[suggestions API] Nao foi possivel gravar o estado de retry do Discord:",
+        "[suggestions API] Não foi possível gravar o estado de retry do Discord:",
         error,
       );
     }
@@ -1679,7 +1206,7 @@ async function appendSuggestion(payload: AppendPayload) {
 async function replaceDatabase(req: NextRequest, payload: ReplacePayload) {
   if (!isFullReplaceAuthorized(req)) {
     throw new ApiError(
-      "A substituicao integral da fila requer autorizacao de administrador.",
+      "A substituição integral da fila só está disponível localmente ou com token de administrador.",
       403,
     );
   }
@@ -1696,26 +1223,6 @@ async function replaceDatabase(req: NextRequest, payload: ReplacePayload) {
   });
 }
 
-function errorStatus(error: unknown): number {
-  if (error instanceof ApiError) return error.status;
-  if (error instanceof StorageConflictError) return 409;
-  return 500;
-}
-
-function genericErrorMessage(status: number): string {
-  if (status === 413) return "O pedido excede o tamanho permitido.";
-  if (status === 429) return "Demasiados pedidos. Tenta novamente mais tarde.";
-  if (status === 403) return "Nao foi possivel autorizar este pedido.";
-  if (status === 409) return "Nao foi possivel concluir o pedido neste momento.";
-  if (status >= 500) return "Nao foi possivel concluir o pedido neste momento.";
-  return "Nao foi possivel processar os dados enviados.";
-}
-
-function errorResponse(error: unknown): NextResponse {
-  const status = errorStatus(error);
-  return NextResponse.json({ error: genericErrorMessage(status) }, { status });
-}
-
 export async function GET() {
   try {
     const snapshot = await readStorageSnapshot();
@@ -1727,12 +1234,17 @@ export async function GET() {
     });
   } catch (error: unknown) {
     console.error("[suggestions API] Falha ao carregar:", error);
-    return errorResponse(error);
+    const status = error instanceof ApiError ? error.status : 500;
+    return NextResponse.json(
+      { error: errorMessage(error) },
+      { status },
+    );
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
+    assertRequestSize(req);
     const fullReplaceAuthorized = isFullReplaceAuthorized(req);
     const rateLimit = checkRecommendationRateLimit(
       req,
@@ -1743,15 +1255,14 @@ export async function POST(req: NextRequest) {
     );
     if (!rateLimit.allowed) {
       return NextResponse.json(
-        { error: genericErrorMessage(429) },
+        { error: "Demasiados pedidos. Tenta novamente mais tarde." },
         {
           status: 429,
           headers: { "Retry-After": String(rateLimit.retryAfterSeconds) },
         },
       );
     }
-
-    const payload = await readJsonBody(req);
+    const payload: unknown = await req.json();
     if (isJsonRecord(payload) && payload.action === "append") {
       const item = isJsonRecord(payload.item)
         ? {
@@ -1775,9 +1286,13 @@ export async function POST(req: NextRequest) {
         history: payload.history,
       });
     }
-    throw new ApiError("Acao invalida.", 400);
+    throw new ApiError("Ação inválida.", 400);
   } catch (error: unknown) {
     console.error("[suggestions API] Falha ao guardar:", error);
-    return errorResponse(error);
+    const status = error instanceof ApiError ? error.status : 500;
+    return NextResponse.json(
+      { error: resolutionErrorMessage(error) },
+      { status },
+    );
   }
 }

@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+from typing import cast
 import discord
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -57,7 +58,7 @@ intents = discord.Intents.default()
 # Enable message content intent to suppress the bot commands warning
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
-SEND_ERROR = None
+SEND_ERROR: str | None = None
 
 # Persistent view with matching custom_ids
 class PostReviewView(discord.ui.View):
@@ -96,6 +97,7 @@ async def on_ready():
         channel = bot.get_channel(CHANNEL_ID)
         if not channel:
             channel = await bot.fetch_channel(CHANNEL_ID)
+        channel = cast(discord.abc.Messageable, channel)
 
         if post_type == "wednesday_nostalgia":
             card_title = "📼 Revisão: Clássicos & Sátira (Quarta-feira 09:00) - Politómetro"
@@ -158,8 +160,8 @@ async def on_ready():
             f"📝 **Legenda do Instagram (copiar/colar):**\n\n{caption}"
             f"\n\n{caption_marker}"
         )
-        existing_review = None
-        existing_caption = None
+        existing_review: discord.Message | None = None
+        existing_caption: discord.Message | None = None
         async for existing in channel.history(limit=100):
             if any(
                 existing_embed.footer

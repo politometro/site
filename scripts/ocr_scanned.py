@@ -5,12 +5,34 @@ import pypdf
 import asyncio
 import sys
 import unicodedata
-from winrt.windows.storage import StorageFile
-from winrt.windows.data.pdf import PdfDocument
-from winrt.windows.media.ocr import OcrEngine
-from winrt.windows.graphics.imaging import BitmapDecoder
-from winrt.windows.storage.streams import InMemoryRandomAccessStream
-from winrt.windows.globalization import Language
+from importlib import import_module
+from typing import Any
+
+
+def _load_winrt_type(module_name: str, type_name: str) -> Any:
+    return getattr(import_module(module_name), type_name)
+
+
+StorageFile: Any = None
+PdfDocument: Any = None
+OcrEngine: Any = None
+BitmapDecoder: Any = None
+InMemoryRandomAccessStream: Any = None
+Language: Any = None
+
+try:
+    StorageFile = _load_winrt_type("winrt.windows.storage", "StorageFile")
+    PdfDocument = _load_winrt_type("winrt.windows.data.pdf", "PdfDocument")
+    OcrEngine = _load_winrt_type("winrt.windows.media.ocr", "OcrEngine")
+    BitmapDecoder = _load_winrt_type(
+        "winrt.windows.graphics.imaging", "BitmapDecoder"
+    )
+    InMemoryRandomAccessStream = _load_winrt_type(
+        "winrt.windows.storage.streams", "InMemoryRandomAccessStream"
+    )
+    Language = _load_winrt_type("winrt.windows.globalization", "Language")
+except (ImportError, AttributeError):
+    pass
 
 workspace = "."
 data_dir = os.path.join(workspace, "data")
@@ -138,7 +160,26 @@ def chunk_text(text, chunk_size=1000, overlap=200):
     return chunks
 
 # Run Windows Native OCR on a PDF file
+def _require_winrt() -> None:
+    if any(
+        component is None
+        for component in (
+            StorageFile,
+            PdfDocument,
+            OcrEngine,
+            BitmapDecoder,
+            InMemoryRandomAccessStream,
+            Language,
+        )
+    ):
+        raise RuntimeError(
+            "O OCR nativo requer Windows App SDK/WinRT. "
+            "Instala os pacotes winrt-* de OCR neste ambiente Windows."
+        )
+
+
 async def ocr_pdf_winrt(filepath, meta):
+    _require_winrt()
     abs_path = os.path.abspath(filepath)
     try:
         file = await StorageFile.get_file_from_path_async(abs_path)
@@ -180,6 +221,7 @@ async def ocr_pdf_winrt(filepath, meta):
         return []
 
 async def ocr_processing_loop():
+    _require_winrt()
     # Load existing main text chunks
     main_files = set()
     if os.path.exists(main_chunks_file):

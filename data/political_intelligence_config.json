@@ -1,0 +1,290 @@
+{
+  "schemaVersion": 1,
+  "pruneStaleSeenEntries": true,
+  "crawl": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+    "delaySeconds": 0.05,
+    "requestTimeoutSeconds": 10,
+    "maxConcurrentRequests": 4,
+    "maxConcurrentSources": 1,
+    "useConditionalGet": true,
+    "verboseRejections": true,
+    "maxSitemapDepth": null,
+    "maxSitemapsPerSource": null,
+    "maxUrlsPerSource": null,
+    "maxArticleExcerptCharacters": 1200,
+    "newsRetentionDays": null,
+    "failClosedOnRobotsError": true
+  },
+  "sources": [
+    {
+      "id": "noticias-ao-minuto",
+      "name": "Notícias ao Minuto",
+      "homepage": "https://www.noticiasaominuto.com/",
+      "robotsUrl": "https://www.noticiasaominuto.com/robots.txt",
+      "rssFeeds": [
+        "https://www.noticiasaominuto.com/rss/politica",
+        "https://www.noticiasaominuto.com/rss/economia"
+      ],
+      "sitemapSeeds": [
+        "https://www.noticiasaominuto.com/sitemap.xml"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "jornal-de-noticias",
+      "name": "Jornal de Notícias",
+      "homepage": "https://www.jn.pt/",
+      "robotsUrl": "https://www.jn.pt/robots.txt",
+      "sitemapSeeds": [
+        "https://www.jn.pt/feed/news/sitemap.xml",
+        "https://www.jn.pt/feed/sitemap.xml"
+      ],
+      "sitemapDateFloor": "2004-01-01",
+      "enabled": true
+    },
+    {
+      "id": "cmtv",
+      "name": "CMTV / Correio da Manhã",
+      "homepage": "https://www.cmjornal.pt/cmtv/",
+      "robotsUrl": "https://www.cmjornal.pt/robots.txt",
+      "rssFeeds": [
+        "https://www.cmjornal.pt/rss"
+      ],
+      "sitemapSeeds": [
+        "https://www.cmjornal.pt/sitemap"
+      ],
+      "sitemapDateFloor": "2024-01-01",
+      "enabled": true
+    },
+    {
+      "id": "sic-noticias",
+      "name": "SIC Notícias",
+      "homepage": "https://sicnoticias.pt/",
+      "robotsUrl": "https://sicnoticias.pt/robots.txt",
+      "sitemapSeeds": [
+        "https://sicnoticias.pt/sitemap/news.xml",
+        "https://sicnoticias.pt/sitemap/index.xml"
+      ],
+      "sitemapDateFloor": "2015-01-01",
+      "sitemapChildIncludePatterns": [
+        "/sitemap/\\d{4}-\\d{1,2}\\.xml$"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "expresso",
+      "name": "Expresso",
+      "homepage": "https://expresso.pt/",
+      "robotsUrl": "https://expresso.pt/robots.txt",
+      "rssFeeds": [
+        "https://feeds.feedburner.com/expresso-geral"
+      ],
+      "sitemapSeeds": [
+        "https://expresso.pt/sitemap/news.xml",
+        "https://expresso.pt/sitemap/index.xml"
+      ],
+      "sitemapDateFloor": "2015-01-01",
+      "sitemapChildIncludePatterns": [
+        "/sitemap/\\d{4}-\\d{1,2}\\.xml$"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "cnn-portugal",
+      "name": "CNN Portugal",
+      "homepage": "https://cnnportugal.iol.pt/",
+      "robotsUrl": "https://cnnportugal.iol.pt/robots.txt",
+      "rssFeeds": [
+        "https://cnnportugal.iol.pt/rss.xml"
+      ],
+      "sitemapSeeds": [
+        "https://cnnportugal.iol.pt/sitemaps/news.xml",
+        "https://cnnportugal.iol.pt/sitemaps/index.xml"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "rtp-noticias",
+      "name": "RTP Notícias",
+      "homepage": "https://www.rtp.pt/noticias/",
+      "robotsUrl": "https://www.rtp.pt/robots.txt",
+      "rssFeeds": [
+        "https://www.rtp.pt/noticias/rss"
+      ],
+      "sitemapSeeds": [
+        "https://www.rtp.pt/noticias/sitemap"
+      ],
+      "ignoreRobotsSitemaps": true,
+      "enabled": true
+    },
+    {
+      "id": "observador",
+      "name": "Observador",
+      "homepage": "https://observador.pt/",
+      "robotsUrl": "https://observador.pt/robots.txt",
+      "rssFeeds": [
+        "https://observador.pt/rss/ultimas/"
+      ],
+      "sitemapSeeds": [
+        "https://observador.pt/wp-sitemap.xml"
+      ],
+      "sitemapChildIncludePatterns": [
+        "/wp-sitemap-posts-(?:post|obs_longform|obs_liveblog|obs_factcheck)-\\d+\\.xml$"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "eco",
+      "name": "ECO",
+      "homepage": "https://eco.sapo.pt/",
+      "robotsUrl": "https://eco.sapo.pt/robots.txt",
+      "rssFeeds": [
+        "https://eco.sapo.pt/feed/"
+      ],
+      "sitemapSeeds": [
+        "https://eco.sapo.pt/sitemap.xml",
+        "https://eco.sapo.pt/sitemap-news.xml"
+      ],
+      "sitemapChildIncludePatterns": [
+        "/sitemap-posttype-(?:post|explainer|news_report|special_article|interview)\\.xml$"
+      ],
+      "enabled": true
+    },
+    {
+      "id": "jornal-economico",
+      "name": "Jornal Económico",
+      "homepage": "https://jornaleconomico.sapo.pt/",
+      "robotsUrl": "https://jornaleconomico.sapo.pt/robots.txt",
+      "rssFeeds": [
+        "https://jornaleconomico.sapo.pt/feed/",
+        "https://jornaleconomico.sapo.pt/politica/feed/",
+        "https://jornaleconomico.sapo.pt/economia/feed/"
+      ],
+      "sitemapSeeds": [
+        "https://jornaleconomico.sapo.pt/sitemap_index.xml"
+      ],
+      "sitemapChildIncludePatterns": [
+        "/post-sitemap\\d*\\.xml$"
+      ],
+      "sitemapDateFloor": "2014-01-01",
+      "enabled": true
+    },
+    {
+      "id": "tsf",
+      "name": "TSF",
+      "homepage": "https://www.tsf.pt/",
+      "robotsUrl": "https://www.tsf.pt/robots.txt",
+      "sitemapSeeds": [
+        "https://www.tsf.pt/feed/news/sitemap.xml",
+        "https://www.tsf.pt/feed/sitemap.xml"
+      ],
+      "sitemapDateFloor": "2000-01-01",
+      "enabled": true
+    },
+    {
+      "id": "sabado",
+      "name": "Revista Sábado",
+      "homepage": "https://www.sabado.pt/",
+      "robotsUrl": "https://www.sabado.pt/robots.txt",
+      "rssFeeds": [
+        "https://www.sabado.pt/rss"
+      ],
+      "sitemapSeeds": [
+        "https://www.sabado.pt/sitemap"
+      ],
+      "sitemapDateFloor": "2017-01-01",
+      "enabled": true
+    },
+    {
+      "id": "sapo-24",
+      "name": "SAPO 24",
+      "homepage": "https://24.sapo.pt/",
+      "allowedHosts": [
+        "24.sapo.pt",
+        "24noticias.sapo.pt"
+      ],
+      "robotsUrl": "https://24.sapo.pt/robots.txt",
+      "rssFeeds": [
+        "https://24.sapo.pt/rss"
+      ],
+      "sitemapSeeds": [
+        "https://24.sapo.pt/sitemap.xml"
+      ],
+      "sitemapDateFloor": "2015-01-01",
+      "enabled": true
+    },
+    {
+      "id": "now-canal",
+      "name": "Now Canal",
+      "homepage": "https://www.nowcanal.pt/",
+      "robotsUrl": "https://www.nowcanal.pt/robots.txt",
+      "rssFeeds": [
+        "https://www.nowcanal.pt/rss"
+      ],
+      "sitemapSeeds": [
+        "https://www.nowcanal.pt/sitemap"
+      ],
+      "sitemapDateFloor": "2024-01-01",
+      "enabled": true
+    },
+    {
+      "id": "publico",
+      "name": "Público",
+      "homepage": "https://www.publico.pt/",
+      "robotsUrl": "https://www.publico.pt/robots.txt",
+      "rssFeeds": [
+        "https://feeds.feedburner.com/PublicoRSS"
+      ],
+      "sitemapSeeds": [
+        "https://www.publico.pt/sitemaps/news.xml"
+      ],
+      "archiveSitemap": {
+        "urlTemplate": "https://www.publico.pt/sitemaps/articles/{year}-{month}.xml",
+        "firstAvailableMonth": "1998-01",
+        "completedMonthsOnly": true,
+        "refreshRecentMonths": 2
+      },
+      "sitemapDateFloor": "1998-01-01",
+      "enabled": true
+    }
+  ],
+  "assembly": {
+    "enabled": true,
+    "openDataBaseUrl": "https://www.parlamento.pt/Cidadania/Paginas/",
+    "initiativesPage": "DAIniciativas.aspx",
+    "activitiesPage": "DAatividades.aspx",
+    "currentLegislature": "XVII",
+    "syncIntervalHours": 24,
+    "detailUrlTemplate": "https://www.parlamento.pt/ActividadeParlamentar/Paginas/DetalheIniciativa.aspx?ACT_TP=INI&BID={bid}",
+    "projectVoteDetailUrlTemplate": "https://www.parlamento.pt/ActividadeParlamentar/Paginas/DetalheProjetoVoto.aspx?BID={bid}",
+    "sourceAttribution": "Dados abertos da Assembleia da República"
+  },
+  "governmentPeriods": [
+    {"id": "GC-I", "name": "I Governo Constitucional — Mário Soares", "start": "1976-07-23", "end": "1978-01-30", "parties": ["PS"]},
+    {"id": "GC-II", "name": "II Governo Constitucional — Mário Soares", "start": "1978-01-30", "end": "1978-08-28", "parties": ["PS", "CDS-PP"]},
+    {"id": "GC-III", "name": "III Governo Constitucional — Nobre da Costa", "start": "1978-08-28", "end": "1978-11-21", "parties": []},
+    {"id": "GC-IV", "name": "IV Governo Constitucional — Mota Pinto", "start": "1978-11-21", "end": "1979-07-31", "parties": []},
+    {"id": "GC-V", "name": "V Governo Constitucional — Maria de Lurdes Pintasilgo", "start": "1979-07-31", "end": "1980-01-03", "parties": []},
+    {"id": "GC-VI", "name": "VI Governo Constitucional — Sá Carneiro", "start": "1980-01-03", "end": "1981-01-09", "parties": ["AD"]},
+    {"id": "GC-VII", "name": "VII Governo Constitucional — Pinto Balsemão", "start": "1981-01-09", "end": "1981-09-04", "parties": ["AD"]},
+    {"id": "GC-VIII", "name": "VIII Governo Constitucional — Pinto Balsemão", "start": "1981-09-04", "end": "1983-06-09", "parties": ["AD"]},
+    {"id": "GC-IX", "name": "IX Governo Constitucional — Mário Soares", "start": "1983-06-09", "end": "1985-11-06", "parties": ["PS", "PSD"]},
+    {"id": "GC-X", "name": "X Governo Constitucional — Cavaco Silva", "start": "1985-11-06", "end": "1987-08-17", "parties": ["PSD"]},
+    {"id": "GC-XI", "name": "XI Governo Constitucional — Cavaco Silva", "start": "1987-08-17", "end": "1991-10-31", "parties": ["PSD"]},
+    {"id": "GC-XII", "name": "XII Governo Constitucional — Cavaco Silva", "start": "1991-10-31", "end": "1995-10-28", "parties": ["PSD"]},
+    {"id": "GC-XIII", "name": "XIII Governo Constitucional — António Guterres", "start": "1995-10-28", "end": "1999-10-25", "parties": ["PS"]},
+    {"id": "GC-XIV", "name": "XIV Governo Constitucional — António Guterres", "start": "1999-10-25", "end": "2002-04-06", "parties": ["PS"]},
+    {"id": "GC-XV", "name": "XV Governo Constitucional — Durão Barroso", "start": "2002-04-06", "end": "2004-07-17", "parties": ["PSD", "CDS-PP"]},
+    {"id": "GC-XVI", "name": "XVI Governo Constitucional — Santana Lopes", "start": "2004-07-17", "end": "2005-03-12", "parties": ["PSD", "CDS-PP"]},
+    {"id": "GC-XVII", "name": "XVII Governo Constitucional — José Sócrates", "start": "2005-03-12", "end": "2009-10-26", "parties": ["PS"]},
+    {"id": "GC-XVIII", "name": "XVIII Governo Constitucional — José Sócrates", "start": "2009-10-26", "end": "2011-06-21", "parties": ["PS"]},
+    {"id": "GC-XIX", "name": "XIX Governo Constitucional — Passos Coelho", "start": "2011-06-21", "end": "2015-10-30", "parties": ["PSD", "CDS-PP"]},
+    {"id": "GC-XX", "name": "XX Governo Constitucional — Passos Coelho", "start": "2015-10-30", "end": "2015-11-26", "parties": ["PSD", "CDS-PP"]},
+    {"id": "GC-XXI", "name": "XXI Governo Constitucional — António Costa", "start": "2015-11-26", "end": "2019-10-26", "parties": ["PS"]},
+    {"id": "GC-XXII", "name": "XXII Governo Constitucional — António Costa", "start": "2019-10-26", "end": "2022-03-30", "parties": ["PS"]},
+    {"id": "GC-XXIII", "name": "XXIII Governo Constitucional — António Costa", "start": "2022-03-30", "end": "2024-04-02", "parties": ["PS"]},
+    {"id": "GC-XXIV", "name": "XXIV Governo Constitucional — Luís Montenegro", "start": "2024-04-02", "end": "2025-06-05", "parties": ["PSD", "CDS-PP", "PPM"]},
+    {"id": "GC-XXV", "name": "XXV Governo Constitucional — Luís Montenegro", "start": "2025-06-05", "parties": ["PSD", "CDS-PP", "PPM"]}
+  ]
+}

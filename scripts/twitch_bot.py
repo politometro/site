@@ -475,7 +475,7 @@ def _retry_after_slowmode(sock, channel, text, wait_seconds):
         _set_twitch_status(
             "error",
             "Não foi possível reenviar uma resposta após o modo lento.",
-            error=exc,
+            error=str(exc),
         )
     finally:
         with _send_schedule_lock:
@@ -652,7 +652,7 @@ def _answer_question(sock, channel, display_name, user, question):
         _set_twitch_status(
             "error",
             "Foi recebida uma pergunta, mas não foi possível enviar a resposta.",
-            error=exc,
+            error=str(exc),
         )
         print(f"Falha ao responder no chat da Twitch: {exc}")
     finally:
@@ -931,7 +931,7 @@ def run_twitch_bot_forever():
             _set_twitch_status(
                 "reconnecting",
                 f"Nova tentativa automática em {backoff} segundos.",
-                error=exc,
+                error=str(exc),
             )
             print(f"Twitch bot desligou-se: {exc}. Nova tentativa em {backoff}s.")
             time.sleep(backoff)

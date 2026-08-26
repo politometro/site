@@ -32,7 +32,7 @@ import xml.etree.ElementTree as ET
 from dataclasses import dataclass
 from html.parser import HTMLParser
 from io import BytesIO
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Iterable, Mapping, Sequence, cast
 
 import requests
 from PIL import Image, ImageOps, UnidentifiedImageError
@@ -1264,7 +1264,7 @@ def remove_black_bars(image: Image.Image, threshold: int = 28) -> Image.Image:
         if w < 50 or h < 50:
             return image
 
-        bw = gray.point(lambda p: 255 if p > threshold else 0)
+        bw = gray.point(lambda p: 255 if cast(int, p) > threshold else 0)
         bbox = bw.getbbox()
         if not bbox:
             return image
@@ -1652,7 +1652,7 @@ def _openlibrary_work_key(link: str) -> str:
 
 
 def _openlibrary_work_url(work_key: str, title: str) -> str:
-    """Build the human-facing Open Library URL without relying on a redirect."""
+    """Build the canonical Open Library work URL without relying on a redirect."""
     canonical_key = _openlibrary_work_key(
         urllib.parse.urljoin("https://openlibrary.org", str(work_key or ""))
     )
@@ -1661,14 +1661,7 @@ def _openlibrary_work_url(work_key: str, title: str) -> str:
             "BOOK_NOT_FOUND",
             "O registo Open Library não contém uma chave de obra válida.",
         )
-    normalized_title = unicodedata.normalize("NFKC", str(title or "")).strip()
-    slug = re.sub(r"\s+", "_", normalized_title)
-    if not slug:
-        return f"https://openlibrary.org{canonical_key}"
-    # Match JavaScript's encodeURIComponent so both ingestion paths persist
-    # exactly the same canonical link.
-    encoded_slug = urllib.parse.quote(slug, safe="-_.!~*'()")
-    return f"https://openlibrary.org{canonical_key}/{encoded_slug}"
+    return f"https://openlibrary.org{canonical_key}"
 
 
 def _validate_book_page(item: Mapping[str, Any], link: str) -> EntityResolution:
@@ -3487,10 +3480,10 @@ def resolve_recommendation(
         raise RecommendationResolutionError(
             "UNSUPPORTED_TYPE", f"Tipo não suportado: {media_type!r}.", item=item
         )
-    verification = item.get("verification")
+    existing_verification = item.get("verification")
     cover_override = (
-        verification.get("coverOverride")
-        if isinstance(verification, Mapping)
+        existing_verification.get("coverOverride")
+        if isinstance(existing_verification, Mapping)
         else None
     )
     if (

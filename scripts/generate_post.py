@@ -20,17 +20,23 @@ import datetime
 import re
 import copy
 import hashlib
-import base64
-import binascii
-from PIL import Image, ImageDraw, ImageFont, ImageOps
+import urllib.parse
+from PIL import (
+    Image,
+    ImageChops,
+    ImageDraw,
+    ImageFilter,
+    ImageFont,
+    ImageOps,
+    ImageStat,
+)
 import requests
 
 # Import the single, source-grounded resolver.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from cover_fetcher import load_cover_for_item
+from cover_fetcher import fetch_cover_for_item, load_cover_for_item
 from recommendation_resolver import (
     ResolutionError,
-    is_community_evergreen_highlight,
     is_eligible_highlight,
     is_same_series,
     is_series_recency_restricted,
@@ -38,7 +44,6 @@ from recommendation_resolver import (
     resolve_recommendation,
 )
 from recommendation_approval import (
-    has_verified_discord_approval,
     is_post_workflow_eligible,
     requires_discord_approval,
 )
@@ -85,6 +90,25 @@ def ensure_fonts():
             r.raise_for_status()
             with open(path, "wb") as f:
                 f.write(r.content)
+
+
+def _search_duckduckgo_link(query):
+    """Return the first non-DuckDuckGo result for a legacy fallback search."""
+    response = requests.post(
+        "https://html.duckduckgo.com/html/",
+        data={"q": query},
+        headers={"User-Agent": "Mozilla/5.0"},
+        timeout=10,
+    )
+    for redirect in re.findall(r'href="([^"]+uddg=[^"]+)"', response.text):
+        match = re.search(r"uddg=([^&\"]+)", redirect)
+        if not match:
+            continue
+        decoded = urllib.parse.unquote(match.group(1))
+        if "duckduckgo.com" not in decoded:
+            return decoded
+    direct = re.findall(r'class="result__url"\s+href="([^"]+)"', response.text)
+    return direct[0] if direct else None
 
 # --- DYNAMIC QUADRANT BASE X AND DESC CONFIGURATION ---
 QUADRANTS_CONFIG = {
@@ -283,7 +307,7 @@ def _legacy_get_recommendations_with_valid_covers(queue):
             
             if not resolved:
                 try:
-                    found_url = search_duckduckgo_link(query)
+                    found_url = _search_duckduckgo_link(query)
                     if found_url:
                         item["link"] = found_url
                 except Exception:
@@ -422,7 +446,7 @@ def _recommendation_emoji(item):
 
 
 def _caption_hashtags(selected, post_type="sunday_standard"):
-    hashtags = list(CAPTION_HASHTAGS)
+    hashtags: list[str] = list(CAPTION_HASHTAGS)
     if post_type == "wednesday_nostalgia":
         if "#Classicos" not in hashtags:
             hashtags.append("#Classicos")
@@ -553,10 +577,7 @@ def _item_score(item, now):
         score = float(item.get("priority", 3))
     except (TypeError, ValueError):
         score = 3.0
-    time_sensitive = bool(
-        item.get("type") in {"podcast", "highlight"}
-        and not is_community_evergreen_highlight(item)
-    )
+    time_sensitive = item.get("type") in {"podcast", "highlight"}
     if time_sensitive and item.get("sourcePublishedAt"):
         try:
             published = datetime.datetime.fromisoformat(
@@ -584,20 +605,6 @@ def _item_score(item, now):
         except (TypeError, ValueError):
             pass
     return score
-
-
-def _is_priority_community_highlight(item):
-    """Prioritise only community highlights with complete approval/evidence."""
-    verification = item.get("verification") or {}
-    return bool(
-        item.get("type") == "highlight"
-        and requires_discord_approval(item)
-        and has_verified_discord_approval(item)
-        and item.get("resolutionStatus") == "verified"
-        and verification.get("status") == "verified"
-        and verification.get("entityId")
-        and verification.get("coverHash")
-    )
 
 
 def _cover_hash(item, cover):
@@ -635,7 +642,6 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
         and _item_score(item, now) >= 0
         and (
             item.get("type") != "highlight"
-            or is_community_evergreen_highlight(item)
             or is_eligible_highlight(
                 title=item.get("title"),
                 description=item.get("description"),
@@ -774,14 +780,6 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
                 if item.get("type") == media_type
                 and item_key(item) not in selected_item_keys
             ]
-            if qkey == "q4":
-                # The queue records an explicit human editorial decision for
-                # approved community suggestions.  Recent RSS timestamps must
-                # not silently outrank that decision.  Stable sorting keeps the
-                # existing freshness order within both groups.
-                candidates.sort(
-                    key=lambda item: not _is_priority_community_highlight(item)
-                )
 
             for queue_item in candidates:
                 key = item_key(queue_item)
@@ -1054,6 +1052,180 @@ def remove_black_bars(image, threshold=28):
     return image
 
 
+def _cover_content_signal(image, max_dimension=320):
+    """Return a small map of visual detail likely to carry cover information.
+
+    Editorial artwork frequently places its title, a person, or other meaningful
+    graphics away from the geometric centre.  Edges, local contrast and colour
+    saturation are inexpensive, source-agnostic signals for those regions and
+    work without making assumptions about a publisher or a media type.
+    """
+    source = image.convert("RGB")
+    largest_side = max(source.size)
+    if largest_side > max_dimension:
+        scale = max_dimension / largest_side
+        source = source.resize(
+            (
+                max(1, round(source.width * scale)),
+                max(1, round(source.height * scale)),
+            ),
+            Image.Resampling.LANCZOS,
+        )
+
+    luminance = source.convert("L")
+    edges = ImageOps.autocontrast(
+        luminance.filter(ImageFilter.FIND_EDGES), cutoff=1
+    )
+    local_contrast = ImageOps.autocontrast(
+        ImageChops.difference(
+            luminance,
+            luminance.filter(ImageFilter.GaussianBlur(radius=1.2)),
+        ),
+        cutoff=1,
+    )
+    saturation = source.convert("HSV").getchannel("S")
+
+    detail = Image.blend(edges, local_contrast, 0.45)
+    return Image.blend(detail, saturation, 0.22)
+
+
+def _signal_score(signal, crop_box, source_size):
+    """Measure the content signal inside a source-coordinate crop box."""
+    source_w, source_h = source_size
+    signal_w, signal_h = signal.size
+    left, top, right, bottom = crop_box
+    mapped_box = (
+        max(0, min(signal_w - 1, round(left * signal_w / source_w))),
+        max(0, min(signal_h - 1, round(top * signal_h / source_h))),
+        max(1, min(signal_w, round(right * signal_w / source_w))),
+        max(1, min(signal_h, round(bottom * signal_h / source_h))),
+    )
+    mapped_left, mapped_top, mapped_right, mapped_bottom = mapped_box
+    if mapped_right <= mapped_left:
+        mapped_right = min(signal_w, mapped_left + 1)
+    if mapped_bottom <= mapped_top:
+        mapped_bottom = min(signal_h, mapped_top + 1)
+    return float(
+        ImageStat.Stat(
+            signal.crop((mapped_left, mapped_top, mapped_right, mapped_bottom))
+        ).sum[0]
+    )
+
+
+def _content_aware_crop_box(image, target_size):
+    """Choose the best-fitting crop and whether retaining the full frame is safer."""
+    source_w, source_h = image.size
+    target_w, target_h = target_size
+    full_box = (0, 0, source_w, source_h)
+    if min(source_w, source_h, target_w, target_h) <= 0:
+        return full_box, {"content_retained": 1.0, "preserve_full_frame": False}
+
+    source_ratio = source_w / source_h
+    target_ratio = target_w / target_h
+    if abs(source_ratio - target_ratio) < 0.01:
+        return full_box, {"content_retained": 1.0, "preserve_full_frame": False}
+
+    if source_ratio > target_ratio:
+        crop_h = source_h
+        crop_w = max(1, min(source_w, round(source_h * target_ratio)))
+        movable = source_w - crop_w
+        axis = "x"
+    else:
+        crop_w = source_w
+        crop_h = max(1, min(source_h, round(source_w / target_ratio)))
+        movable = source_h - crop_h
+        axis = "y"
+
+    signal = _cover_content_signal(image)
+    total_signal = _signal_score(signal, full_box, image.size)
+    centre = movable / 2
+    candidate_offsets = {
+        round(movable * index / 24)
+        for index in range(25)
+    }
+    candidate_offsets.add(round(centre))
+    candidates = []
+    for offset in candidate_offsets:
+        if axis == "x":
+            crop_box = (offset, 0, offset + crop_w, crop_h)
+        else:
+            crop_box = (0, offset, crop_w, offset + crop_h)
+        candidates.append(
+            (
+                _signal_score(signal, crop_box, image.size),
+                offset,
+                crop_box,
+            )
+        )
+
+    # A centered framing remains the stable tie-breaker for images without a
+    # meaningful off-centre focal area.
+    best_score, best_offset, best_box = max(
+        candidates,
+        key=lambda candidate: (
+            candidate[0],
+            -abs(candidate[1] - centre),
+        ),
+    )
+    content_retained = (
+        best_score / total_signal if total_signal > 0 else (crop_w * crop_h) / (source_w * source_h)
+    )
+    aspect_difference = max(
+        source_ratio / target_ratio,
+        target_ratio / source_ratio,
+    )
+
+    # If even the strongest crop would discard a substantial amount of visual
+    # information, keep the whole artwork visible rather than silently favouring
+    # its geometric centre.  This protects covers whose meaningful copy and
+    # graphics occupy different areas.
+    preserve_full_frame = (
+        aspect_difference >= 1.25 and content_retained < 0.72
+    )
+    return best_box, {
+        "content_retained": content_retained,
+        "preserve_full_frame": preserve_full_frame,
+        "offset": best_offset,
+    }
+
+
+def _contained_cover_art(image, target_size):
+    """Keep every part of a wide or tall cover visible in a polished card."""
+    background = ImageOps.fit(
+        image,
+        target_size,
+        method=Image.Resampling.LANCZOS,
+        centering=(0.5, 0.5),
+    )
+    blur_radius = max(3, round(min(target_size) / 24))
+    background = background.filter(ImageFilter.GaussianBlur(radius=blur_radius))
+    background = Image.blend(
+        background,
+        Image.new("RGB", target_size, (0, 0, 0)),
+        0.24,
+    )
+    contained = ImageOps.contain(
+        image,
+        target_size,
+        method=Image.Resampling.LANCZOS,
+    )
+    position = (
+        (target_size[0] - contained.width) // 2,
+        (target_size[1] - contained.height) // 2,
+    )
+    background.paste(contained, position)
+    return background
+
+
+def fit_cover_art(image, target_size):
+    """Fit cover art while preserving off-centre titles and graphics when needed."""
+    source = image.convert("RGB")
+    crop_box, decision = _content_aware_crop_box(source, target_size)
+    if decision["preserve_full_frame"]:
+        return _contained_cover_art(source, target_size)
+    return source.crop(crop_box).resize(target_size, Image.Resampling.LANCZOS)
+
+
 _FONT_CACHE = {}
 _WATCHLIST_DESCRIPTION_CACHE = None
 
@@ -1246,6 +1418,8 @@ def _fit_text_lines_at_size(draw, text, font_path, size, max_width, max_lines):
 
 def _fit_fixed_description_lines(draw, text, max_width, max_lines):
     compact = str(text or "").strip()
+    font = _load_font(FONT_DESC_BOLD, DESCRIPTION_FONT_MIN_SIZE)
+    spacing = max(15, DESCRIPTION_FONT_MIN_SIZE + 3)
 
     def fits(font, candidate_lines):
         return bool(
@@ -1335,11 +1509,7 @@ def _save_story_asset(post_image, output_path=None):
 
 
 def _draft_content_hash(
-    quadrants,
-    post_sha256,
-    caption_sha256,
-    is_test=False,
-    review_request_id="",
+    quadrants, post_sha256, caption_sha256, is_test=False
 ):
     payload = {
         "quadrants": {key: quadrants[key] for key in sorted(quadrants.keys())},
@@ -1347,34 +1517,10 @@ def _draft_content_hash(
         "caption_sha256": caption_sha256,
         "is_test": bool(is_test),
     }
-    clean_request_id = str(review_request_id or "").strip()
-    if clean_request_id:
-        payload["review_request_id"] = clean_request_id
     encoded = json.dumps(
         payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
-
-
-def _decode_caption_override(encoded_caption):
-    """Decode a workflow-safe caption override and enforce Instagram limits."""
-    value = str(encoded_caption or "").strip()
-    if not value:
-        return ""
-    if len(value) > 12000:
-        raise ValueError("A legenda codificada é demasiado longa.")
-    try:
-        caption = base64.b64decode(value, validate=True).decode("utf-8")
-    except (binascii.Error, UnicodeDecodeError) as exc:
-        raise ValueError("A legenda corrigida não está codificada corretamente.") from exc
-    caption = caption.replace("\r\n", "\n").replace("\r", "\n").strip()
-    if not caption:
-        raise ValueError("A legenda corrigida não pode ficar vazia.")
-    if len(caption) > 2200:
-        raise ValueError(
-            "A legenda corrigida excede o limite de 2200 caracteres do Instagram."
-        )
-    return caption
 
 
 def _parse_utc_datetime(value):
@@ -1433,15 +1579,11 @@ def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
             if isinstance(item.get("_discovery"), dict)
             else []
         ),
-    ) and not is_community_evergreen_highlight(item):
+    ):
         raise RuntimeError(f"{qkey} é uma notícia e não um destaque editorial")
     source_published = _parse_utc_datetime(item.get("sourcePublishedAt"))
     expiry = _parse_utc_datetime(item.get("expiryDate"))
-    time_sensitive = bool(
-        item.get("type") in {"podcast", "highlight"}
-        and not is_community_evergreen_highlight(item)
-    )
-    if time_sensitive and (
+    if item.get("type") in {"podcast", "highlight"} and (
         not source_published
         or not expiry
         or expiry <= source_published
@@ -1454,7 +1596,7 @@ def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
             f"{qkey} expirou em {expiry.isoformat()}; gera uma proposta atualizada"
         )
     if (
-        time_sensitive
+        item.get("type") in {"podcast", "highlight"}
         and expiry
         and expiry
         < now + datetime.timedelta(hours=MIN_PUBLICATION_VALIDITY_HOURS)
@@ -1535,7 +1677,6 @@ def commit_approved_draft(
         post_sha,
         caption_sha,
         is_test=draft.get("is_test", False),
-        review_request_id=draft.get("review_request_id", ""),
     )
     if expected_hash != content_hash:
         raise RuntimeError("O conteúdo do rascunho não corresponde ao hash aprovado.")
@@ -1546,16 +1687,6 @@ def commit_approved_draft(
     current_by_id = {item.get("id"): item for item in current_queue}
     selected_ids = {item["id"] for item in quadrants.values()}
     missing_ids = selected_ids.difference(current_by_id)
-    missing_community_ids = {
-        item["id"]
-        for item in quadrants.values()
-        if item["id"] in missing_ids and requires_discord_approval(item)
-    }
-    if missing_community_ids:
-        raise RuntimeError(
-            "Uma sugestão comunitária deixou de existir na fila atual: "
-            + ", ".join(sorted(missing_community_ids))
-        )
     if missing_ids:
         print(
             "[WARN] A fila automática já não contém alguns itens aprovados: "
@@ -1566,22 +1697,6 @@ def commit_approved_draft(
         current = current_by_id.get(reviewed["id"])
         if current is None:
             continue
-        if requires_discord_approval(reviewed):
-            if not is_post_workflow_eligible(current):
-                raise RuntimeError(
-                    f"{qkey} perdeu a aprovação Discord válida"
-                )
-            for field in (
-                "sourceKind",
-                "communitySubmission",
-                "submissionHash",
-                "discordMessageId",
-                "discordApproval",
-            ):
-                if current.get(field) != reviewed.get(field):
-                    raise RuntimeError(
-                        f"{qkey} teve o comprovativo Discord alterado depois da revisão"
-                    )
         for field in (
             "type",
             "status",
@@ -1626,8 +1741,8 @@ def commit_approved_draft(
 
     with open(REC_FILE, "r", encoding="utf-8") as handle:
         data = json.load(handle)
-    queue = data.get("queue", [])
-    history = data.get("history", [])
+    queue = data.get("queue") or []
+    history = data.get("history") or []
 
     queued_by_id = {item.get("id"): item for item in queue}
     selected_ids = {item["id"] for item in quadrants.values()}
@@ -1681,31 +1796,7 @@ def generate_production_post():
         default="",
         help="Select one specific verified queue item for a single-card edition",
     )
-    parser.add_argument(
-        "--review-request-id",
-        default="",
-        help="Bind an intentional reviewer-requested replacement to a unique ID",
-    )
-    parser.add_argument(
-        "--caption-override-b64",
-        default="",
-        help="Replace the generated caption with reviewer text encoded as base64",
-    )
     args = parser.parse_args()
-
-    review_request_id = str(args.review_request_id or "").strip()
-    if review_request_id and not re.fullmatch(
-        r"[A-Za-z0-9_-]{8,80}", review_request_id
-    ):
-        print("ERROR: Invalid --review-request-id")
-        sys.exit(1)
-    try:
-        caption_override = _decode_caption_override(
-            args.caption_override_b64
-        )
-    except ValueError as exc:
-        print(f"ERROR: {exc}")
-        sys.exit(1)
 
     post_type = args.post_type
     if post_type == "auto":
@@ -1723,11 +1814,14 @@ def generate_production_post():
 
     if args.verify_approved:
         try:
-            draft, _ = commit_approved_draft(
+            result = commit_approved_draft(
                 DRAFT_FILE,
                 require_publication_receipt=False,
                 dry_run=True,
             )
+            if result is None:
+                raise RuntimeError("Não foi possível validar o rascunho aprovado.")
+            draft, _ = result
             print(f"[OK] Draft {draft['draft_id']} aprovado e ainda válido.")
         except (OSError, ValueError, RuntimeError) as exc:
             print(f"ERROR: {exc}")
@@ -1868,12 +1962,7 @@ def generate_production_post():
         cover_x = (819 - cover_w) // 2
         cover_y = max(curr_y + 15, 450)
         
-        cover_resized = ImageOps.fit(
-            cover.convert("RGB"),
-            (cover_w, cover_h),
-            method=Image.Resampling.LANCZOS,
-            centering=(0.5, 0.5),
-        )
+        cover_resized = fit_cover_art(cover, (cover_w, cover_h))
         cover_rounded = apply_rounded_corners(cover_resized, radius=24)
         template.alpha_composite(cover_rounded, (cover_x, cover_y))
         
@@ -1989,13 +2078,9 @@ def generate_production_post():
             cover_y = cover_y_map[qkey]
             cx = config["cover_x"]
             
-            # Crop to the target aspect ratio without stretching the source image.
-            cover_resized = ImageOps.fit(
-                cover.convert("RGB"),
-                (cover_w, cover_h),
-                method=Image.Resampling.LANCZOS,
-                centering=(0.5, 0.5),
-            )
+            # Keep off-centre artwork readable instead of always trimming it
+            # around the geometric middle of the source image.
+            cover_resized = fit_cover_art(cover, (cover_w, cover_h))
             cover_rounded = apply_rounded_corners(cover_resized, radius=18)
             
             template.alpha_composite(cover_rounded, (cx, cover_y))
@@ -2091,8 +2176,6 @@ def generate_production_post():
         post_type=post_type,
         max_chars=1800,
     )
-    if caption_override:
-        caption = caption_override
     
     with open(OUTPUT_CAPTION_PATH, "w", encoding="utf-8") as f:
         f.write(caption)
@@ -2114,7 +2197,6 @@ def generate_production_post():
             post_sha,
             caption_sha,
             is_test=args.test,
-            review_request_id=review_request_id,
         )
         draft_data = {
             "schema_version": 2,
@@ -2128,8 +2210,6 @@ def generate_production_post():
             "approval": {"approved": False},
             **quadrants,
         }
-        if review_request_id:
-            draft_data["review_request_id"] = review_request_id
         with open(DRAFT_FILE, "w", encoding="utf-8") as f:
             json.dump(draft_data, f, indent=2, ensure_ascii=False)
         print(

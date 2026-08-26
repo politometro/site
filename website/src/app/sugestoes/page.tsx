@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import Header from "@/components/Header";
 import type { RecommendationType } from "@/lib/recommendationResolver";
 import styles from "./page.module.css";
@@ -10,21 +10,74 @@ const dropdownOptions: Array<{
   icon: string;
   label: string;
 }> = [
-  { value: "book", icon: "📚", label: "Livro ou publicação" },
-  { value: "podcast", icon: "🎙️", label: "Podcast, canal ou episódio" },
-  { value: "movie", icon: "🎬", label: "Filme, série ou documentário" },
-  { value: "nostalgia", icon: "📼", label: "Nostalgia ou memória" },
-  { value: "investigation", icon: "🔎", label: "Investigação ou reportagem" },
-  { value: "highlight", icon: "📰", label: "Destaque ou artigo" },
-  { value: "project", icon: "💡", label: "Projeto ou melhoria" },
+  { value: "book", icon: "📚", label: "Livro / Publicação" },
+  { value: "podcast", icon: "🎙️", label: "Podcast / Áudio" },
+  { value: "movie", icon: "🎬", label: "Filme / Série / Vídeo" },
+  { value: "nostalgia", icon: "📼", label: "Humor / Arquivo" },
+  {
+    value: "investigation",
+    icon: "🔎",
+    label: "Investigação / Documentário",
+  },
+  { value: "highlight", icon: "📰", label: "Destaque / Artigo" },
+  {
+    value: "project",
+    icon: "💡",
+    label: "Ideia / Outro conteúdo",
+  },
 ];
 
-function publicSubmissionError(status: number): string {
-  if (status === 429) {
-    return "Recebemos várias sugestões num curto espaço de tempo. Aguarda um pouco e tenta novamente.";
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === "object" && !Array.isArray(value);
+}
+
+function text(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
+async function responsePayload(
+  response: Response,
+): Promise<Record<string, unknown>> {
+  const payload: unknown = await response.json().catch(() => ({}));
+  return isRecord(payload) ? payload : {};
+}
+
+function payloadError(
+  payload: Record<string, unknown>,
+  fallback: string,
+): string {
+  return text(payload.error) || text(payload.warning) || fallback;
+}
+
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+function publicSubmissionError(error: unknown): string {
+  const original = errorMessage(error);
+  const message = original.toLowerCase();
+  if (message.includes("prazo de relevância") || message.includes("expir")) {
+    return "Este conteúdo já não é suficientemente recente para ser recomendado. Escolhe uma publicação mais atual e tenta novamente.";
   }
-  if (status === 413) {
-    return "A sugestão é demasiado longa. Reduz o texto e tenta novamente.";
+  if (message.includes("já existe") || message.includes("histórico")) {
+    return "Esta sugestão já foi recebida anteriormente. Obrigado pela contribuição.";
+  }
+  if (
+    message.includes("demasiad") ||
+    message.includes("limite") ||
+    message.includes("muitas sugestões")
+  ) {
+    return "Recebemos várias sugestões num curto espaço de tempo. Aguarda um pouco antes de tentares novamente.";
+  }
+  if (
+    message.includes("link indicado") ||
+    message.includes("link fornecido") ||
+    message.includes("apenas pelo título")
+  ) {
+    return original;
+  }
+  if (message.includes("tipo de recomendação")) {
+    return "Seleciona um tipo de conteúdo válido e tenta novamente.";
   }
   return "Não foi possível concluir a submissão neste momento. Confirma os dados e tenta novamente dentro de alguns minutos.";
 }
@@ -53,47 +106,47 @@ export default function SuggestionsPage() {
     dropdownOptions.find((option) => option.value === type) ??
     dropdownOptions[0];
 
-  const handleAddRecommendation = async (event: FormEvent) => {
+  const handleAddRecommendation = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!title.trim()) return;
 
     setIsLoading(true);
-    setFormStatus("A enviar a sugestão para revisão…");
+    setFormStatus("A enviar a sugestão para aprovação…");
     try {
-      const response = await fetch("/api/suggestions", {
+      const appendResponse = await fetch("/api/suggestions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "append",
-          item: { type, title, link },
+          item: {
+            type,
+            title,
+            link,
+          },
         }),
       });
-      const payload: unknown = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        throw new Error(publicSubmissionError(response.status));
+      const appendPayload = await responsePayload(appendResponse);
+      if (!appendResponse.ok) {
+        throw new Error(
+          payloadError(appendPayload, "A sugestão não foi recebida."),
+        );
       }
-
-      const notificationSent =
-        typeof payload === "object" &&
-        payload !== null &&
-        "notificationSent" in payload &&
-        payload.notificationSent === true;
 
       setTitle("");
       setLink("");
+      const storedItem = isRecord(appendPayload.item)
+        ? appendPayload.item
+        : {};
+      const submittedTitle = text(storedItem.title) || title.trim();
+      const notificationSent = appendPayload.notificationSent === true;
       setFormStatus(
         notificationSent
-          ? "A sugestão foi enviada para o canal de aprovação no Discord. Obrigado pela contribuição."
-          : "Recomendação enviada.",
+          ? `“${submittedTitle}” foi enviada para aprovação no Discord. Obrigado pela contribuição.`
+          : `“${submittedTitle}” foi recebida e será entregue no canal de aprovação antes de poder seguir para posts.`,
       );
     } catch (error: unknown) {
       console.error(error);
-      setFormStatus(
-        error instanceof Error
-          ? error.message
-          : publicSubmissionError(500),
-      );
+      setFormStatus(publicSubmissionError(error));
     } finally {
       setIsLoading(false);
     }
@@ -106,27 +159,23 @@ export default function SuggestionsPage() {
 
       <main className={styles.main}>
         <div className={styles.titleSection}>
-          <h1 className={styles.title}>Sugerir conteúdo</h1>
+          <h1 className={styles.title}>Sugerir Conteúdo</h1>
           <p className={styles.subtitle}>
-            Partilha conteúdos, referências ou melhorias para o próprio projeto
-            do Politómetro. A ligação é opcional e a revisão acontece antes de
-            qualquer publicação.
+            Partilha qualquer conteúdo ou ideia: o link é opcional e pode ser
+            de qualquer site público, independentemente da categoria.
           </p>
         </div>
 
         <div className={styles.grid}>
           <div className={`${styles.formCard} glass`}>
-            <h2>Adicionar sugestão</h2>
+            <h2>Adicionar Sugestão</h2>
 
             <form onSubmit={handleAddRecommendation} className={styles.form}>
               <div className={styles.inputGroup}>
                 <label className={styles.inputLabel} id="type-label">
                   Tipo
                 </label>
-                <div
-                  className={styles.customDropdownContainer}
-                  ref={dropdownRef}
-                >
+                <div className={styles.customDropdownContainer} ref={dropdownRef}>
                   <button
                     type="button"
                     className={`${styles.select} ${styles.dropdownToggle}`}
@@ -137,7 +186,7 @@ export default function SuggestionsPage() {
                     aria-expanded={isOpen}
                   >
                     <span className={styles.selectedOption}>
-                      <span className={styles.optionIcon} aria-hidden="true">
+                      <span className={styles.optionIcon}>
                         {selectedOption.icon}
                       </span>
                       {selectedOption.label}
@@ -176,9 +225,7 @@ export default function SuggestionsPage() {
                             setIsOpen(false);
                           }}
                         >
-                          <span className={styles.optionIcon} aria-hidden="true">
-                            {option.icon}
-                          </span>
+                          <span className={styles.optionIcon}>{option.icon}</span>
                           <span>{option.label}</span>
                         </button>
                       ))}
@@ -188,11 +235,8 @@ export default function SuggestionsPage() {
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel} htmlFor="suggestion-title">
-                  Título
-                </label>
+                <label className={styles.inputLabel}>Título</label>
                 <input
-                  id="suggestion-title"
                   type="text"
                   placeholder={
                     type === "project"
@@ -209,11 +253,8 @@ export default function SuggestionsPage() {
               </div>
 
               <div className={styles.inputGroup}>
-                <label className={styles.inputLabel} htmlFor="suggestion-link">
-                  Link / URL (opcional)
-                </label>
+                <label className={styles.inputLabel}>Link / URL (opcional)</label>
                 <input
-                  id="suggestion-link"
                   type="url"
                   placeholder="https://…"
                   className={styles.input}
@@ -221,7 +262,6 @@ export default function SuggestionsPage() {
                   onChange={(event) => setLink(event.target.value)}
                   disabled={isLoading}
                   maxLength={2048}
-                  inputMode="url"
                 />
               </div>
 
@@ -231,7 +271,7 @@ export default function SuggestionsPage() {
                 disabled={isLoading || !title.trim()}
               >
                 {isLoading
-                  ? "A enviar…"
+                  ? "A enviar para aprovação…"
                   : `Submeter sugestão ${selectedOption.icon}`}
               </button>
 

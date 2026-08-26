@@ -1,0 +1,170 @@
+{
+  "total_articles": 246836,
+  "rows": [
+    {
+      "num": 1,
+      "id": "noticias-ao-minuto",
+      "name": "Notícias ao Minuto",
+      "status": "✅ Concluído",
+      "db_count": 1173,
+      "seen_count": 1636,
+      "accepted": 1161,
+      "rejected": 475,
+      "last_run": "2026-08-22 19:47:09"
+    },
+    {
+      "num": 2,
+      "id": "jornal-de-noticias",
+      "name": "Jornal de Notícias",
+      "status": "✅ Concluído",
+      "db_count": 51753,
+      "seen_count": 516011,
+      "accepted": 51764,
+      "rejected": 464247,
+      "last_run": "2026-08-22 19:47:47"
+    },
+    {
+      "num": 3,
+      "id": "cmtv",
+      "name": "CMTV / Correio da Manhã",
+      "status": "✅ Concluído",
+      "db_count": 25618,
+      "seen_count": 190434,
+      "accepted": 25789,
+      "rejected": 164645,
+      "last_run": "2026-08-22 19:49:58"
+    },
+    {
+      "num": 4,
+      "id": "sic-noticias",
+      "name": "SIC Notícias",
+      "status": "✅ Concluído",
+      "db_count": 13246,
+      "seen_count": 154030,
+      "accepted": 13074,
+      "rejected": 140956,
+      "last_run": "2026-08-22 19:50:52"
+    },
+    {
+      "num": 5,
+      "id": "expresso",
+      "name": "Expresso",
+      "status": "✅ Concluído",
+      "db_count": 15217,
+      "seen_count": 115576,
+      "accepted": 15050,
+      "rejected": 100526,
+      "last_run": "2026-08-22 19:52:47"
+    },
+    {
+      "num": 6,
+      "id": "cnn-portugal",
+      "name": "CNN Portugal",
+      "status": "✅ Concluído",
+      "db_count": 486,
+      "seen_count": 22892,
+      "accepted": 482,
+      "rejected": 22410,
+      "last_run": "2026-08-22 19:55:02"
+    },
+    {
+      "num": 7,
+      "id": "rtp-noticias",
+      "name": "RTP Notícias",
+      "status": "⚠️ Parcial",
+      "db_count": 155,
+      "seen_count": 524,
+      "accepted": 146,
+      "rejected": 378,
+      "last_run": "2026-08-22 19:55:56"
+    },
+    {
+      "num": 8,
+      "id": "observador",
+      "name": "Observador",
+      "status": "✅ Concluído",
+      "db_count": 137860,
+      "seen_count": 510905,
+      "accepted": 137852,
+      "rejected": 373053,
+      "last_run": "2026-08-22 19:56:32"
+    },
+    {
+      "num": 9,
+      "id": "eco",
+      "name": "ECO",
+      "status": "⚠️ Parcial",
+      "db_count": 1313,
+      "seen_count": 5473,
+      "accepted": 1311,
+      "rejected": 4162,
+      "last_run": "2026-08-22 20:27:40"
+    },
+    {
+      "num": 10,
+      "id": "jornal-economico",
+      "name": "Jornal Económico",
+      "status": "✅ Concluído",
+      "db_count": 5,
+      "seen_count": 9,
+      "accepted": 5,
+      "rejected": 4,
+      "last_run": "2026-08-22 20:28:20"
+    },
+    {
+      "num": 11,
+      "id": "tsf",
+      "name": "TSF",
+      "status": "⏳ Pendente",
+      "db_count": 10,
+      "seen_count": 17,
+      "accepted": 10,
+      "rejected": 7,
+      "last_run": "--"
+    },
+    {
+      "num": 12,
+      "id": "sabado",
+      "name": "Revista Sábado",
+      "status": "⏳ Pendente",
+      "db_count": 0,
+      "seen_count": 0,
+      "accepted": 0,
+      "rejected": 0,
+      "last_run": "--"
+    },
+    {
+      "num": 13,
+      "id": "sapo-24",
+      "name": "SAPO 24",
+      "status": "⏳ Pendente",
+      "db_count": 0,
+      "seen_count": 0,
+      "accepted": 0,
+      "rejected": 0,
+      "last_run": "--"
+    },
+    {
+      "num": 14,
+      "id": "now-canal",
+      "name": "Now Canal",
+      "status": "⏳ Pendente",
+      "db_count": 0,
+      "seen_count": 0,
+      "accepted": 0,
+      "rejected": 0,
+      "last_run": "--"
+    },
+    {
+      "num": 15,
+      "id": "publico",
+      "name": "Público",
+      "status": "⏳ Pendente",
+      "db_count": 0,
+      "seen_count": 0,
+      "accepted": 0,
+      "rejected": 0,
+      "last_run": "--"
+    }
+  ]
+}

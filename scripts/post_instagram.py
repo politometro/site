@@ -214,6 +214,14 @@ def _receipt_for_current_draft(context, *, require=True):
     return None
 
 
+def _required_receipt(context):
+    """Return the current receipt, raising if the required receipt is absent."""
+    receipt = _receipt_for_current_draft(context)
+    if receipt is None:
+        raise RuntimeError("O recibo pendente não existe.")
+    return receipt
+
+
 def _response_json(response):
     try:
         payload = response.json()
@@ -352,7 +360,7 @@ def prepare_publication(session=None):
 def prepare_story(session=None):
     """Create one Story container for the same approved weekly image."""
     context = _context()
-    receipt = _receipt_for_current_draft(context)
+    receipt = _required_receipt(context)
     if receipt.get("story_post_id"):
         return receipt
     if receipt.get("story_creation_id"):
@@ -383,7 +391,7 @@ def prepare_story(session=None):
 def publish_story(session=None):
     """Publish the persisted Story container once; reruns reuse its id."""
     context = _context()
-    receipt = _receipt_for_current_draft(context)
+    receipt = _required_receipt(context)
     if receipt.get("story_post_id"):
         return receipt
     if not receipt.get("story_creation_id"):
@@ -422,7 +430,7 @@ def publish_story(session=None):
 def mark_publishing():
     """Persist the publish intent before the first media_publish request."""
     context = _context()
-    receipt = _receipt_for_current_draft(context)
+    receipt = _required_receipt(context)
     if _confirmed(receipt):
         print(f"[OK] Publicação já confirmada: {receipt['post_id']}.")
         return receipt
@@ -585,7 +593,7 @@ def _reconcile_with_retries(
 def publish_or_reconcile(session=None):
     """Publish the persisted container, reconciling every ambiguous outcome."""
     context = _context()
-    receipt = _receipt_for_current_draft(context)
+    receipt = _required_receipt(context)
     if _confirmed(receipt):
         print(
             "[OK] Este rascunho já foi publicado no Instagram; "

@@ -3,20 +3,37 @@ import sys
 import time
 import threading
 import asyncio
+from typing import Any, cast
 import gradio as gr
 
-# Try to import spaces (ZeroGPU library), fallback to dummy decorator for local runs
+# Try to import spaces (ZeroGPU library), falling back to a no-op decorator for local runs.
+_spaces_module: Any = None
 try:
-    import spaces
+    import spaces as _spaces_import
 except ImportError:
-    class spaces:
-        @staticmethod
-        def GPU(func):
-            return func
+    pass
+else:
+    _spaces_module = cast(Any, _spaces_import)
 
-# Force unbuffered output so we can see logs in real-time
-sys.stdout.reconfigure(line_buffering=True)
-sys.stderr.reconfigure(line_buffering=True)
+
+class _SpacesFallback:
+    @staticmethod
+    def GPU(func: Any) -> Any:
+        return func
+
+
+spaces: Any = _spaces_module or _SpacesFallback()
+
+# Force line-buffered output so we can see logs in real-time. Some stream
+# implementations (and their type stubs) do not expose ``reconfigure``.
+def _enable_line_buffering(stream: object) -> None:
+    reconfigure = getattr(stream, "reconfigure", None)
+    if callable(reconfigure):
+        reconfigure(line_buffering=True)
+
+
+_enable_line_buffering(sys.stdout)
+_enable_line_buffering(sys.stderr)
 
 # A dummy function with the literal decorator so Hugging Face detects it on startup
 @spaces.GPU

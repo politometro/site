@@ -20,10 +20,6 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 import recommendation_resolver as resolver
-from recommendation_approval import (
-    COMMUNITY_SOURCE_KIND,
-    community_submission_hash,
-)
 
 
 def iso_now() -> str:
@@ -41,43 +37,6 @@ def jpeg_bytes(width: int = 320, height: int = 480) -> bytes:
     output = BytesIO()
     image.save(output, format="JPEG", quality=90)
     return output.getvalue()
-
-
-def approved_community_highlight(*, evergreen: bool = False) -> dict:
-    item = {
-        "id": "web_highlight_memory",
-        "type": "highlight",
-        "title": "A Fragilidade da Memória",
-        "link": "https://author.example.net/p/a-fragilidade-da-memoria",
-        "origin": "website-community",
-        "sourceKind": COMMUNITY_SOURCE_KIND,
-        "createdAt": "2026-08-10T18:39:28.921Z",
-        "status": "approved_pending_enrichment",
-        "notificationStatus": "sent",
-        "discordMessageId": "1536444114831417486",
-    }
-    item["communitySubmission"] = {
-        "id": item["id"],
-        "sourceKind": item["sourceKind"],
-        "type": item["type"],
-        "title": item["title"],
-        "link": item["link"],
-        "createdAt": item["createdAt"],
-    }
-    item["submissionHash"] = community_submission_hash(item)
-    item["discordApproval"] = {
-        "required": True,
-        "status": "approved",
-        "channelId": "1526189969427796049",
-        "messageId": item["discordMessageId"],
-        "sentAt": "2026-08-10T18:40:22+00:00",
-        "payloadHash": item["submissionHash"],
-        "approvedAt": "2026-08-10T18:42:13+00:00",
-        "approvedBy": "948240528632324107",
-    }
-    if evergreen:
-        item["contentLifecycle"] = "evergreen"
-    return item
 
 
 class RecommendationResolverTests(unittest.TestCase):
@@ -315,41 +274,6 @@ class RecommendationResolverTests(unittest.TestCase):
             cached["verification"]["sourceDescription"],
             source_description,
         )
-
-    def test_cached_openlibrary_book_upgrades_short_link_to_title_route(self):
-        item = {
-            "type": "book",
-            "title": "The Origins of Totalitarianism",
-            "authorOrMeta": "Hannah Arendt",
-            "description": (
-                "A obra analisa as origens históricas e políticas do "
-                "totalitarismo no século XX."
-            ),
-            "link": "https://openlibrary.org/works/OL10460640W",
-            "imageUrl": "",
-        }
-        result = self.resolve_with(
-            item,
-            self.entity(
-                title="The Origins of Totalitarianism",
-                author="Hannah Arendt",
-                description=item["description"],
-                url="https://openlibrary.org/works/OL10460640W",
-            ),
-        )
-
-        with patch.object(
-            resolver, "probe_verified_source", return_value=True
-        ):
-            cached = resolver._already_verified(result)
-
-        self.assertIsNotNone(cached)
-        self.assertEqual(
-            cached["link"],
-            "https://openlibrary.org/works/OL10460640W/"
-            "The_Origins_of_Totalitarianism",
-        )
-        self.assertTrue(resolver.validate_cached_cover(cached))
 
     def test_forced_resolution_keeps_discord_approved_cover(self):
         item = {
@@ -752,7 +676,7 @@ class RecommendationResolverTests(unittest.TestCase):
         }
         candidate_important = {
             "type": "podcast",
-            "title": "Conteúdo do Batáguas EP02: Especial Eleições",
+            "title": "Conteúdo do Batáguas EP02 — Especial Eleições",
             "authorOrMeta": "Diogo Bataguas",
             "high_importance": True,
         }
@@ -762,6 +686,20 @@ class RecommendationResolverTests(unittest.TestCase):
         self.assertFalse(
             resolver.is_series_recency_restricted(candidate_important, history)
         )
+
+    def test_same_series_detects_spaced_em_dash_title_separator(self):
+        first = {
+            "type": "podcast",
+            "title": "Programa Sem Nome — Episódio 1",
+            "authorOrMeta": "Autor A",
+        }
+        second = {
+            "type": "podcast",
+            "title": "Programa Sem Nome — Episódio 2",
+            "authorOrMeta": "Autor B",
+        }
+
+        self.assertTrue(resolver.is_same_series(first, second))
 
     def test_investigation_is_exempt_from_series_recency_restriction(self):
         history = [
@@ -887,32 +825,10 @@ class RecommendationResolverTests(unittest.TestCase):
         ):
             result = resolver._validate_book_page(item, item["link"])
 
-        self.assertEqual(
-            result.link,
-            "https://openlibrary.org/works/OL30827457W/1984",
-        )
+        self.assertEqual(result.link, "https://openlibrary.org/works/OL30827457W")
         self.assertEqual(result.external_id, "isbn:9780451524935")
         self.assertEqual(result.source, "openlibrary")
         self.assertIn("search.json", get_json.call_args.args[0])
-
-    def test_openlibrary_work_url_includes_encoded_title_slug(self):
-        self.assertEqual(
-            resolver._openlibrary_work_url(
-                "/works/OL10460640W",
-                "The Origins of Totalitarianism",
-            ),
-            (
-                "https://openlibrary.org/works/OL10460640W/"
-                "The_Origins_of_Totalitarianism"
-            ),
-        )
-        self.assertEqual(
-            resolver._openlibrary_work_url(
-                "/works/OL1W",
-                "Política & Cidadania",
-            ),
-            "https://openlibrary.org/works/OL1W/Pol%C3%ADtica_%26_Cidadania",
-        )
 
     def test_openlibrary_source_probe_uses_work_json_not_html(self):
         item = {
@@ -1165,19 +1081,6 @@ class RecommendationResolverTests(unittest.TestCase):
         )
         self.assertFalse(
             resolver.is_eligible_highlight(
-                title="PSD assinala 50 anos da Festa do Pontal",
-                description=(
-                    "Luís Montenegro falou esta noite aos militantes do PSD "
-                    "na festa que marca a rentrée política social-democrata."
-                ),
-                link=(
-                    "https://www.rtp.pt/noticias/opiniao/autores/"
-                    "psd-assinala-50-anos-da-festa-do-pontal_n789"
-                ),
-            )
-        )
-        self.assertFalse(
-            resolver.is_eligible_highlight(
                 title="Ministério Público abre investigação ao contrato",
                 description="O inquérito foi anunciado esta manhã.",
                 link=(
@@ -1205,52 +1108,11 @@ class RecommendationResolverTests(unittest.TestCase):
         )
         self.assertTrue(
             resolver.is_eligible_highlight(
-                title=(
-                    "Festa do Pontal: PSD apresenta proposta para reduzir impostos"
-                ),
-                description=(
-                    "Análise das medidas, do impacto orçamental e das consequências "
-                    "da proposta."
-                ),
-                link="https://www.publico.pt/opiniao/proposta-fiscal",
+                title="Opinião — O futuro da democracia",
+                description="Reflexão do autor sobre as instituições.",
+                link="https://example.org/artigo",
             )
         )
-
-    def test_highlight_page_rejects_protocol_only_editorial_section(self):
-        item = {
-            "type": "highlight",
-            "title": "PSD assinala 50 anos da Festa do Pontal",
-            "authorOrMeta": "RTP",
-        }
-        metadata = {
-            "finalUrl": (
-                "https://www.rtp.pt/noticias/opiniao/autores/"
-                "psd-assinala-50-anos-da-festa-do-pontal_n789"
-            ),
-            "canonical": (
-                "https://www.rtp.pt/noticias/opiniao/autores/"
-                "psd-assinala-50-anos-da-festa-do-pontal_n789"
-            ),
-            "title": item["title"],
-            "image": "https://cdn.example.org/pontal.jpg",
-            "images": ["https://cdn.example.org/pontal.jpg"],
-            "description": (
-                "Luís Montenegro falou aos militantes do PSD na festa que "
-                "marca a rentrée política social-democrata."
-            ),
-            "publishedAt": iso_now(),
-            "authors": ["RTP"],
-            "isbns": [],
-            "schemaTypes": ["newsarticle"],
-            "meta": {"article:section": "Opinião"},
-        }
-        with patch.object(
-            resolver, "_page_metadata", return_value=metadata
-        ):
-            with self.assertRaisesRegex(
-                resolver.ResolutionError, "NEWS_NOT_ALLOWED"
-            ):
-                resolver._validate_highlight_page(item, metadata["canonical"])
 
     def test_highlight_page_rejects_ordinary_news_after_metadata_check(self):
         item = {
@@ -1278,103 +1140,6 @@ class RecommendationResolverTests(unittest.TestCase):
                 resolver._validate_highlight_page(
                     item, metadata["canonical"]
                 )
-
-    def test_approved_community_article_uses_structured_social_metadata(self):
-        item = approved_community_highlight(evergreen=True)
-        metadata = {
-            "finalUrl": item["link"],
-            "canonical": item["link"],
-            "title": item["title"],
-            "image": "https://cdn.example.net/og.jpg",
-            "images": [
-                "https://cdn.example.net/og.jpg",
-                "https://cdn.example.net/twitter.jpg",
-            ],
-            "description": (
-                "Entre verdades subjetivas e factos esquecidos, a identidade "
-                "humana pode ser uma ficção convincente."
-            ),
-            "publishedAt": iso_days_ago(300),
-            "authors": ["António Abreu"],
-            "isbns": [],
-            "schemaTypes": ["newsarticle"],
-            "meta": {"og:type": "article"},
-        }
-
-        with patch.object(resolver, "_page_metadata", return_value=metadata):
-            entity = resolver._validate_highlight_page(item, item["link"])
-
-        self.assertEqual(entity.image_url, metadata["image"])
-        self.assertEqual(
-            entity.image_candidates,
-            ("https://cdn.example.net/twitter.jpg",),
-        )
-        self.assertEqual(entity.resolved_author, "António Abreu")
-
-    def test_unapproved_untrusted_article_remains_blocked(self):
-        item = approved_community_highlight()
-        item["discordApproval"]["status"] = "pending"
-
-        with self.assertRaisesRegex(
-            resolver.ResolutionError, "DISALLOWED_SOURCE"
-        ):
-            resolver._validate_highlight_page(item, item["link"])
-
-    def test_approved_evergreen_highlight_has_no_artificial_expiry(self):
-        item = approved_community_highlight(evergreen=True)
-        entity = self.entity(
-            media_type="highlight",
-            title=item["title"],
-            author="António Abreu",
-            description=(
-                "Ensaio fundamentado sobre memória, identidade e factos "
-                "esquecidos na vida coletiva."
-            ),
-            published_at=iso_days_ago(300),
-            url=item["link"],
-        )
-
-        resolved = self.resolve_with(item, entity)
-
-        self.assertEqual(resolved["contentLifecycle"], "evergreen")
-        self.assertNotIn("expiryDate", resolved)
-        self.assertTrue(resolved["sourcePublishedAt"])
-
-    def test_cover_download_tries_next_social_image(self):
-        item = approved_community_highlight(evergreen=True)
-        entity = self.entity(
-            media_type="highlight",
-            title=item["title"],
-            author="António Abreu",
-            description=(
-                "Ensaio fundamentado sobre memória, identidade e factos "
-                "esquecidos na vida coletiva."
-            ),
-            published_at=iso_days_ago(300),
-            url=item["link"],
-        )
-        entity = resolver.EntityResolution(
-            **{**entity.__dict__, "image_candidates": ("https://cdn.example.org/fallback.jpg",)}
-        )
-        first_error = resolver.ResolutionError(
-            "HTTP_ERROR", "primeira imagem indisponível", item=item
-        )
-
-        with (
-            patch.object(resolver, "_resolve_entity", return_value=entity),
-            patch.object(resolver, "_assert_safe_url"),
-            patch.object(
-                resolver,
-                "_download_and_normalize_image",
-                side_effect=[first_error, self.cover],
-            ) as download,
-        ):
-            resolved = resolver.resolve_recommendation(item)
-
-        self.assertEqual(download.call_count, 2)
-        self.assertEqual(
-            resolved["verification"]["coverHash"], self.cover.sha256
-        )
 
     def test_svg_unsplash_known_placeholder_and_private_ip_are_blocked(self):
         with self.assertRaisesRegex(

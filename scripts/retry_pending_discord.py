@@ -1,21 +1,14 @@
-"""Retry the durable Discord outbox for community suggestions."""
+"""Retry the durable Discord outbox for website suggestions."""
 
 import datetime
 import ipaddress
 import json
 import os
-import re
 import sys
 import time
 from urllib.parse import urljoin, urlparse
 
 import requests
-
-from recommendation_approval import (
-    community_submission_hash,
-    has_valid_submission_contract,
-    requires_discord_approval,
-)
 
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -57,7 +50,7 @@ def _existing_messages(session, endpoint, headers):
     found = {}
     before = None
     for _ in range(DEDUPLICATION_PAGES):
-        params = {"limit": 100}
+        params: dict[str, int | str] = {"limit": 100}
         if before:
             params["before"] = before
         response = session.get(
@@ -71,32 +64,13 @@ def _existing_messages(session, endpoint, headers):
         if not isinstance(messages, list):
             raise RuntimeError("Discord returned an invalid message list.")
         for message in messages:
-            author = message.get("author") or {}
-            component_ids = {
-                component.get("custom_id")
-                for row in message.get("components") or []
-                for component in row.get("components") or []
-                if isinstance(component, dict)
-            }
-            if author.get("bot") is not True or not {
-                "rec_approve",
-                "rec_reject",
-            }.issubset(component_ids):
-                continue
             embeds = message.get("embeds") or []
             for embed in embeds:
                 footer = (embed.get("footer") or {}).get("text", "")
-                match = re.fullmatch(
-                    r"ID: ([^|]+) \| Hash: ([0-9a-f]{64})",
-                    footer.strip(),
-                )
-                if match:
-                    key = (match.group(1).strip(), match.group(2))
-                    if key not in found:
-                        found[key] = {
-                            "messageId": str(message.get("id") or ""),
-                            "sentAt": str(message.get("timestamp") or ""),
-                        }
+                if footer.startswith("ID: "):
+                    item_id = footer[4:].split("|", 1)[0].strip()
+                    if item_id and item_id not in found:
+                        found[item_id] = str(message.get("id") or "")
         if len(messages) < 100:
             break
         before = str(messages[-1].get("id") or "")
@@ -167,12 +141,16 @@ def _has_safe_optional_link(item):
 
 
 def _is_deliverable_submission(item, now):
-    """Accept only immutable community submissions, verified or unresolved."""
-    if (
-        not requires_discord_approval(item)
-        or not has_valid_submission_contract(item)
-        or item.get("type")
-        not in {
+    """Accept verified items and safe provisional community submissions."""
+    if _strictly_verified(item, now):
+        return True
+    approval = item.get("discordApproval") or {}
+    return bool(
+        item.get("origin") in {"website", "discord", "discord-command", "community"}
+        and approval.get("required") is True
+        and item.get("resolutionStatus") == "unresolved"
+        and item.get("type")
+        in {
             "book",
             "podcast",
             "movie",
@@ -181,16 +159,8 @@ def _is_deliverable_submission(item, now):
             "highlight",
             "project",
         }
-        or len(str(item.get("title") or "").strip()) < 3
-        or not _has_safe_optional_link(item)
-    ):
-        return False
-    if _strictly_verified(item, now):
-        return True
-    verification = item.get("verification") or {}
-    return bool(
-        item.get("resolutionStatus") == "unresolved"
-        and verification.get("status") == "unresolved"
+        and len(str(item.get("title") or "").strip()) >= 3
+        and _has_safe_optional_link(item)
     )
 
 
@@ -314,7 +284,7 @@ def _message_payload(item):
         "footer": {
             "text": (
                 f"ID: {item.get('id', 'sem-id')} | "
-                f"Hash: {community_submission_hash(item)}"
+                "Aprovação obrigatória"
             )
         },
         "timestamp": item.get("createdAt")
@@ -430,7 +400,7 @@ def main():
             _dead_letter(
                 item,
                 now,
-                "Stored suggestion does not satisfy the immutable submission contract.",
+                "Stored suggestion no longer satisfies the safe submission contract.",
                 kind="validation",
             )
             dead_letters.append(str(item.get("id") or "sem-id"))
@@ -449,10 +419,7 @@ def main():
             _atomic_write(database)
             continue
 
-        payload_hash = community_submission_hash(item)
-        receipt = existing.get((str(item.get("id") or ""), payload_hash))
-        message_id = receipt.get("messageId") if receipt else ""
-        sent_at = receipt.get("sentAt") if receipt else ""
+        message_id = existing.get(str(item.get("id") or ""))
         if not message_id:
             response = session.post(
                 endpoint,
@@ -462,7 +429,6 @@ def main():
             )
             if response.ok:
                 message_id = str(response.json().get("id") or "")
-                sent_at = now.isoformat()
             else:
                 attempts = previous_attempts + 1
                 item["notificationAttempts"] = attempts
@@ -483,7 +449,7 @@ def main():
                 continue
 
         if message_id:
-            sent_at = sent_at or now.isoformat()
+            sent_at = now.isoformat()
             item["status"] = "pending_sent"
             item["notificationStatus"] = "sent"
             item["notificationAttempts"] = (
@@ -494,10 +460,9 @@ def main():
             item["discordApproval"] = {
                 "required": True,
                 "status": "pending",
-                "channelId": channel_id,
+                "channelId": str(channel_id),
                 "messageId": message_id,
                 "sentAt": sent_at,
-                "payloadHash": payload_hash,
             }
             item.pop("nextNotificationAttemptAt", None)
             item.pop("lastNotificationError", None)
@@ -515,7 +480,6 @@ def main():
             endpoint,
             headers=headers,
             json={
-                "allowed_mentions": {"parse": []},
                 "content": (
                     "⚠️ A entrega de sugestões ficou bloqueada após validação "
                     "ou tentativas limitadas. IDs: "

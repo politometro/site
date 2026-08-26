@@ -15,17 +15,11 @@ if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
 import retry_pending_discord as outbox
-from recommendation_approval import (
-    COMMUNITY_SOURCE_KIND,
-    community_submission_hash,
-)
 
 
 def verified_book(item_id):
-    item = {
+    return {
         "id": item_id,
-        "origin": "website",
-        "sourceKind": COMMUNITY_SOURCE_KIND,
         "type": "book",
         "category": "Livro",
         "title": f"Livro {item_id}",
@@ -34,7 +28,6 @@ def verified_book(item_id):
         "link": f"https://example.com/{item_id}",
         "imageUrl": f"/covers/{item_id}.jpg",
         "status": "pending_approval",
-        "notificationStatus": "pending",
         "resolutionStatus": "verified",
         "verification": {
             "status": "verified",
@@ -43,42 +36,6 @@ def verified_book(item_id):
             "source": "test",
         },
     }
-    item["communitySubmission"] = {
-        "id": item["id"],
-        "sourceKind": item["sourceKind"],
-        "type": item["type"],
-        "title": item["title"],
-        "link": item["link"],
-        "createdAt": "2026-08-10T09:00:00+00:00",
-    }
-    item["createdAt"] = item["communitySubmission"]["createdAt"]
-    item["submissionHash"] = community_submission_hash(item)
-    item["discordApproval"] = {
-        "required": True,
-        "status": "pending",
-        "payloadHash": item["submissionHash"],
-    }
-    return item
-
-
-def unresolved_linkless_book(item_id="raw"):
-    item = verified_book(item_id)
-    item.update(
-        {
-            "description": "",
-            "link": "",
-            "imageUrl": "",
-            "resolutionStatus": "unresolved",
-            "verification": {
-                "status": "unresolved",
-                "provider": "community-submission",
-            },
-        }
-    )
-    item["communitySubmission"]["link"] = ""
-    item["submissionHash"] = community_submission_hash(item)
-    item["discordApproval"]["payloadHash"] = item["submissionHash"]
-    return item
 
 
 class FakeResponse:
@@ -149,8 +106,14 @@ class DiscordOutboxTests(unittest.TestCase):
                 stored["queue"][0]["discordMessageId"], "discord-first"
             )
             self.assertEqual(
-                stored["queue"][0]["discordApproval"]["payloadHash"],
-                stored["queue"][0]["submissionHash"],
+                stored["queue"][0]["discordApproval"],
+                {
+                    "required": True,
+                    "status": "pending",
+                    "channelId": "channel",
+                    "messageId": "discord-first",
+                    "sentAt": stored["queue"][0]["discordNotifiedAt"],
+                },
             )
             self.assertEqual(
                 stored["queue"][1]["status"], "pending_approval"
@@ -216,8 +179,19 @@ class DiscordOutboxTests(unittest.TestCase):
             datetime.timedelta(seconds=37),
         )
 
-    def test_unresolved_linkless_submission_is_sent_for_approval(self):
-        item = unresolved_linkless_book()
+    def test_unresolved_linkless_submission_is_deliverable_for_review(self):
+        item = {
+            "id": "web_book_linkless",
+            "origin": "website",
+            "type": "book",
+            "title": "Uma sugestão sem link",
+            "link": "",
+            "status": "pending_approval",
+            "resolutionStatus": "unresolved",
+            "verification": {"status": "unresolved"},
+            "discordApproval": {"required": True, "status": "pending"},
+        }
+
         self.assertTrue(
             outbox._is_deliverable_submission(
                 item,
@@ -226,42 +200,7 @@ class DiscordOutboxTests(unittest.TestCase):
         )
         payload = outbox._message_payload(item)
         self.assertEqual(payload["allowed_mentions"], {"parse": []})
-        self.assertIn(item["submissionHash"], payload["embeds"][0]["footer"]["text"])
-        self.assertIn(
-            "ainda não entra",
-            payload["embeds"][0]["fields"][2]["value"],
-        )
-
-    def test_existing_message_requires_bot_buttons_and_matching_hash(self):
-        item = unresolved_linkless_book("dedupe")
-
-        class Session:
-            def get(self, *args, **kwargs):
-                return FakeResponse(
-                    payload=[
-                        {
-                            "id": "forged",
-                            "timestamp": "2026-08-10T09:01:00+00:00",
-                            "author": {"bot": False},
-                            "components": [],
-                            "embeds": [
-                                {
-                                    "footer": {
-                                        "text": (
-                                            f"ID: {item['id']} | Hash: "
-                                            f"{item['submissionHash']}"
-                                        )
-                                    }
-                                }
-                            ],
-                        }
-                    ]
-                )
-
-        self.assertEqual(
-            outbox._existing_messages(Session(), "endpoint", {}),
-            {},
-        )
+        self.assertIn("ainda não entra", payload["embeds"][0]["fields"][2]["value"])
 
 
 if __name__ == "__main__":

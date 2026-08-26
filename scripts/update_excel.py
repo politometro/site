@@ -1,6 +1,7 @@
 import os
 import re
 import openpyxl
+from openpyxl.cell.cell import MergedCell
 
 workspace = "."
 excel_path = os.path.join(workspace, "Polítólogo Português.xlsx")
@@ -13,6 +14,15 @@ if not os.path.exists(excel_path):
 # Load workbook
 wb = openpyxl.load_workbook(excel_path)
 sheet = wb["Folha1"]
+
+
+def _write_cell_value(row, column, value):
+    cell = sheet.cell(row=row, column=column)
+    if isinstance(cell, MergedCell):
+        raise RuntimeError(
+            f"Não é possível escrever numa célula combinada: {cell.coordinate}"
+        )
+    cell.value = value
 
 # Let's inspect rows and columns to find indices
 # Row indices are 1-based in openpyxl
@@ -92,7 +102,7 @@ for row in range(2, max_row + 1):
     if val:
         try:
             # cell value could be float like 2025.0
-            yr = int(float(val))
+            yr = int(float(str(val)))
             year_rows[yr] = row
         except:
             pass
@@ -222,7 +232,7 @@ if extras_row:
     for col_name, value in extras_mappings.items():
         col_idx = headers.get(col_name)
         if col_idx:
-            sheet.cell(row=extras_row, column=col_idx).value = value
+            _write_cell_value(extras_row, col_idx, value)
 
 
 # Scan and map files
@@ -268,7 +278,7 @@ for root, dirs, files in os.walk(data_dir):
                 
                 col_idx = headers.get(col_name)
                 if col_idx:
-                    sheet.cell(row=r_idx, column=col_idx).value = "Sim"
+                    _write_cell_value(r_idx, col_idx, "Sim")
                     mapped_count += 1
                 else:
                     unmapped_files.append((rel_path, "Budget column not found"))
@@ -281,7 +291,7 @@ for root, dirs, files in os.walk(data_dir):
             r_idx = find_party_row(file)
             col_idx = headers.get("Declaração de Princípios")
             if r_idx and col_idx:
-                sheet.cell(row=r_idx, column=col_idx).value = "Sim"
+                _write_cell_value(r_idx, col_idx, "Sim")
                 mapped_count += 1
             else:
                 unmapped_files.append((rel_path, "Party or principles column not found"))
@@ -302,7 +312,7 @@ for root, dirs, files in os.walk(data_dir):
                 col_name = f"Legislativas - {year}"
                 col_idx = headers.get(col_name)
                 if col_idx:
-                    sheet.cell(row=r_idx, column=col_idx).value = "Sim"
+                    _write_cell_value(r_idx, col_idx, "Sim")
                     mapped_count += 1
                 else:
                     unmapped_files.append((rel_path, f"Column {col_name} not found"))
@@ -335,7 +345,7 @@ for root, dirs, files in os.walk(data_dir):
                 for r_idx in parties_to_map:
                     if r_idx:
                         # Write "Sim" or the filename if we want. Let's write "Sim"
-                        sheet.cell(row=r_idx, column=col_idx).value = "Sim"
+                        _write_cell_value(r_idx, col_idx, "Sim")
                         mapped_count += 1
             else:
                 unmapped_files.append((rel_path, f"Column '{col_name}' or Party not found"))

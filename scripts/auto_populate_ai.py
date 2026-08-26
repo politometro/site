@@ -22,6 +22,7 @@ import xml.etree.ElementTree as ET
 from difflib import SequenceMatcher
 from email.utils import parsedate_to_datetime
 from statistics import median
+from typing import Any
 from urllib.parse import urlparse
 
 import requests
@@ -34,7 +35,6 @@ WATCHLIST_FILE = os.path.join(ROOT_DIR, "website", "public", "watchlist.json")
 sys.path.insert(0, SCRIPT_DIR)
 from recommendation_resolver import (
     ResolutionError,
-    is_community_evergreen_highlight,
     is_eligible_highlight,
     is_series_recency_restricted,
     resolve_recommendation,
@@ -894,7 +894,7 @@ def _new_id(prefix, identity):
     return f"{prefix}_{digest}"
 
 
-def _load_database():
+def _load_database() -> dict[str, Any]:
     if not os.path.exists(REC_FILE):
         return {"queue": [], "history": []}
     with open(REC_FILE, "r", encoding="utf-8") as handle:
@@ -906,7 +906,7 @@ def _load_database():
     return parsed
 
 
-def _write_database(data):
+def _write_database(data: dict[str, Any]) -> None:
     tmp_path = REC_FILE + ".tmp"
     with open(tmp_path, "w", encoding="utf-8") as handle:
         json.dump(data, handle, indent=2, ensure_ascii=False)
@@ -1440,6 +1440,9 @@ def discover_rss_highlight_candidates(seen_links, limit):
         "saúde",
         "habitação",
         "união europeia",
+        "juros",
+        "taxas de juro",
+        "euribor",
     )
     for feed_url in DEFAULT_HIGHLIGHT_RSS_FEEDS:
         try:
@@ -1730,10 +1733,7 @@ def _is_publishable_record(item):
     verification = item.get("verification")
     if not isinstance(verification, dict):
         return False
-    time_sensitive = bool(
-        item.get("type") in {"podcast", "highlight"}
-        and not is_community_evergreen_highlight(item)
-    )
+    time_sensitive = item.get("type") in {"podcast", "highlight"}
     source_published = _parse_datetime(item.get("sourcePublishedAt"))
     expiry = _parse_datetime(item.get("expiryDate"))
     temporal_contract = (
@@ -1750,8 +1750,7 @@ def _is_publishable_record(item):
     )
     discovery = item.get("_discovery")
     editorial_contract = (
-        is_community_evergreen_highlight(item)
-        or is_eligible_highlight(
+        is_eligible_highlight(
             title=item.get("title"),
             description=item.get("description"),
             link=item.get("link"),
@@ -1979,9 +1978,7 @@ def _trim_time_sensitive_pool(
     eligible = [
         item
         for item in queue
-        if item.get("type") == media_type
-        and _is_publishable_record(item)
-        and not is_community_evergreen_highlight(item)
+        if item.get("type") == media_type and _is_publishable_record(item)
     ]
     if len(eligible) <= limit:
         return False
@@ -2051,7 +2048,7 @@ def _refresh_verified_queue(queue):
 
 
 def _enforce_community_approval_gate(queue):
-    """Move queued community items back behind the Discord approval gate."""
+    """Move accidentally queued community items back behind the Discord gate."""
     changed = False
     for item in queue:
         if item.get("status") != "queue":
@@ -2060,32 +2057,17 @@ def _enforce_community_approval_gate(queue):
         if not pending:
             continue
         item.update(pending)
-        if pending["notificationStatus"] == "pending_retry":
-            item.setdefault("nextNotificationAttemptAt", _utc_now())
+        item.setdefault("nextNotificationAttemptAt", _utc_now())
         changed = True
-        print(f"  [APPROVAL REQUIRED] {item.get('title', '<sem titulo>')}")
+        print(
+            f"  [APPROVAL REQUIRED] {item.get('title', '<sem título>')}"
+        )
     return changed
 
 
 def _enrich_approved_suggestions(queue):
-    """Resolve approved raw suggestions without dropping their approval proof."""
+    """Promote approved raw suggestions only after source verification succeeds."""
     changed = False
-    protected_fields = (
-        "id",
-        "origin",
-        "sourceKind",
-        "createdAt",
-        "communitySubmission",
-        "submissionHash",
-        "notificationStatus",
-        "notificationAttempts",
-        "discordMessageId",
-        "discordNotifiedAt",
-        "discordApproval",
-        "approvedAt",
-        "approvedBy",
-        "approvalMode",
-    )
     for item in queue:
         if item.get("status") != "approved_pending_enrichment":
             continue
@@ -2095,31 +2077,11 @@ def _enrich_approved_suggestions(queue):
             or item.get("type") not in ALLOWED_TYPES
         ):
             continue
-        preserved = {
-            field: item.get(field)
-            for field in protected_fields
-            if field in item
-        }
         try:
-            candidate = dict(item)
-            if requires_discord_approval(item):
-                # The submitted title is only a search hint. Once approved,
-                # show the title verified by the resolved source instead of
-                # preserving an arbitrary community label.
-                candidate.pop("editorialTitle", None)
-            resolved = resolve_recommendation(candidate, force=True)
-            if requires_discord_approval(item):
-                verification = resolved.get("verification") or {}
-                canonical_title = str(
-                    verification.get("resolvedTitle") or ""
-                ).strip()
-                if canonical_title:
-                    resolved["title"] = canonical_title
-                resolved.pop("editorialTitle", None)
-            resolved.update(preserved)
+            resolved = resolve_recommendation(dict(item), force=True)
             resolved["status"] = "queue"
             if not _is_publishable_record(resolved):
-                raise ValueError("incomplete verification contract")
+                raise ValueError("contrato de verificação incompleto")
             item.clear()
             item.update(resolved)
             item.pop("validationError", None)

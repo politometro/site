@@ -2,6 +2,7 @@ import os
 import json
 import sys
 import time
+from typing import Any, cast
 
 # We check if pinecone client is installed, and if not, we guide the user to install it
 try:
@@ -64,7 +65,7 @@ def load_local_embedder():
         sys.path.insert(0, project_venv_site_packages)
 
     try:
-        from sentence_transformers import SentenceTransformer
+        from sentence_transformers import SentenceTransformer  # pyright: ignore[reportMissingImports]
     except ImportError:
         print("Error: Pinecone embedding quota was exhausted and local embeddings are not available.")
         print("Install them with: pip install sentence-transformers")
@@ -200,7 +201,13 @@ for i in range(0, len(chunks), batch_size):
                 vector_id = item["id"]
                 raw_embedding = res[idx].values if hasattr(res[idx], "values") else res[idx]
                 # Convert numpy float32 to native Python float for JSON serialization
-                embedding = raw_embedding.tolist() if hasattr(raw_embedding, "tolist") else list(raw_embedding)
+                embedding_api = cast(Any, raw_embedding)
+                tolist = cast(Any, getattr(embedding_api, "tolist", None))
+                if callable(tolist):
+                    values = cast(list[Any], tolist())
+                else:
+                    values = list(cast(Any, embedding_api))
+                embedding = [float(value) for value in values]
                 
                 metadata = {
                     "text": item["text"],

@@ -1,7 +1,6 @@
 import os
 import json
 import datetime
-import ipaddress
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -13,17 +12,11 @@ import asyncio
 import base64
 import threading
 import time
-import unicodedata
-import uuid
+from typing import Any, cast
 from dotenv import load_dotenv
 from publication_schedule import (
     PUBLICATION_TIMEZONE_NAME,
     scheduled_for_draft,
-)
-from recommendation_approval import (
-    community_submission_hash,
-    has_valid_discord_delivery,
-    requires_discord_approval,
 )
 
 # Load environment variables if available
@@ -54,30 +47,21 @@ APPROVER_USER_IDS = _configured_ids("DISCORD_APPROVER_USER_IDS")
 APPROVER_ROLE_IDS = _configured_ids("DISCORD_APPROVER_ROLE_IDS")
 
 
-def _reviewer_authorization(user):
-    """Return the authorization source for a reviewer, if any."""
+def _is_authorized_reviewer(user):
+    """Allow configured reviewers or server managers; deny anonymous DMs."""
     if str(getattr(user, "id", "")) in APPROVER_USER_IDS:
-        return {"kind": "configured_user"}
+        return True
     roles = getattr(user, "roles", []) or []
-    for role in roles:
-        role_id = str(getattr(role, "id", ""))
-        if role_id in APPROVER_ROLE_IDS:
-            return {"kind": "configured_role", "roleId": role_id}
+    if any(str(getattr(role, "id", "")) in APPROVER_ROLE_IDS for role in roles):
+        return True
     permissions = getattr(user, "guild_permissions", None)
-    if bool(
+    return bool(
         permissions
         and (
             getattr(permissions, "administrator", False)
             or getattr(permissions, "manage_guild", False)
         )
-    ):
-        return {"kind": "server_manager"}
-    return None
-
-
-def _is_authorized_reviewer(user):
-    """Allow configured reviewers or server managers; deny anonymous DMs."""
-    return _reviewer_authorization(user) is not None
+    )
 
 
 def _is_expired_recommendation(item):
@@ -245,7 +229,7 @@ def update_github_file(file_path, content_bytes, commit_message, sha=None):
     except Exception as e:
         return str(e)
 
-def trigger_github_workflow(workflow_name, inputs=None):
+def trigger_github_workflow(workflow_name):
     """Triggers a GitHub Actions workflow dispatch"""
     if not GITHUB_REPO or not GITHUB_TOKEN:
         return "Erro: GITHUB_REPO ou GITHUB_TOKEN não configurados nos Secrets do Hugging Face."
@@ -255,14 +239,9 @@ def trigger_github_workflow(workflow_name, inputs=None):
         "Authorization": f"token {GITHUB_TOKEN}",
         "Accept": "application/vnd.github.v3+json"
     }
-    payload = {"ref": "main"}
-    normalized_inputs = {
-        str(key): str(value)
-        for key, value in (inputs or {}).items()
-        if str(key).strip() and value is not None
+    payload = {
+        "ref": "main"
     }
-    if normalized_inputs:
-        payload["inputs"] = normalized_inputs
     try:
         r = requests.post(url, json=payload, headers=headers, timeout=15)
         if r.status_code == 204:
@@ -270,19 +249,6 @@ def trigger_github_workflow(workflow_name, inputs=None):
         return f"Status {r.status_code} - {r.text}"
     except Exception as e:
         return str(e)
-
-
-def trigger_review_regeneration(
-    workflow_name="instagram_generate.yml",
-    inputs=None,
-):
-    """Start an intentional replacement with a retry-stable review identity."""
-    workflow_inputs = dict(inputs or {})
-    workflow_inputs["review_request_id"] = uuid.uuid4().hex
-    return trigger_github_workflow(
-        workflow_name,
-        inputs=workflow_inputs,
-    )
 
 # ===================== CHATBOT Q&A API =====================
 def query_politometro_chat(query, user_id="unknown"):
@@ -453,41 +419,13 @@ def search_duckduckgo_link(query):
         print(f"Error searching DDG: {e}")
     return None
 
-def _review_draft_identity_error(
-    draft_data,
-    expected_draft_id="",
-    expected_hash_prefix="",
-):
-    """Reject corrections made from a card that is no longer current."""
-    if expected_draft_id and draft_data.get("draft_id") != expected_draft_id:
-        return "Este cartão já não corresponde ao rascunho atual."
-    content_hash = str(draft_data.get("content_hash") or "")
-    if expected_hash_prefix and not content_hash.startswith(expected_hash_prefix):
-        return "Este cartão já não corresponde ao rascunho atual."
-    return None
-
-
-async def update_recommendation_field(
-    original_msg_id,
-    quadrant,
-    field_name,
-    new_value,
-    expected_draft_id="",
-    expected_hash_prefix="",
-):
+async def update_recommendation_field(original_msg_id, quadrant, field_name, new_value):
     """Helper to update a recommendation field in both draft and main DB, and trigger regeneration."""
     draft_content, draft_sha = get_github_file("scripts/review_draft.json")
     if not draft_content:
         return f"Erro ao obter review_draft.json: {draft_sha}"
         
     draft_data = json.loads(draft_content.decode("utf-8"))
-    identity_error = _review_draft_identity_error(
-        draft_data,
-        expected_draft_id,
-        expected_hash_prefix,
-    )
-    if identity_error:
-        return identity_error
     item = draft_data.get(quadrant)
     if not item:
         return f"Quadrante {quadrant} não encontrado no rascunho."
@@ -510,9 +448,6 @@ async def update_recommendation_field(
                 break
         if updated:
             break
-
-    if not updated:
-        return f"Recomendação {item_id} não encontrada na base de dados."
             
     new_rec_bytes = json.dumps(rec_data, indent=2, ensure_ascii=False).encode("utf-8")
     res_db = update_github_file("website/public/recommendations.json", new_rec_bytes, f"Update {field_name} of {item_id} [bot]", sha=rec_sha)
@@ -524,59 +459,10 @@ async def update_recommendation_field(
     if res_draft is not True:
         return f"Erro ao salvar review_draft.json: {res_draft}"
         
-    res_wf = trigger_review_regeneration()
+    res_wf = trigger_github_workflow("instagram_generate.yml")
     if res_wf is not True:
         return f"Erro ao acionar workflow: {res_wf}"
-
-    await mark_review_superseded(
-        original_msg_id,
-        "❌ Proposta substituída após correção. A gerar uma nova proposta...",
-    )
-    return True
-
-
-async def replace_review_caption(
-    original_msg_id,
-    caption,
-    expected_draft_id="",
-    expected_hash_prefix="",
-):
-    """Regenerate the exact draft with reviewer-authored caption text."""
-    normalized_caption = str(caption or "").replace("\r\n", "\n").replace(
-        "\r", "\n"
-    ).strip()
-    if not normalized_caption:
-        return "A legenda não pode ficar vazia."
-    if len(normalized_caption) > 2200:
-        return "A legenda excede o limite de 2200 caracteres do Instagram."
-
-    draft_content, draft_sha = get_github_file("scripts/review_draft.json")
-    if not draft_content:
-        return f"Erro ao obter review_draft.json: {draft_sha}"
-    try:
-        draft_data = json.loads(draft_content.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        return f"Rascunho inválido: {exc}"
-    identity_error = _review_draft_identity_error(
-        draft_data,
-        expected_draft_id,
-        expected_hash_prefix,
-    )
-    if identity_error:
-        return identity_error
-
-    encoded_caption = base64.b64encode(
-        normalized_caption.encode("utf-8")
-    ).decode("ascii")
-    workflow = trigger_review_regeneration(
-        inputs={"caption_override_b64": encoded_caption}
-    )
-    if workflow is not True:
-        return f"Erro ao acionar workflow: {workflow}"
-    await mark_review_superseded(
-        original_msg_id,
-        "❌ Proposta substituída após correção da legenda. A gerar uma nova proposta...",
-    )
+        
     return True
 
 
@@ -619,13 +505,7 @@ def _review_cover_name(current_name, cover_bytes):
     return f"{stem}_review_{digest}.jpg"
 
 
-async def replace_review_cover(
-    original_msg_id,
-    quadrant,
-    raw_image_bytes,
-    expected_draft_id="",
-    expected_hash_prefix="",
-):
+async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
     """Persist a corrected cover, manifest and hashes before regeneration."""
     from io import BytesIO
     from PIL import Image, ImageOps, UnidentifiedImageError
@@ -644,13 +524,6 @@ async def replace_review_cover(
     if not draft_content:
         return f"Erro ao obter review_draft.json: {draft_sha}"
     draft_data = json.loads(draft_content.decode("utf-8"))
-    identity_error = _review_draft_identity_error(
-        draft_data,
-        expected_draft_id,
-        expected_hash_prefix,
-    )
-    if identity_error:
-        return identity_error
     draft_item = draft_data.get(quadrant)
     if not isinstance(draft_item, dict):
         return f"Quadrante {quadrant} não encontrado no rascunho."
@@ -706,7 +579,6 @@ async def replace_review_cover(
             json.dumps(manifest, indent=2, ensure_ascii=False).encode("utf-8"),
             "Bind reviewed cover manifest [bot]",
             None,
-            None,
         ),
         (
             "website/public/recommendations.json",
@@ -726,14 +598,17 @@ async def replace_review_cover(
         if result is not True:
             return f"Erro ao guardar {path}: {result}"
 
-    workflow = trigger_review_regeneration()
+    workflow = trigger_github_workflow("instagram_generate.yml")
     return True if workflow is True else f"Erro ao acionar workflow: {workflow}"
 
 
 async def mark_review_superseded(original_msg_id, text):
     """Disable the old proposal so Discord does not treat it as actionable."""
     try:
-        channel = bot.get_channel(CHANNEL_ID) or await bot.fetch_channel(CHANNEL_ID)
+        channel = cast(
+            discord.TextChannel,
+            bot.get_channel(CHANNEL_ID) or await bot.fetch_channel(CHANNEL_ID),
+        )
         old_message = await channel.fetch_message(int(original_msg_id))
         await old_message.edit(content=text, embed=None, view=None)
     except (discord.HTTPException, discord.NotFound, discord.Forbidden, ValueError):
@@ -785,8 +660,9 @@ class ReviewFeedbackModal(discord.ui.Modal, title="Descrever a correção"):
             ),
             ephemeral=True,
         )
-        if interaction.channel:
-            await interaction.channel.send(
+        if interaction.channel is not None:
+            channel = cast(discord.abc.Messageable, interaction.channel)
+            await channel.send(
                 (
                     f"📝 **Correção solicitada por "
                     f"{interaction.user.mention}:**\n"
@@ -825,6 +701,13 @@ class RejectionReasonSelect(discord.ui.Select):
         global waiting_for_text, waiting_for_image_quadrant
         reasons = self.values
         channel = interaction.channel
+        if channel is None:
+            await interaction.response.send_message(
+                "Não foi possível identificar o canal desta interação.",
+                ephemeral=True,
+            )
+            return
+        channel = cast(discord.TextChannel, channel)
 
         if "custom_feedback" in reasons:
             if len(reasons) > 1:
@@ -855,16 +738,6 @@ class RejectionReasonSelect(discord.ui.Select):
                     continue
                 
                 draft_data = json.loads(draft_content.decode("utf-8"))
-                identity_error = _review_draft_identity_error(
-                    draft_data,
-                    self.expected_draft_id,
-                    self.expected_hash_prefix,
-                )
-                if identity_error:
-                    await interaction.followup.send(
-                        f"❌ {identity_error}", ephemeral=True
-                    )
-                    continue
                 quadrants = {k: v for k, v in draft_data.items() if k in ["q1", "q2", "q3", "q4"]}
                 for qkey, item in quadrants.items():
                     if isinstance(item, dict):
@@ -878,7 +751,7 @@ class RejectionReasonSelect(discord.ui.Select):
                     await interaction.followup.send(f"❌ Erro ao atualizar layout no GitHub: {res_draft}", ephemeral=True)
                     continue
 
-                res_wf = trigger_review_regeneration()
+                res_wf = trigger_github_workflow("instagram_generate.yml")
                 if res_wf is True:
                     try:
                         old_msg = await channel.fetch_message(self.original_msg_id)
@@ -890,13 +763,7 @@ class RejectionReasonSelect(discord.ui.Select):
 
             elif reason == "wrong_covers":
                 quadrant_view = discord.ui.View()
-                quadrant_view.add_item(
-                    QuadrantSelect(
-                        self.original_msg_id,
-                        self.expected_draft_id,
-                        self.expected_hash_prefix,
-                    )
-                )
+                quadrant_view.add_item(QuadrantSelect(self.original_msg_id))
                 await interaction.followup.send(
                     "📚 Qual é o quadrante da capa incorreta?",
                     view=quadrant_view,
@@ -904,14 +771,9 @@ class RejectionReasonSelect(discord.ui.Select):
                 )
 
             elif reason == "typo_text":
-                waiting_for_text = {
-                    "original_msg_id": self.original_msg_id,
-                    "expected_draft_id": self.expected_draft_id,
-                    "expected_hash_prefix": self.expected_hash_prefix,
-                    "requester_id": str(interaction.user.id),
-                }
+                waiting_for_text = True
                 await interaction.followup.send(
-                    "✍️ Envia agora o **texto completo da legenda corrigida**.",
+                    "✍️ Por favor, **responda a esta mensagem enviando o texto da legenda corrigido**.", 
                     ephemeral=True
                 )
 
@@ -927,13 +789,7 @@ class RejectionReasonSelect(discord.ui.Select):
 
             elif reason == "bad_links":
                 link_quad_view = discord.ui.View()
-                link_quad_view.add_item(
-                    LinkQuadrantSelect(
-                        self.original_msg_id,
-                        self.expected_draft_id,
-                        self.expected_hash_prefix,
-                    )
-                )
+                link_quad_view.add_item(LinkQuadrantSelect(self.original_msg_id))
                 await interaction.followup.send(
                     "🔗 Qual é o quadrante do link incorreto?",
                     view=link_quad_view,
@@ -952,7 +808,9 @@ class RejectionReasonSelect(discord.ui.Select):
                             f"❌ {rejected}", ephemeral=True
                         )
                         continue
-                    res_wf = trigger_review_regeneration()
+                    res_wf = trigger_github_workflow(
+                        "instagram_generate.yml"
+                    )
                     if res_wf is True:
                         try:
                             old_msg = await channel.fetch_message(
@@ -1017,7 +875,7 @@ class RejectionReasonSelect(discord.ui.Select):
                     await interaction.followup.send(f"❌ Erro ao atualizar recommendations.json: {res_db}", ephemeral=True)
                     continue
 
-                res_wf = trigger_review_regeneration()
+                res_wf = trigger_github_workflow("instagram_generate.yml")
                 if res_wf is True:
                     try:
                         old_msg = await channel.fetch_message(self.original_msg_id)
@@ -1045,12 +903,7 @@ class RejectionReasonView(discord.ui.View):
         )
 
 class LinkQuadrantSelect(discord.ui.Select):
-    def __init__(
-        self,
-        original_msg_id,
-        expected_draft_id="",
-        expected_hash_prefix="",
-    ):
+    def __init__(self, original_msg_id):
         options = [
             discord.SelectOption(label="Quadrante 1 (Superior Esquerdo)", value="q1"),
             discord.SelectOption(label="Quadrante 2 (Superior Direito)", value="q2"),
@@ -1059,17 +912,10 @@ class LinkQuadrantSelect(discord.ui.Select):
         ]
         super().__init__(placeholder="Selecione o quadrante do link incorreto...", options=options)
         self.original_msg_id = original_msg_id
-        self.expected_draft_id = expected_draft_id
-        self.expected_hash_prefix = expected_hash_prefix
 
     async def callback(self, interaction: discord.Interaction):
         quad = self.values[0]
-        view = LinkCorrectionView(
-            self.original_msg_id,
-            quad,
-            self.expected_draft_id,
-            self.expected_hash_prefix,
-        )
+        view = LinkCorrectionView(self.original_msg_id, quad)
         await interaction.response.send_message(
             f"🔗 Como pretendes corrigir o link do quadrante **{quad}**?",
             view=view,
@@ -1077,18 +923,10 @@ class LinkQuadrantSelect(discord.ui.Select):
         )
 
 class LinkCorrectionView(discord.ui.View):
-    def __init__(
-        self,
-        original_msg_id,
-        quadrant,
-        expected_draft_id="",
-        expected_hash_prefix="",
-    ):
+    def __init__(self, original_msg_id, quadrant):
         super().__init__(timeout=120)
         self.original_msg_id = original_msg_id
         self.quadrant = quadrant
-        self.expected_draft_id = expected_draft_id
-        self.expected_hash_prefix = expected_hash_prefix
 
     @discord.ui.button(label="🔍 Pesquisa Automática", style=discord.ButtonStyle.success, custom_id="link_auto_search_item")
     async def auto_search_item(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -1123,14 +961,7 @@ class LinkCorrectionView(discord.ui.View):
             return
             
         await interaction.followup.send(f"✅ Link encontrado: <{found_url}>\nA atualizar no GitHub...", ephemeral=True)
-        res = await update_recommendation_field(
-            self.original_msg_id,
-            self.quadrant,
-            "link",
-            found_url,
-            self.expected_draft_id,
-            self.expected_hash_prefix,
-        )
+        res = await update_recommendation_field(self.original_msg_id, self.quadrant, "link", found_url)
         if res is True:
             await interaction.followup.send(f"🔗 Link do quadrante **{self.quadrant}** atualizado! A regerar proposta...", ephemeral=True)
         else:
@@ -1141,9 +972,7 @@ class LinkCorrectionView(discord.ui.View):
         global waiting_for_link_query
         waiting_for_link_query = {
             "quadrant": self.quadrant,
-            "original_msg_id": self.original_msg_id,
-            "expected_draft_id": self.expected_draft_id,
-            "expected_hash_prefix": self.expected_hash_prefix,
+            "original_msg_id": self.original_msg_id
         }
         await interaction.response.send_message(
             "✍️ Escreve o **termo de pesquisa** para eu tentar encontrar o link correto no DuckDuckGo.",
@@ -1155,9 +984,7 @@ class LinkCorrectionView(discord.ui.View):
         global waiting_for_link_manual
         waiting_for_link_manual = {
             "quadrant": self.quadrant,
-            "original_msg_id": self.original_msg_id,
-            "expected_draft_id": self.expected_draft_id,
-            "expected_hash_prefix": self.expected_hash_prefix,
+            "original_msg_id": self.original_msg_id
         }
         await interaction.response.send_message(
             "✍️ Envia o **link direto** (começando com `http` ou `https`) que queres associar.",
@@ -1165,12 +992,7 @@ class LinkCorrectionView(discord.ui.View):
         )
 
 class QuadrantSelect(discord.ui.Select):
-    def __init__(
-        self,
-        original_msg_id,
-        expected_draft_id="",
-        expected_hash_prefix="",
-    ):
+    def __init__(self, original_msg_id):
         options = [
             discord.SelectOption(label="Quadrante 1 (Superior Esquerdo)", value="q1"),
             discord.SelectOption(label="Quadrante 2 (Superior Direito)", value="q2"),
@@ -1179,17 +1001,10 @@ class QuadrantSelect(discord.ui.Select):
         ]
         super().__init__(placeholder="Selecione o quadrante da capa incorreta...", options=options)
         self.original_msg_id = original_msg_id
-        self.expected_draft_id = expected_draft_id
-        self.expected_hash_prefix = expected_hash_prefix
 
     async def callback(self, interaction: discord.Interaction):
         quad = self.values[0]
-        view = CoverCorrectionView(
-            self.original_msg_id,
-            quad,
-            self.expected_draft_id,
-            self.expected_hash_prefix,
-        )
+        view = CoverCorrectionView(self.original_msg_id, quad)
         await interaction.response.send_message(
             f"📚 Como pretendes corrigir a capa do quadrante **{quad}**?",
             view=view,
@@ -1197,18 +1012,10 @@ class QuadrantSelect(discord.ui.Select):
         )
 
 class CoverCorrectionView(discord.ui.View):
-    def __init__(
-        self,
-        original_msg_id,
-        quadrant,
-        expected_draft_id="",
-        expected_hash_prefix="",
-    ):
+    def __init__(self, original_msg_id, quadrant):
         super().__init__(timeout=120)
         self.original_msg_id = original_msg_id
         self.quadrant = quadrant
-        self.expected_draft_id = expected_draft_id
-        self.expected_hash_prefix = expected_hash_prefix
 
     @discord.ui.button(label="🔍 Pesquisa Automática", style=discord.ButtonStyle.success, custom_id="cover_auto_search_item")
     async def auto_search_item(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -1256,11 +1063,7 @@ class CoverCorrectionView(discord.ui.View):
             image_bytes = bio.getvalue()
             
             result = await replace_review_cover(
-                self.original_msg_id,
-                self.quadrant,
-                image_bytes,
-                self.expected_draft_id,
-                self.expected_hash_prefix,
+                self.original_msg_id, self.quadrant, image_bytes
             )
             if result is True:
                 await mark_review_superseded(
@@ -1278,9 +1081,7 @@ class CoverCorrectionView(discord.ui.View):
         global waiting_for_cover_query
         waiting_for_cover_query = {
             "quadrant": self.quadrant,
-            "original_msg_id": self.original_msg_id,
-            "expected_draft_id": self.expected_draft_id,
-            "expected_hash_prefix": self.expected_hash_prefix,
+            "original_msg_id": self.original_msg_id
         }
         await interaction.response.send_message(
             f"🔍 Escreve o **termo de pesquisa** para eu tentar encontrar a capa do quadrante **{self.quadrant}** automaticamente.",
@@ -1292,9 +1093,7 @@ class CoverCorrectionView(discord.ui.View):
         global waiting_for_image_quadrant
         waiting_for_image_quadrant = {
             "quadrant": self.quadrant,
-            "original_msg_id": self.original_msg_id,
-            "expected_draft_id": self.expected_draft_id,
-            "expected_hash_prefix": self.expected_hash_prefix,
+            "original_msg_id": self.original_msg_id
         }
         await interaction.response.send_message(
             f"📥 Envia a nova imagem de capa em anexo para substituir a capa do quadrante **{self.quadrant}**.",
@@ -1487,7 +1286,15 @@ class PostReviewView(discord.ui.View):
             )
             return
 
-        draft_id, hash_prefix = _review_identity_from_message(interaction.message)
+        message = interaction.message
+        if message is None:
+            await interaction.followup.send(
+                "Não foi possível localizar a mensagem desta interação.",
+                ephemeral=True,
+            )
+            return
+
+        draft_id, hash_prefix = _review_identity_from_message(message)
         if not draft_id or not hash_prefix:
             await interaction.followup.send(
                 "Este cartão é antigo e não contém a identidade segura do rascunho. "
@@ -1503,7 +1310,7 @@ class PostReviewView(discord.ui.View):
             await interaction.followup.send(f"❌ {approval}", ephemeral=True)
             return
 
-        await interaction.message.edit(
+        await message.edit(
             content=(
                 f"@everyone ✅ Post **Aprovado** por {interaction.user.mention}! "
                 "Publicação agendada para domingo às 10:00 "
@@ -1525,8 +1332,15 @@ class PostReviewView(discord.ui.View):
                 ephemeral=True,
             )
             return
+        message = interaction.message
+        if message is None:
+            await interaction.response.send_message(
+                "Não foi possível localizar a mensagem desta interação.",
+                ephemeral=True,
+            )
+            return
         draft_id, hash_prefix = _review_identity_from_message(
-            interaction.message
+            message
         )
         if not draft_id or not hash_prefix:
             await interaction.response.send_message(
@@ -1537,7 +1351,7 @@ class PostReviewView(discord.ui.View):
         await interaction.response.send_message(
             "Indica o que deve ser corrigido nesta proposta:",
             view=RejectionReasonView(
-                interaction.message.id,
+                message.id,
                 draft_id,
                 hash_prefix,
             ),
@@ -1690,195 +1504,29 @@ def add_podcast_to_watchlist(item):
 
 
 def _recommendation_delivery_error(item, message_id, channel_id):
-    """Bind review actions to the exact delivered card and configured channel."""
+    """Bind an action to the exact Discord review card and configured channel."""
     actual_message_id = str(message_id or "").strip()
     actual_channel_id = str(channel_id or "").strip()
-    approval = item.get("discordApproval") or {}
     expected_message_id = str(item.get("discordMessageId") or "").strip()
+    approval = item.get("discordApproval") or {}
     expected_channel_id = str(
         approval.get("channelId") or CHANNEL_ID or ""
     ).strip()
+    approval_message_id = str(approval.get("messageId") or "").strip()
 
     if item.get("status") != "pending_sent":
-        return "A sugestão ainda não foi entregue ou já foi processada."
+        return "A sugestão ainda não foi entregue para aprovação ou já foi processada."
     if item.get("notificationStatus") != "sent":
         return "Não existe comprovativo de entrega desta sugestão no Discord."
     if not actual_message_id or actual_message_id != expected_message_id:
         return "Este cartão não corresponde à mensagem de aprovação registada."
-    if str(approval.get("messageId") or "").strip() != actual_message_id:
+    if approval_message_id and approval_message_id != actual_message_id:
         return "O comprovativo de entrega da sugestão é inconsistente."
     if not actual_channel_id or actual_channel_id != expected_channel_id:
         return "A aprovação só é válida no canal de revisão configurado."
     if CHANNEL_ID and actual_channel_id != str(CHANNEL_ID):
         return "A aprovação só é válida no canal de revisão configurado."
-    if requires_discord_approval(item) and not has_valid_discord_delivery(item):
-        return "O conteúdo deste cartão não corresponde à sugestão registada."
     return None
-
-
-def _recommendation_item_id_from_message(message):
-    if not message or not getattr(message, "embeds", None):
-        return ""
-    footer = message.embeds[0].footer
-    footer_text = str(getattr(footer, "text", "") or "")
-    prefix = footer_text.split("|", 1)[0].strip()
-    return prefix[3:].strip() if prefix.startswith("ID:") else ""
-
-
-def _normalize_recommendation_link(value):
-    """Normalize a reviewer-provided public URL without fetching it."""
-    cleaned = str(value or "").strip()
-    if any(
-        unicodedata.category(character) in {"Cc", "Cf", "Cs", "Co", "Cn"}
-        for character in cleaned
-    ):
-        raise ValueError("O link contém caracteres inválidos.")
-    if not cleaned:
-        return ""
-    if len(cleaned) > 2048 or "<" in cleaned or ">" in cleaned:
-        raise ValueError("O link é demasiado longo ou inválido.")
-    try:
-        parsed = urllib.parse.urlsplit(cleaned)
-        hostname = (parsed.hostname or "").strip(".").casefold()
-        if (
-            parsed.scheme.casefold() not in {"http", "https"}
-            or not hostname
-            or parsed.username is not None
-            or parsed.password is not None
-        ):
-            raise ValueError("O link deve ser HTTP(S), sem credenciais.")
-        if (
-            hostname == "localhost"
-            or hostname == "localhost.localdomain"
-            or hostname.endswith(".localhost")
-            or hostname.endswith(".local")
-        ):
-            raise ValueError("O link aponta para um destino local.")
-        try:
-            address = ipaddress.ip_address(hostname)
-        except ValueError:
-            address = None
-        if address is not None and (
-            address.is_private
-            or address.is_loopback
-            or address.is_link_local
-            or address.is_reserved
-            or address.is_multicast
-            or address.is_unspecified
-        ):
-            raise ValueError("O link aponta para uma rede privada ou reservada.")
-        return urllib.parse.urlunsplit(parsed._replace(fragment=""))
-    except ValueError:
-        raise
-    except (TypeError, UnicodeError) as exc:
-        raise ValueError("O link é inválido.") from exc
-
-
-def update_pending_recommendation_link(
-    item_id,
-    message_id,
-    channel_id,
-    new_link,
-    user,
-):
-    """Edit a pending community link and rebind its Discord proof to it."""
-    if not _is_authorized_reviewer(user):
-        return {"ok": False, "error": "Revisor sem autorização."}
-    try:
-        normalized_link = _normalize_recommendation_link(new_link)
-    except ValueError as exc:
-        return {"ok": False, "error": str(exc)}
-
-    rec_content, rec_sha = get_github_file(
-        "website/public/recommendations.json"
-    )
-    if not rec_content:
-        return {
-            "ok": False,
-            "error": f"Erro ao obter recommendations.json: {rec_sha}",
-        }
-    try:
-        rec_data = json.loads(rec_content.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        return {"ok": False, "error": f"recommendations.json inválido: {exc}"}
-
-    item = next(
-        (
-            candidate
-            for candidate in rec_data.get("queue", [])
-            if candidate.get("id") == item_id
-        ),
-        None,
-    )
-    if not item:
-        return {"ok": False, "error": f"Item `{item_id}` não encontrado na fila."}
-    delivery_error = _recommendation_delivery_error(
-        item,
-        message_id,
-        channel_id,
-    )
-    if delivery_error:
-        return {"ok": False, "error": delivery_error}
-    snapshot = item.get("communitySubmission")
-    if not isinstance(snapshot, dict):
-        return {"ok": False, "error": "Esta recomendação não tem snapshot comunitário válido."}
-
-    previous_link = str(snapshot.get("link") or "")
-    if normalized_link == previous_link:
-        return {
-            "ok": True,
-            "changed": False,
-            "link": normalized_link,
-            "hash": item.get("submissionHash", ""),
-        }
-
-    updated_snapshot = dict(snapshot)
-    updated_snapshot["link"] = normalized_link
-    item["communitySubmission"] = updated_snapshot
-    item["link"] = normalized_link
-    updated_hash = community_submission_hash(item)
-    if not updated_hash:
-        return {
-            "ok": False,
-            "error": "Não foi possível atualizar a identidade da recomendação.",
-        }
-    item["submissionHash"] = updated_hash
-
-    delivery = item.get("discordDelivery")
-    if isinstance(delivery, dict):
-        delivery = dict(delivery)
-        delivery["payloadHash"] = updated_hash
-        item["discordDelivery"] = delivery
-    item["discordPayloadHash"] = updated_hash
-    approval = dict(item.get("discordApproval") or {})
-    approval.update(
-        {
-            "required": True,
-            "status": "pending",
-            "payloadHash": updated_hash,
-            "linkEditedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-            "linkEditedBy": str(getattr(user, "id", "")).strip(),
-        }
-    )
-    item["discordApproval"] = approval
-
-    encoded = json.dumps(
-        rec_data, indent=2, ensure_ascii=False
-    ).encode("utf-8")
-    result = update_github_file(
-        "website/public/recommendations.json",
-        encoded,
-        f"Update recommendation link: {item_id} [bot]",
-        sha=rec_sha,
-    )
-    if result is not True:
-        return {"ok": False, "error": str(result)}
-    return {
-        "ok": True,
-        "changed": True,
-        "link": normalized_link,
-        "hash": updated_hash,
-    }
 
 
 def approve_recommendation(
@@ -1889,8 +1537,6 @@ def approve_recommendation(
     discord_channel_id=None,
 ):
     """Approve one recommendation or convert a whole podcast into a watch."""
-    if not _is_authorized_reviewer(user):
-        return {"ok": False, "error": "Revisor sem autorização."}
     if mode not in {"queue", "watch", "both"}:
         return {"ok": False, "error": "Modo de aprovação inválido."}
     rec_content, rec_sha = get_github_file(
@@ -1952,15 +1598,16 @@ def approve_recommendation(
         }
 
     watch_result = None
+    if mode in {"watch", "both"}:
+        watch_result = add_podcast_to_watchlist(item)
+        if not isinstance(watch_result, dict):
+            return {"ok": False, "error": str(watch_result)}
+
     if mode in {"watch", "both"} and not verified:
         return {
             "ok": False,
             "error": "A observação de podcasts exige uma fonte verificada.",
         }
-    if mode in {"watch", "both"}:
-        watch_result = add_podcast_to_watchlist(item)
-        if not isinstance(watch_result, dict):
-            return {"ok": False, "error": str(watch_result)}
 
     if mode in {"queue", "both"}:
         if verified:
@@ -1974,27 +1621,20 @@ def approve_recommendation(
     item["approvalMode"] = mode
     approved_at = datetime.datetime.now(datetime.timezone.utc).isoformat()
     approved_by = str(getattr(user, "id", "")).strip()
-    reviewer_authorization = _reviewer_authorization(user) or {}
     item["approvedAt"] = approved_at
     item["approvedBy"] = approved_by
     existing_approval = item.get("discordApproval") or {}
     item["discordApproval"] = {
         "required": True,
         "status": "approved",
-        "channelId": str(discord_channel_id or ""),
-        "messageId": str(discord_message_id or ""),
+        "channelId": str(discord_channel_id),
+        "messageId": str(discord_message_id),
         "sentAt": existing_approval.get("sentAt")
         or item.get("discordNotifiedAt"),
-        "payloadHash": community_submission_hash(item),
         "approvedAt": approved_at,
         "approvedBy": approved_by,
-        "reviewerAuthorization": reviewer_authorization.get("kind"),
         "mode": mode,
     }
-    if reviewer_authorization.get("roleId"):
-        item["discordApproval"]["approvedByRole"] = (
-            reviewer_authorization["roleId"]
-        )
     if watch_result:
         item["watchlistStatus"] = watch_result["status"]
         item["watchlistCollectionId"] = _podcast_collection_id(item)
@@ -2081,7 +1721,8 @@ class PodcastApprovalChoiceView(discord.ui.View):
             except discord.HTTPException:
                 pass
         for child in self.children:
-            child.disabled = True
+            if isinstance(child, discord.ui.Button):
+                child.disabled = True
         try:
             await interaction.message.edit(view=self)
         except discord.HTTPException:
@@ -2101,114 +1742,10 @@ class PodcastApprovalChoiceView(discord.ui.View):
 
 
 # ===================== RECOMMENDATION APPROVAL VIEW =====================
-class RecommendationLinkModal(discord.ui.Modal):
-    def __init__(self, item_id, review_message):
-        super().__init__(title="Alterar link")
-        self.item_id = item_id
-        self.review_message = review_message
-        current_link = ""
-        if review_message and review_message.embeds:
-            for field in review_message.embeds[0].fields:
-                if field.name == "Link fornecido":
-                    current_link = str(field.value or "")
-                    break
-        self.link_input = discord.ui.TextInput(
-            label="Novo link (vazio para remover)",
-            placeholder="https://...",
-            default=current_link[:2048],
-            required=False,
-            max_length=2048,
-        )
-        self.add_item(self.link_input)
-
-    async def on_submit(self, interaction: discord.Interaction):
-        await interaction.response.defer(ephemeral=True)
-        message = self.review_message
-        channel_id = getattr(getattr(message, "channel", None), "id", None)
-        result = await asyncio.to_thread(
-            update_pending_recommendation_link,
-            self.item_id,
-            getattr(message, "id", None),
-            channel_id,
-            self.link_input.value,
-            interaction.user,
-        )
-        if not result.get("ok"):
-            await interaction.followup.send(
-                f"❌ {result.get('error')}",
-                ephemeral=True,
-            )
-            return
-
-        if message and message.embeds:
-            embed = message.embeds[0]
-            link = str(result.get("link") or "")
-            link_field_index = next(
-                (
-                    index
-                    for index, field in enumerate(embed.fields)
-                    if field.name == "Link fornecido"
-                ),
-                None,
-            )
-            if link:
-                if link_field_index is None:
-                    embed.add_field(
-                        name="Link fornecido",
-                        value=link[:1024],
-                        inline=False,
-                    )
-                else:
-                    embed.set_field_at(
-                        link_field_index,
-                        name="Link fornecido",
-                        value=link[:1024],
-                        inline=False,
-                    )
-            elif link_field_index is not None:
-                embed.remove_field(link_field_index)
-            embed.set_footer(
-                text=f"ID: {self.item_id} | Hash: {result.get('hash', '')}"
-            )
-            try:
-                await message.edit(embed=embed)
-            except discord.HTTPException:
-                pass
-
-        await interaction.followup.send(
-            "✅ Link atualizado. A recomendação continua pendente de aprovação.",
-            ephemeral=True,
-        )
-
-
 class RecommendationApprovalView(discord.ui.View):
     """Persistent view for approving/rejecting individual AI-generated recommendations."""
     def __init__(self):
         super().__init__(timeout=None)
-
-    @discord.ui.button(
-        label="Alterar link",
-        style=discord.ButtonStyle.secondary,
-        custom_id="rec_edit_link",
-        emoji="🔗",
-    )
-    async def edit_link_button(self, interaction: discord.Interaction, button: discord.ui.Button):
-        if not _is_authorized_reviewer(interaction.user):
-            await interaction.response.send_message(
-                "Não tens permissão para alterar recomendações.",
-                ephemeral=True,
-            )
-            return
-        item_id = _recommendation_item_id_from_message(interaction.message)
-        if not item_id:
-            await interaction.response.send_message(
-                "Erro: não foi possível identificar a recomendação.",
-                ephemeral=True,
-            )
-            return
-        await interaction.response.send_modal(
-            RecommendationLinkModal(item_id, interaction.message)
-        )
 
     @discord.ui.button(label="Aprovar", style=discord.ButtonStyle.success, custom_id="rec_approve", emoji="\u2705")
     async def approve_button(self, interaction: discord.Interaction, button: discord.ui.Button):
@@ -2219,11 +1756,19 @@ class RecommendationApprovalView(discord.ui.View):
                 ephemeral=True,
             )
             return
+
+        message = interaction.message
+        if message is None:
+            await interaction.followup.send(
+                "Não foi possível localizar a mensagem desta interação.",
+                ephemeral=True,
+            )
+            return
         
         # Extract item_id from the message embed footer
         item_id = None
-        if interaction.message and interaction.message.embeds:
-            footer = interaction.message.embeds[0].footer
+        if message.embeds:
+            footer = message.embeds[0].footer
             if footer and footer.text:
                 # Footer format: "ID: ai_book_1234_0 | Gerado por IA"
                 parts = footer.text.split("|")[0].strip()
@@ -2270,7 +1815,7 @@ class RecommendationApprovalView(discord.ui.View):
                     "Escolhe como deve ser usado:"
                 ),
                 view=PodcastApprovalChoiceView(
-                    item_id, review_message=interaction.message
+                    item_id, review_message=message
                 ),
                 ephemeral=True,
             )
@@ -2281,7 +1826,7 @@ class RecommendationApprovalView(discord.ui.View):
             item_id,
             interaction.user,
             "queue",
-            getattr(interaction.message, "id", None),
+            message.id,
             getattr(interaction, "channel_id", None),
         )
         if not result.get("ok"):
@@ -2289,7 +1834,7 @@ class RecommendationApprovalView(discord.ui.View):
                 f"❌ {result.get('error')}", ephemeral=True
             )
             return
-        embed = interaction.message.embeds[0]
+        embed = message.embeds[0]
         embed.color = 0x2ECC71
         embed.set_footer(
             text=(
@@ -2297,7 +1842,7 @@ class RecommendationApprovalView(discord.ui.View):
                 f"ID: {item_id}"
             )
         )
-        await interaction.message.edit(embed=embed, view=None)
+        await message.edit(embed=embed, view=None)
         await interaction.followup.send(
             (
                 f"Recomendação **{result['title']}** aprovada e adicionada "
@@ -2320,11 +1865,19 @@ class RecommendationApprovalView(discord.ui.View):
                 ephemeral=True,
             )
             return
+
+        message = interaction.message
+        if message is None:
+            await interaction.followup.send(
+                "Não foi possível localizar a mensagem desta interação.",
+                ephemeral=True,
+            )
+            return
         
         # Extract item_id from the message embed footer
         item_id = None
-        if interaction.message and interaction.message.embeds:
-            footer = interaction.message.embeds[0].footer
+        if message.embeds:
+            footer = message.embeds[0].footer
             if footer and footer.text:
                 parts = footer.text.split("|")[0].strip()
                 if parts.startswith("ID:"):
@@ -2349,7 +1902,7 @@ class RecommendationApprovalView(discord.ui.View):
             if item.get("id") == item_id:
                 delivery_error = _recommendation_delivery_error(
                     item,
-                    getattr(interaction.message, "id", None),
+                    message.id,
                     getattr(interaction, "channel_id", None),
                 )
                 if delivery_error:
@@ -2368,8 +1921,7 @@ class RecommendationApprovalView(discord.ui.View):
                     "required": True,
                     "status": "rejected",
                     "channelId": str(interaction.channel_id),
-                    "messageId": str(interaction.message.id),
-                    "payloadHash": community_submission_hash(item),
+                    "messageId": str(message.id),
                     "rejectedAt": rejected_at,
                     "rejectedBy": str(interaction.user.id),
                 }
@@ -2387,10 +1939,10 @@ class RecommendationApprovalView(discord.ui.View):
         
         if res is True:
             # Update the embed to show rejection
-            embed = interaction.message.embeds[0]
+            embed = message.embeds[0]
             embed.color = 0xE74C3C  # red
             embed.set_footer(text=f"REJEITADO por {interaction.user.display_name} | ID: {item_id}")
-            await interaction.message.edit(embed=embed, view=None)
+            await message.edit(embed=embed, view=None)
             await interaction.followup.send(f"Recomendacao **{item_title}** rejeitada e ignorada.", ephemeral=True)
         else:
             await interaction.followup.send(f"Erro ao guardar no GitHub: {res}", ephemeral=True)
@@ -2539,7 +2091,8 @@ async def on_message(message):
         return
 
     is_dm = isinstance(message.channel, discord.DMChannel)
-    is_mention = bot.user in message.mentions
+    bot_user = bot.user
+    is_mention = bot_user is not None and bot_user in message.mentions
     is_allowed = (message.channel.id == CHANNEL_ID) or is_dm
 
     # Check command prefix
@@ -2550,26 +2103,16 @@ async def on_message(message):
 
     if is_allowed:
         # 1. Caption text correction
-        if (
-            waiting_for_text
-            and str(message.author.id)
-            == waiting_for_text.get("requester_id", "")
-        ):
-            caption_info = waiting_for_text
+        if waiting_for_text and message.reference:
             await message.channel.typing()
-            res = await replace_review_caption(
-                caption_info["original_msg_id"],
-                message.content,
-                caption_info.get("expected_draft_id", ""),
-                caption_info.get("expected_hash_prefix", ""),
-            )
+            content_bytes = message.content.encode("utf-8")
+            res = update_github_file("website/public/current_caption.txt", content_bytes, "Update caption text [bot]")
+            
+            waiting_for_text = False
             if res is True:
-                waiting_for_text = None
-                await message.reply(
-                    "✍️ Legenda corrigida! Está a ser gerada e enviada uma nova proposta para revisão."
-                )
+                await message.reply("✍️ Legenda do post atualizada no GitHub! Podes prosseguir com a aprovação.")
             else:
-                await message.reply(f"❌ Não foi possível corrigir a legenda: {res}")
+                await message.reply(f"❌ Erro ao guardar legenda no GitHub: {res}")
             return
 
         # 2. Manual link correction
@@ -2584,14 +2127,7 @@ async def on_message(message):
                 return
                 
             await message.reply(f"⏳ A atualizar o link do quadrante **{quad}** no GitHub...")
-            res = await update_recommendation_field(
-                quad_info["original_msg_id"],
-                quad,
-                "link",
-                url_input,
-                quad_info.get("expected_draft_id", ""),
-                quad_info.get("expected_hash_prefix", ""),
-            )
+            res = await update_recommendation_field(quad_info["original_msg_id"], quad, "link", url_input)
             if res is True:
                 await message.reply(f"🔗 Link do quadrante **{quad}** atualizado! A regerar proposta de post no GitHub Actions...")
             else:
@@ -2612,14 +2148,7 @@ async def on_message(message):
                 return
                 
             await message.reply(f"✅ Link encontrado: <{found_url}>\nA atualizar no GitHub...")
-            res = await update_recommendation_field(
-                quad_info["original_msg_id"],
-                quad,
-                "link",
-                found_url,
-                quad_info.get("expected_draft_id", ""),
-                quad_info.get("expected_hash_prefix", ""),
-            )
+            res = await update_recommendation_field(quad_info["original_msg_id"], quad, "link", found_url)
             if res is True:
                 await message.reply(f"🔗 Link do quadrante **{quad}** atualizado! A regerar proposta de post no GitHub Actions...")
             else:
@@ -2670,11 +2199,7 @@ async def on_message(message):
                 image_bytes = bio.getvalue()
                 
                 result = await replace_review_cover(
-                    quad_info["original_msg_id"],
-                    quad,
-                    image_bytes,
-                    quad_info.get("expected_draft_id", ""),
-                    quad_info.get("expected_hash_prefix", ""),
+                    quad_info["original_msg_id"], quad, image_bytes
                 )
                 if result is True:
                     await mark_review_superseded(
@@ -2711,11 +2236,7 @@ async def on_message(message):
                             image_bytes = response.read()
                         
                         result = await replace_review_cover(
-                            quad_info["original_msg_id"],
-                            quad,
-                            image_bytes,
-                            quad_info.get("expected_draft_id", ""),
-                            quad_info.get("expected_hash_prefix", ""),
+                            quad_info["original_msg_id"], quad, image_bytes
                         )
                         if result is True:
                             await mark_review_superseded(
@@ -2733,8 +2254,10 @@ async def on_message(message):
     if is_dm or is_mention:
         query = message.content
         if is_mention:
-            query = query.replace(f"<@{bot.user.id}>", "").strip()
-            query = query.replace(f"<@!{bot.user.id}>", "").strip()
+            if bot_user is None:
+                return
+            query = query.replace(f"<@{bot_user.id}>", "").strip()
+            query = query.replace(f"<@!{bot_user.id}>", "").strip()
             
         if not query:
             await message.reply("Olá! Em que posso ajudar hoje sobre os programas eleitorais?")

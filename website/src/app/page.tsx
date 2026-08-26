@@ -1,185 +1,25 @@
 "use client";
 // Trigger Vercel build after settings update
 
-import { useState, useEffect, useRef, useMemo, type ReactNode } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  type ReactNode,
+} from "react";
 import Header from "@/components/Header";
-import { stripUnsafeUnicode } from "@/lib/chatSecurity";
+import PoliticalIntelligencePanel from "@/components/PoliticalIntelligencePanel";
 import styles from "./page.module.css";
 
 interface MessageNode {
   id: string;
   role: "user" | "assistant";
   content: string;
-  sources?: ChatSource[];
+  sources?: unknown[];
   parentId: string | null;
   children: string[];
 }
-
-interface ChatSource {
-  party: string;
-  year: string;
-  category: string;
-}
-
-const MAX_STORED_CHAT_NODES = 512;
-const MAX_STORED_MESSAGE_CHARACTERS = 12_000;
-const MAX_STORED_SOURCE_CHARACTERS = 120;
-const SAFE_MESSAGE_ID = /^[A-Za-z0-9_-]{1,128}$/;
-const MESSAGE_NODE_KEYS = new Set([
-  "id",
-  "role",
-  "content",
-  "sources",
-  "parentId",
-  "children",
-]);
-const SOURCE_KEYS = new Set(["party", "year", "category"]);
-
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === "object" && value !== null && !Array.isArray(value);
-
-const isSafeMessageId = (value: string) =>
-  SAFE_MESSAGE_ID.test(value) &&
-  value !== "__proto__" &&
-  value !== "constructor" &&
-  value !== "prototype";
-
-const storedText = (value: unknown, maxCharacters: number) => {
-  if (typeof value !== "string" || value.length > maxCharacters) {
-    return null;
-  }
-  return stripUnsafeUnicode(value);
-};
-
-const validateStoredSource = (value: unknown): ChatSource | null => {
-  if (!isRecord(value)) return null;
-  const keys = Object.keys(value);
-  if (keys.length !== SOURCE_KEYS.size || keys.some(key => !SOURCE_KEYS.has(key))) {
-    return null;
-  }
-
-  const party = storedText(value.party, MAX_STORED_SOURCE_CHARACTERS);
-  const year = storedText(value.year, MAX_STORED_SOURCE_CHARACTERS);
-  const category = storedText(value.category, MAX_STORED_SOURCE_CHARACTERS);
-  if (party === null || year === null || category === null) return null;
-
-  return { party, year, category };
-};
-
-const validateStoredChatMap = (
-  value: unknown
-): Record<string, MessageNode> | null => {
-  if (!isRecord(value)) return null;
-
-  const ids = Object.keys(value);
-  if (ids.length === 0 || ids.length > MAX_STORED_CHAT_NODES) return null;
-
-  const validatedMap: Record<string, MessageNode> = Object.create(null);
-  for (const id of ids) {
-    if (!isSafeMessageId(id)) return null;
-    const storedNode = value[id];
-    if (!isRecord(storedNode)) return null;
-
-    const nodeKeys = Object.keys(storedNode);
-    if (
-      nodeKeys.some(key => !MESSAGE_NODE_KEYS.has(key)) ||
-      !nodeKeys.includes("id") ||
-      !nodeKeys.includes("role") ||
-      !nodeKeys.includes("content") ||
-      !nodeKeys.includes("parentId") ||
-      !nodeKeys.includes("children")
-    ) {
-      return null;
-    }
-
-    if (
-      storedNode.id !== id ||
-      (storedNode.role !== "user" && storedNode.role !== "assistant") ||
-      typeof storedNode.content !== "string" ||
-      storedNode.content.length > MAX_STORED_MESSAGE_CHARACTERS ||
-      (storedNode.parentId !== null &&
-        (typeof storedNode.parentId !== "string" ||
-          !isSafeMessageId(storedNode.parentId))) ||
-      !Array.isArray(storedNode.children) ||
-      storedNode.children.length > MAX_STORED_CHAT_NODES
-    ) {
-      return null;
-    }
-
-    const content = storedText(
-      storedNode.content,
-      MAX_STORED_MESSAGE_CHARACTERS
-    );
-    if (content === null) return null;
-
-    const children: string[] = [];
-    for (const child of storedNode.children) {
-      if (
-        typeof child !== "string" ||
-        !isSafeMessageId(child) ||
-        children.includes(child)
-      ) {
-        return null;
-      }
-      children.push(child);
-    }
-
-    let sources: ChatSource[] | undefined;
-    if ("sources" in storedNode) {
-      if (!Array.isArray(storedNode.sources) || storedNode.sources.length > 64) {
-        return null;
-      }
-      sources = [];
-      for (const source of storedNode.sources) {
-        const validatedSource = validateStoredSource(source);
-        if (!validatedSource) return null;
-        sources.push(validatedSource);
-      }
-    }
-
-    validatedMap[id] = {
-      id,
-      role: storedNode.role,
-      content,
-      ...(sources ? { sources } : {}),
-      parentId: storedNode.parentId,
-      children,
-    };
-  }
-
-  const roots = ids.filter(id => validatedMap[id].parentId === null);
-  if (
-    roots.length !== 1 ||
-    roots[0] !== welcomeMsgId ||
-    validatedMap[welcomeMsgId].role !== "assistant"
-  ) {
-    return null;
-  }
-
-  for (const id of ids) {
-    const node = validatedMap[id];
-    if (node.parentId && !validatedMap[node.parentId]) return null;
-    for (const childId of node.children) {
-      const child = validatedMap[childId];
-      if (!child || child.parentId !== id) return null;
-    }
-  }
-
-  const visited = new Set<string>();
-  const visiting = new Set<string>();
-  const visit = (id: string): boolean => {
-    if (visiting.has(id)) return false;
-    if (visited.has(id)) return true;
-    visiting.add(id);
-    visited.add(id);
-    const valid = validatedMap[id].children.every(visit);
-    visiting.delete(id);
-    return valid;
-  };
-  if (!visit(welcomeMsgId) || visited.size !== ids.length) return null;
-
-  return validatedMap;
-};
 
 const welcomeMsgId = "welcome";
 const WELCOME_CONTENT = `📘 **Bem-vindo ao Politómetro!** Sou um assistente neutro especializado em programas eleitorais portugueses, na Constituição da República e em Orçamentos do Estado.
@@ -200,80 +40,68 @@ const initialMessagesMap: Record<string, MessageNode> = {
   }
 };
 
+const INLINE_MARKDOWN_PATTERN =
+  /(\*\*[^*\n]+\*\*|`[^`\n]+`|\[[^\]\n]+\]\([^)\s]+\))/g;
+
+function safeExternalHref(value: string): string | null {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? url.toString()
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function renderInlineMarkdown(value: string, keyPrefix: string): ReactNode[] {
+  const nodes: ReactNode[] = [];
+  let cursor = 0;
+  let tokenIndex = 0;
+
+  for (const match of value.matchAll(INLINE_MARKDOWN_PATTERN)) {
+    const start = match.index ?? 0;
+    if (start > cursor) nodes.push(value.slice(cursor, start));
+
+    const token = match[0];
+    const key = `${keyPrefix}-${tokenIndex}`;
+    if (token.startsWith("**")) {
+      nodes.push(<strong key={key}>{token.slice(2, -2)}</strong>);
+    } else if (token.startsWith("`")) {
+      nodes.push(<code key={key}>{token.slice(1, -1)}</code>);
+    } else {
+      const linkMatch = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+      const href = linkMatch ? safeExternalHref(linkMatch[2]) : null;
+      nodes.push(
+        href && linkMatch ? (
+          <a key={key} href={href} target="_blank" rel="noopener noreferrer">
+            {linkMatch[1]}
+          </a>
+        ) : (
+          token
+        ),
+      );
+    }
+    cursor = start + token.length;
+    tokenIndex += 1;
+  }
+
+  if (cursor < value.length) nodes.push(value.slice(cursor));
+  return nodes;
+}
+
+function readableError(error: unknown): string {
+  return error instanceof Error
+    ? error.message
+    : "Não foi possível ligar à API. Por favor, tenta novamente.";
+}
+
 const getLeafNodeId = (nodeId: string, map: Record<string, MessageNode>): string => {
   let currentId = nodeId;
   while (map[currentId]?.children && map[currentId].children.length > 0) {
     currentId = map[currentId].children[0];
   }
   return currentId;
-};
-
-const currentTimestamp = () => Date.now();
-const createClientId = () =>
-  Math.random().toString(36).substring(2, 15) +
-  Math.random().toString(36).substring(2, 15);
-
-const isSafeHttpUrl = (value: string) => {
-  try {
-    const url = new URL(value);
-    return url.protocol === "http:" || url.protocol === "https:";
-  } catch {
-    return false;
-  }
-};
-
-const renderInlineMarkdown = (text: string): ReactNode[] => {
-  const nodes: ReactNode[] = [];
-  const tokenPattern = /\*\*[^*\n]+\*\*|`[^`\n]+`|\[[^\]\n]+\]\([^\s)]+\)/g;
-  let lastIndex = 0;
-  let tokenIndex = 0;
-
-  for (const match of text.matchAll(tokenPattern)) {
-    const token = match[0];
-    const index = match.index ?? 0;
-    if (index > lastIndex) {
-      nodes.push(text.slice(lastIndex, index));
-    }
-
-    if (token.startsWith("**")) {
-      nodes.push(
-        <strong key={`strong-${tokenIndex}`}>
-          {renderInlineMarkdown(token.slice(2, -2))}
-        </strong>
-      );
-    } else if (token.startsWith("`")) {
-      nodes.push(
-        <code key={`code-${tokenIndex}`}>{token.slice(1, -1)}</code>
-      );
-    } else {
-      const linkMatch = token.match(/^\[([^\]]+)\]\(([^\s)]+)\)$/);
-      if (!linkMatch) {
-        nodes.push(token);
-      } else if (isSafeHttpUrl(linkMatch[2])) {
-        nodes.push(
-          <a
-            key={`link-${tokenIndex}`}
-            href={linkMatch[2]}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {renderInlineMarkdown(linkMatch[1])}
-          </a>
-        );
-      } else {
-        nodes.push(linkMatch[1]);
-      }
-    }
-
-    lastIndex = index + token.length;
-    tokenIndex += 1;
-  }
-
-  if (lastIndex < text.length) {
-    nodes.push(text.slice(lastIndex));
-  }
-
-  return nodes;
 };
 
 export default function Home() {
@@ -307,17 +135,16 @@ export default function Home() {
       const savedActiveId = sessionStorage.getItem("politometro_chat_active_id");
       if (savedMap && savedActiveId) {
         try {
-          const parsedValue: unknown = JSON.parse(savedMap);
-          const validatedMap = validateStoredChatMap(parsedValue);
-          if (validatedMap && validatedMap[savedActiveId]) {
-            validatedMap[welcomeMsgId].content = WELCOME_CONTENT;
-            // Session storage is an external source being hydrated on mount.
-            // eslint-disable-next-line react-hooks/set-state-in-effect
-            setMessagesMap(validatedMap);
+          const parsedMap = JSON.parse(savedMap);
+          if (parsedMap[welcomeMsgId]) {
+            parsedMap[welcomeMsgId].content = WELCOME_CONTENT;
+          }
+          if (parsedMap[savedActiveId]) {
+            setMessagesMap(parsedMap);
             setActiveMessageId(savedActiveId);
           }
-        } catch {
-          console.error("Failed to parse saved chat state.");
+        } catch (e) {
+          console.error("Failed to parse saved chat state:", e);
         }
       }
     }
@@ -349,13 +176,6 @@ export default function Home() {
     return path;
   }, [activeMessageId, messagesMap]);
 
-  const scrollToBottom = () => {
-    const container = messageListRef.current;
-    if (container) {
-      container.scrollTop = container.scrollHeight;
-    }
-  };
-
   useEffect(() => {
     scrollToBottom();
   }, [activePath]);
@@ -377,6 +197,13 @@ export default function Home() {
       list.removeEventListener("scroll", handleScroll);
     };
   }, [activePath]);
+
+  const scrollToBottom = () => {
+    const container = messageListRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
+  };
 
   const handleCopy = (text: string, msgId: string) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -408,10 +235,8 @@ export default function Home() {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
 
-    const messageTimestamp = currentTimestamp();
-    const userMessageId = messageTimestamp.toString();
-    const userMessageText = stripUnsafeUnicode(input).trim();
-    if (!userMessageText) return;
+    const userMessageId = Date.now().toString();
+    const userMessageText = input.trim();
     setInput("");
     
     const currentParentId = activeMessageId;
@@ -424,7 +249,7 @@ export default function Home() {
       children: []
     };
     
-    const assistantMessageId = (messageTimestamp + 1).toString();
+    const assistantMessageId = (Date.now() + 1).toString();
     const newAssistantNode: MessageNode = {
       id: assistantMessageId,
       role: "assistant",
@@ -461,7 +286,7 @@ export default function Home() {
     }
     pathUpToNewUser.push(newUserNode);
     
-    const chatHistory = pathUpToNewUser.slice(1).filter(node => node.role === "user").map(node => ({
+    const chatHistory = pathUpToNewUser.slice(1).map(node => ({
       role: node.role,
       content: node.content
     }));
@@ -483,7 +308,7 @@ export default function Home() {
       }
 
       const encodedSources = response.headers.get("X-Sources");
-      let sources: ChatSource[] = [];
+      let sources: unknown[] = [];
       if (encodedSources) {
         try {
           sources = JSON.parse(decodeURIComponent(encodedSources));
@@ -495,7 +320,7 @@ export default function Home() {
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let done = false;
-      const accumulatedContent = { current: "" };
+      let accumulatedContent = "";
       let buffer = "";
 
       if (!reader) {
@@ -525,13 +350,13 @@ export default function Home() {
               try {
                 const dataJson = JSON.parse(dataStr);
                 const textChunk = dataJson.choices?.[0]?.delta?.content || "";
-                accumulatedContent.current += textChunk;
+                accumulatedContent += textChunk;
                 
                 setMessagesMap(prev => ({
                   ...prev,
                   [assistantMessageId]: {
                     ...prev[assistantMessageId],
-                    content: accumulatedContent.current,
+                    content: accumulatedContent,
                     sources
                   }
                 }));
@@ -549,13 +374,13 @@ export default function Home() {
             try {
               const dataJson = JSON.parse(dataStr);
               const textChunk = dataJson.choices?.[0]?.delta?.content || "";
-              accumulatedContent.current += textChunk;
+              accumulatedContent += textChunk;
               
               setMessagesMap(prev => ({
                 ...prev,
                 [assistantMessageId]: {
                   ...prev[assistantMessageId],
-                  content: accumulatedContent.current,
+                  content: accumulatedContent,
                   sources
                 }
               }));
@@ -564,14 +389,12 @@ export default function Home() {
         }
       }
     } catch (err: unknown) {
-      console.error("Chat request failed.");
-      const errorMessage =
-        err instanceof Error ? err.message : "Não foi possível ligar à API.";
+      console.error(err);
       setMessagesMap(prev => ({
         ...prev,
         [assistantMessageId]: {
           ...prev[assistantMessageId],
-          content: `❌ **Erro**: ${errorMessage || "Não foi possível ligar à API. Por favor, tenta novamente."}`
+          content: `❌ **Erro**: ${readableError(err)}`
         }
       }));
     } finally {
@@ -580,31 +403,28 @@ export default function Home() {
   };
 
   const handleEditSubmit = async (nodeId: string, newText: string) => {
-    const sanitizedNewText = stripUnsafeUnicode(newText).trim();
-    if (!sanitizedNewText || isLoading) return;
+    if (!newText.trim() || isLoading) return;
     
     const originalNode: MessageNode | undefined = messagesMap[nodeId];
     if (!originalNode) return;
     
-    if (sanitizedNewText === originalNode.content.trim()) {
+    if (newText.trim() === originalNode.content.trim()) {
       setEditingMessageId(null);
       return;
     }
     
-    const messageTimestamp = currentTimestamp();
-    const userMessageId = "edit-" + messageTimestamp.toString();
+    const userMessageId = "edit-" + Date.now().toString();
     const parentId = originalNode.parentId;
     
     const newUserNode: MessageNode = {
       id: userMessageId,
       role: "user",
-      content: sanitizedNewText,
+      content: newText.trim(),
       parentId,
       children: []
     };
     
-    const assistantMessageId =
-      "assistant-edit-" + (messageTimestamp + 1).toString();
+    const assistantMessageId = "assistant-edit-" + (Date.now() + 1).toString();
     const newAssistantNode: MessageNode = {
       id: assistantMessageId,
       role: "assistant",
@@ -642,7 +462,7 @@ export default function Home() {
     }
     pathUpToNewUser.push(newUserNode);
     
-    const chatHistory = pathUpToNewUser.slice(1).filter(node => node.role === "user").map(node => ({
+    const chatHistory = pathUpToNewUser.slice(1).map(node => ({
       role: node.role,
       content: node.content
     }));
@@ -652,12 +472,12 @@ export default function Home() {
     try {
       let storedId = localStorage.getItem("politometro_client_id");
       if (!storedId) {
-        storedId = createClientId();
+        storedId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         localStorage.setItem("politometro_client_id", storedId);
       }
       clientId = storedId;
-    } catch {
-      console.warn("localStorage not available.");
+    } catch (e) {
+      console.warn("localStorage not available:", e);
     }
     
     try {
@@ -678,7 +498,7 @@ export default function Home() {
       }
       
       const encodedSources = response.headers.get("X-Sources");
-      let sources: ChatSource[] = [];
+      let sources: unknown[] = [];
       if (encodedSources) {
         try {
           sources = JSON.parse(decodeURIComponent(encodedSources));
@@ -690,7 +510,7 @@ export default function Home() {
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let done = false;
-      const accumulatedContent = { current: "" };
+      let accumulatedContent = "";
       let buffer = "";
       
       if (!reader) {
@@ -719,14 +539,13 @@ export default function Home() {
               try {
                 const dataJson = JSON.parse(dataStr);
                 const textChunk = dataJson.choices?.[0]?.delta?.content || "";
-                // eslint-disable-next-line react-hooks/immutability
-                accumulatedContent.current += textChunk;
+                accumulatedContent += textChunk;
                 
                 setMessagesMap(prev => ({
                   ...prev,
                   [assistantMessageId]: {
                     ...prev[assistantMessageId],
-                    content: accumulatedContent.current,
+                    content: accumulatedContent,
                     sources
                   }
                 }));
@@ -744,14 +563,13 @@ export default function Home() {
             try {
               const dataJson = JSON.parse(dataStr);
               const textChunk = dataJson.choices?.[0]?.delta?.content || "";
-              // eslint-disable-next-line react-hooks/immutability
-              accumulatedContent.current += textChunk;
+              accumulatedContent += textChunk;
               
               setMessagesMap(prev => ({
                 ...prev,
                 [assistantMessageId]: {
                   ...prev[assistantMessageId],
-                  content: accumulatedContent.current,
+                  content: accumulatedContent,
                   sources
                 }
               }));
@@ -760,14 +578,12 @@ export default function Home() {
         }
       }
     } catch (err: unknown) {
-      console.error("Chat request failed.");
-      const errorMessage =
-        err instanceof Error ? err.message : "Não foi possível ligar à API.";
+      console.error(err);
       setMessagesMap(prev => ({
         ...prev,
         [assistantMessageId]: {
           ...prev[assistantMessageId],
-          content: `❌ **Erro**: ${errorMessage || "Não foi possível ligar à API. Por favor, tenta novamente."}`
+          content: `❌ **Erro**: ${readableError(err)}`
         }
       }));
     } finally {
@@ -795,32 +611,40 @@ export default function Home() {
       if (line.startsWith("### ")) {
         return (
           <h3 key={idx} className={styles.mdH3}>
-            {renderInlineMarkdown(line.slice(4))}
+            {renderInlineMarkdown(line.slice(4), `h3-${idx}`)}
           </h3>
         );
       }
       if (line.startsWith("## ")) {
         return (
           <h2 key={idx} className={styles.mdH2}>
-            {renderInlineMarkdown(line.slice(3))}
+            {renderInlineMarkdown(line.slice(3), `h2-${idx}`)}
           </h2>
         );
       }
-
+      if (line.startsWith("🗳️ ")) {
+        return (
+          <p key={idx} className={styles.mdParagraph}>
+            {renderInlineMarkdown(line, `ballot-${idx}`)}
+          </p>
+        );
+      }
+      
       if (line.startsWith("- ") || line.startsWith("* ")) {
+        const bulletContent = line.slice(2);
         return (
           <ul key={idx} className={styles.mdUl}>
-            <li>{renderInlineMarkdown(line.slice(2))}</li>
+            <li>{renderInlineMarkdown(bulletContent, `bullet-${idx}`)}</li>
           </ul>
         );
       }
 
       return (
-        <p
-          key={idx}
+        <p 
+          key={idx} 
           className={line.trim() === "" ? styles.mdSpacing : styles.mdParagraph}
         >
-          {line ? renderInlineMarkdown(line) : "\u00a0"}
+          {line ? renderInlineMarkdown(line, `line-${idx}`) : "\u00A0"}
         </p>
       );
     });
@@ -829,6 +653,7 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Header />
+      <PoliticalIntelligencePanel />
       
       <main className={styles.main}>
         <div className={`${styles.chatBox} ${isScrolled ? styles.scrolled : ""} glass`}>

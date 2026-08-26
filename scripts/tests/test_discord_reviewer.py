@@ -1,6 +1,6 @@
-import asyncio
 import json
 import hashlib
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -14,17 +14,11 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import auto_populate_ai
 import discord_reviewer
-from recommendation_approval import (
-    COMMUNITY_SOURCE_KIND,
-    community_submission_hash,
-)
 
 
 def whole_podcast():
-    item = {
+    return {
         "id": "web_podcast_1",
-        "origin": "website",
-        "sourceKind": COMMUNITY_SOURCE_KIND,
         "type": "podcast",
         "title": "Podcast Exemplo",
         "authorOrMeta": "Podcast Exemplo / Jornalista",
@@ -34,8 +28,15 @@ def whole_podcast():
         "sourceImageUrl": "https://cdn.example.com/podcast.jpg",
         "status": "pending_sent",
         "notificationStatus": "sent",
-        "discordMessageId": "100000000000000001",
-        "createdAt": "2026-08-10T09:00:00+00:00",
+        "discordMessageId": "discord-message-1",
+        "discordNotifiedAt": "2026-08-10T09:00:00+00:00",
+        "discordApproval": {
+            "required": True,
+            "status": "pending",
+            "channelId": "discord-channel-1",
+            "messageId": "discord-message-1",
+            "sentAt": "2026-08-10T09:00:00+00:00",
+        },
         "resolutionStatus": "verified",
         "verification": {
             "status": "verified",
@@ -44,24 +45,6 @@ def whole_podcast():
             "coverHash": "cover-hash",
         },
     }
-    item["communitySubmission"] = {
-        "id": item["id"],
-        "sourceKind": item["sourceKind"],
-        "type": item["type"],
-        "title": item["title"],
-        "link": item["link"],
-        "createdAt": item["createdAt"],
-    }
-    item["submissionHash"] = community_submission_hash(item)
-    item["discordApproval"] = {
-        "required": True,
-        "status": "pending",
-        "channelId": "200000000000000002",
-        "messageId": item["discordMessageId"],
-        "sentAt": "2026-08-10T09:01:00+00:00",
-        "payloadHash": item["submissionHash"],
-    }
-    return item
 
 
 class DiscordApplicationTests(unittest.TestCase):
@@ -90,177 +73,6 @@ class DiscordApplicationTests(unittest.TestCase):
                 "custom_feedback",
             },
         )
-
-    def test_review_regeneration_dispatches_a_unique_request_identity(self):
-        request_id = "a" * 32
-        with (
-            mock.patch.object(
-                discord_reviewer.uuid,
-                "uuid4",
-                return_value=SimpleNamespace(hex=request_id),
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "trigger_github_workflow",
-                return_value=True,
-            ) as trigger,
-        ):
-            result = discord_reviewer.trigger_review_regeneration()
-
-        self.assertTrue(result)
-        trigger.assert_called_once_with(
-            "instagram_generate.yml",
-            inputs={"review_request_id": request_id},
-        )
-
-    def test_caption_correction_regenerates_with_encoded_text(self):
-        request_id = "b" * 32
-        draft = {
-            "draft_id": "draft_current",
-            "content_hash": "current-hash-full",
-        }
-        with (
-            mock.patch.object(
-                discord_reviewer,
-                "get_github_file",
-                return_value=(json.dumps(draft).encode("utf-8"), "sha"),
-            ),
-            mock.patch.object(
-                discord_reviewer.uuid,
-                "uuid4",
-                return_value=SimpleNamespace(hex=request_id),
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "trigger_github_workflow",
-                return_value=True,
-            ) as trigger,
-            mock.patch.object(
-                discord_reviewer,
-                "mark_review_superseded",
-                new=mock.AsyncMock(return_value=True),
-            ) as supersede,
-        ):
-            result = asyncio.run(
-                discord_reviewer.replace_review_caption(
-                    "100",
-                    "Legenda política corrigida.\n#Politómetro",
-                    "draft_current",
-                    "current-hash",
-                )
-            )
-
-        self.assertTrue(result)
-        inputs = trigger.call_args.kwargs["inputs"]
-        self.assertEqual(inputs["review_request_id"], request_id)
-        self.assertEqual(
-            discord_reviewer.base64.b64decode(
-                inputs["caption_override_b64"]
-            ).decode("utf-8"),
-            "Legenda política corrigida.\n#Politómetro",
-        )
-        supersede.assert_awaited_once()
-
-    def test_link_correction_rejects_a_superseded_review_card(self):
-        draft = {
-            "draft_id": "draft_current",
-            "content_hash": "current-hash",
-            "q1": {"id": "book_1", "link": "https://example.com/old"},
-        }
-        with (
-            mock.patch.object(
-                discord_reviewer,
-                "get_github_file",
-                return_value=(json.dumps(draft).encode("utf-8"), "sha"),
-            ),
-            mock.patch.object(discord_reviewer, "update_github_file") as update,
-            mock.patch.object(
-                discord_reviewer, "trigger_review_regeneration"
-            ) as trigger,
-        ):
-            result = asyncio.run(
-                discord_reviewer.update_recommendation_field(
-                    "100",
-                    "q1",
-                    "link",
-                    "https://example.com/new",
-                    "draft_old",
-                    "old-hash",
-                )
-            )
-
-        self.assertIn("já não corresponde", result)
-        update.assert_not_called()
-        trigger.assert_not_called()
-
-    def test_link_correction_requests_new_card_and_closes_old_card(self):
-        draft = {
-            "draft_id": "draft_current",
-            "content_hash": "current-hash-full",
-            "q1": {"id": "book_1", "link": "https://example.com/old"},
-        }
-        database = {
-            "queue": [
-                {"id": "book_1", "link": "https://example.com/old"}
-            ],
-            "history": [],
-        }
-        written = {}
-
-        def fake_get(path):
-            value = (
-                draft
-                if path == "scripts/review_draft.json"
-                else database
-            )
-            return json.dumps(value).encode("utf-8"), f"sha-{path}"
-
-        def fake_update(path, content, message, sha=None):
-            written[path] = json.loads(content.decode("utf-8"))
-            return True
-
-        with (
-            mock.patch.object(
-                discord_reviewer, "get_github_file", side_effect=fake_get
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "update_github_file",
-                side_effect=fake_update,
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "trigger_review_regeneration",
-                return_value=True,
-            ) as trigger,
-            mock.patch.object(
-                discord_reviewer,
-                "mark_review_superseded",
-                new=mock.AsyncMock(return_value=True),
-            ) as supersede,
-        ):
-            result = asyncio.run(
-                discord_reviewer.update_recommendation_field(
-                    "100",
-                    "q1",
-                    "link",
-                    "https://example.com/new",
-                    "draft_current",
-                    "current-hash",
-                )
-            )
-
-        self.assertTrue(result)
-        self.assertEqual(
-            written["scripts/review_draft.json"]["q1"]["link"],
-            "https://example.com/new",
-        )
-        self.assertEqual(
-            written["website/public/recommendations.json"]["queue"][0]["link"],
-            "https://example.com/new",
-        )
-        trigger.assert_called_once_with()
-        supersede.assert_awaited_once()
 
     def test_review_cover_updates_item_and_identity_manifest_hashes(self):
         item = {
@@ -416,83 +228,6 @@ class DiscordApplicationTests(unittest.TestCase):
         self.assertNotIn("servidor", message.lower())
         self.assertIn("tenta novamente", message.lower())
 
-    def test_recommendation_view_exposes_link_edit_button(self):
-        view = discord_reviewer.RecommendationApprovalView()
-        custom_ids = {child.custom_id for child in view.children}
-        self.assertIn("rec_edit_link", custom_ids)
-
-    def test_pending_recommendation_link_edit_rebinds_submission_proof(self):
-        database = {"queue": [whole_podcast()], "history": []}
-        written = {}
-
-        def fake_update(path, content, message, sha=None):
-            written[path] = json.loads(content.decode("utf-8"))
-            return True
-
-        with (
-            mock.patch.object(
-                discord_reviewer,
-                "get_github_file",
-                return_value=(json.dumps(database).encode("utf-8"), "sha"),
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "update_github_file",
-                side_effect=fake_update,
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "_is_authorized_reviewer",
-                return_value=True,
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "CHANNEL_ID",
-                200000000000000002,
-            ),
-        ):
-            result = discord_reviewer.update_pending_recommendation_link(
-                "web_podcast_1",
-                "100000000000000001",
-                "200000000000000002",
-                "https://better.example.org/show",
-                SimpleNamespace(id=42),
-            )
-
-        self.assertTrue(result["ok"])
-        stored = written["website/public/recommendations.json"]["queue"][0]
-        self.assertEqual(stored["link"], "https://better.example.org/show")
-        self.assertEqual(
-            stored["communitySubmission"]["link"],
-            "https://better.example.org/show",
-        )
-        self.assertEqual(
-            stored["submissionHash"],
-            community_submission_hash(stored),
-        )
-        self.assertEqual(
-            stored["discordApproval"]["payloadHash"],
-            stored["submissionHash"],
-        )
-        self.assertEqual(stored["discordApproval"]["status"], "pending")
-
-    def test_pending_recommendation_link_edit_rejects_private_destinations(self):
-        with mock.patch.object(
-            discord_reviewer,
-            "_is_authorized_reviewer",
-            return_value=True,
-        ):
-            result = discord_reviewer.update_pending_recommendation_link(
-                "web_podcast_1",
-                "100000000000000001",
-                "200000000000000002",
-                "http://127.0.0.1/admin",
-                SimpleNamespace(id=42),
-            )
-
-        self.assertFalse(result["ok"])
-        self.assertIn("privada", result["error"])
-
     def test_expired_recommendation_error_suggests_recent_content(self):
         message = discord_reviewer.public_recommendation_error(
             "A fonte foi identificada, mas o prazo de relevância terminou."
@@ -539,23 +274,13 @@ class DiscordApplicationTests(unittest.TestCase):
                 "update_github_file",
                 side_effect=fake_update,
             ),
-            mock.patch.object(
-                discord_reviewer,
-                "_is_authorized_reviewer",
-                return_value=True,
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "CHANNEL_ID",
-                200000000000000002,
-            ),
         ):
             result = discord_reviewer.approve_recommendation(
                 "web_podcast_1",
                 SimpleNamespace(id=42),
                 "watch",
-                "100000000000000001",
-                "200000000000000002",
+                "discord-message-1",
+                "discord-channel-1",
             )
 
         self.assertTrue(result["ok"])
@@ -563,8 +288,9 @@ class DiscordApplicationTests(unittest.TestCase):
         self.assertEqual(stored["status"], "watching")
         self.assertEqual(stored["approvalMode"], "watch")
         self.assertEqual(stored["watchlistCollectionId"], "12345")
+        self.assertEqual(stored["discordApproval"]["status"], "approved")
 
-    def test_approval_is_bound_to_exact_discord_message(self):
+    def test_approval_requires_the_delivered_discord_message(self):
         database = {"queue": [whole_podcast()], "history": []}
         with (
             mock.patch.object(
@@ -573,53 +299,68 @@ class DiscordApplicationTests(unittest.TestCase):
                 return_value=(json.dumps(database).encode(), "sha"),
             ),
             mock.patch.object(
-                discord_reviewer,
-                "_is_authorized_reviewer",
-                return_value=True,
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "CHANNEL_ID",
-                200000000000000002,
-            ),
-            mock.patch.object(
-                discord_reviewer,
-                "update_github_file",
+                discord_reviewer, "update_github_file"
             ) as update_mock,
         ):
             result = discord_reviewer.approve_recommendation(
                 "web_podcast_1",
                 SimpleNamespace(id=42),
                 "queue",
-                "999999999999999999",
-                "200000000000000002",
+                "different-message",
+                "discord-channel-1",
             )
 
         self.assertFalse(result["ok"])
+        self.assertIn("não corresponde", result["error"])
         update_mock.assert_not_called()
 
-    def test_approval_helper_rechecks_reviewer_authorization(self):
+    def test_unresolved_suggestion_is_approved_but_not_queued(self):
+        item = whole_podcast()
+        item.update(
+            {
+                "type": "book",
+                "title": "Sugestão sem link",
+                "link": "",
+                "imageUrl": "",
+                "resolutionStatus": "unresolved",
+                "verification": {
+                    "status": "unresolved",
+                    "matchedFields": ["title"],
+                },
+            }
+        )
+        database = {"queue": [item], "history": []}
+        written = {}
+
+        def fake_update(path, content, message, sha=None):
+            written[path] = json.loads(content.decode("utf-8"))
+            return True
+
         with (
             mock.patch.object(
                 discord_reviewer,
-                "_is_authorized_reviewer",
-                return_value=False,
+                "get_github_file",
+                return_value=(json.dumps(database).encode(), "sha"),
             ),
             mock.patch.object(
                 discord_reviewer,
-                "get_github_file",
-            ) as get_mock,
+                "update_github_file",
+                side_effect=fake_update,
+            ),
         ):
             result = discord_reviewer.approve_recommendation(
                 "web_podcast_1",
                 SimpleNamespace(id=42),
                 "queue",
-                "100000000000000001",
-                "200000000000000002",
+                "discord-message-1",
+                "discord-channel-1",
             )
 
-        self.assertFalse(result["ok"])
-        get_mock.assert_not_called()
+        self.assertTrue(result["ok"])
+        self.assertFalse(result["queued"])
+        stored = written["website/public/recommendations.json"]["queue"][0]
+        self.assertEqual(stored["status"], "approved_pending_enrichment")
+        self.assertEqual(stored["discordApproval"]["status"], "approved")
 
     def test_watchlist_append_is_idempotent_by_apple_collection_id(self):
         item = whole_podcast()
