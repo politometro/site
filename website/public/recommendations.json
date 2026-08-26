@@ -1021,46 +1021,6 @@
       "validationError": "SOURCE_MISMATCH [Contraponto. A saúde da democracia e o fantasma dos corte nas pensões]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
-      "id": "rss_highlight_e350555d266a7823",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Não fazer nada",
-      "authorOrMeta": "André Abrantes Amaral",
-      "description": "Perante um estudo que encomendou sobre a segurança social com recomendações de mudanças necessárias, o governo decide não fazer nada. Para não perder votos, Luís Montenegro faz-nos perder tudo.",
-      "imageUrl": "/covers/highlight_n_o_fazer_nada_a33a76f5_1038e06bf96c.jpg",
-      "link": "https://observador.pt/opiniao/nao-fazer-nada/",
-      "externalId": "article:url:e350555d266a782372cb365d",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-22T23:22:52Z",
-      "expiryDate": "2026-09-21T23:22:52Z",
-      "createdAt": "2026-08-23T04:57:57.926754Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/nao-fazer-nada/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2224%3A2224%3Anowe%3A226%3A374%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170541%2Fandre-amaral.jpg",
-        "categories": [
-          "Governo",
-          "Política"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:e350555d266a782372cb365d",
-        "score": 1.0,
-        "coverHash": "19d90940e35bc60cfba5065c45d97a56b2f61ef8c2ef6710ebe9d7fad315deb3",
-        "verifiedAt": "2026-08-23T04:57:58.078332Z",
-        "resolvedTitle": "Não fazer nada",
-        "resolvedAuthor": "André Abrantes Amaral",
-        "sourcePublishedAt": "2026-08-22T23:22:52Z",
-        "sourceDescription": "Perante um estudo que encomendou sobre a segurança social com recomendações de mudanças necessárias, o governo decide não fazer nada. Para não perder votos, Luís Montenegro faz-nos perder tudo."
-      }
-    },
-    {
       "id": "rss_podcast_c0be4eaa630c0102",
       "type": "podcast",
       "category": "Podcast",
@@ -1149,51 +1109,11 @@
       }
     },
     {
-      "id": "rss_highlight_f0977879ca273dbc",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "A Europa chamou-lhes extremistas. Depois deu-lhes razão",
-      "authorOrMeta": "Nelson Miguel Dias da Silva",
-      "description": "A alternativa não é entre ingenuidade multicultural e etnocentrismo primário. A alternativa é entre uma democracia adulta, capaz de discutir os seus limites, ou uma democracia infantilizada",
-      "imageUrl": "/covers/highlight_a_europa_chamou_lhes_extremistas__depois_deu_lhes__faeb944c_9f4998b9b0c1.jpg",
-      "link": "https://observador.pt/opiniao/a-europa-chamou-lhes-extremistas-depois-deu-lhes-razao/",
-      "externalId": "article:url:f0977879ca273dbc08e05a88",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-23T23:10:51Z",
-      "expiryDate": "2026-09-22T23:10:51Z",
-      "createdAt": "2026-08-24T05:07:11.412759Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/a-europa-chamou-lhes-extremistas-depois-deu-lhes-razao/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F06%2F25232515%2Fimage0.jpg",
-        "categories": [
-          "Extrema Direita",
-          "Política"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:f0977879ca273dbc08e05a88",
-        "score": 1.0,
-        "coverHash": "f6e9673ac9e97820f2d64528393169f955a94a81a137e12ffc38c21973d11c0c",
-        "verifiedAt": "2026-08-24T05:07:11.567830Z",
-        "resolvedTitle": "A Europa chamou-lhes extremistas. Depois deu-lhes razão",
-        "resolvedAuthor": "Nelson Miguel Dias da Silva",
-        "sourcePublishedAt": "2026-08-23T23:10:51Z",
-        "sourceDescription": "A alternativa não é entre ingenuidade multicultural e etnocentrismo primário. A alternativa é entre uma democracia adulta, capaz de discutir os seus limites, ou uma democracia infantilizada"
-      }
-    },
-    {
       "id": "rss_highlight_69cdbdbfa3819d81",
       "type": "highlight",
       "category": "Destaque",
       "title": "A cobardia moderna",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Nuno Gonçalo Poças",
       "description": "Montenegro podia ter escolhido construir uma maioria política e social reformista, mas nunca o conseguirá, porque não está, nunca esteve, sequer interessado em construí-la.",
       "imageUrl": "/covers/highlight_a_cobardia_moderna_dfe296c7_aabeb02d72da.jpg",
       "link": "https://observador.pt/opiniao/a-cobardia-moderna/",
@@ -1217,13 +1137,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:69cdbdbfa3819d812080c2b4",
         "score": 1.0,
         "coverHash": "1ecaa7c9e81c833a22f207176ca0e6b19354e3eb9ce9af733c7243db3e8d73f1",
         "verifiedAt": "2026-08-25T05:00:16.920292Z",
         "resolvedTitle": "A cobardia moderna",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Nuno Gonçalo Poças",
         "sourcePublishedAt": "2026-08-24T23:25:54Z",
         "sourceDescription": "Montenegro podia ter escolhido construir uma maioria política e social reformista, mas nunca o conseguirá, porque não está, nunca esteve, sequer interessado em construí-la."
       }
@@ -1233,7 +1153,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "As legislativas de 2028",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Rui Pedro Antunes",
       "description": "A aprovação do OE2027 está quase garantida, mas, no ano seguinte, será provável Carneiro ceder à tentação de provocar crise política. Já Ventura está sempre pronto para ela. Seguro pouco poderá fazer.",
       "imageUrl": "/covers/highlight_as_legislativas_de_2028_ea145183_7c50389e88e6.jpg",
       "link": "https://observador.pt/opiniao/as-legislativas-de-2028/",
@@ -1261,13 +1181,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:21f5e9253783d7ce116409cd",
         "score": 1.0,
         "coverHash": "091614f66c8e38f4d50dce0197adfe04107fef54e87ab6ea019930c916fd002c",
         "verifiedAt": "2026-08-25T05:00:17.070774Z",
         "resolvedTitle": "As legislativas de 2028",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Rui Pedro Antunes",
         "sourcePublishedAt": "2026-08-24T23:22:05Z",
         "sourceDescription": "A aprovação do OE2027 está quase garantida, mas, no ano seguinte, será provável Carneiro ceder à tentação de provocar crise política. Já Ventura está sempre pronto para ela. Seguro pouco poderá fazer."
       }
@@ -1313,6 +1233,87 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "44fd0c7c5a1d58264d62647e45c371c3cad76087a00fa90a166e8110a3e66adc",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_abe435a3c1a7dbd1",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "O impacto das eleições presidenciais no governo",
+      "authorOrMeta": "observador.pt",
+      "description": "O governo deve abandonar rapidamente a tese dos três blocos. Só desse modo se distingue claramente do PS. E só assim combate os socialistas, o maior adversário do governo, e reduz o apelo do Chega.",
+      "imageUrl": "/covers/highlight_o_impacto_das_elei__es_presidenciais_no_governo_a16bdb6f_6d420627b7e6.jpg",
+      "link": "https://observador.pt/opiniao/o-impacto-das-eleicoes-presidenciais-no-governo/",
+      "externalId": "article:url:abe435a3c1a7dbd1d5921c85",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-25T23:25:52Z",
+      "expiryDate": "2026-09-24T23:25:52Z",
+      "createdAt": "2026-08-26T05:01:34.642508Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/o-impacto-das-eleicoes-presidenciais-no-governo/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2666%3A2665%3Anowe%3A0%3A503%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170547%2Fjoao-marques-de-almeida.jpg",
+        "categories": [
+          "Governo",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:abe435a3c1a7dbd1d5921c85",
+        "score": 1.0,
+        "coverHash": "8fd790e50e35a95e95758ad73bbd3b448ba6acc7f0061a28d08f69ada21043aa",
+        "verifiedAt": "2026-08-26T05:01:34.886986Z",
+        "resolvedTitle": "O impacto das eleições presidenciais no governo",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-25T23:25:52Z",
+        "sourceDescription": "O governo deve abandonar rapidamente a tese dos três blocos. Só desse modo se distingue claramente do PS. E só assim combate os socialistas, o maior adversário do governo, e reduz o apelo do Chega."
+      }
+    },
+    {
+      "id": "rss_highlight_4bf031feb2cb1b7b",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Na pensão sagrada já quase não há águas correntes",
+      "authorOrMeta": "observador.pt",
+      "description": "Para o Presidente Seguro, as reformas são sagradas. É também como as vacas na Índia. Só que por lá produzem imenso leite, enquanto por cá o eleitoralismo há de secar essa tetinha em menos de nada",
+      "imageUrl": "/covers/highlight_na_pens_o_sagrada_j__quase_n_o_h___guas_correntes_89442882_35243167cc6c.jpg",
+      "link": "https://observador.pt/opiniao/na-pensao-sagrada-ja-quase-nao-ha-aguas-correntes/",
+      "externalId": "article:url:4bf031feb2cb1b7b368586f5",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-25T23:21:14Z",
+      "expiryDate": "2026-09-24T23:21:14Z",
+      "createdAt": "2026-08-26T05:01:34.643246Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/na-pensao-sagrada-ja-quase-nao-ha-aguas-correntes/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A640%3A640%3Anowe%3A0%3A175%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2022%2F01%2F14185443%2Ftiago-dores-15-1.jpeg",
+        "categories": [
+          "Pensões",
+          "Segurança Social",
+          "Economia"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:4bf031feb2cb1b7b368586f5",
+        "score": 1.0,
+        "coverHash": "0945f0b15e5797ca942dd6b3f786e454669571ed1673ba09b8570fd0e518d608",
+        "verifiedAt": "2026-08-26T05:01:35.096990Z",
+        "resolvedTitle": "Na pensão sagrada já quase não há águas correntes",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-25T23:21:14Z",
+        "sourceDescription": "Para o Presidente Seguro, as reformas são sagradas. É também como as vacas na Índia. Só que por lá produzem imenso leite, enquanto por cá o eleitoralismo há de secar essa tetinha em menos de nada"
       }
     }
   ],
