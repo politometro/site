@@ -1196,7 +1196,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "O impacto das eleições presidenciais no governo",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "João Marques de Almeida",
       "description": "O governo deve abandonar rapidamente a tese dos três blocos. Só desse modo se distingue claramente do PS. E só assim combate os socialistas, o maior adversário do governo, e reduz o apelo do Chega.",
       "imageUrl": "/covers/highlight_o_impacto_das_elei__es_presidenciais_no_governo_a16bdb6f_6d420627b7e6.jpg",
       "link": "https://observador.pt/opiniao/o-impacto-das-eleicoes-presidenciais-no-governo/",
@@ -1220,13 +1220,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:abe435a3c1a7dbd1d5921c85",
         "score": 1.0,
         "coverHash": "8fd790e50e35a95e95758ad73bbd3b448ba6acc7f0061a28d08f69ada21043aa",
         "verifiedAt": "2026-08-26T05:01:34.886986Z",
         "resolvedTitle": "O impacto das eleições presidenciais no governo",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "João Marques de Almeida",
         "sourcePublishedAt": "2026-08-25T23:25:52Z",
         "sourceDescription": "O governo deve abandonar rapidamente a tese dos três blocos. Só desse modo se distingue claramente do PS. E só assim combate os socialistas, o maior adversário do governo, e reduz o apelo do Chega."
       }
@@ -1236,7 +1236,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Na pensão sagrada já quase não há águas correntes",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Tiago Dores",
       "description": "Para o Presidente Seguro, as reformas são sagradas. É também como as vacas na Índia. Só que por lá produzem imenso leite, enquanto por cá o eleitoralismo há de secar essa tetinha em menos de nada",
       "imageUrl": "/covers/highlight_na_pens_o_sagrada_j__quase_n_o_h___guas_correntes_89442882_35243167cc6c.jpg",
       "link": "https://observador.pt/opiniao/na-pensao-sagrada-ja-quase-nao-ha-aguas-correntes/",
@@ -1261,13 +1261,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:4bf031feb2cb1b7b368586f5",
         "score": 1.0,
         "coverHash": "0945f0b15e5797ca942dd6b3f786e454669571ed1673ba09b8570fd0e518d608",
         "verifiedAt": "2026-08-26T05:01:35.096990Z",
         "resolvedTitle": "Na pensão sagrada já quase não há águas correntes",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Tiago Dores",
         "sourcePublishedAt": "2026-08-25T23:21:14Z",
         "sourceDescription": "Para o Presidente Seguro, as reformas são sagradas. É também como as vacas na Índia. Só que por lá produzem imenso leite, enquanto por cá o eleitoralismo há de secar essa tetinha em menos de nada"
       }
@@ -1312,7 +1312,7 @@
         "sourceDescription": "Reedição do arquivo de podcasts da SIC. Episódio publicado originalmente em novembro de 2024, de “Coisa Que Não Edifica Nem Destrói”. o primeiro podcast original de Ricardo Araújo Pereira. Ricardo Araújo Pereira fala sozinho sobre as vantagens e os inconvenientes de estar morto. Alega que determinada categoria de pessoas não está exactamente viva nem morta.",
         "editorialDescription": "Análise sobre ricardo Araújo Pereira fala sozinho sobre as vantagens e os inconvenientes de estar morto.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "856b87a19b106e58581489d1cff6902fdfaf80d0870d23aca207d27dddee1a2a",
+        "editorialSourceHash": "79222b22f280d3f4fcebe3c2bddec93b07e5a0e068ce51ffec143460cfee21e7",
         "editorialDescriptionProvider": "extractive"
       }
     }
