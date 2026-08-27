@@ -469,9 +469,13 @@ export default function PoliticalIntelligencePanel() {
   const [scope, setScope] = useState("atual");
   const [comparisonLeft, setComparisonLeft] = useState("");
   const [comparisonRight, setComparisonRight] = useState("");
-  const [promiseLimit, setPromiseLimit] = useState(20);
-  const [voteLimit, setVoteLimit] = useState(12);
-  const [articleLimit, setArticleLimit] = useState(30);
+  const [promiseLimit, setPromiseLimit] = useState(25);
+  const [voteLimit, setVoteLimit] = useState(25);
+  const [articleLimit, setArticleLimit] = useState(25);
+  const [promisePage, setPromisePage] = useState(1);
+  const [votePage, setVotePage] = useState(1);
+  const [articlePage, setArticlePage] = useState(1);
+  const ITEMS_PER_PAGE = 25;
 
   const close = () => {
     if (closeTimer.current) {
@@ -537,7 +541,7 @@ export default function PoliticalIntelligencePanel() {
     closeTimer.current = setTimeout(() => setIsOpen(false), 180);
   };
 
-  const currentScope = scope === "atual" ? data?.currentLegislature : scope;
+const currentScope = scope === "atual" ? data?.currentLegislature : scope;
   const statistics = data
     ? (currentScope === "sempre" ? data.statistics.allTime : data.statistics.byLegislature[currentScope ?? ""])
     : undefined;
@@ -566,11 +570,33 @@ export default function PoliticalIntelligencePanel() {
     )) ?? null;
   }, [statistics, comparisonLeft, comparisonRight]);
 
+  // Paginated data
+  const paginatedPromises = useMemo(() => {
+    const start = (promisePage - 1) * ITEMS_PER_PAGE;
+    return promises.slice(start, start + ITEMS_PER_PAGE);
+  }, [promises, promisePage]);
+  const totalPromisePages = Math.ceil(promises.length / ITEMS_PER_PAGE);
+
+  const paginatedVotes = useMemo(() => {
+    const start = (votePage - 1) * ITEMS_PER_PAGE;
+    return votes.slice(start, start + ITEMS_PER_PAGE);
+  }, [votes, votePage]);
+  const totalVotePages = Math.ceil(votes.length / ITEMS_PER_PAGE);
+
+  const paginatedArticles = useMemo(() => {
+    const start = (articlePage - 1) * ITEMS_PER_PAGE;
+    return articles.slice(start, start + ITEMS_PER_PAGE);
+  }, [articles, articlePage]);
+  const totalArticlePages = Math.ceil(articles.length / ITEMS_PER_PAGE);
+
   const setPanelTab = (nextTab: Tab) => {
     setTab(nextTab);
-    setPromiseLimit(20);
-    setVoteLimit(12);
-    setArticleLimit(30);
+    setPromiseLimit(25);
+    setVoteLimit(25);
+    setArticleLimit(25);
+    setPromisePage(1);
+    setVotePage(1);
+    setArticlePage(1);
   };
 
   return (
@@ -669,10 +695,10 @@ export default function PoliticalIntelligencePanel() {
             {loadError && <p className={styles.error}>{loadError}</p>}
             {!data && !loadError && <p className={styles.empty}>A preparar o quadro público…</p>}
 
-            {data && tab === "promessas" && (
+{data && tab === "promessas" && (
               <div className={styles.promiseList}>
                 {promises.length === 0 && <p className={styles.empty}>Ainda não há promessas verificáveis neste filtro. A próxima sincronização irá preencher esta área.</p>}
-                {promises.slice(0, promiseLimit).map((promise) => {
+                {paginatedPromises.map((promise) => {
                   const relatedProposals = (promise.proposalMatches ?? []).map((proposal, index) => ({
                     proposal,
                     matchingVotes: (proposal.voteIds ?? [])
@@ -747,7 +773,29 @@ export default function PoliticalIntelligencePanel() {
                     </article>
                   );
                 })}
-                {promises.length > promiseLimit && <button type="button" className={styles.moreButton} onClick={() => setPromiseLimit((limit) => limit + 20)}>Mostrar mais promessas</button>}
+                {totalPromisePages > 1 && (
+                  <div className={styles.pagination}>
+                    <button
+                      type="button"
+                      className={styles.pageButton}
+                      onClick={() => setPromisePage((p) => Math.max(1, p - 1))}
+                      disabled={promisePage === 1}
+                    >
+                      Anterior
+                    </button>
+                    <span className={styles.pageInfo}>
+                      Página {promisePage} de {totalPromisePages} ({promises.length} promessas)
+                    </span>
+                    <button
+                      type="button"
+                      className={styles.pageButton}
+                      onClick={() => setPromisePage((p) => Math.min(totalPromisePages, p + 1))}
+                      disabled={promisePage === totalPromisePages}
+                    >
+                      Próxima
+                    </button>
+                  </div>
+                )}
               </div>
             )}
 
@@ -776,15 +824,37 @@ export default function PoliticalIntelligencePanel() {
 
               <section className={styles.rawVotes}>
                 <h3>Votações detalhadas</h3>
-                {votes.length === 0 ? <p className={styles.empty}>Ainda não há votações detalhadas neste filtro.</p> : votes.slice(0, voteLimit).map((vote) => <VoteBox key={vote.id} vote={vote} parties={data.parties} />)}
-                {votes.length > voteLimit && <button type="button" className={styles.moreButton} onClick={() => setVoteLimit((limit) => limit + 12)}>Mostrar mais votações</button>}
+                {votes.length === 0 ? <p className={styles.empty}>Ainda não há votações detalhadas neste filtro.</p> : paginatedVotes.map((vote) => <VoteBox key={vote.id} vote={vote} parties={data.parties} />)}
+                {totalVotePages > 1 && (
+                  <div className={styles.pagination}>
+                    <button
+                      type="button"
+                      className={styles.pageButton}
+                      onClick={() => setVotePage((p) => Math.max(1, p - 1))}
+                      disabled={votePage === 1}
+                    >
+                      Anterior
+                    </button>
+                    <span className={styles.pageInfo}>
+                      Página {votePage} de {totalVotePages} ({votes.length} votações)
+                    </span>
+                    <button
+                      type="button"
+                      className={styles.pageButton}
+                      onClick={() => setVotePage((p) => Math.min(totalVotePages, p + 1))}
+                      disabled={votePage === totalVotePages}
+                    >
+                      Próxima
+                    </button>
+                  </div>
+                )}
               </section>
             </>}
 
             {data && tab === "noticias" && (
               <div className={styles.articleList}>
                 {articles.length === 0 && <p className={styles.empty}>Ainda não foram recolhidos excertos noticiosos permitidos.</p>}
-                {articles.slice(0, articleLimit).map((article) => (
+                {paginatedArticles.map((article) => (
                   <article key={article.id} className={styles.articleCard}>
                     <div><span>{article.source}</span><time>{formatDate(article.publishedAt)}</time></div>
                     <h3>{article.title}</h3>
@@ -792,10 +862,28 @@ export default function PoliticalIntelligencePanel() {
                     <a className={styles.sourceLink} href={article.url} target="_blank" rel="noreferrer">Ler na fonte</a>
                   </article>
                 ))}
-                {articles.length > articleLimit && (
-                  <button type="button" className={styles.moreButton} onClick={() => setArticleLimit((limit) => limit + 30)}>
-                    Mostrar mais notícias
-                  </button>
+                {totalArticlePages > 1 && (
+                  <div className={styles.pagination}>
+                    <button
+                      type="button"
+                      className={styles.pageButton}
+                      onClick={() => setArticlePage((p) => Math.max(1, p - 1))}
+                      disabled={articlePage === 1}
+                    >
+                      Anterior
+                    </button>
+                    <span className={styles.pageInfo}>
+                      Página {articlePage} de {totalArticlePages} ({articles.length} notícias)
+                    </span>
+                    <button
+                      type="button"
+                      className={styles.pageButton}
+                      onClick={() => setArticlePage((p) => Math.min(totalArticlePages, p + 1))}
+                      disabled={articlePage === totalArticlePages}
+                    >
+                      Próxima
+                    </button>
+                  </div>
                 )}
               </div>
             )}

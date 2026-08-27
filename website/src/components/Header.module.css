@@ -45,6 +45,9 @@
   color: var(--text-secondary);
   border-radius: var(--radius-full);
   transition: var(--transition-fast);
+  text-align: center;
+  white-space: normal;
+  word-break: keep-all;
 }
 
 .navLink:hover {
@@ -167,15 +170,17 @@
     animation: slideDown 0.2s ease-out forwards;
   }
   
-  .mobileNavLink {
-    padding: 0.75rem 1.25rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    border-radius: var(--radius-md);
-    transition: var(--transition-fast);
-    text-align: center; /* Center menu text */
-  }
+.mobileNavLink {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+  text-align: center;
+  white-space: normal;
+  word-break: keep-all;
+}
   
   .mobileNavLink:hover {
     background: rgba(10, 49, 74, 0.04);
@@ -212,5 +217,8 @@
   .mobileNavLink {
     padding: 0.65rem 1rem;
     font-size: 0.85rem;
+    text-align: center;
+    white-space: normal;
+    word-break: keep-all;
   }
 }

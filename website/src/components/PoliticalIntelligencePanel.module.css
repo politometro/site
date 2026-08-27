@@ -604,6 +604,48 @@
   outline: none;
 }
 
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.pageButton {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.7rem;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: 700;
+  transition: var(--transition-fast);
+}
+
+.pageButton:hover:not(:disabled),
+.pageButton:focus-visible:not(:disabled) {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.pageButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .articleList {
   display: grid;
   gap: 0.75rem;

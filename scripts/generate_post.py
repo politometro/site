@@ -470,7 +470,7 @@ def build_caption(
     post_type="sunday_standard",
     *,
     title_chars=110,
-    author_chars=80,
+    author_chars=0,
     description_chars=220,
 ):
     sections = []
@@ -478,11 +478,6 @@ def build_caption(
         item = selected[qkey]
         emoji = _recommendation_emoji(item)
         title = _ellipsize(_display_title(item), title_chars)
-        author = (
-            _ellipsize(item.get("authorOrMeta", ""), author_chars)
-            if author_chars
-            else ""
-        )
         clean_desc = _sanitize_description(
             item.get("description", ""), _display_title(item)
         )
@@ -491,9 +486,8 @@ def build_caption(
             if description_chars
             else ""
         )
-        author_suffix = f" ({author})" if author else ""
         category = _ellipsize(item.get("category") or "Recomendação", 32)
-        section = f"{emoji} {category.upper()}: {title}{author_suffix}"
+        section = f"{emoji} {category.upper()}: {title}"
         if description:
             section += f"\n{description}"
         sections.append(section)
@@ -536,9 +530,9 @@ def build_caption_within_limit(
 ):
     """Compact optional copy progressively; a long caption never aborts a draft."""
     strategies = (
-        (110, 80, 220),
-        (96, 64, 170),
-        (80, 48, 120),
+        (110, 0, 220),
+        (96, 0, 170),
+        (80, 0, 120),
         (64, 0, 80),
         (48, 0, 0),
     )
@@ -926,6 +920,10 @@ def _sanitize_description(description, title=""):
     text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"https?://\S+", "", text)
     text = re.sub(r"www\.\S+", "", text)
+    # Remove dates like "2024", "2023", "19 de janeiro de 2024", etc.
+    text = re.sub(r"\b(?:19|20)\d{2}\b", "", text)
+    text = re.sub(r"\b\d{1,2}\s+de\s+\w+\s+de\s+(?:19|20)\d{2}\b", "", text)
+    text = re.sub(r"\b\d{1,2}/\d{1,2}/\d{4}\b", "", text)
     text = re.sub(r"\s+", " ", text).strip()
 
     if title:
@@ -973,13 +971,21 @@ def _fallback_description_from_title(item):
     topic = topic if topic else raw_title
     media_type = str(item.get("type", "")).strip().lower()
     if media_type == "investigation":
-        return f"Investigação sobre {topic.rstrip(' .!?')}."
+        return f"Análise aprofundada sobre {topic.rstrip(' .!?')}."
     if media_type == "nostalgia":
-        return f"Sketch ou episódio de humor sobre {topic.rstrip(' .!?')}."
+        return f"Episódio de humor que retrata {topic.rstrip(' .!?')}."
     if media_type == "highlight":
         return f"Texto de opinião sobre {topic.rstrip(' .!?')}."
     if media_type == "podcast":
-        return f"Análise sobre {topic.rstrip(' .!?')}."
+        return f"Conversa sobre {topic.rstrip(' .!?')}."
+    if media_type == "book":
+        return f"Livro que aborda {topic.rstrip(' .!?')}."
+    if media_type == "movie":
+        return f"Filme que explora {topic.rstrip(' .!?')}."
+    if media_type == "documentary":
+        return f"Documentário sobre {topic.rstrip(' .!?')}."
+    if media_type == "series":
+        return f"Série que trata de {topic.rstrip(' .!?')}."
     return raw_title
 
 

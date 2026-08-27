@@ -327,6 +327,21 @@ CELEBRITY_LIFESTYLE_RE = re.compile(
     r"angelina jolie|leonardo dicaprio|miley cyrus|beyonc[eé]|rihanna|"
     r"cristiano ronaldo|messi|neymar|mbapp[eé]|haaland|"
     r"shakira|jennifer lopez|lady gaga|madonna|justin bieber|"
+    # Realeza/monarquia (internacional, sem âncora PT/UE)
+    r"rainha\s+(?:da|do|de)?\s*\w+|rei\s+(?:da|do|de)?\s*\w+|pr[íi]ncipe\s+(?:da|do|de)?\s*\w+|princesa\s+(?:da|do|de)?\s*\w+|"
+    r"monarquia|pal[aá]cio\s+real|coroa\s+(?:brit[aâ]nica|espanhola|holandesa|belga|sueca|dinamarquesa|norueguesa|japonesa)|"
+    r"isabel\s+ii|isabel\s+2|elizabeth\s+ii|queen\s+elizabeth|long\s+live\s+the\s+queen|god\s+save\s+the\s+(?:queen|king)|"
+    r"carlos\s+iii|charles\s+iii|william\s+(?:pr[íi]ncipe|de\s+gales)|harry\s+(?:pr[íi]ncipe|duque\s+de\s+sussex)|"
+    r"felipe\s+vi|letizia|sof[ií]a|leonor|juan\s+carlos|"
+    r"beatrix|willem-alexander|m[aá]xima|amalia|"
+    r"carl\s+xvi\s+gustaf|silvia|victoria|daniel|estelle|oscar|"
+    r"margrethe\s+ii|frederik|mary|"
+    r"philippe|mathilde|elisabeth|gabriel|emmanuel|eleonore|"
+    r"albert\s+ii|paola|philippe|mathilde|laurent|"
+    r"hans-adam|marie|alexander|maximilian|"
+    r"henri|maria|guillaume|stephanie|"
+    r"harald\s+v|sonja|haakon|mette-marit|marius|"
+    r"naruhito|masako|akihito|michiko|akishino|kako|mako|hisahito|"
     # Moda/beleza/corpo
     r"cabelo|seios|bikini|biqu[ií]ni|ver[aã]o|f[eé]rias?\s+(?:na|em)\s+"
     r"|roteiro\s+de\s+viagem|guia\s+de\s+viagem|melhores\s+praias"
@@ -351,6 +366,89 @@ SPORTS_TRANSFER_RE = re.compile(
     r"ficha\s+(?:do|da)\s+jogador|empr[eé]stimo\s+com\s+op[cç][aã]o|"
     r"mercado\s+de\s+(?:transfer[eê]ncias|contrata[cç][oõ]es)|"
     r"renova\s+(?:com|at[eé])\s+(?:o|a)\s+\w+\s+at[eé]"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Ciência/descobertas puras (sem âncora política PT/UE)
+SCIENCE_DISCOVERY_RE = re.compile(
+    r"\b(?:"
+    r"nova\s+esp[eé]cie|descoberta\s+(?:na|em|no)\s+\w+|f[oó]ssil|arqueologia|paleontologia|"
+    r"homo\s+\w+|australopithecus|neanderthal|denisova|"
+    r"espa[çc]o|nasa|esa|telesc[oó]pio|sonda|planeta|asteroide|cometa|"
+    r"buraco\s+negro|onda\s+gravitacional|exoplaneta|marte|j[úu]piter|saturno|"
+    r"intelig[eê]ncia\s+artificial|machine\s+learning|deep\s+learning|algoritmo|"
+    r"sequenciamento|genoma|dna|crisp|gene|mutação|evolução|seleção\s+natural"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Saúde/médico puro (sem âncora política - políticas de saúde ficam)
+HEALTH_MEDICAL_RE = re.compile(
+    r"\b(?:"
+    r"suic[ií]dio|prevenção\s+do\s+suic[ií]dio|voz\s+amiga|linha\s+de\s+apoio|"
+    r"depressão|ansiedade|transtorno|psiquiatria|psicologia|terapia|"
+    r"doença|sintoma|tratamento|cura|vacina|epidemia|pandemia|vírus|bactéria|"
+    r"câncer|tumor|quimioterapia|radioterapia|transplante|doação\s+de\s+órgãos|"
+    r"diabetes|hipertensão|colesterol|obesidade|nutrição|dieta|exercício|"
+    r"hospital|urgência|consulta|médico|enfermeiro|farmacêutico|"
+    r"bem-estar|wellness|mindfulness|meditação|ioga|pilates"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Meteorologia/desastres naturais (sem âncora política)
+WEATHER_DISASTER_RE = re.compile(
+    r"\b(?:"
+    r"tufão|furacão|ciclone|tempestade|temporal|chuva\s+forte|inundação|enchente|"
+    r"terremoto|sismo|tsunami|vulcão|erupção|lava|cinza\s+vulcânica|"
+    r"seca|estiagem|ondade\s+calor|frio\s+intenso|neve|geada|granizo|"
+    r"alerta\s+(?:vermelho|laranja|amarelo)|estado\s+de\s+emergência|"
+    r"proteção\s+civil|bombeiros|evacuação|desabrigado|vítima\s+fatal|"
+    r"morto[s]?\s+(?:em|no|pelo?)\s+(?:tufão|furacão|tempestade|inundação|terremoto|sismo)"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Entretenimento/cultura puro (sem âncora política)
+ENTERTAINMENT_CULTURE_RE = re.compile(
+    r"\b(?:"
+    r"festival|concerto|espetáculo|peça\s+de\s+teatro|filme|cinema|série|streaming|"
+    r"netflix|hbo|disney\+|prime\s+video|apple\s+tv|"
+    r"livro|romance|autor|escritor|prémio\s+literário|nobel\s+de\s+literatura|"
+    r"exposição|museu|galeria|arte|pintura|escultura|arquitetura|design|"
+    r"moda|desfile|semana\s+de\s+moda|beauty|maquiagem|cosmético|perfume|"
+    r"gastronomia|restaurante|chef|receita|vinho|cerveja|café|chocolate|"
+    r"turismo|viagem|destino|hotel|resort|cruzeiro|praia|ilha|montanha|"
+    r"patrimônio\s+mundial|unesco|sítio\s+histórico|monumento|castelo|palácio"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Tecnologia/produtos puro (sem âncora política/regulatória)
+TECH_PRODUCT_RE = re.compile(
+    r"\b(?:"
+    r"smartphone|iphone|android|samsung|xiaomi|google\s+pixel|oneplus|"
+    r"notebook|laptop|macbook|ipad|tablet|smartwatch|apple\s+watch|"
+    r"console|playstation|xbox|nintendo|switch|jogo|game|gaming|"
+    r"app|aplicativo|software|atualização|update|versão|beta|"
+    r"5g|wi-fi|bluetooth|nfc|usb-c|carregador|bateria|processador|chip|"
+    r"inteligência\s+artificial|chatgpt|gemini|copilot|claude|llm|"
+    r"criptomoeda|bitcoin|ethereum|blockchain|nft|metaverso|web3"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Automobilístico puro (sem âncora política/regulatória)
+AUTO_MOTOR_RE = re.compile(
+    r"\b(?:"
+    r"automóvel|carro|motociclo|moto|camioneta|suv|sedan|hatch|station\s+wagon|"
+    r"elétrico|híbrido|plug-in|autonomia|carregamento|posto\s+de\s+carregamento|"
+    r"teste\s+drive|lançamento|nova\s+geração|facelift|restyling|"
+    r"motor|potência|cavalos|torque|0\s+a\s+100|velocidade\s+máxima|"
+    r"consumo|emissões|co2|euro\s+\d+|wltp|"
+    r"mercedes|bmw|audi|volkswagen|ford|toyota|honda|nissan|hyundai|kia|peugeot|citroën|renault|fiat|opel|skoda|seat|dacia|tesla|porsche|ferrari|lamborghini|mclaren|bugatti|"
+    r"fórmula\s+1|f1|moto gp|rally|wtcc|dtm|endurance|le\s+mans"
     r")\b",
     re.IGNORECASE,
 )
@@ -2222,6 +2320,23 @@ def candidate_may_be_relevant(
 
     if is_blocked_non_political(candidate):
         return False
+
+    # Quick title/summary check for obviously non-political content
+    # to avoid downloading articles that will be rejected anyway.
+    title = str(candidate.get("title") or "")
+    summary = str(candidate.get("summary") or "")
+    text = f"{title} {summary}".casefold()
+    if text and not topic_labels(text):
+        if any(
+            padrao.search(text)
+            for padrao in (
+                CELEBRITY_LIFESTYLE_RE, CRIME_ACCIDENT_RE, SPORTS_TRANSFER_RE,
+                SCIENCE_DISCOVERY_RE, HEALTH_MEDICAL_RE, WEATHER_DISASTER_RE,
+                ENTERTAINMENT_CULTURE_RE, TECH_PRODUCT_RE, AUTO_MOTOR_RE
+            )
+        ):
+            return False
+
     # Skip is_purely_foreign_news here - it needs full article text to be accurate.
     # The full classifier will handle scope checking after download.
     return True
@@ -2238,12 +2353,17 @@ def classify_article(
     # âncora política nem tópico claro — evita perder peças como "Governo apoia
     # férias de verão dos jovens" ou "Montenegro lamenta morte de…".
     titulo_casefold = f"{article.get('title') or ''} {article.get('summary') or ''}".casefold()
+    evidence_casefold = evidence.casefold()
     if (
         not has_relevant_political_anchor(entities)
         and not topic_labels(evidence)
         and any(
             padrao.search(titulo_casefold)
-            for padrao in (CELEBRITY_LIFESTYLE_RE, CRIME_ACCIDENT_RE, SPORTS_TRANSFER_RE)
+            for padrao in (
+                CELEBRITY_LIFESTYLE_RE, CRIME_ACCIDENT_RE, SPORTS_TRANSFER_RE,
+                SCIENCE_DISCOVERY_RE, HEALTH_MEDICAL_RE, WEATHER_DISASTER_RE,
+                ENTERTAINMENT_CULTURE_RE, TECH_PRODUCT_RE, AUTO_MOTOR_RE
+            )
         )
     ):
         return [], entities, False
