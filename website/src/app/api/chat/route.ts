@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  normalizeChatMessages,
-  redactConfidentialText,
-  safeRetrievedText,
-  type SafeChatMessage,
+  sanitizeChatMessages,
+  redactSensitiveText,
+  normalizePublicText,
+  type UserChatMessage,
 } from "@/lib/chatSecurity";
 
 // Shared memory in the Node process to track daily limit exhaustions
@@ -157,16 +157,16 @@ function completionAsSse(text: string) {
 
 export async function POST(req: NextRequest) {
   try {
-    let messages: SafeChatMessage[];
+    let messages: UserChatMessage[];
     try {
       const body: unknown = await req.json();
       const rawMessages =
         body && typeof body === "object" && !Array.isArray(body)
           ? (body as Record<string, unknown>).messages
           : undefined;
-      messages = normalizeChatMessages(rawMessages).map((message) => ({
+      messages = sanitizeChatMessages(rawMessages).map((message) => ({
         ...message,
-        content: redactConfidentialText(message.content),
+        content: redactSensitiveText(message.content),
       }));
     } catch {
       return NextResponse.json(
@@ -442,7 +442,7 @@ export async function POST(req: NextRequest) {
             const meta = match.metadata || {};
             const sourceType = String(meta.source_type || "");
             const isCurrentPoliticalSource = Boolean(sourceType);
-            const sourceText = safeRetrievedText(
+            const sourceText = normalizePublicText(
               meta.text,
               Math.max(2_000, retrievalPlan.maxCharactersPerSource * 2),
             )
@@ -503,10 +503,10 @@ export async function POST(req: NextRequest) {
               sourceText,
               retrievalPlan.maxCharactersPerSource
             );
-            const publicParty = safeRetrievedText(meta.party, 120);
-            const publicCategory = safeRetrievedText(meta.category, 120);
-            const publicYear = safeRetrievedText(String(meta.year || ""), 12);
-            const publicPage = safeRetrievedText(String(meta.page || ""), 24);
+            const publicParty = normalizePublicText(meta.party, 120);
+            const publicCategory = normalizePublicText(meta.category, 120);
+            const publicYear = normalizePublicText(String(meta.year || ""), 12);
+            const publicPage = normalizePublicText(String(meta.page || ""), 24);
             const currentSourceLabel =
               sourceType === "news"
                 ? "Notícia recente"
@@ -685,7 +685,7 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
 
         if (groqRes.ok) {
           const completionPayload = await groqRes.json();
-          const completion = redactConfidentialText(
+          const completion = redactSensitiveText(
             stripModelReasoning(
               String(
                 completionPayload.choices?.[0]?.message?.content || ""

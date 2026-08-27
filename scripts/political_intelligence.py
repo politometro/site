@@ -50,6 +50,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
 import requests
+from requests.adapters import HTTPAdapter
 
 try:
     import orjson
@@ -67,6 +68,31 @@ PROGRAM_CHUNK_FILES = (
     ROOT / "scripts" / "extracted_chunks.json",
     ROOT / "scripts" / "extracted_chunks_ocr.json",
 )
+
+# Categorias que contêm evidência orçamental dentro dos corpora extraídos.
+# Os PDF europeus são extraídos por scripts/extract_eu_budget.py para o
+# terceiro ficheiro; os 39 mil excertos PT vêm na categoria "Orçamentos de
+# Estado" dos corpora gerais.
+BUDGET_CHUNK_CATEGORIES = {
+    "Orçamentos de Estado": "pt_estado",
+    "Orçamento UE (BCE)": "ue_bce",
+    "Quadro Financeiro Plurianual da UE": "ue_mff",
+    "Regulamento Financeiro da UE": "ue_regulamento",
+    "Recursos Próprios da UE": "ue_recursos",
+    "Orçamento UE (EUR-Lex)": "ue_eurlex",
+    "Orçamento UE (Metadados)": "ue_metadados",
+}
+BUDGET_CHUNK_FILES = (
+    ROOT / "scripts" / "extracted_chunks.json",
+    ROOT / "scripts" / "extracted_chunks_ocr.json",
+    ROOT / "scripts" / "extracted_chunks_eu_budget.json",
+)
+
+# GitHub rejeita blobs individuais acima de 100 MB. Os exports crescem com o
+# histórico de notícias, por isso são publicados como listas JSON particionadas
+# e acompanhadas por um manifesto pequeno. O limite fica deliberadamente abaixo
+# do limite do GitHub para deixar margem a variações de serialização.
+JSON_SHARD_MAX_BYTES = 45 * 1024 * 1024
 
 LOGGER = logging.getLogger("political_intelligence")
 
@@ -462,14 +488,32 @@ def is_purely_foreign_news(evidence: str, entities: Sequence[Mapping[str, Any]])
     if not FOREIGN_JURISDICTION_RE.search(evidence):
         return False
     # Check if there is a Portuguese or EU anchor that makes this foreign news relevant to Portugal / EU
+    # Expanded entity kinds/IDs that count as Portuguese/EU anchor
+    pt_eu_kinds = {
+        "party", "coalition", "youth_wing", "person",
+        "government", "institution", "eu_institution",
+        "president", "parliament", "court", "regulator",
+        "central_bank", "security_forces", "health_service",
+        "local_government", "public_service"
+    }
+    pt_eu_ids = {
+        "UNIAO-EUROPEIA", "ONU", "AUTARQUIAS", "JUSTICA", "PRESIDENCIA",
+        "PARLAMENTO", "REGULADORES", "BANCO-DE-PORTUGAL", "ESTADO", "SNS",
+        "FORCAS-SEGURANCA", "SEGURANCA-SOCIAL", "INEM", "ACT", "CMVM",
+        "ERSE", "ANACOM", "CNPD", "EDP", "REN", "TAP", "CP", "CARRIS",
+        "METRO-LISBOA", "METRO-PORTO", "STCP", "CARRIS-METROPOLITANA"
+    }
     has_specific_pt_entity = any(
-        item.get("kind") in {"party", "coalition", "youth_wing", "person"}
-        or item.get("id") in {"UNIAO-EUROPEIA", "ONU"}
+        item.get("kind") in pt_eu_kinds
+        or item.get("id") in pt_eu_ids
         for item in entities
     )
     if has_specific_pt_entity:
         return False
+    # Also check for Portuguese/EU scope markers in text (fallback if no entities matched)
     if PORTUGAL_OR_EU_OVERRIDE_RE.search(evidence):
+        return False
+    if AMBITO_PT_UE_RE.search(evidence):
         return False
     return True
 
@@ -735,6 +779,66 @@ def json_save(path: Path, payload: Any) -> None:
                 time.sleep(2.0)
                 continue
             raise
+
+
+def _json_bytes(payload: Any) -> bytes:
+    if orjson is not None:
+        return orjson.dumps(payload, default=str)
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"), default=str).encode("utf-8")
+
+
+def write_json_list_shards(
+    items: Sequence[Any],
+    manifest_path: Path,
+    shard_dir: Path,
+    *,
+    shard_prefix: str,
+    max_bytes: int = JSON_SHARD_MAX_BYTES,
+) -> dict[str, Any]:
+    """Write a large JSON list as small files plus a relative-path manifest."""
+
+    shard_dir.mkdir(parents=True, exist_ok=True)
+    for existing in shard_dir.glob(f"{shard_prefix}-*.json"):
+        try:
+            existing.unlink()
+        except OSError:
+            LOGGER.warning("Não foi possível remover shard antigo: %s", existing)
+
+    paths: list[str] = []
+    batch: list[Any] = []
+    batch_bytes = 2  # '[' and ']'
+    shard_number = 0
+
+    def flush() -> None:
+        nonlocal batch, batch_bytes, shard_number
+        if not batch:
+            return
+        filename = f"{shard_prefix}-{shard_number:04d}.json"
+        shard_path = shard_dir / filename
+        json_save(shard_path, batch)
+        paths.append(shard_path.relative_to(manifest_path.parent).as_posix())
+        shard_number += 1
+        batch = []
+        batch_bytes = 2
+
+    for item in items:
+        item_size = len(_json_bytes(item))
+        separator_size = 1 if batch else 0
+        if batch and batch_bytes + separator_size + item_size > max_bytes:
+            flush()
+            separator_size = 0
+        batch.append(item)
+        batch_bytes += separator_size + item_size
+    flush()
+
+    manifest = {
+        "schemaVersion": 1,
+        "format": "json-list-shards",
+        "count": len(items),
+        "shards": paths,
+    }
+    json_save(manifest_path, manifest)
+    return manifest
 
 
 class CheckpointManager:
@@ -1162,7 +1266,7 @@ class HttpClient:
         NAVEGADOR_ESTADO["user_agent"] = self.user_agent
         self.session = requests.Session()
         pool_size = max(20, self.max_concurrent * 2)
-        adapter = requests.adapters.HTTPAdapter(
+        adapter = HTTPAdapter(
             pool_connections=pool_size,
             pool_maxsize=pool_size,
             max_retries=0,
@@ -1417,7 +1521,13 @@ def initial_state() -> dict[str, Any]:
         "initiatives": {},
         "votes": {},
         "promises": {},
+        "presidentActions": {},
+        "euInitiatives": {},
+        "euVotes": {},
+        "budgetDocuments": {},
         "assembly": {"lastSyncedAt": None, "resourceSnapshots": {}},
+        "europeanUnion": {"sittingsSeen": {}},
+        "budgetCorpusFingerprint": None,
         "programCorpusFingerprint": None,
     }
 
@@ -2052,16 +2162,27 @@ def is_foreign_or_non_news_section(path_tokens: set[str]) -> tuple[bool, bool]:
 
 
 def has_relevant_political_anchor(entities: Sequence[Mapping[str, Any]]) -> bool:
+    pt_eu_kinds = {
+        "party", "coalition", "youth_wing", "person",
+        "government", "institution", "eu_institution",
+        "president", "parliament", "court", "regulator",
+        "central_bank", "security_forces", "health_service",
+        "local_government", "public_service"
+    }
+    pt_eu_ids = {
+        "UNIAO-EUROPEIA", "ONU", "AUTARQUIAS", "JUSTICA", "PRESIDENCIA",
+        "PARLAMENTO", "REGULADORES", "BANCO-DE-PORTUGAL", "ESTADO", "SNS",
+        "FORCAS-SEGURANCA", "SEGURANCA-SOCIAL", "EDUCACAO",
+        "INEM", "ACT", "CMVM", "ERSE", "ANACOM", "CNPD",
+        "EDP", "REN", "TAP", "CP", "CARRIS",
+        "METRO-LISBOA", "METRO-PORTO", "STCP", "CARRIS-METROPOLITANA"
+    }
     for item in entities:
         kind = str(item.get("kind") or "")
         entity_id = str(item.get("id") or "")
-        if kind in {"party", "coalition", "youth_wing", "person"}:
+        if kind in pt_eu_kinds:
             return True
-        if entity_id in {
-            "UNIAO-EUROPEIA", "ONU", "AUTARQUIAS", "JUSTICA", "PRESIDENCIA",
-            "PARLAMENTO", "REGULADORES", "BANCO-DE-PORTUGAL", "ESTADO", "SNS",
-            "FORCAS-SEGURANCA", "SEGURANCA-SOCIAL", "EDUCACAO",
-        }:
+        if entity_id in pt_eu_ids:
             return True
     return False
 
@@ -2094,20 +2215,16 @@ def candidate_may_be_relevant(
 ) -> bool:
     """Cheap pre-download gate.
 
-    Two checks only, both safe against false rejections:
-    1. Hard blocks (sports, betting, junk paths);
-    2. Editorial scope: purely foreign news without a Portuguese/EU anchor is
-       out of scope for the project.
-
-    Everything else is downloaded — relevance is decided by the classifier on
-    the full article text, never on sparse sitemap metadata.
+    Only hard blocks (sports, betting, junk paths) are applied here.
+    Editorial scope (purely foreign news) is checked AFTER downloading
+    the full article in classify_article(), where we have complete text.
     """
 
     if is_blocked_non_political(candidate):
         return False
-    evidence = article_evidence(candidate)
-    entities = matcher.match(evidence)
-    return not is_purely_foreign_news(evidence, entities)
+    # Skip is_purely_foreign_news here - it needs full article text to be accurate.
+    # The full classifier will handle scope checking after download.
+    return True
 
 def classify_article(
     article: Mapping[str, Any], matcher: EntityMatcher
@@ -2705,7 +2822,7 @@ def sync_news(
     client: HttpClient,
     since_days: int,
     max_urls_override: int | None = None,
-    checkpoint: Callable[[], None] | None = None,
+    checkpoint: Callable[..., None] | None = None,
     source_filter: Sequence[str] | None = None,
 ) -> list[dict[str, Any]]:
     """Synchronise permitted sources and return per-source operational status."""
@@ -2770,6 +2887,22 @@ def sync_news(
     flush_event = threading.Event()
     stop_ticker = threading.Event()
 
+    def checkpoint_call(force: bool = False) -> None:
+        """Call a checkpoint callback regardless of whether it accepts a force kwarg."""
+
+        if checkpoint is None:
+            return
+        try:
+            checkpoint(force=force)
+        except TypeError as exc:
+            message = str(exc)
+            if "force" not in message and "unexpected keyword argument" not in message:
+                raise
+            try:
+                checkpoint()
+            except Exception:
+                pass
+
     def checkpoint_ticker() -> None:
         """Perform all state saves on this thread so writes never race."""
 
@@ -2779,15 +2912,16 @@ def sync_news(
             try:
                 if flush_event.is_set():
                     flush_event.clear()
-                    checkpoint(force=True)
+                    checkpoint_call(force=True)
                 else:
-                    checkpoint()
+                    checkpoint_call()
             except Exception:  # never let the ticker die mid-run
                 LOGGER.exception("Checkpoint periódico falhou")
 
     def note_dirty(force: bool = False) -> None:
-        if checkpoint is not None and hasattr(checkpoint, "mark_dirty"):
-            checkpoint.mark_dirty()
+        mark_dirty = getattr(checkpoint, "mark_dirty", None)
+        if callable(mark_dirty):
+            mark_dirty()
         if force:
             flush_event.set()
 
@@ -3108,9 +3242,10 @@ def sync_news(
             ticker_thread.join(timeout=30.0)
         if checkpoint is not None:
             try:
-                if hasattr(checkpoint, "mark_dirty"):
-                    checkpoint.mark_dirty()
-                checkpoint(force=True)
+                mark_dirty = getattr(checkpoint, "mark_dirty", None)
+                if callable(mark_dirty):
+                    mark_dirty()
+                checkpoint()
             except Exception:
                 LOGGER.exception("Checkpoint final das notícias falhou")
     configured_retention = crawl_config.get("newsRetentionDays", 1095)
@@ -4380,6 +4515,30 @@ EUROPEAN_PARLIAMENT_HOSTS = {"data.europarl.europa.eu"}
 LAW_REFERENCE_RE = re.compile(r"(?is)leis?\s+n[.\sºo°]*\s*(\d{1,5})\s*[/\\]\s*(?:de\s+)?(\d{4})")
 
 
+EUROPEAN_OUTCOME_LABELS = {"ADOPTED": "Aprovada", "REJECTED": "Rejeitada"}
+EU_REPORT_REF_RE = re.compile(r"\b([ABC]\d-\d{3,8}/\d{4})\b")
+
+
+def _ep_fetch_json(
+    client: HttpClient, url: str
+) -> tuple[Mapping[str, Any] | None, str]:
+    """Fetch a data.europarl JSON-LD payload tolerating empty 204 answers."""
+
+    try:
+        raw, _headers, _resolved = client.text(url)
+    except PipelineError as exc:
+        return None, compact_text(exc, 200)
+    if not raw.strip():
+        return None, "resposta vazia do PE (HTTP sem conteúdo)"
+    try:
+        payload = json.loads(raw.lstrip("\ufeff"))
+    except ValueError as exc:
+        return None, f"JSON inválido do PE ({compact_text(exc, 120)})"
+    if not isinstance(payload, Mapping):
+        return None, "resposta inesperada da API do PE"
+    return payload, ""
+
+
 def _ld_text(value: Any, depth: int = 0) -> str:
     """Extract a plain string from JSON-LD values (plain, list or language map)."""
 
@@ -4435,18 +4594,32 @@ def sync_presidential_actions(
                 return result
 
     store: dict[str, Any] = state.setdefault("presidentActions", {})
-    laws_by_ref: dict[tuple[str, str], dict[str, Any]] = {}
-    for kind, key in (("promulgada", "promulgationsUrl"), ("veto", "vetoesUrl")):
-        url = safe_url(str(section.get(key) or ""), PRESIDENCY_HOSTS)
-        if not url:
+    for kind, key in (("promulgada", "promulgationsCandidates"), ("veto", "vetoesCandidates")):
+        candidates = [
+            safe_url(str(item or ""), PRESIDENCY_HOSTS)
+            for item in as_list(section.get(key))
+        ]
+        candidates = [item for item in candidates if item]
+        if not candidates:
             continue
-        if policy is not None and not can_fetch(policy, client, url):
-            result["note"] = f"{key}: bloqueado por robots.txt"
-            continue
-        try:
-            raw, _headers, resolved = client.text(url)
-        except PipelineError as exc:
-            result["note"] = f"{key}: {exc}"
+        raw, resolved, fetched_note = "", "", ""
+        for candidate in candidates:
+            if policy is not None and not can_fetch(policy, client, candidate):
+                fetched_note = f"{key}: bloqueado por robots.txt"
+                continue
+            try:
+                candidate_raw, _headers, candidate_resolved = client.text(candidate)
+            except PipelineError as exc:
+                fetched_note = f"{key}: {compact_text(exc, 140)}"
+                continue
+            if LAW_REFERENCE_RE.search(candidate_raw):
+                raw, resolved, fetched_note = candidate_raw, candidate_resolved, ""
+                break
+            if not fetched_note:
+                fetched_note = f"{key}: sem referências 'Lei n.º' em {candidate}"
+        if fetched_note and len(result["note"]) < 300:
+            result["note"] = f"{result['note']} {fetched_note}".strip()
+        if not raw:
             continue
         for match in LAW_REFERENCE_RE.finditer(raw):
             number, year = match.group(1), match.group(2)
@@ -4474,8 +4647,6 @@ def sync_presidential_actions(
                 continue
             store[action_id] = record
             result["novas"] += 1
-            if checkpoint:
-                checkpoint.mark_dirty()
         if checkpoint:
             checkpoint()
 
@@ -4484,7 +4655,7 @@ def sync_presidential_actions(
 
     # Liga registos presidenciais a iniciativas cujo título refira a mesma lei.
     for initiative in state.get("initiatives", {}).values():
-        if not isinstance(initiative, Mapping) or initiative.get("presidentAction"):
+        if not isinstance(initiative, dict) or initiative.get("presidentAction"):
             continue
         title = normalise_text(initiative.get("title"))
         match = re.search(r"(?i)leis?\s+n[.\sºo°]*\s*(\d{1,5})\s*[/\\]\s*(\d{4})", title)
@@ -4533,7 +4704,7 @@ def sync_european_initiatives(
     api_base = str(section.get("apiBase") or "https://data.europarl.europa.eu/api/v2").rstrip("/")
     term = max(9, int(section.get("parliamentaryTerm") or 10))
     page_size = max(10, int(section.get("pageSize") or 100))
-    max_requests = max(1, int(section.get("maxRequests") or 20))
+    max_requests = max(1, int(section.get("maxListRequests") or 3))
 
     store: dict[str, Any] = state.setdefault("euInitiatives", {})
     for request_index in range(max_requests):
@@ -4575,7 +4746,11 @@ def sync_european_initiatives(
             ).rsplit("/", 1)[-1]
             if not identifier:
                 continue
-            title = compact_text(_ld_text(item.get("title")) or _ld_text(item.get("procedureTitle")), 500)
+            # A listagem oficial só devolve rótulos curtos ("2024/2526(RSP)");
+            # o título completo e o estado entram depois, quando os votos de
+            # plenário referirem o procedimento e o detalhe for pedido.
+            title = compact_text(_ld_text(item.get("title")) or _ld_text(item.get("process_title")), 500)
+            label = compact_text(_ld_text(item.get("label")), 80)
             status = compact_text(
                 _ld_text(item.get("statusLabel"))
                 or _ld_text(item.get("procedureStage"))
@@ -4594,6 +4769,7 @@ def sync_european_initiatives(
                 "id": eu_id,
                 "identifier": identifier,
                 "title": title,
+                "label": label,
                 "type": type_label,
                 "status": status,
                 "date": date_value,
@@ -4602,6 +4778,10 @@ def sync_european_initiatives(
                 "sourceUrl": safe_url(_ld_text(item.get("@id")), EUROPEAN_PARLIAMENT_HOSTS) or safe,
                 "fetchedAt": iso_now(),
             }
+            if title:
+                record["contentHash"] = content_hash(
+                    "|".join(str(record.get(key) or "") for key in ("identifier", "title", "status", "date", "label"))
+                )
             existing = store.get(eu_id)
             if existing:
                 comparable_new = {key: value for key, value in record.items() if key != "fetchedAt"}
@@ -4615,13 +4795,538 @@ def sync_european_initiatives(
                 result["novos"] += 1
             store[eu_id] = record
         if checkpoint:
-            checkpoint.mark_dirty()
+            mark_dirty = getattr(checkpoint, "mark_dirty", None)
+            if callable(mark_dirty):
+                mark_dirty()
             checkpoint()
         if len(records) < page_size:
             break
     result["known"] = len(store)
     return result
 
+
+def _positive_int(value: Any) -> int:
+    """Coerce JSON-LD numbers or numeric strings into a non-negative int."""
+
+    if isinstance(value, bool):
+        return 0
+    if isinstance(value, (int, float)):
+        return max(0, int(value))
+    digits = re.sub(r"[^\d]", "", str(value or ""))
+    return int(digits) if digits else 0
+
+
+def _eu_record_hash(record: Mapping[str, Any]) -> str:
+    comparable = {key: value for key, value in record.items() if key not in {"fetchedAt"}}
+    return content_hash(json.dumps(comparable, sort_keys=True, default=str))
+
+
+def _multilang(item: Mapping[str, Any], field: str) -> str:
+    value = item.get(field)
+    if isinstance(value, Mapping):
+        return compact_text(
+            _ld_text(value.get("pt")) or _ld_text(value.get("mul")) or _ld_text(value.get("en")), 500
+        )
+    return compact_text(_ld_text(value), 500)
+
+
+def normalise_eu_decision(raw: Mapping[str, Any], api_base: str, term: int) -> dict[str, Any] | None:
+    """Turn a plenary ``PLENARY_OUTCOME`` decision into an ``euVotes`` record.
+
+    O evento oficial traz o resultado (ADOPTED/REJECTED), contagens e, nas
+    votações nominais (RCV), as listas individuais de deputados por sentido de
+    voto. As posições partidárias não são inferidas — o dataset oficial não as
+    publica por grupo político — pelo que ``positions`` fica vazio.
+    """
+
+    decision_id = str(_ld_text(raw.get("activity_id")) or "").rsplit("/", 1)[-1]
+    outcome = normalise_text(str(_ld_text(raw.get("decision_outcome"))).rsplit("/", 1)[-1]).upper()
+    if not decision_id or not outcome:
+        return None
+
+    process_refs: set[str] = set()
+    inverse = raw.get("inverse_consists_of")
+    if isinstance(inverse, list):
+        for entry in inverse:
+            match_obj = re.search(r"eli/dl/proc/([^/]+)$", str(_ld_text(entry.get("id") if isinstance(entry, Mapping) else entry)))
+            if match_obj:
+                process_refs.add(match_obj.group(1))
+
+    method = normalise_text(str(_ld_text(raw.get("decision_method"))).rsplit("/", 1)[-1])
+    comment = raw.get("comment")
+    comment_pt = _ld_text(comment.get("pt")) if isinstance(comment, Mapping) else ""
+    nominal = "ROLLCALL" in method.upper() or normalise_text(comment_pt).upper() == "VN"
+
+    label_title = _multilang(raw, "activity_label")
+    report_ref_match = EU_REPORT_REF_RE.search(label_title)
+
+    record = {
+        "id": stable_id("euv", decision_id),
+        "decisionId": decision_id,
+        "legislature": f"EP-{term}",
+        "date": iso_datetime(_ld_text(raw.get("activity_date"))) or "",
+        "subject": label_title,
+        "reportRef": report_ref_match.group(0) if report_ref_match else "",
+        "result": EUROPEAN_OUTCOME_LABELS.get(outcome, outcome.title()),
+        "method": method,
+        "nominal": nominal,
+        "counts": {
+            "favor": _positive_int(raw.get("number_of_votes_favor")),
+            "against": _positive_int(raw.get("number_of_votes_against")),
+            "abstention": _positive_int(raw.get("number_of_votes_abstention")),
+            "attendees": _positive_int(raw.get("number_of_attendees")),
+        },
+        # Posições por partido não publicadas por grupo neste dataset oficial;
+        # guardamos apenas os IDs nominais de deputados quando existem.
+        "positions": [],
+        "nominalVoters": {
+            "favorIds": [str(_ld_text(v)).rsplit("/", 1)[-1] for v in as_list(raw.get("had_voter_favor")) if v][:800],
+            "againstIds": [str(_ld_text(v)).rsplit("/", 1)[-1] for v in as_list(raw.get("had_voter_against")) if v][:800],
+            "abstentionIds": [str(_ld_text(v)).rsplit("/", 1)[-1] for v in as_list(raw.get("had_voter_abstention")) if v][:800],
+        }
+        if nominal
+        else {},
+        "processRefs": sorted(process_refs),
+        "sourceType": "ep_plenary_vote",
+        "sourceUrl": safe_url(f"{api_base}/events/{urllib.parse.quote(decision_id)}", EUROPEAN_PARLIAMENT_HOSTS) or "",
+        "fetchedAt": iso_now(),
+    }
+    refs_sorted = record["processRefs"]
+    record["initiativeId"] = stable_id("eui", refs_sorted[0]) if refs_sorted else None
+    return record
+
+
+def apply_eu_procedure_detail(
+    state: dict[str, Any],
+    raw_detail: Mapping[str, Any],
+    term: int,
+) -> tuple[int, int]:
+    """Fill dossier titles/states from official procedure details.
+
+    Devolve ``(atualizados, criados)``; cada detalhe traz o título
+    multi-idioma (PT incluído) e a fase corrente do procedimento.
+    """
+
+    data = raw_detail.get("data")
+    items = data if isinstance(data, list) else []
+    updated = created = 0
+    store: dict[str, Any] = state.setdefault("euInitiatives", {})
+    for item in items:
+        if not isinstance(item, Mapping):
+            continue
+        identifier = str(_ld_text(item.get("process_id")) or "").strip()
+        if not identifier:
+            identifier = str(_ld_text(item.get("@id") or item.get("id")) or "").rstrip("/").rsplit("/", 1)[-1]
+        if not identifier:
+            continue
+        title = _multilang(item, "process_title")
+        label = compact_text(_ld_text(item.get("label")), 80)
+        status = compact_text(str(_ld_text(item.get("current_stage"))).rsplit("/", 1)[-1], 160)
+        type_label = compact_text(str(_ld_text(item.get("process_type"))).rsplit("/", 1)[-1], 60)
+        record_partial = {
+            "id": stable_id("eui", identifier),
+            "identifier": identifier,
+            "title": title,
+            "label": label,
+            "type": type_label or "Process",
+            "status": status,
+            "parliamentaryTerm": term,
+            "sourceType": "ep_procedure",
+            "sourceUrl": safe_url(
+                f"https://data.europarl.europa.eu/eli/dl/proc/{urllib.parse.quote(identifier)}",
+                EUROPEAN_PARLIAMENT_HOSTS,
+            ) or "",
+            "fetchedAt": iso_now(),
+        }
+        digest = content_hash(
+            "|".join(str(record_partial.get(key) or "") for key in ("identifier", "title", "status", "label"))
+        )
+        existing = store.get(record_partial["id"])
+        if existing:
+            if existing.get("_detailHash") == digest:
+                continue
+            merged = dict(existing)
+            merged.update({key: value for key, value in record_partial.items() if value not in (None, "")})
+            merged["_detailHash"] = digest
+            store[record_partial["id"]] = merged
+            updated += 1
+        else:
+            record = dict(record_partial)
+            record["_detailHash"] = digest
+            store[record["id"]] = record
+            created += 1
+    return updated, created
+
+
+def _ep_sittings_for_years(
+    client: HttpClient,
+    api_base: str,
+    term: int,
+    years: Sequence[int],
+    page_size: int,
+    result: dict[str, Any],
+) -> list[tuple[str, str]]:
+    """Discover plenary sittings for the given parliamentary terms/years."""
+
+    sittings: list[tuple[str, str]] = []
+    wanted_term = f"ep-{term}"
+    for year in years:
+        offset = 0
+        while offset < 20_000:
+            payload, note = _ep_fetch_json(
+                client,
+                f"{api_base}/meetings?year={year}&format=application%2Fld%2Bjson"
+                f"&limit={page_size}&offset={offset}",
+            )
+            result["pedidos"] += 1
+            if payload is None:
+                result["note"] = f"meetings {year} offset={offset}: {note}"
+                break
+            records = payload.get("data")
+            if not isinstance(records, list):
+                result["note"] = f"meetings {year}: resposta sem lista 'data'"
+                break
+            for item in records:
+                if not isinstance(item, Mapping):
+                    continue
+                activity_type = normalise_text(
+                    str(_ld_text(item.get("had_activity_type"))).rsplit("/", 1)[-1]
+                ).upper()
+                if activity_type != "PLENARY_SITTING":
+                    continue
+                item_term = normalise_text(str(_ld_text(item.get("parliamentary_term"))).rsplit("/", 1)[-1]).lower()
+                if item_term and item_term != wanted_term:
+                    continue
+                sid = str(_ld_text(item.get("activity_id"))).rsplit("/", 1)[-1]
+                if sid.startswith("MTG-PL-"):
+                    sittings.append((sid, iso_datetime(_ld_text(item.get("activity_date"))) or ""))
+            if len(records) < page_size:
+                break
+            offset += page_size
+    # Mais recentes primeiro: os runs limitados priorizam a atualidade.
+    sittings.sort(key=lambda pair: pair[1], reverse=True)
+    return sittings
+
+
+def sync_european_votes(
+    state: dict[str, Any],
+    config: Mapping[str, Any],
+    client: HttpClient,
+    checkpoint: Callable[[], None] | None = None,
+) -> dict[str, Any]:
+    """Ingest plenary votes (RCV) from the EP open-data API per sitting.
+
+    Para cada sessão plenária descoberta consulta ``vote-results``, extrai os
+    eventos de decisão novos (``/events/{id}``) com ADOPTED/REJECTED e listas
+    nominais, e preenche títulos/estados dos dossiês referidos. Os limites por
+    execução tornam a sincronização incremental; ``sittingsSeen`` guarda o
+    estado de cada sessão para dedupe e retoma pendências noutro run.
+    """
+
+    section = config.get("europeanUnion")
+    section = section if isinstance(section, Mapping) else {}
+    result = {
+        "enabled": bool(section.get("enabled")),
+        "votesKnown": 0,
+        "novosVotos": 0,
+        "sessoesProcessadas": 0,
+        "sessoesPendentes": 0,
+        "pedidos": 0,
+        "procedimentosAtualizados": 0,
+        "note": "",
+    }
+    if not result["enabled"]:
+        result["note"] = "secção 'europeanUnion' desativada na configuração"
+        return result
+
+    api_base = str(section.get("apiBase") or "https://data.europarl.europa.eu/api/v2").rstrip("/")
+    term = max(9, int(section.get("parliamentaryTerm") or 10))
+    page_size = max(10, int(section.get("pageSize") or 100))
+    max_sittings = max(1, int(section.get("maxSittingsPerRun") or 4))
+    max_decisions = max(1, int(section.get("maxDecisionRequestsPerRun") or 40))
+    max_procs = max(1, int(section.get("maxProcedureRequestsPerRun") or 30))
+    current_year = utc_now().year
+    configured_years = [int(year) for year in as_list(section.get("years")) if year]
+    years = configured_years or [current_year - 1, current_year]
+
+    votes_store: dict[str, Any] = state.setdefault("euVotes", {})
+    sittings_seen: dict[str, Any] = state.setdefault("europeanUnion", {}).setdefault("sittingsSeen", {})
+
+    # Retomar primeiro sessões deixadas pendentes por runs anteriores.
+    pending_first = [
+        sid for sid, entry in sorted(sittings_seen.items(), reverse=True)
+        if isinstance(entry, Mapping) and entry.get("status") == "pending"
+    ]
+    discovered = _ep_sittings_for_years(client, api_base, term, years, page_size, result)
+    queue = [(sid, "") for sid in pending_first] + [
+        (sid, date_value) for sid, date_value in discovered
+        if sittings_seen.get(sid, {}).get("status") != "complete"
+    ]
+
+    new_votes = 0
+    processed = 0
+    for sid, sitting_date in queue:
+        if processed >= max_sittings:
+            break
+        dec_ids: list[str] = []
+        titles_by_parent: dict[str, str] = {}
+        proc_refs_by_parent: dict[str, set[str]] = {}
+        offset = 0
+        while True:
+            payload, note = _ep_fetch_json(
+                client,
+                f"{api_base}/meetings/{urllib.parse.quote(sid)}/vote-results"
+                f"?limit={page_size}&offset={offset}&format=application%2Fld%2Bjson",
+            )
+            result["pedidos"] += 1
+            if payload is None:
+                result["note"] = f"vote-results {sid} offset={offset}: {note}"
+                break
+            records = payload.get("data")
+            if not isinstance(records, list):
+                result["note"] = f"vote-results {sid}: resposta sem lista 'data'"
+                break
+            for item in records:
+                if not isinstance(item, Mapping):
+                    continue
+                activity_type = normalise_text(str(_ld_text(item.get("had_activity_type"))).rsplit("/", 1)[-1]).upper()
+                item_id = str(_ld_text(item.get("activity_id"))).rsplit("/", 1)[-1]
+                if activity_type == "PLENARY_VOTE_RESULTS":
+                    titles_by_parent[item_id] = _multilang(item, "activity_label")
+                    refs: set[str] = set()
+                    for entry in as_list(item.get("inverse_consists_of")):
+                        match_obj = re.search(
+                            r"eli/dl/proc/([^/]+)$",
+                            str(_ld_text(entry.get("id") if isinstance(entry, Mapping) else entry)),
+                        )
+                        if match_obj:
+                            refs.add(match_obj.group(1))
+                    proc_refs_by_parent[item_id] = refs
+                    for child in as_list(item.get("consists_of")):
+                        child_id = str(_ld_text(child)).rsplit("/")[-1]
+                        if "-DEC-" in child_id:
+                            dec_ids.append(child_id)
+                elif activity_type == "PLENARY_OUTCOME":
+                    dec_ids.append(item_id)
+            if len(records) < page_size:
+                break
+            offset += page_size
+        unique_dec_ids = list(dict.fromkeys(dec_ids))
+        fetched_here: list[str] = []
+        for dec_id in unique_dec_ids[:max_decisions]:
+            detail_payload, _dec_note = _ep_fetch_json(
+                client, f"{api_base}/events/{urllib.parse.quote(dec_id)}?format=application%2Fld%2Bjson"
+            )
+            result["pedidos"] += 1
+            if detail_payload is None:
+                continue
+            fetched_here.append(dec_id)
+            data_items = detail_payload.get("data")
+            for decision in [item for item in (data_items or []) if isinstance(item, Mapping)]:
+                enriched = dict(decision)
+                parent_tail = ""
+                for entry in as_list(enriched.get("was_motivated_by")):
+                    if isinstance(entry, Mapping):
+                        parent_tail = str(_ld_text(entry.get("activity_id"))).rsplit("-", 1)[0]
+                        break
+                title_from_parent = titles_by_parent.get(parent_tail)
+                if title_from_parent and not _multilang(enriched, "activity_label"):
+                    enriched["activity_label"] = {"pt": title_from_parent}
+                inverse_refs = [
+                    {"id": f"eli/dl/proc/{ref}"} for ref in proc_refs_by_parent.get(parent_tail, set())
+                ]
+                if inverse_refs:
+                    enriched["inverse_consists_of"] = inverse_refs
+                record = normalise_eu_decision(enriched, api_base, term)
+                if record is None:
+                    continue
+                record["initiativeId"] = (
+                    stable_id("eui", record["processRefs"][0]) if record["processRefs"] else None
+                )
+                digest = _eu_record_hash(record)
+                existing = votes_store.get(record["id"])
+                if existing and existing.get("_hash") == digest:
+                    continue
+                if not existing:
+                    new_votes += 1
+                record["_hash"] = digest
+                votes_store[record["id"]] = record
+
+        remaining_decisions = unique_dec_ids[len(fetched_here):]
+        proc_touched: set[str] = set()
+        for refs_set in proc_refs_by_parent.values():
+            proc_touched.update(refs_set)
+        for proc_identifier in sorted(proc_touched)[:max_procs]:
+            detail_payload, _proc_note = _ep_fetch_json(
+                client,
+                f"{api_base}/procedures/{urllib.parse.quote(proc_identifier)}?format=application%2Fld%2Bjson",
+            )
+            result["pedidos"] += 1
+            if detail_payload is None:
+                continue
+            updated_count, _created = apply_eu_procedure_detail(state, detail_payload, term)
+            result["procedimentosAtualizados"] += updated_count
+
+        complete = not remaining_decisions
+        sittings_seen[sid] = {
+            "status": "complete" if complete else "pending",
+            "date": sitting_date,
+            "lastTouchedAt": iso_now(),
+            **({"pendingDecisions": remaining_decisions} if remaining_decisions else {}),
+        }
+        result["sessoesProcessadas"] = processed + 1
+        if checkpoint:
+            checkpoint()
+        processed += 1
+
+    pending_total = sum(
+        1 for entry in sittings_seen.values()
+        if isinstance(entry, Mapping) and entry.get("status") == "pending"
+    )
+    result.update({
+        "novosVotos": new_votes,
+        "votesKnown": len(votes_store),
+        "sessoesPendentes": pending_total,
+    })
+    return result
+
+
+
+def sync_eu_dossier(
+    state: dict[str, Any],
+    config: Mapping[str, Any],
+    client: HttpClient,
+    checkpoint: Callable[[], None] | None = None,
+) -> dict[str, Any]:
+    """Sincronizar dossiês legislativos da UE a partir de fontes oficiais.
+
+    Fontes:
+    - Conselho da UE: resultados de votação (https://www.consilium.europa.eu/.../voting-results/)
+    - Comissão Europeia: acompanhamento legislativo (https://commission.europa.eu/law/tracking-law-making_en)
+    - Parlamento Europeu OEIL: observatório legislativo (https://oeil.europarl.europa.eu/oeil/en)
+
+    Cada fonte expõe listas de dossiês/actos com links para detalhe (procedimento, acta, voto).
+    O pipeline baixa a lista, segue links para detalhe, extrai metadados (título, referência CELEX,
+    estado, datas, instituições, votações) e guarda em state['euDossiers'].
+    """
+
+    eu_dossier_config = config.get('euDossier')
+    eu_dossier_config = eu_dossier_config if isinstance(eu_dossier_config, Mapping) else {}
+    result = {
+        'enabled': bool(eu_dossier_config.get('enabled')),
+        'sourcesProcessed': 0,
+        'dossiersKnown': 0,
+        'dossiersNovos': 0,
+        'dossiersAtualizados': 0,
+        'pedidos': 0,
+        'erros': 0,
+        'note': '',
+    }
+    if not result['enabled']:
+        result['note'] = 'secção euDossier desativada na configuração'
+        return result
+
+    sources = eu_dossier_config.get('sources', [])
+    if not sources:
+        result['note'] = 'nenhuma fonte configurada em euDossier.sources'
+        return result
+
+    dossier_store: dict[str, Any] = state.setdefault('euDossiers', {})
+    for src in sources:
+        if not src.get('enabled', True):
+            continue
+        src_id = src.get('id')
+        base_url = src.get('baseUrl')
+        list_selector = src.get('listSelector', 'a[href]')
+        detail_selector = src.get('detailSelector', 'article, main, .content')
+        if not src_id or not base_url:
+            result['erros'] += 1
+            result['note'] = f'fonte inválida: {src_id}'
+            continue
+
+        safe_print(f'\n📚  [EU Dossier] A processar {src.get("name", src_id)} ({base_url})...')
+        try:
+            # 1. Baixar página de lista
+            raw, _headers, _resolved = client.text(base_url)
+            result['pedidos'] += 1
+
+            from bs4 import BeautifulSoup
+            soup = BeautifulSoup(raw, 'html.parser')
+            links = soup.select(list_selector)
+
+            dossier_urls = []
+            for link in links:
+                href = link.get('href')
+                if href:
+                    full = urllib.parse.urljoin(base_url, href)
+                    if urllib.parse.urlparse(full).netloc.endswith(('europa.eu', 'europarl.europa.eu', 'consilium.europa.eu')):
+                        dossier_urls.append(full)
+
+            # Dedupe
+            dossier_urls = list(dict.fromkeys(dossier_urls))
+            safe_print(f'  {len(dossier_urls)} dossiês candidatos')
+
+            # 2. Processar cada dossiê
+            for d_url in dossier_urls[:50]:  # limitar por run
+                try:
+                    d_raw, _dh, _dr = client.text(d_url)
+                    result['pedidos'] += 1
+                    d_soup = BeautifulSoup(d_raw, 'html.parser')
+
+                    # Extrair texto principal
+                    content_el = d_soup.select_one(detail_selector)
+                    text = content_el.get_text(' ', strip=True) if content_el else d_soup.get_text(' ', strip=True)
+                    text = re.sub(r'\s+', ' ', text).strip()
+
+                    if not text or len(text) < 50:
+                        continue
+
+                    # Hash para dedupe
+                    import hashlib
+                    d_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()[:16]
+                    dossier_id = f'{src_id}_{d_hash}'
+
+                    existing = dossier_store.get(dossier_id)
+                    if existing:
+                        result['dossiersKnown'] += 1
+                        # Verificar se mudou
+                        if existing.get('contentHash') != d_hash:
+                            result['dossiersAtualizados'] += 1
+                            existing.update({
+                                'text': text,
+                                'contentHash': d_hash,
+                                'url': d_url,
+                                'source': src_id,
+                                'sourceName': src.get('name'),
+                                'fetchedAt': iso_now(),
+                            })
+                    else:
+                        dossier_store[dossier_id] = {
+                            'id': dossier_id,
+                            'source': src_id,
+                            'sourceName': src.get('name'),
+                            'url': d_url,
+                            'title': d_soup.title.string.strip() if d_soup.title else d_url,
+                            'text': text,
+                            'contentHash': d_hash,
+                            'fetchedAt': iso_now(),
+                        }
+                        result['dossiersNovos'] += 1
+
+                except Exception as e:
+                    result['erros'] += 1
+                    safe_print(f'  ❌ Erro ao processar {d_url}: {e}')
+
+        except PipelineError as e:
+            result['erros'] += 1
+            result['note'] = f'{src_id}: {e}'
+            safe_print(f'  ❌ Erro na fonte {src_id}: {e}')
+
+        result['sourcesProcessed'] += 1
+
+    result['dossiersKnown'] = len(dossier_store)
+    safe_print(f'✅ [EU Dossier] {result["sourcesProcessed"]} fontes, {result["dossiersNovos"]} novos, {result["dossiersAtualizados"]} atualizados, {result["erros"]} erros')
+    return result
 
 def rebuild_promise_european_matches(state: dict[str, Any]) -> int:
     """Suggest promise ↔ EU dossier relations with the same conservative rules."""
@@ -4636,7 +5341,7 @@ def rebuild_promise_european_matches(state: dict[str, Any]) -> int:
 
     for promise in state["promises"].values():
         if not eu_initiatives:
-            promise.pop("proposalEuropeanMatches", None)
+            promise.pop("europeanMatches", None)
             continue
         overlap: Counter[str] = Counter()
         for token in tokenise(promise.get("statement")):
@@ -4666,15 +5371,257 @@ def rebuild_promise_european_matches(state: dict[str, Any]) -> int:
                 }
             )
         suggestions.sort(key=lambda item: (-item["score"], str(item.get("title") or "")))
-        promise["proposalEuropeanMatches"] = suggestions[:12]
+        promise["europeanMatches"] = suggestions[:12]
         matched += len(suggestions[:12])
     safe_print(f"   ↳ {matched} correspondências sugeridas entre promessas e iniciativas europeias.")
     return matched
 
 
 # ---------------------------------------------------------------------------
-# Vote statistics.  Absence and lack of an observed position are distinct.
+# Orçamentos PT/UE: evidência local dos corpora extraídos + sugestões com
+# revisão humana.
 
+BUDGET_PREVIEW_LIMIT_DEFAULT = 240
+
+
+def budget_chunk_category(chunk: Mapping[str, Any]) -> str | None:
+    """Return the normalised budget scope of a corpus chunk, if any."""
+
+    category = str(chunk.get("category") or "").strip()
+    return BUDGET_CHUNK_CATEGORIES.get(category)
+
+
+def iter_budget_chunks(paths: Sequence[Path] | None = None):
+    """Yield ``(path, index, chunk)`` for every budget-labelled corpus chunk."""
+
+    if paths is None:
+        paths = BUDGET_CHUNK_FILES
+    for path in paths:
+        if not path.exists():
+            continue
+        chunks = json_load(path, [])
+        if not isinstance(chunks, list):
+            LOGGER.warning("Corpus de orçamentos com formato inesperado: %s", path)
+            continue
+        for index, chunk in enumerate(chunks):
+            if not isinstance(chunk, Mapping):
+                continue
+            if not budget_chunk_category(chunk):
+                continue
+            yield path, index, chunk
+
+
+def government_label_for_year(
+    year: int, government_periods: Sequence[Mapping[str, Any]]
+) -> str | None:
+    """Pick the Government whose term overlapped most days of the budget year.
+
+    O OE do ano Y é aprovado no fim de Y-1, mas as rubricas vigoram durante Y;
+    atribuímos o governo que esteve em funções durante mais dias de execução,
+    sem inventar períodos quando não há configuração verificada.
+    """
+
+    if not year:
+        return None
+    window_start = dt.datetime(year, 1, 1, tzinfo=UTC)
+    window_end = dt.datetime(year + 1, 1, 1, tzinfo=UTC)
+    best_name: str | None = None
+    best_days = -1.0
+    for period in government_periods:
+        start = parse_datetime(period.get("start"))
+        end = parse_datetime(period.get("end")) or utc_now()
+        if start is None:
+            continue
+        overlap_start = max(start, window_start)
+        overlap_end = min(end, window_end)
+        if overlap_end <= overlap_start:
+            continue
+        days = (overlap_end - overlap_start).total_seconds() / 86_400.0
+        if days > best_days:
+            best_days = days
+            best_name = str(period.get("name") or period.get("id") or "Governo")
+    return best_name
+
+
+def sync_budget_evidence(
+    state: dict[str, Any],
+    config: Mapping[str, Any],
+    checkpoint: Any | None = None,
+) -> dict[str, Any]:
+    """Catalogue offline budget evidence (PT State Budgets + EU BCE/MFF PDFs).
+
+    Constrói ``state['budgetDocuments']`` a partir dos corpora extraídos sem
+    pedidos de rede: um registo por ficheiro PDF, com ano recuperado do caminho,
+    número de excertos e pré-visualização curta para revisão.
+    """
+
+    budgets_section = config.get("budgets")
+    budgets_section = budgets_section if isinstance(budgets_section, Mapping) else {}
+    result = {
+        "enabled": bool(budgets_section.get("enabled", True)),
+        "documentsKnown": 0,
+        "novos": 0,
+        "chunks": 0,
+        "note": "",
+    }
+    if not result["enabled"]:
+        result["note"] = "secção 'budgets' desativada na configuração"
+        return result
+
+    fingerprint_paths = [
+        Path(path) for path in BUDGET_CHUNK_FILES if Path(path).exists()
+    ]
+    new_fingerprint = content_hash(
+        "|".join(f"{path.name}:{path.stat().st_size}" for path in sorted(fingerprint_paths))
+    )
+    existing_fingerprint = state.get("budgetCorpusFingerprint")
+    store: dict[str, Any] = state.setdefault("budgetDocuments", {})
+    if existing_fingerprint == new_fingerprint and store:
+        result["documentsKnown"] = len(store)
+        result["note"] = "evidência orçamental já atualizada"
+        result["chunks"] = sum(int(item.get("chunkCount") or 0) for item in store.values())
+        return result
+
+    grouped: dict[str, dict[str, Any]] = {}
+    preview_limit = int(budgets_section.get("previewCharacters") or BUDGET_PREVIEW_LIMIT_DEFAULT)
+    government_periods = config.get("governmentPeriods") or []
+    for _path, _index, chunk in iter_budget_chunks():
+        category_scope = budget_chunk_category(chunk)
+        year_value = str(chunk.get("year") or "")[:4]
+        year_int = int(year_value) if year_value.isdigit() else None
+        rel_path = str(chunk.get("rel_path") or chunk.get("filename") or "")
+        doc_id = stable_id("bud", rel_path)
+        document = grouped.setdefault(
+            doc_id,
+            {
+                "id": doc_id,
+                "category": category_scope,
+                "year": year_int,
+                "filename": str(chunk.get("filename") or ""),
+                "relPath": rel_path,
+                "chunkCount": 0,
+                "preview": "",
+                "matchCount": 0,
+            },
+        )
+        document["chunkCount"] += 1
+        if len(document["preview"]) < preview_limit:
+            remainder = preview_limit - len(document["preview"])
+            document["preview"] = compact_text(document["preview"] + " " + str(chunk.get("text") or ""), preview_limit) if remainder else document["preview"]
+        result["chunks"] += 1
+
+    for document in grouped.values():
+        document["governmentLabel"] = (
+            government_label_for_year(document["year"], government_periods)
+            if document["year"]
+            else None
+        )
+    replaced_count = len(grouped)
+    state["budgetDocuments"] = grouped
+    state["budgetCorpusFingerprint"] = new_fingerprint
+    result["documentsKnown"] = len(grouped)
+    result["novos"] = replaced_count
+    if checkpoint:
+        checkpoint.mark_dirty()
+    return result
+
+
+def rebuild_budget_matches(state: dict[str, Any], config: Mapping[str, Any]) -> int:
+    """Suggest promise ↔ budget rubric relations from offline corpora.
+
+    Usa o mesmo matcher de tokens das propostas da AR (≥2 termos partilhados e
+    os mesmos limiares), etiqueta tudo com ``reviewRequired`` e agrega contagens
+    por documento (ano/Governo). As rubricas são excertos breves dos PDF já em
+    disco, nunca páginas web reextratdas.
+    """
+
+    budgets_section = config.get("budgets")
+    budgets_section = budgets_section if isinstance(budgets_section, Mapping) else {}
+    min_shared_terms = max(2, int(budgets_section.get("minSharedTerms") or 2))
+    threshold_two = float(budgets_section.get("approximateThresholdTwoTerms") or 0.42)
+    threshold_three = float(budgets_section.get("approximateThresholdThreeTerms") or 0.22)
+    max_per_promise = max(1, int(budgets_section.get("maxMatchesPerPromise") or 8))
+
+    documents_by_id: dict[str, Mapping[str, Any]] = {
+        str(item.get("id")): item
+        for item in state.setdefault("budgetDocuments", {}).values()
+        if isinstance(item, Mapping) and item.get("id")
+    }
+    if not documents_by_id:
+        # Sem catálogo anterior nesta execução, constrói-o on-the-fly.
+        sync_budget_evidence(state, config)
+        documents_by_id = {
+            str(item.get("id")): item
+            for item in state["budgetDocuments"].values()
+            if isinstance(item, Mapping) and item.get("id")
+        }
+
+    matched_total = 0
+    for promise in state["promises"].values():
+        promise_tokens = tokenise(promise.get("statement"))
+        suggestions: list[dict[str, Any]] = []
+        if promise_tokens:
+            # As rubricas são varridas com um pré-filtro barato de sobreposição
+            # (≥2 termos partilhados) antes de calcular a similaridade.
+            for _path, _index, chunk in iter_budget_chunks():
+                category_scope = budget_chunk_category(chunk)
+                text_value = str(chunk.get("text") or "")
+                tokens = tokenise(text_value)
+                if not tokens:
+                    continue
+                overlap_count = sum(1 for token in promise_tokens if token in tokens)
+                if overlap_count < min_shared_terms:
+                    continue
+                chunk_id = str(chunk.get("id") or stable_id(
+                    "budchunk", chunk.get("rel_path"), chunk.get("page"), chunk.get("chunk_index")
+                ))
+                shared = sorted(promise_tokens & tokens)
+                score, _unused = promise_similarity(promise, {"title": text_value, "type": ""})
+                if len(shared) == 2 and score < threshold_two:
+                    continue
+                if len(shared) >= 3 and score < threshold_three:
+                    continue
+                rel_path = str(chunk.get("rel_path") or "")
+                doc_id = stable_id("bud", rel_path)
+                document = documents_by_id.get(doc_id) or {}
+                year_raw = chunk.get("year")
+                year_text = str(year_raw or "")
+                year_value = int(year_text[:4]) if year_text[:4].isdigit() else None
+                suggestions.append({
+                    "budgetChunkId": chunk_id,
+                    "budgetDocId": doc_id,
+                    "category": category_scope,
+                    "year": year_value,
+                    "filename": chunk.get("filename"),
+                    "page": chunk.get("page"),
+                    "rubricPreview": compact_text(text_value, 240),
+                    "governmentLabel": document.get("governmentLabel"),
+                    "score": score,
+                    "sharedTerms": shared[:12],
+                    "reviewRequired": True,
+                })
+        suggestions.sort(key=lambda item: (-item["score"], str(item.get("filename") or "")))
+        top = suggestions[:max_per_promise]
+        promise["budgetMatches"] = top
+        matched_total += len(top)
+
+    # Recalcula as contagens agregadas por documento a partir de todas as promessas.
+    fresh_counts: Counter[str] = Counter()
+    for promise in state["promises"].values():
+        seen_docs: set[str] = set()
+        for match in promise.get("budgetMatches", []) or []:
+            doc_key = str(match.get("budgetDocId"))
+            if doc_key not in seen_docs:
+                seen_docs.add(doc_key)
+                fresh_counts[doc_key] += 1
+    for doc_id, document in state["budgetDocuments"].items():
+        document["matchCount"] = int(fresh_counts.get(doc_id, 0))
+    safe_print(f"   ↳ {matched_total} correspondências sugeridas entre promessas e rubricas orçamentais.")
+    return matched_total
+
+
+# ---------------------------------------------------------------------------
+# Vote statistics.  Absence and lack of an observed position are distinct.
 
 def initiative_outcome(initiative: Mapping[str, Any], votes: Sequence[Mapping[str, Any]]) -> str:
     def canonical(value: Any) -> str | None:
@@ -4877,6 +5824,27 @@ def public_source(source: Mapping[str, Any]) -> dict[str, Any]:
     return {key: source[key] for key in allowed if source.get(key) not in (None, "")}
 
 
+def public_budget_match(match: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        key: match.get(key)
+        for key in (
+            "budgetChunkId", "budgetDocId", "category", "year", "filename",
+            "page", "rubricPreview", "governmentLabel", "score", "sharedTerms",
+            "reviewRequired",
+        )
+    }
+
+
+def public_eu_match(match: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        key: match.get(key)
+        for key in (
+            "initiativeId", "identifier", "title", "status", "date",
+            "sourceUrl", "score", "sharedTerms", "reviewRequired",
+        )
+    }
+
+
 def public_promise(
     promise: Mapping[str, Any],
     vote_outcomes: Sequence[Mapping[str, Any]] | None = None,
@@ -4903,6 +5871,12 @@ def public_promise(
         "reviewRequired": bool(promise.get("reviewRequired", True)),
         "proposalMatches": matches,
         "voteOutcomes": list(vote_outcomes or []),
+        "europeanMatches": [
+            public_eu_match(match) for match in promise.get("europeanMatches", []) or []
+        ],
+        "budgetMatches": [
+            public_budget_match(match) for match in promise.get("budgetMatches", []) or []
+        ],
         "updatedAt": promise.get("updatedAt"),
     }
 
@@ -4925,6 +5899,32 @@ def public_initiative(initiative: Mapping[str, Any]) -> dict[str, Any]:
             "authors", "sourceUrl", "fetchedAt", "presidentAction",
         )
     }
+
+
+PUBLIC_POSITIONS = {"favor", "contra", "abstencao", "ausencia"}
+
+
+def outcome_positions_by_party(votes: Sequence[Mapping[str, Any]]) -> dict[str, str]:
+    """Merge observed per-party positions over the matched votes.
+
+    As votações são percorridas por ordem cronológica e a última observação
+    publicada de cada partido fica como posição do dossiê. Uma ausência é uma
+    observação distinta (nunca convertida em abstenção).
+    """
+
+    merged: dict[str, str] = {}
+    ordered = sorted(votes, key=lambda item: str(item.get("date") or ""))
+    for vote in ordered:
+        for position in vote.get("positions", []) or []:
+            # A variável do AR já guarda o código canónico do partido via
+            # matcher (ex.: "PS"); não taxamos para não partir a ligação com
+            # o mapa de partidos do painel.
+            party = str(position.get("party") or "").strip()
+            raw = position.get("position")
+            value = str(raw) if str(raw) in PUBLIC_POSITIONS else canonical_vote_position(raw)
+            if party and value:
+                merged[party] = value
+    return dict(sorted(merged.items()))
 
 
 def promise_vote_outcomes(
@@ -4956,6 +5956,7 @@ def promise_vote_outcomes(
                 "outcome": initiative_outcome(initiative, votes),
                 "status": initiative.get("status"),
                 "presidentAction": initiative.get("presidentAction"),
+                "positionsByParty": outcome_positions_by_party(votes),
                 "votes": [
                     {
                         "id": vote.get("id"),
@@ -5016,6 +6017,56 @@ def build_public_dataset(state: Mapping[str, Any], config: Mapping[str, Any], ma
         key=lambda item: (str(item.get("date") or ""), str(item.get("id") or "")),
         reverse=True,
     )
+    # Dossiês UE referenciados por promessas apenas — mantém o export público
+    # pequeno mesmo com milhares de procedimentos no estado.
+    referenced_eu_ids: set[str] = set()
+    for promise_value in state["promises"].values():
+        for match in promise_value.get("europeanMatches", []) or []:
+            if match.get("initiativeId"):
+                referenced_eu_ids.add(str(match["initiativeId"]))
+    eu_initiatives_all = state.get("euInitiatives", {})
+    matched_eu_initiatives = sorted(
+        (
+            {
+                key: item.get(key)
+                for key in ("id", "identifier", "label", "title", "type", "status",
+                             "parliamentaryTerm", "sourceUrl")
+            }
+            for initiative_id, item in eu_initiatives_all.items()
+            if initiative_id in referenced_eu_ids and isinstance(item, Mapping)
+        ),
+        key=lambda item: str(item.get("title") or ""),
+    )
+    referenced_budget_docs: Counter[str] = Counter()
+    for promise_value in state["promises"].values():
+        seen_docs: set[str] = set()
+        for match in promise_value.get("budgetMatches", []) or []:
+            doc_key = str(match.get("budgetDocId"))
+            if doc_key not in seen_docs:
+                seen_docs.add(doc_key)
+                referenced_budget_docs[doc_key] += 1
+    budget_documents_public = sorted(
+        (
+            {
+                "id": str(item.get("id")),
+                "category": item.get("category"),
+                "year": item.get("year"),
+                "filename": item.get("filename"),
+                "relPath": item.get("relPath"),
+                "chunkCount": item.get("chunkCount"),
+                "preview": item.get("preview"),
+                "governmentLabel": item.get("governmentLabel"),
+                "matchCount": int(item.get("matchCount") or 0),
+            }
+            for item in state.get("budgetDocuments", {}).values()
+            if isinstance(item, Mapping) and int(item.get("matchCount") or 0) > 0
+        ),
+        key=lambda item: (
+            -(item.get("year") or 0),
+            str(item.get("category") or ""),
+            str(item.get("filename") or ""),
+        ),
+    )
     legislatures = sorted(
         {str(item.get("legislature")) for item in initiatives if item.get("legislature")},
         key=lambda value: ALL_LEGISLATURES.index(value) if value in ALL_LEGISLATURES else len(ALL_LEGISLATURES),
@@ -5028,18 +6079,39 @@ def build_public_dataset(state: Mapping[str, Any], config: Mapping[str, Any], ma
         "legislatures": legislatures,
         "notices": [
             "As correspondências entre promessas e iniciativas são sugestões automáticas e exigem revisão humana.",
+            "A revisão humana das ligações (propostas, UE e orçamentos) é contínua: os dados podem mudar sem aviso.",
+            "As correspondências com dossiês europeus são sugestões automáticas sujeitas a confirmação pela equipa.",
+            "As ligações a rubricas orçamentais apontam excertos dos PDF em arquivo; confirme sempre no documento original.",
             "As notícias são guardadas como excertos breves e atribuídos; consulte sempre a fonte original.",
             "Em votações, uma ausência não é uma abstenção e a falta de posição publicada não é inferida.",
             "Os períodos de governo só são desagregados quando estiverem configurados com datas verificadas.",
         ],
         "sources": {
             "assembly": assembly_config.get("sourceAttribution", "Dados abertos da Assembleia da República"),
+            "presidency": config.get("presidential", {}).get(
+                "sourceAttribution", "Presidência da República Portuguesa"
+            ),
+            "europeanUnion": config.get("europeanUnion", {}).get(
+                "sourceAttribution", "Parlamento Europeu — dados abertos"
+            ),
+            "budgets": config.get("budgets", {}).get(
+                "sourceAttribution", "Orçamentos do Estado e documentação orçamental da UE"
+            ),
             "news": "Fontes jornalísticas autorizadas pela respetiva configuração e robots.txt.",
         },
         "articles": articles,
         "promises": promises,
         "initiatives": initiatives,
         "votes": votes,
+        "europeanUnion": {
+            "initiativesMatched": matched_eu_initiatives,
+            "proceduresKnown": len(eu_initiatives_all),
+            "votesKnown": len(state.get("euVotes", {})),
+        },
+        "budgets": {
+            "documents": budget_documents_public,
+            "documentsKnown": len(state.get("budgetDocuments", {})),
+        },
         "statistics": {
             "allTime": vote_statistics(state, matcher, government_periods=government_periods),
             "byLegislature": {
@@ -5117,6 +6189,16 @@ def build_memory_chunks(state: Mapping[str, Any]) -> list[dict[str, Any]]:
             f"{match.get('number') or 'iniciativa'}: {match.get('title') or ''} ({match.get('matchKind')}, revisão necessária)"
             for match in matches
         )
+        eu_matches = promise.get("europeanMatches", []) or []
+        eu_proposals = "; ".join(
+            f"{match.get('identifier') or 'dossiê UE'}: {match.get('title') or ''} (revisão necessária)"
+            for match in eu_matches[:5]
+        )
+        budget_matches = promise.get("budgetMatches", []) or []
+        budget_rubrics = "; ".join(
+            f"Ano {match.get('year')}: {match.get('rubricPreview') or ''} ({match.get('filename')}, revisão necessária)"
+            for match in budget_matches[:3]
+        )
         source = promise.get("source", {})
         origin = str(promise.get("origin") or "")
         contest = str(source.get("contest") or "")
@@ -5141,6 +6223,8 @@ def build_memory_chunks(state: Mapping[str, Any]) -> list[dict[str, Any]]:
                     for part in (
                         f"{header} {promise.get('statement')}.",
                         f"Propostas relacionadas automaticamente: {proposals}." if proposals else "",
+                        f"Propostas europeias relacionadas automaticamente: {eu_proposals}." if eu_proposals else "",
+                        f"Rubricas orçamentais relacionadas automaticamente: {budget_rubrics}." if budget_rubrics else "",
                         f"Fonte: {source.get('title') or source.get('filename') or ''} {source.get('url') or ''}".strip(),
                     )
                     if part
@@ -5198,6 +6282,57 @@ def build_memory_chunks(state: Mapping[str, Any]) -> list[dict[str, Any]]:
                 str(vote.get("sourceUrl") or ""),
             )
         )
+    for eu_initiative in state.get("euInitiatives", {}).values():
+        if not isinstance(eu_initiative, Mapping):
+            continue
+        chunks.append(
+            memory_chunk(
+                str(eu_initiative["id"]),
+                " ".join(
+                    part
+                    for part in (
+                        (f"[Iniciativa europeia — PE {eu_initiative.get('parliamentaryTerm', '')}] "
+                         f"{eu_initiative.get('identifier') or ''}: {eu_initiative.get('title') or eu_initiative.get('label') or ''}."),
+                        f"Fase atual: {eu_initiative.get('status')}." if eu_initiative.get("status") else "",
+                        f"Fonte oficial: {eu_initiative.get('sourceUrl')}" if eu_initiative.get("sourceUrl") else "",
+                    )
+                    if part
+                ),
+                "Iniciativas europeias",
+                "PARLAMENTO_EUROPEU",
+                str(eu_initiative.get("date") or "")[:4],
+                "ep_procedure",
+                str(eu_initiative.get("sourceUrl") or ""),
+            )
+        )
+    for eu_vote in state.get("euVotes", {}).values():
+        if not isinstance(eu_vote, Mapping):
+            continue
+        counts = eu_vote.get("counts") or {}
+        chunks.append(
+            memory_chunk(
+                str(eu_vote["id"]),
+                " ".join(
+                    part
+                    for part in (
+                        f"[Votação do Parlamento Europeu — {eu_vote.get('legislature', '')}] {eu_vote.get('subject') or ''}.",
+                        f"Resultado: {eu_vote.get('result')}." if eu_vote.get("result") else "",
+                        f"A favor: {counts.get('favor', 0)}, contra: {counts.get('against', 0)},"
+                        f" abstenções: {counts.get('abstention', 0)}."
+                        if counts
+                        else "",
+                        ("Votação nominal (RCV)." if eu_vote.get("nominal") else ""),
+                        f"Fonte oficial: {eu_vote.get('sourceUrl')}" if eu_vote.get("sourceUrl") else "",
+                    )
+                    if part
+                ),
+                "Iniciativas europeias",
+                "PARLAMENTO_EUROPEU",
+                str(eu_vote.get("date") or "")[:4],
+                "ep_plenary_vote",
+                str(eu_vote.get("sourceUrl") or ""),
+            )
+        )
     return sorted(chunks, key=lambda item: item["id"])
 
 
@@ -5219,8 +6354,42 @@ def ensure_state(payload: Any) -> dict[str, Any]:
 def export_outputs(state: Mapping[str, Any], config: Mapping[str, Any], matcher: EntityMatcher, public_path: Path, memory_path: Path) -> dict[str, int]:
     dataset = build_public_dataset(state, config, matcher)
     chunks = build_memory_chunks(state)
-    json_save(public_path, dataset)
-    json_save(memory_path, chunks)
+    public_array_keys = ("articles", "promises", "initiatives", "votes")
+    public_inline = {
+        key: value for key, value in dataset.items() if key not in public_array_keys
+    }
+    public_shard_dir = public_path.parent / f"{public_path.stem}-shards"
+    # Cada array precisa de vários shards próprios; o particionador recebe uma
+    # lista por chamada para não misturar artigos, promessas, iniciativas e votos.
+    shard_paths = {}
+    for key in public_array_keys:
+        manifest = write_json_list_shards(
+            dataset.get(key, []),
+            public_path.parent / f".{public_path.stem}-{key}.tmp.json",
+            public_shard_dir,
+            shard_prefix=key,
+        )
+        shard_paths[key] = manifest.get("shards", [])
+        try:
+            (public_path.parent / f".{public_path.stem}-{key}.tmp.json").unlink()
+        except OSError:
+            pass
+    json_save(
+        public_path,
+        {
+            "schemaVersion": 2,
+            "format": "political-intelligence-shards",
+            "inline": public_inline,
+            "shards": shard_paths,
+        },
+    )
+    memory_shard_dir = memory_path.parent / f"{memory_path.stem}-shards"
+    write_json_list_shards(
+        chunks,
+        memory_path,
+        memory_shard_dir,
+        shard_prefix="chunks",
+    )
     return {
         "articles": len(dataset["articles"]),
         "promises": len(dataset["promises"]),
@@ -5252,6 +6421,12 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="Dias a recolher; 0 (predefinição) recolhe todo o histórico permitido.",
     )
     parser.add_argument("--max-urls-per-source", type=int, default=None)
+    parser.add_argument(
+        "--checkpoint-interval-seconds",
+        type=float,
+        default=None,
+        help="Intervalo de checkpoint em segundos; útil para runs integrais (ex.: 300).",
+    )
     parser.add_argument(
         "--sources",
         type=str,
@@ -5387,8 +6562,13 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
 
     crawl_settings = config.get("crawl", {})
     try:
+        configured_checkpoint_interval = (
+            args.checkpoint_interval_seconds
+            if args.checkpoint_interval_seconds is not None
+            else crawl_settings.get("checkpointIntervalSeconds", 60)
+        )
         checkpoint_interval = max(
-            5.0, float(crawl_settings.get("checkpointIntervalSeconds", 60) or 60)
+            5.0, float(configured_checkpoint_interval or 60)
         )
     except (TypeError, ValueError):
         checkpoint_interval = 60.0
@@ -5454,6 +6634,27 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
                 f"({result['europeanUnion']['novos']} novos, {result['europeanUnion']['atualizados']} atualizados)"
                 + (f" — {eu_note}" if eu_note else "")
             )
+        if _STOP_REQUESTED.is_set():
+            raise KeyboardInterrupt
+        if args.command in {"assembly", "all", "eu"}:
+            safe_print("\n🇪🇺 A recolher votações nominais do Parlamento Europeu por sessão...")
+            result["europeanVotes"] = sync_european_votes(state, config, client, checkpoint)
+            ev_note = result["europeanVotes"].get("note")
+            safe_print(
+                f"   ↳ {result['europeanVotes']['votesKnown']} votações UE conhecidas "
+                f"({result['europeanVotes']['novosVotos']} novos; sessões processadas: "
+                f"{result['europeanVotes']['sessoesProcessadas']}; pendentes: {result['europeanVotes']['sessoesPendentes']})"
+                + (f" — {ev_note}" if ev_note else "")
+            )
+        if _STOP_REQUESTED.is_set():
+            raise KeyboardInterrupt
+        safe_print("\n💰 A catalogar a evidência orçamental (PT/UE) já em disco...")
+        result["budgets"] = sync_budget_evidence(state, config, checkpoint)
+        budgets_note = result["budgets"].get("note")
+        safe_print(
+            f"   ↳ {result['budgets']['documentsKnown']} documentos orçamentais catalogados"
+            + (f" — {budgets_note}" if budgets_note else "")
+        )
 
         safe_print("\n🧹 A validar relevância e a filtrar notícias...")
         result["articlesRemovedAsIrrelevant"] = prune_irrelevant_articles(state, matcher)
@@ -5475,6 +6676,11 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
         result["promises"]["proposalMatches"] = rebuild_promise_matches(state)
         if state.get("euInitiatives"):
             result["promises"]["europeanMatches"] = rebuild_promise_european_matches(state)
+        else:
+            safe_print("   ↳ 0 correspondências sugeridas entre promessas e iniciativas europeias (sem dossiês UE).")
+            result["promises"]["europeanMatches"] = 0
+        if state.get("budgetDocuments") or state.get("budgetCorpusFingerprint"):
+            result["promises"]["budgetMatches"] = rebuild_budget_matches(state, config)
         state["updatedAt"] = iso_now()
         state["lastRun"] = {
             "at": iso_now(),
@@ -5483,6 +6689,12 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
             "assembly": result["assembly"],
             "presidential": result.get("presidential"),
             "europeanUnion": result.get("europeanUnion"),
+            "europeanVotes": {
+                key: value
+                for key, value in (result.get("europeanVotes") or {}).items()
+                if key != "note"
+            },
+            "budgets": result.get("budgets"),
         }
 
         if args.dry_run:
@@ -5491,6 +6703,9 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
                 "promises": len(state["promises"]),
                 "initiatives": len(state["initiatives"]),
                 "votes": len(state["votes"]),
+                "euInitiatives": len(state.get("euInitiatives", {})),
+                "euVotes": len(state.get("euVotes", {})),
+                "budgetDocuments": len(state.get("budgetDocuments", {})),
                 "memoryChunks": len(build_memory_chunks(state)),
                 "dryRun": True,
             }

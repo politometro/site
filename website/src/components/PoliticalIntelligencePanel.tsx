@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import styles from "./PoliticalIntelligencePanel.module.css";
 
-type Tab = "promessas" | "votacoes" | "noticias";
+type Tab = "promessas" | "votacoes" | "noticias" | "europa" | "orcamentos";
 type VotePosition = "favor" | "contra" | "abstencao" | "ausencia";
+type VoteOutcomeKind = "aprovada" | "rejeitada" | "sem_resultado";
 
 interface Party {
   id: string;
@@ -20,6 +21,7 @@ interface Source {
   filename?: string;
   page?: number;
   year?: number | string;
+  contest?: string;
 }
 
 interface ProposalMatch {
@@ -36,6 +38,59 @@ interface ProposalMatch {
   voteIds?: string[];
 }
 
+interface PresidentAction {
+  kind?: string;
+  date?: string | null;
+  phaseLabel?: string;
+  sourceUrl?: string;
+}
+
+interface VoteOutcome {
+  initiativeId?: string;
+  bid?: string;
+  number?: string;
+  title?: string;
+  outcome?: VoteOutcomeKind | string;
+  status?: string;
+  presidentAction?: PresidentAction;
+  positionsByParty?: Record<string, VotePosition | string>;
+  votes?: Array<{ id?: string; date?: string; result?: string; phase?: string }>;
+}
+
+interface EuropeanMatch {
+  initiativeId?: string;
+  identifier?: string;
+  title?: string;
+  status?: string;
+  date?: string;
+  sourceUrl?: string;
+  reviewRequired?: boolean;
+}
+
+interface BudgetMatch {
+  budgetChunkId?: string;
+  budgetDocId?: string;
+  category?: string;
+  year?: number | null;
+  filename?: string;
+  page?: number | null;
+  rubricPreview?: string;
+  governmentLabel?: string | null;
+  reviewRequired?: boolean;
+}
+
+interface BudgetDocument {
+  id: string;
+  category?: string;
+  year?: number | null;
+  filename?: string;
+  relPath?: string;
+  chunkCount?: number;
+  preview?: string;
+  governmentLabel?: string | null;
+  matchCount?: number;
+}
+
 interface PromiseItem {
   id: string;
   party: string;
@@ -43,6 +98,9 @@ interface PromiseItem {
   origin: string;
   source: Source;
   proposalMatches: ProposalMatch[];
+  voteOutcomes?: VoteOutcome[];
+  europeanMatches?: EuropeanMatch[];
+  budgetMatches?: BudgetMatch[];
   reviewRequired: boolean;
 }
 
@@ -113,10 +171,63 @@ interface IntelligenceData {
   promises: PromiseItem[];
   votes: Vote[];
   articles: Article[];
+  europeanUnion?: {
+    initiativesMatched?: Array<{
+      id?: string;
+      identifier?: string;
+      label?: string;
+      title?: string;
+      type?: string;
+      status?: string;
+      parliamentaryTerm?: number | null;
+      sourceUrl?: string;
+    }>;
+    proceduresKnown?: number;
+    votesKnown?: number;
+  };
+  budgets?: {
+    documents?: BudgetDocument[];
+    documentsKnown?: number;
+  };
   statistics: {
     allTime: VoteStatistics;
     byLegislature: Record<string, VoteStatistics>;
   };
+}
+
+type IntelligenceShardManifest = {
+  format?: string;
+  inline?: Record<string, unknown>;
+  shards?: Record<string, string[]>;
+};
+
+async function loadIntelligenceData(): Promise<IntelligenceData> {
+  const response = await fetch("/political-intelligence.json", { cache: "no-store" });
+  if (!response.ok) throw new Error("Não foi possível carregar o quadro público.");
+  const payload = (await response.json()) as IntelligenceData | IntelligenceShardManifest;
+  if ((payload as IntelligenceShardManifest).format !== "political-intelligence-shards") {
+    return payload as IntelligenceData;
+  }
+
+  const manifest = payload as IntelligenceShardManifest;
+  const shardEntries = Object.entries(manifest.shards ?? {});
+  const arrays = await Promise.all(
+    shardEntries.map(async ([key, paths]) => {
+      const parts = await Promise.all(
+        paths.map(async (path) => {
+          const shardResponse = await fetch(`/${path}`, { cache: "no-store" });
+          if (!shardResponse.ok) throw new Error(`Não foi possível carregar o shard ${path}.`);
+          const shard = await shardResponse.json();
+          return Array.isArray(shard) ? shard : [];
+        }),
+      );
+      return [key, parts.flat()] as const;
+    }),
+  );
+  return {
+    ...(manifest.inline ?? {}),
+    ...Object.fromEntries(arrays),
+  } as unknown as IntelligenceData;
 }
 
 const POSITION_LABELS: Record<string, string> = {
@@ -159,10 +270,57 @@ function proposalSourceUrl(proposal: ProposalMatch): string | undefined {
   return proposal.sourceUrl || proposal.source?.url;
 }
 
+function outcomeLabel(outcome?: VoteOutcomeKind | string): string {
+  switch (outcome) {
+    case "aprovada":
+      return "Aprovada ✓";
+    case "rejeitada":
+      return "Rejeitada ✗";
+    default:
+      return "Sem resultado";
+  }
+}
+
+function outcomeClass(outcome?: VoteOutcomeKind | string): string {
+  switch (outcome) {
+    case "aprovada":
+      return styles.outcomeApproved;
+    case "rejeitada":
+      return styles.outcomeRejected;
+    default:
+      return styles.outcomeNone;
+  }
+}
+
+function presidentActionLabel(action?: PresidentAction, president?: string): string {
+  if (!action) return "";
+  const kind = action.kind === "promulgada"
+    ? "Promulgada"
+    : action.kind === "veto"
+      ? "Veto"
+      : (action.phaseLabel || "Decisão presidencial");
+  const when = action.date ? ` em ${formatDate(action.date)}` : "";
+  const who = president ? ` por ${president}` : "";
+  return `${kind}${when}${who}`;
+}
+
 function positionLabel(position?: string): string {
   return position
     ? POSITION_LABELS[position] ?? "Posição não publicada"
     : "Sem posição publicada";
+}
+
+function BudgetDocCategoryLabel(category?: string): string {
+  switch (category) {
+    case "pt_estado":
+      return "Orçamento do Estado";
+    case "ue_bce":
+      return "Orçamento UE — BCE";
+    case "ue_mff":
+      return "Quadro Financeiro Plurianual da UE";
+    default:
+      return category || "Orçamento";
+  }
 }
 
 function positionClass(position?: string): string {
@@ -307,6 +465,7 @@ export default function PoliticalIntelligencePanel() {
   const [data, setData] = useState<IntelligenceData | null>(null);
   const [loadError, setLoadError] = useState("");
   const [selectedParty, setSelectedParty] = useState("todos");
+  const [selectedContest, setSelectedContest] = useState("todos");
   const [scope, setScope] = useState("atual");
   const [comparisonLeft, setComparisonLeft] = useState("");
   const [comparisonRight, setComparisonRight] = useState("");
@@ -325,11 +484,7 @@ export default function PoliticalIntelligencePanel() {
 
   useEffect(() => {
     let active = true;
-    fetch("/political-intelligence.json", { cache: "no-store" })
-      .then((response) => {
-        if (!response.ok) throw new Error("Não foi possível carregar o quadro público.");
-        return response.json() as Promise<IntelligenceData>;
-      })
+    loadIntelligenceData()
       .then((payload) => {
         if (!active) return;
         setData(payload);
@@ -386,9 +541,15 @@ export default function PoliticalIntelligencePanel() {
   const statistics = data
     ? (currentScope === "sempre" ? data.statistics.allTime : data.statistics.byLegislature[currentScope ?? ""])
     : undefined;
+  const contests = useMemo(() => Array.from(new Set(
+    (data?.promises ?? [])
+      .map((promise) => promise.source?.contest)
+      .filter((contest): contest is string => Boolean(contest)),
+  )).sort((left, right) => left.localeCompare(right, "pt")), [data]);
   const promises = useMemo(() => (data?.promises ?? []).filter((promise) => (
-    selectedParty === "todos" || promise.party === selectedParty
-  )), [data, selectedParty]);
+    (selectedParty === "todos" || promise.party === selectedParty)
+    && (selectedContest === "todos" || promise.source?.contest === selectedContest)
+  )), [data, selectedParty, selectedContest]);
   const votes = useMemo(() => (data?.votes ?? []).filter((vote) => (
     (!currentScope || currentScope === "sempre" || vote.legislature === currentScope)
     && (selectedParty === "todos" || vote.positions.some((position) => position.party === selectedParty))
@@ -457,6 +618,8 @@ export default function PoliticalIntelligencePanel() {
               ["promessas", "Promessas"],
               ["votacoes", "Votações"],
               ["noticias", "Notícias"],
+              ["europa", "Europa"],
+              ["orcamentos", "Orçamentos"],
             ] as const).map(([value, label]) => (
               <button
                 key={value}
@@ -479,6 +642,15 @@ export default function PoliticalIntelligencePanel() {
                 {(data?.parties ?? []).map((party) => <option key={party.id} value={party.id}>{party.name}</option>)}
               </select>
             </label>
+            {tab === "promessas" && contests.length > 0 && (
+              <label>
+                Eleição / origem
+                <select value={selectedContest} onChange={(event) => setSelectedContest(event.target.value)}>
+                  <option value="todos">Todos os concursos</option>
+                  {contests.map((contest) => <option key={contest} value={contest}>{contest}</option>)}
+                </select>
+              </label>
+            )}
             {tab === "votacoes" && (
               <label>
                 Período
@@ -513,7 +685,11 @@ export default function PoliticalIntelligencePanel() {
                       <section className={styles.promiseCell}>
                         <span className={styles.partyTag}>{partyName(promise.party, data.parties)}</span>
                         <p>{promise.statement}</p>
-                        <small>{promise.origin === "noticia" ? "Promessa identificada numa notícia" : "Programa eleitoral"}</small>
+                        <small>
+                          {promise.origin === "noticia"
+                            ? "Promessa identificada numa notícia"
+                            : `Programa eleitoral${promise.source.contest ? ` — ${promise.source.contest}` : ""}`}
+                        </small>
                         {promise.source.url ? (
                           <a className={styles.sourceLink} href={promise.source.url} target="_blank" rel="noreferrer">{sourceLabel(promise.source)}</a>
                         ) : <small>{sourceLabel(promise.source)}</small>}
@@ -522,13 +698,32 @@ export default function PoliticalIntelligencePanel() {
                         {relatedProposals.length > 0 ? relatedProposals.map(({ proposal, key }) => {
                           const officialSourceUrl = proposalSourceUrl(proposal);
                           const authorRelationLabel = proposal.authorRelationLabel?.trim();
+                          const outcome = (promise.voteOutcomes ?? []).find(
+                            (item) => item.initiativeId === proposal.initiativeId,
+                          );
                           return (
                             <div className={styles.proposalMatch} key={key}>
                               <span className={`${styles.matchBadge} ${isApproximateMatch(proposal) ? styles.approximate : styles.direct}`}>
                                 {proposalMatchLabel(proposal)}
                               </span>
+                              {outcome ? (
+                                <span className={`${styles.outcomeBadge} ${outcomeClass(outcome.outcome)}`}>
+                                  {outcomeLabel(outcome.outcome)}
+                                </span>
+                              ) : null}
                               <p>{proposal.number && <strong>{proposal.number} · </strong>}{proposalTitle(proposal)}</p>
                               {authorRelationLabel && <small className={styles.authorRelation}>{authorRelationLabel}</small>}
+                              {outcome?.presidentAction && (
+                                <small className={styles.authorRelation}>
+                                  {presidentActionLabel(outcome.presidentAction, "Presidente da República")}
+                                </small>
+                              )}
+                              {outcome && outcome.positionsByParty && Object.keys(outcome.positionsByParty).length > 0 && (
+                                <small className={styles.authorRelation}>
+                                  Posições: {Object.entries(outcome.positionsByParty)
+                                    .map(([party, position]) => `${party} ${positionLabel(position)}`).join(" · ")}
+                                </small>
+                              )}
                               {proposal.reviewRequired !== false && <small className={styles.review}>Esta ligação é informativa e está a ser confirmada pela equipa.</small>}
                               {officialSourceUrl && (
                                 <a className={styles.sourceLink} href={officialSourceUrl} target="_blank" rel="noreferrer">
@@ -604,11 +799,91 @@ export default function PoliticalIntelligencePanel() {
                 )}
               </div>
             )}
+
+            {data && tab === "europa" && (
+              <div>
+                <p className={styles.empty}>
+                  Sugestões automáticas entre promessas portuguesas e iniciativas do Parlamento Europeu (OEIL, dados oficiais). Tudo requer revisão humana.
+                </p>
+                {promises.filter((promise) => (promise.europeanMatches ?? []).length > 0).length === 0 ? (
+                  <p className={styles.empty}>Ainda não há correspondências europeias sugeridas neste filtro.</p>
+                ) : promises
+                  .filter((promise) => (promise.europeanMatches ?? []).length > 0)
+                  .slice(0, promiseLimit)
+                  .map((promise) => (
+                    <article key={promise.id} className={styles.promiseRow}>
+                      <section className={styles.promiseCell}>
+                        <span className={styles.partyTag}>{partyName(promise.party, data.parties)}</span>
+                        <p>{promise.statement}</p>
+                        <small>{promise.origin === "noticia" ? "Promessa identificada numa notícia" : "Programa eleitoral"}</small>
+                      </section>
+                      <section className={styles.proposalCell}>
+                        {(promise.europeanMatches ?? []).map((eu, index) => (
+                          <div className={styles.proposalMatch} key={`${promise.id}-eu-${index}`}>
+                            <span className={`${styles.matchBadge} ${styles.approximate}`}>Proposta europeia</span>
+                            <p>{eu.identifier && <strong>{eu.identifier} · </strong>}{eu.title || "Dossiê europeu"}</p>
+                            {eu.status && <small className={styles.authorRelation}>Fase: {eu.status}</small>}
+                            <small className={styles.review}>Ligação automática sujeita a confirmação pela equipa.</small>
+                            {eu.sourceUrl && (
+                              <a className={styles.sourceLink} href={eu.sourceUrl} target="_blank" rel="noreferrer">
+                                Registo oficial do PE
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </section>
+                    </article>
+                  ))}
+                {promises.filter((promise) => (promise.europeanMatches ?? []).length > 0).length > promiseLimit && (
+                  <button type="button" className={styles.moreButton} onClick={() => setPromiseLimit((limit) => limit + 20)}>Mostrar mais correspondências</button>
+                )}
+              </div>
+            )}
+
+            {data && tab === "orcamentos" && (
+              <div>
+                <p className={styles.empty}>
+                  Ligações automáticas entre promessas e rubricas dos Orçamentos do Estado e de documentação orçamental da UE (PDF em arquivo). Requerem sempre revisão humana.
+                </p>
+                {promises.filter((promise) => (promise.budgetMatches ?? []).length > 0).length === 0 ? (
+                  <p className={styles.empty}>Ainda não há ligações orçamentais sugeridas neste filtro.</p>
+                ) : promises
+                  .filter((promise) => (promise.budgetMatches ?? []).length > 0)
+                  .slice(0, promiseLimit)
+                  .map((promise) => (
+                    <article key={promise.id} className={styles.promiseRow}>
+                      <section className={styles.promiseCell}>
+                        <span className={styles.partyTag}>{partyName(promise.party, data.parties)}</span>
+                        <p>{promise.statement}</p>
+                        <small>{promise.origin === "noticia" ? "Promessa identificada numa notícia" : "Programa eleitoral"}</small>
+                      </section>
+                      <section className={styles.proposalCell}>
+                        {(promise.budgetMatches ?? []).map((br, index) => (
+                          <div className={styles.proposalMatch} key={`${promise.id}-br-${index}`}>
+                            <span className={`${styles.matchBadge} ${styles.approximate}`}>{BudgetDocCategoryLabel(br.category)}</span>
+                            <p>
+                              <strong>{br.year ? `Orçamento ${br.year} · ` : ""}</strong>{br.filename || "Documento orçamental"}
+                              {typeof br.page === "number" ? ` (pág. ${br.page})` : ""}
+                            </p>
+                            <small className={styles.authorRelation}>{br.governmentLabel || "Período por classificar"}</small>
+                            {br.rubricPreview && <p className={styles.rubricPreview}>{br.rubricPreview}</p>}
+                            <small className={styles.review}>Ligação automática sujeita a confirmação pela equipa.</small>
+                          </div>
+                        ))}
+                      </section>
+                    </article>
+                  ))}
+                {promises.filter((promise) => (promise.budgetMatches ?? []).length > 0).length > promiseLimit && (
+                  <button type="button" className={styles.moreButton} onClick={() => setPromiseLimit((limit) => limit + 20)}>Mostrar mais ligações</button>
+                )}
+              </div>
+            )}
           </div>
 
           {data && <footer className={styles.panelFooter}>
-            <p>As propostas semelhantes e os resultados são confirmados antes de serem tratados como conclusões.</p>
+            <p>As propostas semelhantes, os resultados e as ligações são confirmados antes de serem tratados como conclusões.</p>
             <p>As notícias são apresentadas como resumos curtos com referência à fonte.</p>
+            <p>A revisão humana das ligações (propostas, UE e orçamentos) é contínua.</p>
           </footer>}
         </aside>
       )}

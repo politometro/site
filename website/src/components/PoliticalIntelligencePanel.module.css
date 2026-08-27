@@ -335,6 +335,37 @@
   color: var(--color-accent);
 }
 
+.outcomeBadge {
+  display: inline-flex;
+  border-radius: var(--radius-full);
+  padding: 0.22rem 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  margin-left: 0.35rem;
+}
+
+.outcomeApproved {
+  color: #075b36;
+  background: rgba(12, 92, 54, 0.16);
+}
+
+.outcomeRejected {
+  color: #8c1d1d;
+  background: rgba(140, 29, 29, 0.16);
+}
+
+.outcomeNone {
+  color: #5a6472;
+  background: rgba(90, 100, 114, 0.14);
+}
+
+.rubricPreview {
+  color: inherit;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  margin: 0.25rem 0 0;
+}
+
 .voteBox {
   width: 100%;
   overflow: hidden;

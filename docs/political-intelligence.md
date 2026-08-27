@@ -16,7 +16,9 @@ Para iniciar uma recolha completa no Windows, sem limites de dias, URLs ou pági
 executar_recolha.cmd
 ```
 
-O comando inclui todas as legislaturas configuradas, guarda checkpoints e não executa o envio para o Pinecone.
+O comando inclui todas as legislaturas configuradas, guarda checkpoints e, se
+`PINECONE_API_KEY` estiver definida, envia depois apenas os chunks novos ou
+alterados com embeddings locais.
 
 Para atualizar as fontes recentes e a legislatura atual:
 
@@ -33,19 +35,27 @@ python scripts/political_intelligence.py assembly --all-history --force-assembly
 Os resultados locais são:
 
 - `data/political_intelligence_state.json` — estado incremental e evidência normalizada;
-- `website/public/political-intelligence.json` — quadro público usado pelo site;
-- `scripts/extracted_chunks_political_intelligence.json` — factos curtos prontos para a memória de pesquisa do bot.
+- `website/public/political-intelligence.json` — manifesto do quadro público;
+- `website/public/political-intelligence-shards/` — partes abaixo de 45 MB carregadas pelo site;
+- `scripts/extracted_chunks_political_intelligence.json` — manifesto do corpus curto;
+- `scripts/extracted_chunks_political_intelligence-shards/` — partes do corpus usadas pelo upload.
+
+O estado da recolha e os corpora dos PDFs são artefactos regeneráveis e não são
+commitados no Git; no GitHub Actions, o estado é mantido na cache entre
+execuções.
 
 ## Memória do bot
 
-O envio para Pinecone é deliberadamente separado da recolha e usa o namespace `political-intelligence`:
+O upload completo e incremental é feito por:
 
 ```powershell
-python scripts/upload_political_intelligence.py --dry-run
-python scripts/upload_political_intelligence.py
+python scripts/upload_pinecone.py --dry-run
+python scripts/upload_pinecone.py --embedding-mode local
 ```
 
-O segundo comando só deve ser executado quando houver autorização para enviar os dados. A automatização agendada atualiza os ficheiros do site; o envio para a memória só corre numa execução manual com a opção `upload_memory` ativada.
+O namespace padrão recebe os programas/orçamentos extraídos; o namespace
+`political-intelligence` recebe notícias, promessas, iniciativas e votações.
+O tracking fica em `scripts/pinecone_upload_state.json`.
 
 ## Fontes e regras
 

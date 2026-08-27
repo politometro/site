@@ -12,6 +12,8 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import political_intelligence as intelligence
 
+FIXTURES_DIR = Path(__file__).resolve().parents[1] / ".." / "scratch" / "fixtures"
+
 
 class PoliticalIntelligenceTests(unittest.TestCase):
     @classmethod
@@ -552,7 +554,7 @@ class PoliticalIntelligenceTests(unittest.TestCase):
                 },
                 self.matcher,
             ),
-            ("AD", 2025),
+            ("AD", 2025, "Legislativas 2025"),
         )
         self.assertEqual(
             intelligence.programme_chunk_metadata(
@@ -564,7 +566,7 @@ class PoliticalIntelligenceTests(unittest.TestCase):
                 },
                 self.matcher,
             ),
-            (None, None),
+            (None, None, ""),
         )
 
     def test_article_pruning_removes_old_foreign_false_positive(self):
@@ -1079,15 +1081,176 @@ class PoliticalIntelligenceTests(unittest.TestCase):
         self.assertEqual(intelligence.format_duration(125), "2m 05s")
         self.assertEqual(intelligence.format_duration(3665), "1h 01m")
 
-    def test_crawl_progress_tracker(self):
-        tracker = intelligence.CrawlProgressTracker(total_sources=4)
-        tracker.start_source(1, "Fonte A", target_count=100)
-        indiv_pct, indiv_eta, global_pct, global_eta = tracker.stats(processed_in_source=50)
-        self.assertAlmostEqual(indiv_pct, 50.0, places=1)
-        self.assertAlmostEqual(global_pct, 12.5, places=1)
-        badge = tracker.badge(processed_in_source=50)
-        self.assertIn("50.0%", badge)
-        self.assertIn("Global: 12.5%", badge)
+    # ------------------------------------------------------------------
+    # Fase D — decisão presidencial / resultado por promessa (votado)
+    # ------------------------------------------------------------------
+
+    def test_presidential_action_from_events_picks_latest_terminal_phase(self):
+        events = [
+            {"Fase": "entrada", "DataFase": "2026-02-10"},
+            {"Fase": "apreciação parlamentar", "DataFase": "2026-03-01"},
+            {"Fase": "votação final global", "DataFase": "2026-04-05"},
+            {"Fase": "promulgação", "DataFase": "2026-05-02"},
+        ]
+        action = intelligence.presidential_action_from_events(events)
+        self.assertIsNotNone(action)
+        self.assertEqual(action["kind"], "promulgada")
+        self.assertTrue(str(action["date"]).startswith("2026-05-02"))
+
+    def test_presidential_action_from_events_prefers_veto_when_later(self):
+        events = [
+            {"Fase": "promulgação", "DataFase": "2026-04-01"},
+            {"Fase": "veto", "DataFase": "2026-05-03"},
+            {"Fase": "apreciação parlamentar", "DataFase": "2026-05-15"},
+        ]
+        action = intelligence.presidential_action_from_events(events)
+        self.assertEqual(action["kind"], "apreciacao_parlamentar")
+
+    def test_normalise_initiative_stores_president_action_from_fixture(self):
+        raw = intelligence.json_load(FIXTURES_DIR / "ar_inieventos.json", {})
+        assembly = self.config["assembly"]
+        initiative = intelligence.normalise_initiative(raw, self.matcher, "XVII", assembly)
+        self.assertIsNotNone(initiative)
+        self.assertEqual(initiative["presidentAction"]["kind"], "promulgada")
+
+    def test_sync_presidential_actions_parses_lei_references_from_fixture(self):
+        html_fixture = (FIXTURES_DIR / "pr_promulgacoes.html").read_text(encoding="utf-8")
+
+        class _FakeClient:
+            def __init__(self, html: str) -> None:
+                self.html = html
+
+            def text(self, url: str):
+                # Só a página de promulgações contém referências; os vetos vêm vazios.
+                if "promulgacoes" not in url and "promulgac" not in url:
+                    return "", {}, url
+                return self.html, {}, url
+
+        client = _FakeClient(html_fixture)
+        state = intelligence.initial_state()
+        state["initiatives"] = {
+            "ini_x": {"id": "ini_x", "title": "Lei n.º 12/2024 — regime do procedimento simplificado"}
+        }
+        with mock.patch.object(intelligence, "can_fetch", return_value=True):
+            result = intelligence.sync_presidential_actions(state, self.config, client)
+        self.assertEqual(result["promulgadas"], 2)
+        self.assertEqual(result["vetos"], 0)
+        self.assertEqual(result["novas"], 2)
+        self.assertEqual(state["initiatives"]["ini_x"]["presidentAction"]["kind"], "promulgada")
+
+    def test_public_vote_outcomes_merge_positions_by_party_and_president(self):
+        votes = {
+            "v1": {
+                "id": "v1", "initiativeId": "ini", "date": "2026-04-05", "result": "Aprovado",
+                "positions": [{"party": "PS", "position": "favor"}, {"party": "PSD", "position": "contra"}],
+            },
+            "v2": {
+                "id": "v2", "initiativeId": "ini", "date": "2026-05-02", "result": "Aprovado",
+                "positions": [{"party": "PS", "position": "abstencao"}],
+            },
+        }
+        initiatives = {
+            "ini": {"id": "ini", "status": "Promulgada",
+                    "presidentAction": {"kind": "promulgada", "date": "2026-05-02"}}
+        }
+        promise = {"proposalMatches": [{"initiativeId": "ini", "voteIds": ["v1", "v2"]}]}
+        outcomes = intelligence.promise_vote_outcomes(promise, initiatives, votes)
+        self.assertEqual(len(outcomes), 1)
+        self.assertEqual(outcomes[0]["outcome"], "aprovada")
+        self.assertEqual(outcomes[0]["positionsByParty"]["PS"], "abstencao")
+        self.assertEqual(outcomes[0]["positionsByParty"]["PSD"], "contra")
+
+    # ------------------------------------------------------------------
+    # Fase E — iniciativas europeias (OEIL) e votações RCV
+    # ------------------------------------------------------------------
+
+    def test_normalise_eu_decision_from_fixture(self):
+        raw = intelligence.json_load(FIXTURES_DIR / "ep_dec_event.json", {})
+        records = raw.get("data") if isinstance(raw, dict) else []
+        dec = intelligence.normalise_eu_decision(
+            records[0], "https://data.europarl.europa.eu/api/v2", 10
+        )
+        self.assertIsNotNone(dec)
+        self.assertEqual(dec["result"], "Rejeitada")
+        self.assertTrue(dec["nominal"])
+        self.assertEqual(dec["counts"]["against"], 430)
+        self.assertEqual(dec["counts"]["favor"], 76)
+
+    def test_apply_eu_procedure_detail_from_fixture(self):
+        raw = intelligence.json_load(FIXTURES_DIR / "ep_procedure.json", {})
+        state = {"euInitiatives": {}}
+        _updated, created = intelligence.apply_eu_procedure_detail(state, raw, 10)
+        self.assertTrue(created >= 1)
+        record = next(iter(state["euInitiatives"].values()))
+        self.assertEqual(record["identifier"], "2024-2526")
+        self.assertTrue(record["title"])
+        self.assertTrue(record["status"])
+
+    # ------------------------------------------------------------------
+    # Fase F — orçamentos PT/UE
+    # ------------------------------------------------------------------
+
+    def test_government_label_for_year_overlap(self):
+        periods = [
+            {"id": "GC-XXIV", "name": "XXIV Governo", "start": "2024-04-02", "end": "2025-06-05"},
+            {"id": "GC-XXV", "name": "XXV Governo", "start": "2025-06-05"},
+        ]
+        self.assertEqual(intelligence.government_label_for_year(2025, periods), "XXV Governo")
+        self.assertEqual(intelligence.government_label_for_year(2024, periods), "XXIV Governo")
+
+    def test_sync_budget_evidence_groups_by_document_and_recovers_year(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            corpus = Path(temporary) / "budget.json"
+            corpus.write_text(
+                json.dumps([
+                    {"id": "a", "text": "Rubrica A", "category": "Orçamentos de Estado", "year": "2020",
+                     "filename": "Orçamento do Estado 2020.pdf",
+                     "rel_path": "Orçamentos de Estado\\Orçamento do Estado 2020.pdf"},
+                    {"id": "b", "text": "Rubrica B", "category": "Orçamento UE (BCE)", "year": "2021",
+                     "filename": "BCE - Relatório Anual 2021.pdf",
+                     "rel_path": "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2021.pdf"},
+                ]),
+                encoding="utf-8",
+            )
+            state = intelligence.initial_state()
+            config = dict(self.config)
+            config["budgets"] = {"enabled": True}
+            with mock.patch.object(intelligence, "BUDGET_CHUNK_FILES", (corpus,)):
+                result = intelligence.sync_budget_evidence(state, config)
+            self.assertEqual(result["documentsKnown"], 2)
+            self.assertEqual(result["chunks"], 2)
+            by_rel = {item["relPath"]: item for item in state["budgetDocuments"].values()}
+            pt = next(v for v in by_rel.values() if v["category"] == "pt_estado")
+            self.assertEqual(pt["year"], 2020)
+
+    def test_rebuild_budget_matches_uses_shared_terms_and_review_flag(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            corpus = Path(temporary) / "budget.json"
+            corpus.write_text(
+                json.dumps([
+                    {"id": "b1", "text": "Programa de apoio ao arrendamento acessível com meta de 100 mil casas e reforço do parque público de habitação",
+                     "category": "Orçamentos de Estado", "year": "2025",
+                     "filename": "Orçamento do Estado 2025.pdf",
+                     "rel_path": "Orçamentos de Estado\\Orçamento do Estado 2025.pdf"},
+                ]),
+                encoding="utf-8",
+            )
+            state = intelligence.initial_state()
+            state["promises"] = {
+                "p1": {"id": "p1",
+                       "statement": "Criar 100 mil casas de arrendamento acessível e reforçar o parque público de habitação",
+                       "party": "PS"},
+            }
+            config = dict(self.config)
+            config["budgets"] = {"enabled": True}
+            with mock.patch.object(intelligence, "BUDGET_CHUNK_FILES", (corpus,)):
+                matched = intelligence.rebuild_budget_matches(state, config)
+            self.assertGreaterEqual(matched, 1)
+            matches = state["promises"]["p1"]["budgetMatches"]
+            self.assertTrue(matches)
+            first = next(iter(matches))
+            self.assertTrue(first["reviewRequired"])
+            self.assertEqual(first["year"], 2025)
 
 
 if __name__ == "__main__":

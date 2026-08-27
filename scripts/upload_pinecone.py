@@ -1,257 +1,291 @@
-import os
+#!/usr/bin/env python3
+"""Upload every Politómetro corpus to Pinecone incrementally.
+
+The default embedding mode is local, so weekly runs do not consume Pinecone's
+hosted embedding quota. A fingerprint is stored per namespace/id; unchanged
+chunks are skipped and changed chunks are upserted with the same vector ID.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
 import json
+import logging
+import os
 import sys
+import tempfile
 import time
-from typing import Any, cast
+from pathlib import Path
+from typing import Any, Mapping, Sequence
 
-# We check if pinecone client is installed, and if not, we guide the user to install it
-try:
-    from pinecone import Pinecone
-except ImportError:
-    print("Error: The 'pinecone' library is not installed.")
-    print("Please install it using: pip install pinecone")
-    sys.exit(1)
-
-script_dir = os.path.dirname(os.path.abspath(__file__))
-workspace = os.path.abspath(os.path.join(script_dir, os.pardir))
-chunks_file = os.path.join(script_dir, "extracted_chunks.json")
-ocr_chunks_file = os.path.join(script_dir, "extracted_chunks_ocr.json")
-
-if not os.path.exists(chunks_file):
-    print(f"Error: Main chunks file not found at {chunks_file}. Please run scripts/extract_text.py first.")
-    sys.exit(1)
-
-# Get API credentials
-# We look for environment variables or ask the user
-api_key = os.environ.get("PINECONE_API_KEY")
-index_name = os.environ.get("PINECONE_INDEX_NAME")
-
-if not api_key:
-    print("Error: PINECONE_API_KEY environment variable is not set. Please configure it in your environment.")
-    sys.exit(1)
-if not index_name:
-    index_name = "politometro"
+ROOT = Path(__file__).resolve().parent.parent
+SCRIPT_DIR = ROOT / "scripts"
+DEFAULT_TRACKING = SCRIPT_DIR / "pinecone_upload_state.json"
+DEFAULT_POLITICAL_CHUNKS = SCRIPT_DIR / "extracted_chunks_political_intelligence.json"
+DEFAULT_BASE_SOURCES = (
+    SCRIPT_DIR / "extracted_chunks.json",
+    SCRIPT_DIR / "extracted_chunks_ocr.json",
+    SCRIPT_DIR / "extracted_chunks_eu_budget.json",
+)
+DEFAULT_MODEL = "multilingual-e5-large"
+DEFAULT_POLITICAL_NAMESPACE = "political-intelligence"
+MAX_PINECONE_EMBEDDING_TOKENS = 4_500_000
+LOGGER = logging.getLogger("upload_pinecone")
 
 
-def load_chunks(path, label):
-    if not os.path.exists(path):
-        print(f"Warning: {label} file not found at {path}.")
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--tracking", type=Path, default=DEFAULT_TRACKING)
+    parser.add_argument("--namespace", default=os.environ.get("PINECONE_NAMESPACE", ""))
+    parser.add_argument("--political-namespace", default=os.environ.get("PINECONE_POLITICAL_NAMESPACE", DEFAULT_POLITICAL_NAMESPACE))
+    parser.add_argument("--embedding-mode", choices=("local", "pinecone"), default=None)
+    parser.add_argument("--model", default=os.environ.get("LOCAL_EMBEDDING_MODEL", DEFAULT_MODEL))
+    parser.add_argument("--batch-size", type=int, default=48)
+    parser.add_argument("--limit", type=int, default=None)
+    parser.add_argument("--max-embedding-tokens", type=int, default=None)
+    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--force", action="store_true", help="Reenvia todos os chunks, ignorando fingerprints.")
+    return parser.parse_args(argv)
+
+
+def json_load(path: Path, fallback: Any) -> Any:
+    if not path.exists():
+        return fallback
+    with path.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def json_save(path: Path, payload: Any) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", suffix=".tmp", dir=path.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(payload, handle, ensure_ascii=False, separators=(",", ":"))
+            handle.write("\n")
+        os.replace(temporary, path)
+    except Exception:
+        try:
+            os.unlink(temporary)
+        except OSError:
+            pass
+        raise
+
+
+def load_list(path: Path) -> list[dict[str, Any]]:
+    """Load a normal list or the sharded-list manifest produced by the pipeline."""
+    if not path.exists():
+        print(f"Aviso: corpus ausente, ignorado: {path}")
         return []
-
-    with open(path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    if not isinstance(data, list):
-        print(f"Warning: {label} file at {path} does not contain a JSON list.")
-        return []
-
-    print(f"Loaded {len(data)} {label} chunks.")
-    return data
-
-
-def is_quota_error(error):
-    message = str(error).lower()
-    return (
-        "resource_exhausted" in message
-        or "embedding token limit" in message
-        or "quota" in message
-        or "limit" in message and "embedding" in message
-    )
+    payload = json_load(path, [])
+    if isinstance(payload, list):
+        return [item for item in payload if isinstance(item, Mapping)]
+    if not isinstance(payload, Mapping) or payload.get("format") != "json-list-shards":
+        raise RuntimeError(f"{path} não contém uma lista JSON nem um manifesto de shards.")
+    result: list[dict[str, Any]] = []
+    for relative in payload.get("shards", []):
+        shard_path = path.parent / str(relative)
+        shard = json_load(shard_path, [])
+        if not isinstance(shard, list):
+            raise RuntimeError(f"Shard inválido: {shard_path}")
+        result.extend(item for item in shard if isinstance(item, Mapping))
+    return result
 
 
-def load_local_embedder():
-    project_venv_site_packages = os.path.join(workspace, ".venv", "Lib", "site-packages")
-    if os.path.isdir(project_venv_site_packages) and project_venv_site_packages not in sys.path:
-        sys.path.insert(0, project_venv_site_packages)
+def fingerprint(item: Mapping[str, Any]) -> str:
+    relevant = {
+        key: item.get(key)
+        for key in ("id", "text", "page", "party", "year", "category", "filename", "rel_path", "source_type", "source_url")
+    }
+    raw = json.dumps(relevant, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
+
+def estimate_tokens(texts: Sequence[str]) -> int:
+    # Estimativa conservadora para português; o contador da API pode contar subwords.
+    return max(0, int(sum(len(text.split()) for text in texts) * 1.35))
+
+
+def quota_error(error: Exception) -> bool:
+    message = str(error).casefold()
+    return any(token in message for token in ("resource_exhausted", "quota", "embedding token limit", "too_many_requests"))
+
+
+def load_local_embedder(model_name: str) -> Any:
+    venv_site_packages = ROOT / ".venv" / "Lib" / "site-packages"
+    if venv_site_packages.is_dir() and str(venv_site_packages) not in sys.path:
+        sys.path.insert(0, str(venv_site_packages))
     try:
         from sentence_transformers import SentenceTransformer  # pyright: ignore[reportMissingImports]
-    except ImportError:
-        print("Error: Pinecone embedding quota was exhausted and local embeddings are not available.")
-        print("Install them with: pip install sentence-transformers")
-        sys.exit(1)
-
-    model_name = os.environ.get("LOCAL_EMBEDDING_MODEL", "intfloat/multilingual-e5-large")
-    print(f"Using local embedding model: {model_name}")
+    except ImportError as exc:
+        raise RuntimeError("Embeddings locais requerem sentence-transformers. Instale com pip install sentence-transformers.") from exc
+    print(f"A usar embeddings locais: {model_name}")
     return SentenceTransformer(model_name)
 
 
-local_embedder = None
-use_local_embeddings = True  # Set to True by default since the Pinecone embedding quota is exhausted
+def as_values(value: Any) -> list[float]:
+    raw = value.values if hasattr(value, "values") else value
+    tolist = getattr(raw, "tolist", None)
+    values = tolist() if callable(tolist) else list(raw)
+    return [float(item) for item in values]
 
-# Silence Hugging Face Hub warnings about unauthenticated requests
-import logging
-logging.getLogger("huggingface_hub").setLevel(logging.ERROR)
+
+def load_tracking(path: Path) -> dict[str, str]:
+    payload = json_load(path, {})
+    if not isinstance(payload, Mapping):
+        return {}
+    vectors = payload.get("vectors")
+    if isinstance(vectors, Mapping):
+        return {str(key): str(value) for key, value in vectors.items()}
+    # O antigo uploaded_files.json só registava ficheiros, não conteúdo; tudo
+    # é revalidado uma vez para criar fingerprints corretos.
+    return {}
 
 
-def generate_embeddings(texts):
-    global local_embedder, use_local_embeddings
+def build_sources(args: argparse.Namespace) -> list[tuple[Path, str]]:
+    sources = [(path, args.namespace) for path in DEFAULT_BASE_SOURCES]
+    sources.append((DEFAULT_POLITICAL_CHUNKS, args.political_namespace))
+    return sources
 
-    if not use_local_embeddings:
-        try:
-            return pc.inference.embed(
-                model="multilingual-e5-large",
-                inputs=texts,
-                parameters={"input_type": "passage", "truncate": "END"}
+
+def pinecone_upsert(index: Any, vectors: list[dict[str, Any]], namespace: str) -> None:
+    kwargs: dict[str, Any] = {"vectors": vectors}
+    if namespace:
+        kwargs["namespace"] = namespace
+    index.upsert(**kwargs)
+
+
+def run(args: argparse.Namespace) -> dict[str, Any]:
+    if args.batch_size < 1:
+        raise RuntimeError("--batch-size tem de ser positivo.")
+    tracking = load_tracking(args.tracking)
+    pending: list[tuple[dict[str, Any], str, str]] = []
+    totals: dict[str, int] = {}
+    seen: set[tuple[str, str]] = set()
+    for path, namespace in build_sources(args):
+        chunks = load_list(path)
+        totals[str(path.name)] = len(chunks)
+        for raw_item in chunks:
+            item = dict(raw_item)
+            identifier = str(item.get("id") or "").strip()
+            text = str(item.get("text") or "").strip()
+            if not identifier or not text:
+                continue
+            key = (namespace, identifier)
+            if key in seen:
+                continue
+            seen.add(key)
+            digest = fingerprint(item)
+            if args.force or tracking.get(f"{namespace}\x00{identifier}") != digest:
+                pending.append((item, namespace, digest))
+    if args.limit is not None:
+        pending = pending[: max(0, args.limit)]
+    mode = args.embedding_mode or os.environ.get("PINECONE_EMBEDDINGS", "local")
+    print(f"Corpora: {totals}; chunks pendentes: {len(pending)}; modo de embeddings: {mode}.")
+    if args.dry_run or not pending:
+        return {"pending": len(pending), "uploaded": 0, "embeddingMode": mode}
+
+    api_key = os.environ.get("PINECONE_API_KEY")
+    if not api_key:
+        raise RuntimeError("Defina PINECONE_API_KEY antes de enviar para Pinecone.")
+    try:
+        from pinecone import Pinecone
+    except ImportError as exc:
+        raise RuntimeError("Instale pinecone: pip install pinecone.") from exc
+
+    mode = mode.strip().casefold()
+    if mode not in {"local", "pinecone"}:
+        raise RuntimeError("PINECONE_EMBEDDINGS deve ser 'local' ou 'pinecone'.")
+    client = Pinecone(api_key=api_key)
+    index_name = os.environ.get("PINECONE_INDEX_NAME", "politometro")
+    index = client.Index(index_name)
+    local_embedder: Any | None = None
+    embedding_tokens = 0
+    token_limit = args.max_embedding_tokens
+    if token_limit is None:
+        token_limit = int(os.environ.get("PINECONE_EMBEDDING_TOKEN_BUDGET", str(MAX_PINECONE_EMBEDDING_TOKENS)))
+
+    def embed(texts: list[str]) -> Any:
+        nonlocal local_embedder, embedding_tokens
+        if mode == "local":
+            if local_embedder is None:
+                local_embedder = load_local_embedder(args.model)
+            return local_embedder.encode(
+                [f"passage: {text}" for text in texts],
+                batch_size=min(32, len(texts)),
+                normalize_embeddings=True,
+                show_progress_bar=False,
             )
-        except Exception as e:
-            if not is_quota_error(e):
-                raise
-            print("\nWarning: Pinecone embedding quota reached. Switching permanently to local embeddings for the remaining batches.")
-            use_local_embeddings = True
-
-    if local_embedder is None:
-        local_embedder = load_local_embedder()
-
-    return local_embedder.encode(
-        [f"passage: {text}" for text in texts],
-        batch_size=min(32, len(texts)),
-        normalize_embeddings=True,
-        show_progress_bar=False,
-    )
-
-print("\nConnecting to Pinecone...")
-try:
-    pc = Pinecone(api_key=api_key)
-except Exception as e:
-    print(f"Error connecting to Pinecone: {e}")
-    sys.exit(1)
-
-# Check if index exists, and if not, show instructions
-try:
-    indexes = pc.list_indexes()
-    index_names = [idx.name for idx in indexes]
-    if index_name not in index_names:
-        print(f"\nIndex '{index_name}' does not exist in your Pinecone account.")
-        print("Please create a serverless index in your Pinecone console with:")
-        print("  - Dimension: 1024 (matching the 'multilingual-e5-large' model)")
-        print("  - Metric: cosine")
-        print("  - Cloud: AWS or GCP")
-        print("  - Region: us-east-1 (or other serverless regions)")
-        sys.exit(1)
-except Exception as e:
-    print(f"Error verifying index: {e}")
-    sys.exit(1)
-
-main_chunks = load_chunks(chunks_file, "main")
-ocr_chunks = load_chunks(ocr_chunks_file, "OCR")
-
-if not main_chunks and ocr_chunks:
-    print("Warning: main chunks file is empty, so only OCR chunks will be uploaded.")
-
-# Load already uploaded files tracking to support incremental uploads
-uploaded_files_track = os.path.join(script_dir, "uploaded_files.json")
-uploaded_set = set()
-if os.path.exists(uploaded_files_track) and "--force" not in sys.argv:
-    try:
-        with open(uploaded_files_track, "r", encoding="utf-8") as f:
-            uploaded_set = set(json.load(f))
-        print(f"Loaded {len(uploaded_set)} already uploaded files from tracking. These will be skipped.")
-    except Exception as e:
-        print(f"Warning loading upload tracking: {e}")
-elif "--force" in sys.argv:
-    print("Force mode enabled (--force). Re-uploading all files.")
-
-chunks = []
-seen_ids = set()
-files_in_run = set()
-
-for chunk in main_chunks + ocr_chunks:
-    chunk_id = chunk.get("id")
-    if not chunk_id or chunk_id in seen_ids:
-        continue
-    
-    rel_path = chunk.get("rel_path")
-    if rel_path in uploaded_set:
-        continue
-        
-    seen_ids.add(chunk_id)
-    chunks.append(chunk)
-    if rel_path:
-        files_in_run.add(rel_path)
-
-if not chunks:
-    print("\nNo new or changed files detected. Pinecone index is already up to date!")
-    sys.exit(0)
-
-print(f"Total unique new chunks to upload: {len(chunks)} (associated with {len(files_in_run)} new files).")
-print("Uploading chunks in batches using Pinecone Inference API (multilingual-e5-large)...")
-
-index = pc.Index(index_name)
-
-# We will upload in batches of 50
-batch_size = 50
-total_uploaded = 0
-
-for i in range(0, len(chunks), batch_size):
-    batch = chunks[i:i+batch_size]
-    texts = [item["text"] for item in batch]
-    
-    max_retries = 6
-    retry_delay = 1.0
-    success = False
-    
-    for attempt in range(max_retries):
+        estimate = estimate_tokens(texts)
+        if embedding_tokens + estimate > token_limit:
+            raise RuntimeError(
+                f"O lote excederia o orçamento configurado de embeddings Pinecone ({token_limit:,} tokens estimados). "
+                "Use --embedding-mode local ou continue noutro mês."
+            )
         try:
-            # Generate embeddings using Pinecone inference, with local fallback if the monthly quota is exhausted.
-            res = generate_embeddings(texts)
-            
-            vectors = []
-            for idx, item in enumerate(batch):
-                vector_id = item["id"]
-                raw_embedding = res[idx].values if hasattr(res[idx], "values") else res[idx]
-                # Convert numpy float32 to native Python float for JSON serialization
-                embedding_api = cast(Any, raw_embedding)
-                tolist = cast(Any, getattr(embedding_api, "tolist", None))
-                if callable(tolist):
-                    values = cast(list[Any], tolist())
-                else:
-                    values = list(cast(Any, embedding_api))
-                embedding = [float(value) for value in values]
-                
-                metadata = {
-                    "text": item["text"],
-                    "page": item["page"],
-                    "party": item["party"],
-                    "year": item["year"] if item["year"] else 0,
-                    "category": item["category"],
-                    "filename": item["filename"]
-                }
-                
-                vectors.append({
-                    "id": vector_id,
-                    "values": embedding,
-                    "metadata": metadata
-                })
-                
-            # Upsert vectors to Pinecone
-            index.upsert(vectors=vectors)
-            total_uploaded += len(batch)
-            success = True
-            break
-            
-        except Exception as e:
-            print(f"\n  [Warning] Attempt {attempt+1}/{max_retries} failed for batch {i//batch_size + 1}: {e}")
-            if attempt < max_retries - 1:
-                sleep_time = retry_delay * (2 ** attempt)
-                print(f"  Retrying in {sleep_time:.1f} seconds...")
-                time.sleep(sleep_time)
-            else:
-                print(f"  [Error] Batch {i//batch_size + 1} failed permanently. Exiting to prevent silent failure.")
-                sys.exit(1)
-                
-    if success:
-        print(f"  Uploaded chunks {i+1} to {min(i+batch_size, len(chunks))} / {len(chunks)}...")
-        time.sleep(0.3)
-        
-print(f"\nUpload complete! Successfully uploaded {total_uploaded} chunks to Pinecone index '{index_name}'.")
+            response = client.inference.embed(
+                model=DEFAULT_MODEL,
+                inputs=texts,
+                parameters={"input_type": "passage", "truncate": "END"},
+            )
+            embedding_tokens += estimate
+            return response
+        except Exception as exc:
+            if quota_error(exc):
+                raise RuntimeError("A quota mensal de embeddings Pinecone foi atingida; use embeddings locais para continuar.") from exc
+            raise
 
-# Update uploaded tracking list
-if total_uploaded > 0:
-    new_uploaded_set = uploaded_set.union(files_in_run)
+    completed = dict(tracking)
+    uploaded = 0
+    batch_size = min(96, max(1, args.batch_size))
+    # Agrupa por namespace para que um upsert nunca misture o namespace padrão
+    # com o namespace de atualidade política.
+    for namespace in dict.fromkeys(item[1] for item in pending):
+        namespace_pending = [item for item in pending if item[1] == namespace]
+        for start in range(0, len(namespace_pending), batch_size):
+            batch = namespace_pending[start:start + batch_size]
+            encoded = embed([str(item[0]["text"]) for item in batch])
+            vectors = []
+            for offset, (item, _item_namespace, _digest) in enumerate(batch):
+                metadata = {
+                    key: item.get(key)
+                    for key in ("text", "page", "party", "year", "category", "filename", "rel_path", "source_type", "source_url")
+                    if item.get(key) not in (None, "")
+                }
+                vectors.append({"id": str(item["id"]), "values": as_values(encoded[offset]), "metadata": metadata})
+            for attempt in range(6):
+                try:
+                    pinecone_upsert(index, vectors, namespace)
+                    break
+                except Exception:
+                    if attempt == 5:
+                        raise
+                    time.sleep(2 ** attempt)
+            for item, item_namespace, digest in batch:
+                completed[f"{item_namespace}\x00{item['id']}"] = digest
+            uploaded += len(batch)
+            json_save(args.tracking, {"schemaVersion": 2, "index": index_name, "vectors": completed})
+            print(f"Enviados {uploaded}/{len(pending)} chunks.")
+
+    return {
+        "pending": len(pending),
+        "uploaded": uploaded,
+        "embeddingMode": mode,
+        "estimatedPineconeEmbeddingTokens": embedding_tokens,
+        "index": index_name,
+    }
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     try:
-        with open(uploaded_files_track, "w", encoding="utf-8") as f:
-            json.dump(list(new_uploaded_set), f, indent=2, ensure_ascii=False)
-        print(f"Updated upload tracking file: {len(new_uploaded_set)} total files tracked.")
-    except Exception as e:
-        print(f"Warning saving upload tracking: {e}")
+        result = run(parse_args(argv))
+    except (OSError, ValueError, RuntimeError) as exc:
+        print(f"Erro: {exc}", file=sys.stderr)
+        return 2
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

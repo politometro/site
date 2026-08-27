@@ -1,41 +1,81 @@
-name: Pinecone Incremental Upload
+name: Reindexar corpus no Pinecone (manual)
 
 on:
-  push:
-    paths:
-      - 'data/**'
   workflow_dispatch:
+    inputs:
+      embedding_mode:
+        description: 'local não consome a quota mensal de embeddings do Pinecone'
+        required: true
+        default: local
+        type: choice
+        options:
+          - local
+          - pinecone
+      limit:
+        description: 'Máximo de chunks nesta execução; vazio = todos os pendentes'
+        required: false
+        default: ''
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: political-intelligence-weekly
+  cancel-in-progress: false
 
 jobs:
   upload:
     runs-on: ubuntu-latest
+    timeout-minutes: 360
     steps:
-      - name: Checkout Code
+      - name: Obter o projeto
         uses: actions/checkout@v7
 
-      - name: Set up Python
+      - name: Preparar Python
         uses: actions/setup-python@v6
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
-      - name: Install Dependencies
+      - name: Instalar dependências
         run: |
           python -m pip install --upgrade pip
-          pip install pypdf pinecone requests
+          pip install requests pypdf orjson pinecone sentence-transformers
 
-      - name: Run Text Extraction
+      - name: Restaurar estado da recolha
+        uses: actions/cache/restore@v4
+        with:
+          path: data/political_intelligence_state.json
+          key: pinecone-manual-state-${{ github.run_id }}
+          restore-keys: |
+            political-intelligence-state-
+            pinecone-manual-state-
+
+      - name: Recriar os corpora derivados
         run: |
           python scripts/extract_text.py
+          python scripts/extract_eu_budget.py --force
+          python scripts/political_intelligence.py export
 
-      - name: Upload new Chunks to Pinecone
+      - name: Upload incremental
         env:
           PINECONE_API_KEY: ${{ secrets.PINECONE_API_KEY }}
+          PINECONE_INDEX_NAME: ${{ vars.PINECONE_INDEX_NAME || 'politometro' }}
+          PINECONE_EMBEDDINGS: ${{ inputs.embedding_mode }}
+          LOCAL_EMBEDDING_MODEL: intfloat/multilingual-e5-large
         run: |
-          python scripts/upload_pinecone.py
+          if [ -n "${{ inputs.limit }}" ]; then
+            python scripts/upload_pinecone.py --embedding-mode "${{ inputs.embedding_mode }}" --limit "${{ inputs.limit }}"
+          else
+            python scripts/upload_pinecone.py --embedding-mode "${{ inputs.embedding_mode }}"
+          fi
 
-      - name: Commit and Push Changes
+      - name: Guardar tracking incremental
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add scripts/extracted_chunks.json scripts/uploaded_files.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update extracted chunks & upload tracking [skip ci]" && git push)
+          git add scripts/pinecone_upload_state.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Atualizar tracking incremental do Pinecone [skip ci]"
+            git push
+          fi

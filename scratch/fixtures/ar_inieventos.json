@@ -1,0 +1,13 @@
+{
+  "IniId": 12345,
+  "iniNr": "508/XVII/1",
+  "iniTitulo": "Altera o regime do procedimento simplificado de arrendamento",
+  "IniDescTipo": "Projeto de Lei",
+  "iniLeg": "XVII",
+  "IniEventos": [
+    {"Fase": "entrada", "DataFase": "2026-02-10"},
+    {"Fase": "apreciação parlamentar", "DataFase": "2026-03-01"},
+    {"Fase": "votação final global", "DataFase": "2026-04-05", "resultado": "Aprovado"},
+    {"Fase": "promulgação", "DataFase": "2026-05-02"}
+  ]
+}

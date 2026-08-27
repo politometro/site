@@ -13,6 +13,7 @@
     "maxSitemapsPerSource": null,
     "maxUrlsPerSource": null,
     "maxArticleExcerptCharacters": 1200,
+    "checkpointIntervalSeconds": 60,
     "newsRetentionDays": null,
     "failClosedOnRobotsError": true
   },
@@ -66,6 +67,12 @@
         "https://sicnoticias.pt/sitemap/news.xml",
         "https://sicnoticias.pt/sitemap/index.xml"
       ],
+      "archiveSitemap": {
+        "urlTemplate": "https://sicnoticias.pt/sitemaps/{year}-{month}.xml",
+        "firstAvailableMonth": "2015-01",
+        "completedMonthsOnly": true,
+        "refreshRecentMonths": 2
+      },
       "sitemapDateFloor": "2015-01-01",
       "sitemapChildIncludePatterns": [
         "/sitemap/\\d{4}-\\d{1,2}\\.xml$"
@@ -84,6 +91,12 @@
         "https://expresso.pt/sitemap/news.xml",
         "https://expresso.pt/sitemap/index.xml"
       ],
+      "archiveSitemap": {
+        "urlTemplate": "https://expresso.pt/sitemaps/{year}-{month}.xml",
+        "firstAvailableMonth": "2015-01",
+        "completedMonthsOnly": true,
+        "refreshRecentMonths": 2
+      },
       "sitemapDateFloor": "2015-01-01",
       "sitemapChildIncludePatterns": [
         "/sitemap/\\d{4}-\\d{1,2}\\.xml$"
@@ -102,6 +115,12 @@
         "https://cnnportugal.iol.pt/sitemaps/news.xml",
         "https://cnnportugal.iol.pt/sitemaps/index.xml"
       ],
+      "archiveSitemap": {
+        "urlTemplate": "https://cnnportugal.iol.pt/sitemaps/{year}-{month}.xml",
+        "firstAvailableMonth": "2018-01",
+        "completedMonthsOnly": true,
+        "refreshRecentMonths": 2
+      },
       "enabled": true
     },
     {
@@ -179,6 +198,12 @@
         "https://www.tsf.pt/feed/news/sitemap.xml",
         "https://www.tsf.pt/feed/sitemap.xml"
       ],
+      "archiveSitemap": {
+        "urlTemplate": "https://www.tsf.pt/sitemaps/{year}-{month}.xml",
+        "firstAvailableMonth": "2000-01",
+        "completedMonthsOnly": true,
+        "refreshRecentMonths": 2
+      },
       "sitemapDateFloor": "2000-01-01",
       "enabled": true
     },
@@ -193,6 +218,12 @@
       "sitemapSeeds": [
         "https://www.sabado.pt/sitemap"
       ],
+      "archiveSitemap": {
+        "urlTemplate": "https://www.sabado.pt/sitemaps/{year}-{month}.xml",
+        "firstAvailableMonth": "2017-01",
+        "completedMonthsOnly": true,
+        "refreshRecentMonths": 2
+      },
       "sitemapDateFloor": "2017-01-01",
       "enabled": true
     },
@@ -211,6 +242,12 @@
       "sitemapSeeds": [
         "https://24.sapo.pt/sitemap.xml"
       ],
+      "archiveSitemap": {
+        "urlTemplate": "https://24.sapo.pt/sitemaps/{year}-{month}.xml",
+        "firstAvailableMonth": "2015-01",
+        "completedMonthsOnly": true,
+        "refreshRecentMonths": 2
+      },
       "sitemapDateFloor": "2015-01-01",
       "enabled": true
     },
@@ -225,6 +262,12 @@
       "sitemapSeeds": [
         "https://www.nowcanal.pt/sitemap"
       ],
+      "archiveSitemap": {
+        "urlTemplate": "https://www.nowcanal.pt/sitemaps/{year}-{month}.xml",
+        "firstAvailableMonth": "2024-01",
+        "completedMonthsOnly": true,
+        "refreshRecentMonths": 2
+      },
       "sitemapDateFloor": "2024-01-01",
       "enabled": true
     },
@@ -260,31 +303,300 @@
     "projectVoteDetailUrlTemplate": "https://www.parlamento.pt/ActividadeParlamentar/Paginas/DetalheProjetoVoto.aspx?BID={bid}",
     "sourceAttribution": "Dados abertos da Assembleia da República"
   },
+  "presidential": {
+    "enabled": true,
+    "robotsUrl": "https://www.presidenciarepublica.pt/robots.txt",
+    "promulgationsCandidates": [
+      "https://www.presidenciarepublica.pt/pt-pt/presidente/promulgacoes",
+      "https://www.presidenciarepublica.pt/pt-pt/republica/legislacao-promulgada"
+    ],
+    "vetoesCandidates": [
+      "https://www.presidenciarepublica.pt/pt-pt/presidente/vetos",
+      "https://www.presidenciarepublica.pt/pt-pt/republica/vetos"
+    ],
+    "delaySeconds": 1.0,
+    "sourceAttribution": "Presidência da República Portuguesa (presidenciarepublica.pt)"
+  },
+  "europeanUnion": {
+    "enabled": true,
+    "apiBase": "https://data.europarl.europa.eu/api/v2",
+    "parliamentaryTerm": 10,
+    "years": [],
+    "pageSize": 100,
+    "maxListRequests": 3,
+    "maxSittingsPerRun": 4,
+    "maxDecisionRequestsPerRun": 40,
+    "maxProcedureRequestsPerRun": 30,
+    "delaySeconds": 0.2,
+    "sourceAttribution": "Parlamento Europeu — dados abertos (data.europarl.europa.eu)"
+  },
+  "euDossier": {
+    "enabled": true,
+    "sources": [
+      {
+        "id": "consilium-voting",
+        "name": "Conselho da UE — Resultados de Votação",
+        "baseUrl": "https://www.consilium.europa.eu/en/general-secretariat/corporate-policies/transparency/voting-results/",
+        "listSelector": "a[href*='/documents/']",
+        "detailSelector": "article, .document-content, main",
+        "enabled": true
+      },
+      {
+        "id": "commission-law-tracking",
+        "name": "Comissão Europeia — Acompanhamento Legislativo",
+        "baseUrl": "https://commission.europa.eu/law/tracking-law-making_en",
+        "listSelector": "a[href*='/law/'], a[href*='/policy/']",
+        "detailSelector": "article, .content, main",
+        "enabled": true
+      },
+      {
+        "id": "oeil-legislative",
+        "name": "Parlamento Europeu — Observatório Legislativo (OEIL)",
+        "baseUrl": "https://oeil.europarl.europa.eu/oeil/en",
+        "listSelector": "a[href*='/procedure/'], a[href*='/dossier/']",
+        "detailSelector": "article, .procedure-content, main",
+        "enabled": true
+      }
+    ]
+  },
+  "budgets": {
+    "enabled": true,
+    "minSharedTerms": 2,
+    "approximateThresholdTwoTerms": 0.42,
+    "approximateThresholdThreeTerms": 0.22,
+    "maxMatchesPerPromise": 8,
+    "previewCharacters": 240,
+    "eurLexCelexByYear": {},
+    "sourceAttribution": "Orçamentos do Estado em PDF no repositório; BCE/EUR-Lex para o orçamento da UE."
+  },
   "governmentPeriods": [
-    {"id": "GC-I", "name": "I Governo Constitucional — Mário Soares", "start": "1976-07-23", "end": "1978-01-30", "parties": ["PS"]},
-    {"id": "GC-II", "name": "II Governo Constitucional — Mário Soares", "start": "1978-01-30", "end": "1978-08-28", "parties": ["PS", "CDS-PP"]},
-    {"id": "GC-III", "name": "III Governo Constitucional — Nobre da Costa", "start": "1978-08-28", "end": "1978-11-21", "parties": []},
-    {"id": "GC-IV", "name": "IV Governo Constitucional — Mota Pinto", "start": "1978-11-21", "end": "1979-07-31", "parties": []},
-    {"id": "GC-V", "name": "V Governo Constitucional — Maria de Lurdes Pintasilgo", "start": "1979-07-31", "end": "1980-01-03", "parties": []},
-    {"id": "GC-VI", "name": "VI Governo Constitucional — Sá Carneiro", "start": "1980-01-03", "end": "1981-01-09", "parties": ["AD"]},
-    {"id": "GC-VII", "name": "VII Governo Constitucional — Pinto Balsemão", "start": "1981-01-09", "end": "1981-09-04", "parties": ["AD"]},
-    {"id": "GC-VIII", "name": "VIII Governo Constitucional — Pinto Balsemão", "start": "1981-09-04", "end": "1983-06-09", "parties": ["AD"]},
-    {"id": "GC-IX", "name": "IX Governo Constitucional — Mário Soares", "start": "1983-06-09", "end": "1985-11-06", "parties": ["PS", "PSD"]},
-    {"id": "GC-X", "name": "X Governo Constitucional — Cavaco Silva", "start": "1985-11-06", "end": "1987-08-17", "parties": ["PSD"]},
-    {"id": "GC-XI", "name": "XI Governo Constitucional — Cavaco Silva", "start": "1987-08-17", "end": "1991-10-31", "parties": ["PSD"]},
-    {"id": "GC-XII", "name": "XII Governo Constitucional — Cavaco Silva", "start": "1991-10-31", "end": "1995-10-28", "parties": ["PSD"]},
-    {"id": "GC-XIII", "name": "XIII Governo Constitucional — António Guterres", "start": "1995-10-28", "end": "1999-10-25", "parties": ["PS"]},
-    {"id": "GC-XIV", "name": "XIV Governo Constitucional — António Guterres", "start": "1999-10-25", "end": "2002-04-06", "parties": ["PS"]},
-    {"id": "GC-XV", "name": "XV Governo Constitucional — Durão Barroso", "start": "2002-04-06", "end": "2004-07-17", "parties": ["PSD", "CDS-PP"]},
-    {"id": "GC-XVI", "name": "XVI Governo Constitucional — Santana Lopes", "start": "2004-07-17", "end": "2005-03-12", "parties": ["PSD", "CDS-PP"]},
-    {"id": "GC-XVII", "name": "XVII Governo Constitucional — José Sócrates", "start": "2005-03-12", "end": "2009-10-26", "parties": ["PS"]},
-    {"id": "GC-XVIII", "name": "XVIII Governo Constitucional — José Sócrates", "start": "2009-10-26", "end": "2011-06-21", "parties": ["PS"]},
-    {"id": "GC-XIX", "name": "XIX Governo Constitucional — Passos Coelho", "start": "2011-06-21", "end": "2015-10-30", "parties": ["PSD", "CDS-PP"]},
-    {"id": "GC-XX", "name": "XX Governo Constitucional — Passos Coelho", "start": "2015-10-30", "end": "2015-11-26", "parties": ["PSD", "CDS-PP"]},
-    {"id": "GC-XXI", "name": "XXI Governo Constitucional — António Costa", "start": "2015-11-26", "end": "2019-10-26", "parties": ["PS"]},
-    {"id": "GC-XXII", "name": "XXII Governo Constitucional — António Costa", "start": "2019-10-26", "end": "2022-03-30", "parties": ["PS"]},
-    {"id": "GC-XXIII", "name": "XXIII Governo Constitucional — António Costa", "start": "2022-03-30", "end": "2024-04-02", "parties": ["PS"]},
-    {"id": "GC-XXIV", "name": "XXIV Governo Constitucional — Luís Montenegro", "start": "2024-04-02", "end": "2025-06-05", "parties": ["PSD", "CDS-PP", "PPM"]},
-    {"id": "GC-XXV", "name": "XXV Governo Constitucional — Luís Montenegro", "start": "2025-06-05", "parties": ["PSD", "CDS-PP", "PPM"]}
+    {
+      "id": "GC-I",
+      "name": "I Governo Constitucional — Mário Soares",
+      "start": "1976-07-23",
+      "end": "1978-01-30",
+      "parties": [
+        "PS"
+      ]
+    },
+    {
+      "id": "GC-II",
+      "name": "II Governo Constitucional — Mário Soares",
+      "start": "1978-01-30",
+      "end": "1978-08-28",
+      "parties": [
+        "PS",
+        "CDS-PP"
+      ]
+    },
+    {
+      "id": "GC-III",
+      "name": "III Governo Constitucional — Nobre da Costa",
+      "start": "1978-08-28",
+      "end": "1978-11-21",
+      "parties": []
+    },
+    {
+      "id": "GC-IV",
+      "name": "IV Governo Constitucional — Mota Pinto",
+      "start": "1978-11-21",
+      "end": "1979-07-31",
+      "parties": []
+    },
+    {
+      "id": "GC-V",
+      "name": "V Governo Constitucional — Maria de Lurdes Pintasilgo",
+      "start": "1979-07-31",
+      "end": "1980-01-03",
+      "parties": []
+    },
+    {
+      "id": "GC-VI",
+      "name": "VI Governo Constitucional — Sá Carneiro",
+      "start": "1980-01-03",
+      "end": "1981-01-09",
+      "parties": [
+        "AD"
+      ]
+    },
+    {
+      "id": "GC-VII",
+      "name": "VII Governo Constitucional — Pinto Balsemão",
+      "start": "1981-01-09",
+      "end": "1981-09-04",
+      "parties": [
+        "AD"
+      ]
+    },
+    {
+      "id": "GC-VIII",
+      "name": "VIII Governo Constitucional — Pinto Balsemão",
+      "start": "1981-09-04",
+      "end": "1983-06-09",
+      "parties": [
+        "AD"
+      ]
+    },
+    {
+      "id": "GC-IX",
+      "name": "IX Governo Constitucional — Mário Soares",
+      "start": "1983-06-09",
+      "end": "1985-11-06",
+      "parties": [
+        "PS",
+        "PSD"
+      ]
+    },
+    {
+      "id": "GC-X",
+      "name": "X Governo Constitucional — Cavaco Silva",
+      "start": "1985-11-06",
+      "end": "1987-08-17",
+      "parties": [
+        "PSD"
+      ]
+    },
+    {
+      "id": "GC-XI",
+      "name": "XI Governo Constitucional — Cavaco Silva",
+      "start": "1987-08-17",
+      "end": "1991-10-31",
+      "parties": [
+        "PSD"
+      ]
+    },
+    {
+      "id": "GC-XII",
+      "name": "XII Governo Constitucional — Cavaco Silva",
+      "start": "1991-10-31",
+      "end": "1995-10-28",
+      "parties": [
+        "PSD"
+      ]
+    },
+    {
+      "id": "GC-XIII",
+      "name": "XIII Governo Constitucional — António Guterres",
+      "start": "1995-10-28",
+      "end": "1999-10-25",
+      "parties": [
+        "PS"
+      ]
+    },
+    {
+      "id": "GC-XIV",
+      "name": "XIV Governo Constitucional — António Guterres",
+      "start": "1999-10-25",
+      "end": "2002-04-06",
+      "parties": [
+        "PS"
+      ]
+    },
+    {
+      "id": "GC-XV",
+      "name": "XV Governo Constitucional — Durão Barroso",
+      "start": "2002-04-06",
+      "end": "2004-07-17",
+      "parties": [
+        "PSD",
+        "CDS-PP"
+      ]
+    },
+    {
+      "id": "GC-XVI",
+      "name": "XVI Governo Constitucional — Santana Lopes",
+      "start": "2004-07-17",
+      "end": "2005-03-12",
+      "parties": [
+        "PSD",
+        "CDS-PP"
+      ]
+    },
+    {
+      "id": "GC-XVII",
+      "name": "XVII Governo Constitucional — José Sócrates",
+      "start": "2005-03-12",
+      "end": "2009-10-26",
+      "parties": [
+        "PS"
+      ]
+    },
+    {
+      "id": "GC-XVIII",
+      "name": "XVIII Governo Constitucional — José Sócrates",
+      "start": "2009-10-26",
+      "end": "2011-06-21",
+      "parties": [
+        "PS"
+      ]
+    },
+    {
+      "id": "GC-XIX",
+      "name": "XIX Governo Constitucional — Passos Coelho",
+      "start": "2011-06-21",
+      "end": "2015-10-30",
+      "parties": [
+        "PSD",
+        "CDS-PP"
+      ]
+    },
+    {
+      "id": "GC-XX",
+      "name": "XX Governo Constitucional — Passos Coelho",
+      "start": "2015-10-30",
+      "end": "2015-11-26",
+      "parties": [
+        "PSD",
+        "CDS-PP"
+      ]
+    },
+    {
+      "id": "GC-XXI",
+      "name": "XXI Governo Constitucional — António Costa",
+      "start": "2015-11-26",
+      "end": "2019-10-26",
+      "parties": [
+        "PS"
+      ]
+    },
+    {
+      "id": "GC-XXII",
+      "name": "XXII Governo Constitucional — António Costa",
+      "start": "2019-10-26",
+      "end": "2022-03-30",
+      "parties": [
+        "PS"
+      ]
+    },
+    {
+      "id": "GC-XXIII",
+      "name": "XXIII Governo Constitucional — António Costa",
+      "start": "2022-03-30",
+      "end": "2024-04-02",
+      "parties": [
+        "PS"
+      ]
+    },
+    {
+      "id": "GC-XXIV",
+      "name": "XXIV Governo Constitucional — Luís Montenegro",
+      "start": "2024-04-02",
+      "end": "2025-06-05",
+      "parties": [
+        "PSD",
+        "CDS-PP",
+        "PPM"
+      ]
+    },
+    {
+      "id": "GC-XXV",
+      "name": "XXV Governo Constitucional — Luís Montenegro",
+      "start": "2025-06-05",
+      "parties": [
+        "PSD",
+        "CDS-PP",
+        "PPM"
+      ]
+    }
   ]
 }

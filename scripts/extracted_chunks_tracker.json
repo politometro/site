@@ -1,0 +1,912 @@
+{
+  "files": {
+    "70-MEDIDAS-PARA-REERGUER-PORTUGAL-CHEGA.pdf": {
+      "hash": "f4ba18a8b064c26cddc675d804ec3c0c8525d59a19c156424f7b4e82c75e7f05",
+      "processed_at": "2026-08-27T02:24:43.275034"
+    },
+    "Constituição.pdf": {
+      "hash": "aeeecf68bc58d64f4e1a14d04c2a3618cd04422b7d1b63ad6d8a87f4be914534",
+      "processed_at": "2026-08-27T02:25:08.671932"
+    },
+    "Açores\\Açores 2012\\CDU AÇORES 2012.pdf": {
+      "hash": "40d536780201c9d660b98dd9e674c1911c64519be383eec09f9ed31a5e446371",
+      "processed_at": "2026-08-27T02:25:08.858776"
+    },
+    "Açores\\Açores 2016\\LIVRE AÇORES 2016.pdf": {
+      "hash": "8e84252a37cd1863c2717d13265dc6d33a30d54116751eb5b05baa5ca14e895b",
+      "processed_at": "2026-08-27T02:25:15.305584"
+    },
+    "Açores\\Açores 2016\\PS AÇORES 2016.pdf": {
+      "hash": "ecffecde0c9a512cbfe99b0430eaa9bc2d7103f2c3cf02fe03917b4934c76439",
+      "processed_at": "2026-08-27T02:33:53.569054"
+    },
+    "Açores\\Açores 2016\\PSD AÇORES 2016.pdf": {
+      "hash": "a23a319149f81b06f33721582b1f5da00081e2b86076cf7953913e3db3628209",
+      "processed_at": "2026-08-27T02:37:04.441826"
+    },
+    "Açores\\Açores 2020\\BE AÇORES 2020.pdf": {
+      "hash": "877d020dabb3afdb7d3bbc9b6a156395d26b79bc47c6fee2be9f2083b17d8835",
+      "processed_at": "2026-08-27T02:37:17.338818"
+    },
+    "Açores\\Açores 2020\\IL Açores 2020.pdf": {
+      "hash": "b3923a7f2d344cb1291159a4754c3978809738aae9261ac310d8273da4399e52",
+      "processed_at": "2026-08-27T02:37:19.632742"
+    },
+    "Açores\\Açores 2020\\LIVRE AÇORES 2020.pdf": {
+      "hash": "4e6f51b89312374f69d71c04f44dd05259bd3e0bc569b2d38711cd4fb913724c",
+      "processed_at": "2026-08-27T02:37:21.364744"
+    },
+    "Açores\\Açores 2020\\PCTP_MRPP AÇORES 2020.pdf": {
+      "hash": "f7f1c7de9d147f54e197800177147042022d10d2a3df56e509701118c87a3f6d",
+      "processed_at": "2026-08-27T02:37:21.847001"
+    },
+    "Açores\\Açores 2020\\PS AÇORES 2020.pdf": {
+      "hash": "508e527da783eaa281b87360d6071c048bea748108b0af9d63a5ede8978e6154",
+      "processed_at": "2026-08-27T02:37:27.767442"
+    },
+    "Açores\\Açores 2020\\PSD AÇORES 2020.pdf": {
+      "hash": "4b381adbfc843e84574aa269a73d92d6f7fb320a8a37623792c02ea6fa7eff03",
+      "processed_at": "2026-08-27T02:37:31.498775"
+    },
+    "Açores\\Açores 2024\\AD AÇORES 2024.pdf": {
+      "hash": "dc42a7ea844e294f0c1495a06829a4ac35a408e5c71bb004fc580f097024cbfc",
+      "processed_at": "2026-08-27T02:37:37.025661"
+    },
+    "Açores\\Açores 2024\\ADN AÇORES 2024.pdf": {
+      "hash": "c0db4474214da055e829481f23edddfb02ec78b34b14e077d16bb587092fb5e4",
+      "processed_at": "2026-08-27T02:37:39.687604"
+    },
+    "Açores\\Açores 2024\\BE AÇORES 2024.pdf": {
+      "hash": "dd323ed9c4a41fae4d5ffe731bf4d05ff78d6b9b30819c275f35adbee92106dc",
+      "processed_at": "2026-08-27T02:37:46.203459"
+    },
+    "Açores\\Açores 2024\\CDU AÇORES 2024.pdf": {
+      "hash": "043012bb5cb7090ac454db7c7dc648c873c30601763a6b39ab0ce9a4a74affe2",
+      "processed_at": "2026-08-27T02:37:48.005990"
+    },
+    "Açores\\Açores 2024\\IL AÇORES 2024.pdf": {
+      "hash": "6b334c4044491e470ebb64abd580a3209a43f0c9e7cc5aa6135511105b05ef7a",
+      "processed_at": "2026-08-27T02:37:52.337647"
+    },
+    "Açores\\Açores 2024\\LIVRE AÇORES 2024.pdf": {
+      "hash": "28fd00251cc4a050fb25c64c6627b1997b2a6a407be29724fba862276f8cd10c",
+      "processed_at": "2026-08-27T02:37:52.496288"
+    },
+    "Açores\\Açores 2024\\PAN AÇORES 2024.pdf": {
+      "hash": "71d41fb497fbfc1fb6de062d6f727e6d56345ed8760da466d385d6b3acb0a5c3",
+      "processed_at": "2026-08-27T02:37:59.229708"
+    },
+    "Açores\\Açores 2024\\PS AÇORES 2024.pdf": {
+      "hash": "f7743be4201937eca10a17db134c9ca987bc3fddda219e2b7ff9530e0ea2e683",
+      "processed_at": "2026-08-27T02:38:05.294477"
+    },
+    "Declaração de Princípios\\Declaração de Princípios - IL.pdf": {
+      "hash": "ca4d0bd0add801fc09f425c39d211ecad0dbd8bde1c285a4ef194ae45d116bcb",
+      "processed_at": "2026-08-27T02:38:08.904249"
+    },
+    "Declaração de Princípios\\Declaração de Princípios BE.pdf": {
+      "hash": "d7ce913adc085c368ff4f97d4619f7f96b058b296fe5c9fcc8ff54432388242a",
+      "processed_at": "2026-08-27T02:38:20.102668"
+    },
+    "Declaração de Princípios\\Declaração de Princípios CDS.pdf": {
+      "hash": "02e83f5d99f07eda8c6860c40187d3db776901334920eb8efde0b0bf412f2d45",
+      "processed_at": "2026-08-27T02:38:20.400547"
+    },
+    "Declaração de Princípios\\Declaração de Princípios MPT.pdf": {
+      "hash": "89d9607054b5df6dd3610c833f0f3dd7b7faebdf1f93ac105dbb367b85e5cc3c",
+      "processed_at": "2026-08-27T02:38:21.015996"
+    },
+    "Declaração de Princípios\\Declaração de Princípios PS.pdf": {
+      "hash": "9d3eb5590e72a2ea1426c30a8a2e8e63373e7f885052e0903fcebe78591de922",
+      "processed_at": "2026-08-27T02:38:24.445811"
+    },
+    "Declaração de Princípios\\Declaração de Princípios PSD.pdf": {
+      "hash": "6079464aa1560aeaecb689523c564e6b7d73f3f509b454c9091d46c912947c93",
+      "processed_at": "2026-08-27T02:38:25.036244"
+    },
+    "Declaração de Princípios\\Declaração de Princípios VOLT.pdf": {
+      "hash": "8d114610ecade23d781e203059c9e1556f2c06865bfc71b71c773fdb13c8d13a",
+      "processed_at": "2026-08-27T02:38:25.293915"
+    },
+    "Declaração de Princípios\\Princípios PS 1973.pdf": {
+      "hash": "9f3acfa5cf19f2cb726edb1a0546930a8c2d54fe4016a545fe42847fb683f1d2",
+      "processed_at": "2026-08-27T02:40:17.973539"
+    },
+    "Declaração de Princípios\\Princípios PS 1974.pdf": {
+      "hash": "0492bcf6226d411939de16be5583ac8522220298e1a8f2a70eeb2eba83780c2e",
+      "processed_at": "2026-08-27T02:42:36.524200"
+    },
+    "Europeias\\Europeias 1999\\BE EUROPEIAS 1999.pdf": {
+      "hash": "b066dc78520b1555798d6b575890320b0375b398ddca0fa1697bb152bfcbce5b",
+      "processed_at": "2026-08-27T02:43:42.790873"
+    },
+    "Europeias\\Europeias 1999\\CDU EUROPEIAS 1999.pdf": {
+      "hash": "caf540c2cd815062fc19d389775eea7b1f9d5450741bfe07d4699e92636f2021",
+      "processed_at": "2026-08-27T02:43:45.799085"
+    },
+    "Europeias\\Europeias 2004\\BE EUROPEIAS 2004.pdf": {
+      "hash": "55d2e5e05b324aa96bc8ee86a2b45f991277aa1345684e9d9a38cf7222807084",
+      "processed_at": "2026-08-27T02:44:52.479592"
+    },
+    "Europeias\\Europeias 2009\\BE EUROPEIAS 2009.pdf": {
+      "hash": "0f0f7d0b3f704c709a98ddb56ccc12c40282b20690b96378d62b2300dfa22cea",
+      "processed_at": "2026-08-27T02:45:10.663727"
+    },
+    "Europeias\\Europeias 2014\\BE EUROPEIAS 2014.pdf": {
+      "hash": "a8aeda77d453cd8aa8616b6ab01e8a8a965bbe0c1978a876c4c27e934d8f3c5e",
+      "processed_at": "2026-08-27T02:45:11.504767"
+    },
+    "Europeias\\Europeias 2014\\LIVRE EUROPEIAS 2014.pdf": {
+      "hash": "99d466fb8359fff41263b72651ae54b1ab584e11902b0d876852077ccc30f9f6",
+      "processed_at": "2026-08-27T02:45:12.890615"
+    },
+    "Europeias\\Europeias 2014\\PCP EUROPEIAS 2014.pdf": {
+      "hash": "1366572f98c2a1bb7ebe38dddd64a232da8075b966d3e6d794add0764c5dea55",
+      "processed_at": "2026-08-27T02:45:42.069491"
+    },
+    "Europeias\\Europeias 2019\\BE EUROPEIAS 2019.pdf": {
+      "hash": "75b6e16a919c98687f501af347660fd814c91953d0f7e19b7a1486092838afbf",
+      "processed_at": "2026-08-27T02:45:42.568900"
+    },
+    "Europeias\\Europeias 2019\\CDU EUROPEIAS 2019.pdf": {
+      "hash": "76ccc4a976fa5ebd18947e4fcc92ce78b6f3ea5ad1a653d4a1be551476ef9b22",
+      "processed_at": "2026-08-27T02:45:43.751041"
+    },
+    "Europeias\\Europeias 2019\\IL EUROPEIAS 2019.pdf": {
+      "hash": "647da645a9ff3a11b0d39506e6e83e0fe159e9ff1fe92d0589e3bf4098d78340",
+      "processed_at": "2026-08-27T02:45:45.003217"
+    },
+    "Europeias\\Europeias 2019\\LIVRE EUROPEIAS 2019.pdf": {
+      "hash": "1b0b93cf59e4b8fcce4d76e5334206e318d9d43de5fcb9771150ced736b8d8e6",
+      "processed_at": "2026-08-27T02:45:46.919782"
+    },
+    "Europeias\\Europeias 2019\\NÓS CIDADÃOS 2019.pdf": {
+      "hash": "063b616cc57c23419cc58c0baa4a4a61aa75c67f90f7d10486c57acfa6db5e71",
+      "processed_at": "2026-08-27T02:45:47.971741"
+    },
+    "Europeias\\Europeias 2019\\PAN EUROPEIAS 2019.pdf": {
+      "hash": "27d2fbb9532c1e7cd4356b1ac64556fd1bc4bd7321cddce70f13a74289bab51e",
+      "processed_at": "2026-08-27T02:45:52.224676"
+    },
+    "Europeias\\Europeias 2019\\PCTP_MRPP EUROPEIAS 2019.pdf": {
+      "hash": "bbaec884506c299d5670093306247eac95878cda45baca2e4d016820e50502c8",
+      "processed_at": "2026-08-27T02:45:52.448150"
+    },
+    "Europeias\\Europeias 2019\\PNR EUROPEIAS 2019.pdf": {
+      "hash": "1a1d4c508fda14f8c69f10585806aac57154f07c1afaee4f1f7f444b9108f26d",
+      "processed_at": "2026-08-27T02:45:52.896984"
+    },
+    "Europeias\\Europeias 2019\\PTP EUROPEIAS 2019.pdf": {
+      "hash": "674a274d0105a5e2033165eb669ce68b2a869d9561d994690d3501a350717d45",
+      "processed_at": "2026-08-27T02:45:53.306838"
+    },
+    "Europeias\\Europeias 2024\\AD EUROPEIAS 2024.pdf": {
+      "hash": "335d5138e100b2c3556065a548295314379c52825687a1710587e09a31acb263",
+      "processed_at": "2026-08-27T02:45:56.311857"
+    },
+    "Europeias\\Europeias 2024\\ADN EUROPEIAS 2024.pdf": {
+      "hash": "7a4144f228db020338cb44c6a39f6f17ec74d1ea48b77bb429d2854570ec91da",
+      "processed_at": "2026-08-27T02:45:57.714940"
+    },
+    "Europeias\\Europeias 2024\\BE EUROPEIAS 2024.pdf": {
+      "hash": "734e3d18948656b0ec6a2d659dc1ffbefb6780ac868b99e1a5d6a8ee8606701e",
+      "processed_at": "2026-08-27T02:45:58.048655"
+    },
+    "Europeias\\Europeias 2024\\CHEGA EUROPEIAS 2024.pdf": {
+      "hash": "0224a22e86e82bde1dbad7ca7f384def335730860fa965e955d0322bd5b450f6",
+      "processed_at": "2026-08-27T02:46:00.793309"
+    },
+    "Europeias\\Europeias 2024\\ERGUE-TE EUROPEIAS 2024.pdf": {
+      "hash": "064cdf36ccd086424c484776f479ba9775f039291751188997b751c6b8b5fce0",
+      "processed_at": "2026-08-27T02:46:01.212935"
+    },
+    "Europeias\\Europeias 2024\\IL Europeias 2024.pdf": {
+      "hash": "5432aa8d9ee5993e5bed5a3345784b602b9c8899907c5c9f62067ca88223e38f",
+      "processed_at": "2026-08-27T02:46:04.681143"
+    },
+    "Europeias\\Europeias 2024\\LIVRE EUROPEIAS 2024.pdf": {
+      "hash": "642a305edbf3b150a83617c3ee424032522cb2fa5a596682b9d7a6dfeed4c3dd",
+      "processed_at": "2026-08-27T02:46:12.655034"
+    },
+    "Europeias\\Europeias 2024\\NOVA DIREITA EUROPEIAS 2024.pdf": {
+      "hash": "db61b846c36766e0d2aff64e6fcf97968cc65652e70c91dbed1b91967dfe2f3d",
+      "processed_at": "2026-08-27T02:46:14.610548"
+    },
+    "Europeias\\Europeias 2024\\PS EUROPEIAS 2024.pdf": {
+      "hash": "191842b5af3717b86977dd95fe22331fcc9732ddda4be06edc6c8a4f84a133c8",
+      "processed_at": "2026-08-27T02:46:16.083870"
+    },
+    "Europeias\\Europeias 2024\\RIR EUROPEIAS 2024.pdf": {
+      "hash": "9121bcd1eabb69baa1b06865a3c3e2e9af68d5dcd130b7b76490d7ccded91e8c",
+      "processed_at": "2026-08-27T02:46:17.143535"
+    },
+    "Europeias\\Europeias 2024\\VOLT EUROPEIAS 2024.pdf": {
+      "hash": "212f9bf4852ba3529c145f6f1e39aea2d0e6a08876aaa9b9fb18ea17ed73835d",
+      "processed_at": "2026-08-27T02:46:26.010919"
+    },
+    "IL\\Manifesto IL.pdf": {
+      "hash": "3e81e556c178bf3157ace6c148906f2f318814dbd6afbd4e3b0a48f02495f508",
+      "processed_at": "2026-08-27T02:46:26.995285"
+    },
+    "IL\\PREC IL.pdf": {
+      "hash": "c29ea3f15e2b050d08a049467c454bbf08e784231dec6cc859f645bea9b8189c",
+      "processed_at": "2026-08-27T02:47:17.372398"
+    },
+    "IL\\Programa Cotrim - 19_21.pdf": {
+      "hash": "b8da07399a3915886a22360b8e9088d671b79871c63014f8446661463681138a",
+      "processed_at": "2026-08-27T02:47:18.633114"
+    },
+    "IL\\Programa Cotrim - 21_23.pdf": {
+      "hash": "d66cd96ba9854a19d5172a8c04a6bb32b488e5db43b4f985530a431ba9660a43",
+      "processed_at": "2026-08-27T02:47:20.010692"
+    },
+    "IL\\Programa Rui Rocha - 23_25.pdf": {
+      "hash": "4f0e5bdb28d101c456649bb853f1c8877c52fe9e16ed49f94a2d69267735e3df",
+      "processed_at": "2026-08-27T02:47:28.047178"
+    },
+    "Legislativas\\Legislativas 1975\\PS 1975.pdf": {
+      "hash": "5ebf2dbabee3944b5af2e9e1dc30f982e35ba8b34411b5bf1955eba4cd194e04",
+      "processed_at": "2026-08-27T02:47:43.683316"
+    },
+    "Legislativas\\Legislativas 1976\\CDS 1976.pdf": {
+      "hash": "5f520608efb239eaea17f0b854a409c6177636afe0a4a84850b98948de3b3894",
+      "processed_at": "2026-08-27T02:47:44.305905"
+    },
+    "Legislativas\\Legislativas 1976\\PS 1976.pdf": {
+      "hash": "02a206d501cd107afd5de78217b2642316fe53451839713117ea34cac70cbad1",
+      "processed_at": "2026-08-27T02:49:23.544923"
+    },
+    "Legislativas\\Legislativas 1976\\PSD 1976.pdf": {
+      "hash": "d76af40fb53b2470cc6748034d03c478886b34e0175b8e7b7cb6a34d5775245f",
+      "processed_at": "2026-08-27T02:51:56.116281"
+    },
+    "Legislativas\\Legislativas 1979\\AD 1979.pdf": {
+      "hash": "9981f51c4073c3e9ea36e8bc87e336b821823169ee85adfb2d182974c82834c9",
+      "processed_at": "2026-08-27T02:51:56.819890"
+    },
+    "Legislativas\\Legislativas 1979\\PS 1979.pdf": {
+      "hash": "c0862ea204db8cdb6cf5228db3a8a3b2500d54d14941eaa976c07779a2ef25c5",
+      "processed_at": "2026-08-27T02:52:55.045375"
+    },
+    "Legislativas\\Legislativas 1980\\AD 1980.pdf": {
+      "hash": "1255a6743a6bb33e974fd0542852887c6031a0ed51ebc072bcf4fc37c91e90a6",
+      "processed_at": "2026-08-27T02:53:24.592379"
+    },
+    "Legislativas\\Legislativas 1980\\PS 1980.pdf": {
+      "hash": "704bc3bd84ed4358b69d09f3f9acebccc1e0e98e7eabbaa51d100c61bf023eb6",
+      "processed_at": "2026-08-27T02:56:58.806755"
+    },
+    "Legislativas\\Legislativas 1983\\PS 1983.pdf": {
+      "hash": "cd4d0db1f158f778cfca3551535726e02739d84df65ae3cf345a56809df49f07",
+      "processed_at": "2026-08-27T03:00:52.016082"
+    },
+    "Legislativas\\Legislativas 1983\\PSD 1983 - Medidas.pdf": {
+      "hash": "efb8d5fdb6d4852ac67e4c92808f958e3c60954a0d3571cda4f75979dd4fefee",
+      "processed_at": "2026-08-27T03:01:28.108295"
+    },
+    "Legislativas\\Legislativas 1983\\PSD 1983.pdf": {
+      "hash": "bd23f060a0fe267743af822c2a4cfae52a59bf9f7a1a3cd734e1f12d4bf3f72a",
+      "processed_at": "2026-08-27T03:01:39.946007"
+    },
+    "Legislativas\\Legislativas 1985\\PS 1985.pdf": {
+      "hash": "bcb3add665b00ef1abf9dd901cf0420ad33d4450ee65b8c10ca0d67e57937477",
+      "processed_at": "2026-08-27T03:06:22.361387"
+    },
+    "Legislativas\\Legislativas 1985\\PSD 1985.pdf": {
+      "hash": "d4197618f7550639844205689b880cc159a37aa1c2cbbb5cff448021a173ce0f",
+      "processed_at": "2026-08-27T03:08:28.374887"
+    },
+    "Legislativas\\Legislativas 1987\\PS 1987.pdf": {
+      "hash": "5089e1fc9f2cb5db984da9c4a85ab822dce1f3964542b9e02c59ab1962637ee0",
+      "processed_at": "2026-08-27T03:12:28.024651"
+    },
+    "Legislativas\\Legislativas 1987\\PSD 1987.pdf": {
+      "hash": "67184426a10bbcc38cb38db335c4bbca9e97f42070a7532ad95546f239a06818",
+      "processed_at": "2026-08-27T03:13:35.450506"
+    },
+    "Legislativas\\Legislativas 1991\\PS 1991.pdf": {
+      "hash": "97f0cf5598a5c8fa4c7b88b29b5dc72a0861554438e627635679a9bd4907d149",
+      "processed_at": "2026-08-27T03:19:00.644842"
+    },
+    "Legislativas\\Legislativas 1991\\PSD 1991.pdf": {
+      "hash": "7c8e0eefd2cfc85582b961068d970857f7ac52d453c88f33d5f27de8fb1d99de",
+      "processed_at": "2026-08-27T03:21:01.459198"
+    },
+    "Legislativas\\Legislativas 1995\\CDS 1995.pdf": {
+      "hash": "b8bcfe9381afc4c701ddef52ead1b86cacd0015189199696830c6738ec23f653",
+      "processed_at": "2026-08-27T03:21:02.762268"
+    },
+    "Legislativas\\Legislativas 1995\\PS 1995.pdf": {
+      "hash": "a883b6d2346a78f66e1575e64abca4020729117bd7c5c29b870fe3c7a03815f4",
+      "processed_at": "2026-08-27T03:31:15.676229"
+    },
+    "Legislativas\\Legislativas 1995\\PSD 1995.pdf": {
+      "hash": "cab2756d4bf11c03b8218db4873b649b8fc4416d5e469bb8328e9d6528a261bd",
+      "processed_at": "2026-08-27T03:34:17.623383"
+    },
+    "Legislativas\\Legislativas 1997\\CDU 1997.pdf": {
+      "hash": "f418e1134f2d6e4c3181e91cc6599957689e0e5d321d0d29341bffc54cf0f7e1",
+      "processed_at": "2026-08-27T03:34:18.477790"
+    },
+    "Legislativas\\Legislativas 1999\\BE 1999.pdf": {
+      "hash": "3fc164641d93937e3b4c5c754096bfd6c1a7c09ad202f987f4fd2c0590c96100",
+      "processed_at": "2026-08-27T03:34:56.944690"
+    },
+    "Legislativas\\Legislativas 1999\\CDU 1999.pdf": {
+      "hash": "55267fd7cf463d48411e1d428914541f6567584ed7fc89b622a4605480022701",
+      "processed_at": "2026-08-27T03:35:07.012072"
+    },
+    "Legislativas\\Legislativas 1999\\PS 1999.pdf": {
+      "hash": "6fd160d9bcc1a6cb62fc0ec42194c95f10ec29dd821f8dc5ffdae4bbc57e0a67",
+      "processed_at": "2026-08-27T03:38:47.596538"
+    },
+    "Legislativas\\Legislativas 1999\\PSD 1999.pdf": {
+      "hash": "2f0cc61c17c29d9aff22053ae3b57d970680b6bc179fbc98f433a869032cd02e",
+      "processed_at": "2026-08-27T03:40:30.997301"
+    },
+    "Legislativas\\Legislativas 2002\\BE 2002.pdf": {
+      "hash": "b99ed979f9e70e23fb0034385ce1550cbce40816de8a43ae53a48bea78e6f999",
+      "processed_at": "2026-08-27T03:42:49.129711"
+    },
+    "Legislativas\\Legislativas 2002\\PS 2002.pdf": {
+      "hash": "84e8ae2981d3ad541afb44d2709b00d4c6289097937e1d54603d1d3276df9b2e",
+      "processed_at": "2026-08-27T03:42:54.852115"
+    },
+    "Legislativas\\Legislativas 2002\\PSD 2002.pdf": {
+      "hash": "1084bdb246a4166cfc3f263edcb5147420785e4c0c4dd2c936990f7617fc2ded",
+      "processed_at": "2026-08-27T03:45:40.971743"
+    },
+    "Legislativas\\Legislativas 2005\\BE 2005.pdf": {
+      "hash": "77b7cc9277827e03f5ca879bdb672c8b381d519d74b9c33b216e0d36f79fc315",
+      "processed_at": "2026-08-27T03:45:45.683594"
+    },
+    "Legislativas\\Legislativas 2005\\CDU 2005.pdf": {
+      "hash": "fb6a06250714a05f191ef1d1d53fb4a88e283dd9e555b92103c4aa93406afbd7",
+      "processed_at": "2026-08-27T03:45:48.588014"
+    },
+    "Legislativas\\Legislativas 2005\\PS 2005.pdf": {
+      "hash": "52d01bc4348dfeca747abbc32807ecead9cb655933a40f6396f323012b8cc376",
+      "processed_at": "2026-08-27T03:45:54.476182"
+    },
+    "Legislativas\\Legislativas 2005\\PSD 2005.pdf": {
+      "hash": "d0af8be269a2744b3f1b89eb73e6e61b611149e7a9083045f7ac5226d93fcc5f",
+      "processed_at": "2026-08-27T03:45:57.674324"
+    },
+    "Legislativas\\Legislativas 2009\\BE 2009.pdf": {
+      "hash": "e5d4cf1058aaf1907574d5f4992dbfaa1d705c840bbfeab34ed3d16193ad6b57",
+      "processed_at": "2026-08-27T03:45:59.147460"
+    },
+    "Legislativas\\Legislativas 2009\\PS 2009.pdf": {
+      "hash": "70965e54d09b92a5216a80e8f02326e41cc4d066cdd6846d2b813643aa2e650a",
+      "processed_at": "2026-08-27T03:46:03.574161"
+    },
+    "Legislativas\\Legislativas 2009\\PSD 2009.pdf": {
+      "hash": "72bac777bb186c03b459b24051ad8946571737001640b6deefdb8232bce3269b",
+      "processed_at": "2026-08-27T03:46:06.534928"
+    },
+    "Legislativas\\Legislativas 2011\\BE 2011.pdf": {
+      "hash": "8d3262e8486710e23d12a64319e0cd32926dfd794a4ab70f9cb43f095a6f5b00",
+      "processed_at": "2026-08-27T03:46:07.462206"
+    },
+    "Legislativas\\Legislativas 2011\\PAN 2011.pdf": {
+      "hash": "2fe70d8741d26863b8c63c27921b7b5912469086bdf115ffa85250f16e237452",
+      "processed_at": "2026-08-27T03:46:08.739941"
+    },
+    "Legislativas\\Legislativas 2011\\PS 2011.pdf": {
+      "hash": "48877a99aec9dfa5cf5b0002ec3ff4ea1649225dcde0dad4222d62f19f9f5dac",
+      "processed_at": "2026-08-27T03:46:18.267597"
+    },
+    "Legislativas\\Legislativas 2011\\PSD 2011.pdf": {
+      "hash": "ac133a6405b473970f4f1757059fcc09fbf43ad3a43720be9899068c936265b8",
+      "processed_at": "2026-08-27T03:46:22.722339"
+    },
+    "Legislativas\\Legislativas 2015\\BE 2015.pdf": {
+      "hash": "fd54fd8e4ad089e24a4c5ac4b0ee31d49cfd021822a02fe95bd0206a35135763",
+      "processed_at": "2026-08-27T03:46:26.083802"
+    },
+    "Legislativas\\Legislativas 2015\\CDU 2015.pdf": {
+      "hash": "08ee09c0eefb86fceea7328cd4381186c57d8a82b5be1719ee1183422f901ea6",
+      "processed_at": "2026-08-27T03:46:26.602653"
+    },
+    "Legislativas\\Legislativas 2015\\LIVRE 2015.pdf": {
+      "hash": "944f25bc48f7637cf15dc6eb020c209cfb0e1c3ff02a514636ebb21c04f3a5c9",
+      "processed_at": "2026-08-27T03:46:28.812917"
+    },
+    "Legislativas\\Legislativas 2015\\PNR 2015.pdf": {
+      "hash": "5b27a2a818e0fbcf009c478435bab07e90f37fc905ec48e38806df0b533c7ee9",
+      "processed_at": "2026-08-27T03:46:29.498290"
+    },
+    "Legislativas\\Legislativas 2015\\PS 2015.pdf": {
+      "hash": "e4bb910b4b3cb7e3c3eb62b072eac1478e0195e8def5a9ffc82b22968a4030aa",
+      "processed_at": "2026-08-27T03:46:34.524513"
+    },
+    "Legislativas\\Legislativas 2015\\PSD 2015.pdf": {
+      "hash": "23e084c612a66771625f2ee89db8c1d78ee1a7021cee8019eb1d3c4a3ce48e75",
+      "processed_at": "2026-08-27T03:46:39.410595"
+    },
+    "Legislativas\\Legislativas 2019\\BE 2019.pdf": {
+      "hash": "a7dea6135513cd859863c5055e4435ae243a3aa59f057249be46c7c07997c5a6",
+      "processed_at": "2026-08-27T03:47:05.314742"
+    },
+    "Legislativas\\Legislativas 2019\\CDS 2019.pdf": {
+      "hash": "6773f64b065ff77c253ff775a3153ee3a3a2006f127cca9d723801745700e183",
+      "processed_at": "2026-08-27T03:47:13.662381"
+    },
+    "Legislativas\\Legislativas 2019\\CDU 2019.pdf": {
+      "hash": "9a27bdecb3ea3e3c17085db6979242a9d4d00469cfe7f875b11656e518294cbb",
+      "processed_at": "2026-08-27T03:47:21.892767"
+    },
+    "Legislativas\\Legislativas 2019\\CHEGA 2019.pdf": {
+      "hash": "ea2e513e6ab0ef2ec3564a7cba5a24b1d1064b3d3c3d5c1360b6d40c1ccc8d43",
+      "processed_at": "2026-08-27T03:47:23.358720"
+    },
+    "Legislativas\\Legislativas 2019\\IL 2019.pdf": {
+      "hash": "1f0667caac49823ffeea6fa06da338d70875e36cc1c93cad2b2ce1a5cf5d4d8b",
+      "processed_at": "2026-08-27T03:47:33.486413"
+    },
+    "Legislativas\\Legislativas 2019\\LIVRE 2019.pdf": {
+      "hash": "1bb1d0646fac860681a57fa145fe402870b597877e938e6492164d92137586e5",
+      "processed_at": "2026-08-27T03:47:40.695832"
+    },
+    "Legislativas\\Legislativas 2019\\PAN 2019.pdf": {
+      "hash": "43f58d255fc9b7d04285ff5354126afbb851ceda7512332748b829d67d82ae4e",
+      "processed_at": "2026-08-27T03:48:22.403814"
+    },
+    "Legislativas\\Legislativas 2019\\PCTP_MRPP 2019.pdf": {
+      "hash": "5e95090675dffe71cbe6021f681c2518b91399b681d0a0fd533274b8f8cbd06c",
+      "processed_at": "2026-08-27T03:48:22.765611"
+    },
+    "Legislativas\\Legislativas 2019\\PNR 2019.pdf": {
+      "hash": "6a929a68ec6c65128b4c76410fcadf1ead2d939aa27d54e132b76b98f38068e6",
+      "processed_at": "2026-08-27T03:48:24.017290"
+    },
+    "Legislativas\\Legislativas 2019\\PS 2019.pdf": {
+      "hash": "bf14247b68e200d961f1ba19ed81546ee55c510b4ce52725707fedba3d5919c0",
+      "processed_at": "2026-08-27T03:48:44.414933"
+    },
+    "Legislativas\\Legislativas 2019\\PSD 2019.pdf": {
+      "hash": "5e60b8d8754012dae1119ef4d18558802dc97205b69115739352872661e7d96f",
+      "processed_at": "2026-08-27T03:48:53.752105"
+    },
+    "Legislativas\\Legislativas 2022\\ADN 2022.pdf": {
+      "hash": "aca95178148d031eba0a40655ee2f5b6f0e61a7ddd7b71cac7abe80b285342ae",
+      "processed_at": "2026-08-27T03:48:54.161053"
+    },
+    "Legislativas\\Legislativas 2022\\BE 2022.pdf": {
+      "hash": "85341902633c261a373ab6e5f16043db7646e2b9ece8eb656ff0acfa47334bba",
+      "processed_at": "2026-08-27T03:49:02.656925"
+    },
+    "Legislativas\\Legislativas 2022\\CDS 2022.pdf": {
+      "hash": "95bd7da13ed1eba5f9ec3c71195a92c20fc627634e116921e0569b97d22f76ec",
+      "processed_at": "2026-08-27T03:49:03.535830"
+    },
+    "Legislativas\\Legislativas 2022\\CDU 2022.pdf": {
+      "hash": "0ad7f1094f89bbd8ce0889d31e3a47f6d9b92d7b15580d04e33aa9e91b6dc574",
+      "processed_at": "2026-08-27T03:49:04.580282"
+    },
+    "Legislativas\\Legislativas 2022\\IL 2022.pdf": {
+      "hash": "95dc1555b6833b4f45339959628d873c6e79c396331d6528f2b6007dd349e10b",
+      "processed_at": "2026-08-27T03:49:41.118304"
+    },
+    "Legislativas\\Legislativas 2022\\LIVRE 2022.pdf": {
+      "hash": "cf312894d8d4ce5cebc29008128c431424935b6688ca4ee232cb3ed3b158d725",
+      "processed_at": "2026-08-27T03:49:50.847925"
+    },
+    "Legislativas\\Legislativas 2022\\MAS 2022.pdf": {
+      "hash": "d1cecd3f23a5a2c818f0b64fef232d58de882e4feb785db941d3ca8e8254ee94",
+      "processed_at": "2026-08-27T03:49:51.682001"
+    },
+    "Legislativas\\Legislativas 2022\\PAN 2022.pdf": {
+      "hash": "b7c1f09072345fb7b7aa65844bb976ca45b371df521e1dc27203d85fe301175b",
+      "processed_at": "2026-08-27T03:50:15.978161"
+    },
+    "Legislativas\\Legislativas 2022\\PS 2022.pdf": {
+      "hash": "75689f4ee1b06bc94e49fb15bbf39f41692f2ed2e8e7776652dfeba4e978ad8f",
+      "processed_at": "2026-08-27T03:50:24.054560"
+    },
+    "Legislativas\\Legislativas 2022\\PSD 2022.pdf": {
+      "hash": "f3eda7d1bfbc62400c5d02425828fc97f5f993cf869226f89303cfb6562200fd",
+      "processed_at": "2026-08-27T03:50:32.941383"
+    },
+    "Legislativas\\Legislativas 2022\\RIR 2022.pdf": {
+      "hash": "a437386bbb91934a1a2b772910a325548e19639d33683a638a78ae188538d162",
+      "processed_at": "2026-08-27T03:50:34.153487"
+    },
+    "Legislativas\\Legislativas 2022\\VOLT 2022.pdf": {
+      "hash": "5ce30a80b5fb4b683693a56fab76143c8afff2235a367e2f5c78eddbb1378e9f",
+      "processed_at": "2026-08-27T03:50:37.432189"
+    },
+    "Legislativas\\Legislativas 2024\\A21 2024.pdf": {
+      "hash": "c76c0fe0f0ba517a0cda8a2b3b0ce4344bb357af87c78734988f8c1680efda5f",
+      "processed_at": "2026-08-27T03:50:40.152726"
+    },
+    "Legislativas\\Legislativas 2024\\AD 2024.pdf": {
+      "hash": "895a91529b3b411d8ddc29a55e3904ea455fe2c5d35742951beed7a934cce94f",
+      "processed_at": "2026-08-27T03:50:48.983908"
+    },
+    "Legislativas\\Legislativas 2024\\ADN 2024.pdf": {
+      "hash": "609a76250d4a623fe6b346a83fd3afd6dcf3fa4bfaee81101ea5102d165b194d",
+      "processed_at": "2026-08-27T03:50:49.872590"
+    },
+    "Legislativas\\Legislativas 2024\\BE 2024.pdf": {
+      "hash": "f823add7ff92e172f90a400f03ff300bf784bce244b4854ecb66b802da607897",
+      "processed_at": "2026-08-27T03:50:53.374605"
+    },
+    "Legislativas\\Legislativas 2024\\CDU 2024.pdf": {
+      "hash": "58681f0889b4dd421cfa04185f8769d8110997eec8cae9b24c3bce00cb572360",
+      "processed_at": "2026-08-27T03:51:02.190218"
+    },
+    "Legislativas\\Legislativas 2024\\CHEGA 2024.pdf": {
+      "hash": "061f6cbeabe0c000fb21d9302625d635c296a9f856498e56b9f02385f758fc88",
+      "processed_at": "2026-08-27T03:51:54.072379"
+    },
+    "Legislativas\\Legislativas 2024\\IL 2024.pdf": {
+      "hash": "a1c45933037f736cb1e26774bbba1da5b484651e9053395a4f215c5433b495f6",
+      "processed_at": "2026-08-27T03:52:04.523538"
+    },
+    "Legislativas\\Legislativas 2024\\JPP 2024.pdf": {
+      "hash": "94898045c42ff4f66c528fc17fe0da6a1847bb74ec0d6d9bb9081ede8f585546",
+      "processed_at": "2026-08-27T03:52:07.621810"
+    },
+    "Legislativas\\Legislativas 2024\\LIVRE 2024.pdf": {
+      "hash": "847fc2a32b7a9b0065a7a48b310fe6c4f00efcb7cf542c910fb550a691ba981f",
+      "processed_at": "2026-08-27T03:52:12.422531"
+    },
+    "Legislativas\\Legislativas 2024\\PAN 2024.pdf": {
+      "hash": "29badbd7a3c0fa9443e877d00a1b33f6429ec75135e26ab3ce827e8b773dfb97",
+      "processed_at": "2026-08-27T03:52:15.345055"
+    },
+    "Legislativas\\Legislativas 2024\\PS 2024.pdf": {
+      "hash": "5367f3ff4e6037e22db62b16641807ff25c7c6e8c082943f6673876df1af341f",
+      "processed_at": "2026-08-27T03:52:32.878086"
+    },
+    "Legislativas\\Legislativas 2024\\RIR 2024.pdf": {
+      "hash": "eb6fb9a2e1df6327b5c5ba9c0c2cdba23382177c1623a06420af4c4c2e884e88",
+      "processed_at": "2026-08-27T03:52:34.657867"
+    },
+    "Legislativas\\Legislativas 2024\\VOLT PORTUGAL 2024.pdf": {
+      "hash": "9bfb1a4cc8830e77557ddce0f288b140d8ebaebee00aa7c4968d2110846c9d10",
+      "processed_at": "2026-08-27T03:52:49.723535"
+    },
+    "Legislativas\\Legislativas 2025\\AD 2025.pdf": {
+      "hash": "bbb2a59afa63443df20edc8b4f9ad458b303358a21ea26d55318e75937af86e5",
+      "processed_at": "2026-08-27T03:53:03.363587"
+    },
+    "Legislativas\\Legislativas 2025\\ADN 2025.pdf": {
+      "hash": "6ff4169c0028b16ec6651013797d110d598364160549a561c2187f9135d725d5",
+      "processed_at": "2026-08-27T03:53:06.391692"
+    },
+    "Legislativas\\Legislativas 2025\\BE 2025.pdf": {
+      "hash": "4d07fd7d1bb8a3674d21ab8fd96dc700395886f40e93712beba9ea5698c0afa6",
+      "processed_at": "2026-08-27T03:53:06.706987"
+    },
+    "Legislativas\\Legislativas 2025\\CDU 2025.pdf": {
+      "hash": "d0aa2afbf303422952639b7ccb4aca4e5c553bb9afb9e36387e7e9eb843a100c",
+      "processed_at": "2026-08-27T03:53:14.132224"
+    },
+    "Legislativas\\Legislativas 2025\\CHEGA 2025.pdf": {
+      "hash": "14daa7741a6724c7ed8466130c5b6c12b3e515718f791f71947c3bd0e64d5c35",
+      "processed_at": "2026-08-27T03:53:42.538235"
+    },
+    "Legislativas\\Legislativas 2025\\ERGUE-TE 2025.pdf": {
+      "hash": "1807d1cea0acc1b164f72f4aeb76e542ac6035992156d0414284e7ff484fd0f8",
+      "processed_at": "2026-08-27T03:53:43.364455"
+    },
+    "Legislativas\\Legislativas 2025\\IL 2025.pdf": {
+      "hash": "eca02e5d2201d6f8c246a551233f6e7a0cd4087aaf374b43235b81c5b8ff5926",
+      "processed_at": "2026-08-27T03:53:46.789525"
+    },
+    "Legislativas\\Legislativas 2025\\LIVRE 2025.pdf": {
+      "hash": "d37a4cfc3a87f4b79660d714cd260d2d5f162d2544585cd4057e5223ac7875d3",
+      "processed_at": "2026-08-27T03:54:02.563965"
+    },
+    "Legislativas\\Legislativas 2025\\PAN 2025.pdf": {
+      "hash": "b9e53ce8b3bd42f604b8b2f1679da0060795e3b844ee164e16239c7f2ae9b912",
+      "processed_at": "2026-08-27T03:54:06.065559"
+    },
+    "Legislativas\\Legislativas 2025\\PLS 2025.pdf": {
+      "hash": "f445421b09a673f4baf45a954627445ffa7088c87593e6be5c3ea0d02033fe5e",
+      "processed_at": "2026-08-27T03:54:08.128142"
+    },
+    "Legislativas\\Legislativas 2025\\PPM 2025.pdf": {
+      "hash": "2077ebd5fefccd273f3c9c837d0088a5f9d226b00e4a552c8eb2744e61d870b1",
+      "processed_at": "2026-08-27T03:54:27.774097"
+    },
+    "Legislativas\\Legislativas 2025\\PS 2025.pdf": {
+      "hash": "2d994a2ed8a203b2827d32e19824bde41d7e3e2a608cb78bc934d9ae66205dd7",
+      "processed_at": "2026-08-27T03:54:36.825547"
+    },
+    "Legislativas\\Legislativas 2025\\RIR 2025.pdf": {
+      "hash": "d8dee796a0edba2b67f100b6955424947335d453c66f14506cd517a9f29531d8",
+      "processed_at": "2026-08-27T03:54:37.024410"
+    },
+    "Legislativas\\Legislativas 2025\\VOLT 2025.pdf": {
+      "hash": "7cc5b1bd0f0e7b4609f7afbaef0d2d869620e213aa1889a08036a8ddfac1a3fa",
+      "processed_at": "2026-08-27T03:54:59.380756"
+    },
+    "Madeira\\Madeira 2019\\BE MADEIRA 2019.pdf": {
+      "hash": "793bd33b9e751d998ea6a0ca7d55eafbc9e6c756b0e6f43a869829fe5afb3d86",
+      "processed_at": "2026-08-27T03:55:00.536188"
+    },
+    "Madeira\\Madeira 2019\\PS MADEIRA 2019.pdf": {
+      "hash": "462d7dfc7c2ea7628fdac769a7ddd3ae5b4d4a87c3273a671046e66c8b92a14d",
+      "processed_at": "2026-08-27T04:00:41.754011"
+    },
+    "Madeira\\Madeira 2023\\BE MADEIRA 2023.pdf": {
+      "hash": "e383a67bc1327344bdcc1d7e10298f64dc72b3dc839f5bef7fbaa797a768ad8a",
+      "processed_at": "2026-08-27T04:00:42.162557"
+    },
+    "Madeira\\Madeira 2023\\IL MADEIRA 2023.pdf": {
+      "hash": "405eb2188f94ef730eefa9a38bc03b792e416c6ea4f05f7a64e7be79e6709f73",
+      "processed_at": "2026-08-27T04:00:45.530249"
+    },
+    "Madeira\\Madeira 2023\\JPP MADEIRA 2023.pdf": {
+      "hash": "ad6cf4dbd805da4daab33da455b4fc0be9256ed90152826638ac6d2583b8d90d",
+      "processed_at": "2026-08-27T04:00:47.589405"
+    },
+    "Madeira\\Madeira 2023\\LIVRE MADEIRA 2023.pdf": {
+      "hash": "8f569695bd385cdea9687dc8e8c87023d641bba640214e1ab923d5a0e2b30900",
+      "processed_at": "2026-08-27T04:00:51.840079"
+    },
+    "Madeira\\Madeira 2024\\ADN MADEIRA 2024.pdf": {
+      "hash": "ec49ab40611a413518845791b4481aa0254986540e480c1f4839dede23272355",
+      "processed_at": "2026-08-27T04:00:53.404758"
+    },
+    "Madeira\\Madeira 2024\\BE MADEIRA 2024.pdf": {
+      "hash": "a1bd481d3143a3a6cf8f80a6224727a36ba18fdbd208d9bf0c1b59b5c9249d10",
+      "processed_at": "2026-08-27T04:01:05.828907"
+    },
+    "Madeira\\Madeira 2024\\IL MADEIRA 2024.pdf": {
+      "hash": "9c835981164cdf37bd034834f46bca2ba93eb158259d4b5bc0b8a4130d1900ed",
+      "processed_at": "2026-08-27T04:01:08.003409"
+    },
+    "Madeira\\Madeira 2024\\RIR MADEIRA 2024.pdf": {
+      "hash": "9097564867c25acde8baeb58d6016baa169db0a1a900e1b4c05ce828a08dd03c",
+      "processed_at": "2026-08-27T04:01:08.583813"
+    },
+    "Madeira\\Madeira 2025\\IL MADEIRA 2025.pdf": {
+      "hash": "9b06537be64b5e882b5c56654e9bdbcbafa0ccc41be3b878a1fe1f71a93b7b4a",
+      "processed_at": "2026-08-27T04:01:09.734050"
+    },
+    "Madeira\\Madeira 2025\\JPP MADEIRA 2025.pdf": {
+      "hash": "a2bfbddf9766ccc56d592bc177e2741059fe5beff1d558badf9221481d89631c",
+      "processed_at": "2026-08-27T04:01:12.801534"
+    },
+    "Madeira\\Madeira 2025\\LIVRE MADEIRA 2025.pdf": {
+      "hash": "2e68b75487eaf9a28d1e16dbadeaa78d70c6eed0989a38aa3aa71a67899d28b8",
+      "processed_at": "2026-08-27T04:01:15.637999"
+    },
+    "Madeira\\Madeira 2025\\NOVA DIREITA MADEIRA 2025.pdf": {
+      "hash": "3a43d1a551233e4b23c3caad011842d7a473afa7add6e41b751ca921890435f0",
+      "processed_at": "2026-08-27T04:01:18.158880"
+    },
+    "Madeira\\Madeira 2025\\PS MADEIRA 2025.pdf": {
+      "hash": "7e2be4fa4f2ba378ec437f37da361916ff05d18ce4be6d40d2fc617e330e449f",
+      "processed_at": "2026-08-27T04:01:20.290927"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 1999.pdf": {
+      "hash": "acf0abe92a671ff5192d7c6f472f6b0f4d790a6c3b6410f7e65090b52db5abb5",
+      "processed_at": "2026-08-27T04:01:23.560336"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2000.pdf": {
+      "hash": "5b2d07ee02db31bdaaef679395f7762ec3c8239fdc9c9f1b121e4a84b89b4356",
+      "processed_at": "2026-08-27T04:01:26.641216"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2001.pdf": {
+      "hash": "7943d50b316f21890d59d0124a38dfc23b61fb1dc1fea3af420b2631e166110e",
+      "processed_at": "2026-08-27T04:01:52.542580"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2002.pdf": {
+      "hash": "96dcb639382a34876eaf78e1c18461eb8757db60a969d8d28d874a7d4a5fb6c6",
+      "processed_at": "2026-08-27T04:02:44.452908"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2003.pdf": {
+      "hash": "ac64e5b5c573b932c8e4910783f7c78dae542fa6f4a0bf8c6f759c24b8021583",
+      "processed_at": "2026-08-27T04:02:57.739056"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2004.pdf": {
+      "hash": "f90ff3f786e3e34f80e3df7162b546986a0dcd0052e0eb0bac2c072bdc6f45ea",
+      "processed_at": "2026-08-27T04:03:09.279813"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2005.pdf": {
+      "hash": "01a3f51462bc11c9008ab17880081209d0f2c3555711160ec269949b737e4397",
+      "processed_at": "2026-08-27T04:03:12.518012"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2006.pdf": {
+      "hash": "acce8c9bba97830c5d0dc5b5ab3c05b9b307b0442232c64dd5b0cb84fa42c67c",
+      "processed_at": "2026-08-27T04:03:22.814205"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2007.pdf": {
+      "hash": "3cd3898d047c6f84ece31792170d1f641009cfc75f0b4853c0f10e64801a64e4",
+      "processed_at": "2026-08-27T04:03:31.986761"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2008.pdf": {
+      "hash": "76e01777327387eee8d241b4fa72711cf19c1562604641847e81c2cf0340aa50",
+      "processed_at": "2026-08-27T04:03:35.433575"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2009.pdf": {
+      "hash": "03ae88e38bf46084402a24a70b47f2f1ec677e8e82f512700df66df48cef784b",
+      "processed_at": "2026-08-27T04:03:50.217516"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2010.pdf": {
+      "hash": "df1071aaa3c409cd41de99904dae46f547217bd2b1d69d0ad4bb66030b8e77d0",
+      "processed_at": "2026-08-27T04:03:54.918396"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2011.pdf": {
+      "hash": "184b1a306b061df802f596f2c411596e4f94327f15e1a89ba643dfef47c41426",
+      "processed_at": "2026-08-27T04:04:00.701294"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2012.pdf": {
+      "hash": "943aaf53293968c21a225bbfa5d9f0fe9776129fecc798646c6e5081383d132e",
+      "processed_at": "2026-08-27T04:04:04.494723"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2013.pdf": {
+      "hash": "aed8d27632cab6df36b7642875601d4ddda7eb1c17b24b83cf68a3cd7ac52d4a",
+      "processed_at": "2026-08-27T04:04:08.790790"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2014.pdf": {
+      "hash": "daf8b2f84aad532d0bc317942a84d0c903a431eb3d9198c7ef46162a5f3dfe50",
+      "processed_at": "2026-08-27T04:04:13.569354"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2015.pdf": {
+      "hash": "7313d031152c69dc8a99a5f5655431bb2a8c16646260ec9603df800eccba2362",
+      "processed_at": "2026-08-27T04:04:20.084201"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2016.pdf": {
+      "hash": "f29bc98b7e48a75144857e59a7da286c7c2bb33fa1115e9689836814c0196ff6",
+      "processed_at": "2026-08-27T04:04:24.630402"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2017.pdf": {
+      "hash": "0d860e9724aced430e688d50b0b53da52f5605ed2f2c7b7f2d293d3c01946b45",
+      "processed_at": "2026-08-27T04:04:29.237196"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2018.pdf": {
+      "hash": "b80492db68e9e7131d156fd32dfa2c07c9017f24306696a2edb62fd64744cb26",
+      "processed_at": "2026-08-27T04:04:34.188794"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2019.pdf": {
+      "hash": "ecc57c563fc9febf8270da3f27aa5d7e3745e5587309b69091e4735db42f2b36",
+      "processed_at": "2026-08-27T04:04:39.785218"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2020.pdf": {
+      "hash": "1ad73edfb7df948a40b83cae10e3e59b5348c5fb75689259bbc87b44dc3ceafd",
+      "processed_at": "2026-08-27T04:05:05.760475"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2021.pdf": {
+      "hash": "a5c3d219384243ca05bbce7e3fbb9682c489f336ef2687d4abf059e185605bff",
+      "processed_at": "2026-08-27T04:05:28.184572"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2022.pdf": {
+      "hash": "28123eb43f22146e19f32a3e3510789e88f9419796bbd2642f5f4cc6844156b0",
+      "processed_at": "2026-08-27T04:05:51.386089"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2023.pdf": {
+      "hash": "7a732968251236b79fccf9f7fcc0f8d9f1f2fb9b469334913fc98a69a4749df0",
+      "processed_at": "2026-08-27T04:06:17.983802"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2024.pdf": {
+      "hash": "ede0c7e5c520817ba4fc18e92a69521ef333f6a2a8ab5c5904a74d2241180fa9",
+      "processed_at": "2026-08-27T04:06:29.435072"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2025.pdf": {
+      "hash": "67420242cef230c10e7d1bfecd01191f1e9a60fb30f81116f208bf335561b33a",
+      "processed_at": "2026-08-27T04:07:11.931861"
+    },
+    "Orçamentos de Estado\\Orçamento do Estado 2026.pdf": {
+      "hash": "a863f683d0145e3129e56278cbf450e95a405cb912a98e0383e0f83d6fcbc031",
+      "processed_at": "2026-08-27T04:07:38.240417"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 1999.pdf": {
+      "hash": "dc3b53c880bb8affe6b4a936be5abaa620d924fe8d97b0d8f04b4cba6b268ba2",
+      "processed_at": "2026-08-27T04:07:53.097018"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2000.pdf": {
+      "hash": "672d08097f03cdb2fa61079c57bcefc9aac617a3efb0131724c6afe0a7db7c04",
+      "processed_at": "2026-08-27T04:08:04.792440"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2001.pdf": {
+      "hash": "9204edcac52d783d80fa92cee481aa2bd0e1626496037dff69977792529d2f43",
+      "processed_at": "2026-08-27T04:08:16.755175"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2002.pdf": {
+      "hash": "de4cf3fb52e8d082e2aa88a1eff70c05413eb3f0f66406b71c6b32184a8e056d",
+      "processed_at": "2026-08-27T04:08:30.671472"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2003.pdf": {
+      "hash": "29049388a8ad255ac7b99ec5ede938a87399d5d0ba0489d612342d384fdd599d",
+      "processed_at": "2026-08-27T04:08:39.834727"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2004.pdf": {
+      "hash": "cafc3f8194afa1061c54b3ad7c7a24ff3c9aab71f195e29a9112b7bfd8becbd2",
+      "processed_at": "2026-08-27T04:08:50.465187"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2005.pdf": {
+      "hash": "9e263f8d2e8df5f0cd90489fbbe0aaab25f4467846ade18ae07e90d2064ab5ab",
+      "processed_at": "2026-08-27T04:09:01.411149"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2006.pdf": {
+      "hash": "ceae1e9fbf474e2022f993db79d24ff6b585a10cfa0bdc464affa526f26286f8",
+      "processed_at": "2026-08-27T04:09:16.665749"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2007.pdf": {
+      "hash": "6da5069488018de0b41bb49b5da16760bd33a196139a75c7ce32c9117e4d21fa",
+      "processed_at": "2026-08-27T04:09:38.933640"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2008.pdf": {
+      "hash": "12859042b4a5b6e0268b05407d1f9b95f34b1ad87997b6c1f8e296ca670af48f",
+      "processed_at": "2026-08-27T04:10:00.380556"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2009.pdf": {
+      "hash": "6dd5106874b5f9cb643c5e68148d77b9d48f3b61821595e9af6229946c93ef5e",
+      "processed_at": "2026-08-27T04:10:16.363936"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2010.pdf": {
+      "hash": "584c90d65f420c50f59c58664f1cc33a5769afd0d67aeb1d1234cec2272d9da8",
+      "processed_at": "2026-08-27T04:10:33.033523"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2011.pdf": {
+      "hash": "de7b762f0e314634bcb35d0aa11b1f41e383d7aaff529911bbd85018b43f13ce",
+      "processed_at": "2026-08-27T04:10:48.607557"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2012.pdf": {
+      "hash": "d5fa048ede0899f052eb2946037328907303dc5d32f99d353800b112250b9c73",
+      "processed_at": "2026-08-27T04:11:07.857200"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2013.pdf": {
+      "hash": "1310a047f07c775e09348db0d9b843ba01733de88e67dbeb7fdc370c0157264e",
+      "processed_at": "2026-08-27T04:11:19.122742"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2014.pdf": {
+      "hash": "1f1b6418026d5b02364f8a934bf0fa2479f0d852340498f793d90dea5ed47683",
+      "processed_at": "2026-08-27T04:11:27.461992"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2015.pdf": {
+      "hash": "8f61970c318b961c6c7a1245098ebae007e9d2cf7a6e53efdd6bc9066b6e2902",
+      "processed_at": "2026-08-27T04:11:44.851009"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2016.pdf": {
+      "hash": "2ba803d2d9799401165b0b3967e116877266983a57bc5ee74f563effaac51e2d",
+      "processed_at": "2026-08-27T04:11:57.672647"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2017.pdf": {
+      "hash": "d55ee499eff1d824e347a0fcfc656dadf312fb25f5f4b0a69c11870144972c45",
+      "processed_at": "2026-08-27T04:12:08.540942"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2021.pdf": {
+      "hash": "273af79a967bf654685fa18b6cb7377a22327109f4208c35885c5463271bb33c",
+      "processed_at": "2026-08-27T04:12:17.768269"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2022.pdf": {
+      "hash": "c41d1651e42ca4d3ea9e88550121381c9c11366216424699bbe0368a563e0b9a",
+      "processed_at": "2026-08-27T04:12:28.367892"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2023.pdf": {
+      "hash": "8d241acc31e76042d46640355c7539c0bacacf75effca4b51292fcd7b1bd65dd",
+      "processed_at": "2026-08-27T04:12:36.965604"
+    },
+    "Orçamentos de Estado Europeus\\BCE - Relatório Anual 2024.pdf": {
+      "hash": "9b1fa8402e6a50c318dba51c8158a14a54319dab92b3f25e0dfbc4a0e4ab43cc",
+      "processed_at": "2026-08-27T04:12:46.252051"
+    },
+    "Orçamentos de Estado Europeus\\Quadro Financeiro Plurianual da UE 2014-2020.pdf": {
+      "hash": "36ff942d4c6ac75292110b149075ffd5374b4455321bcef9f160ebe868555905",
+      "processed_at": "2026-08-27T04:12:46.544320"
+    },
+    "Orçamentos de Estado Europeus\\Quadro Financeiro Plurianual da UE 2021-2027.pdf": {
+      "hash": "8a2bfd5d8730acb32e806f3c90cb8aa8f15890a29aa2c9b6961de151bb4a574d",
+      "processed_at": "2026-08-27T04:12:46.877375"
+    },
+    "Orçamentos de Estado Europeus\\Regulamento Financeiro da União Europeia.pdf": {
+      "hash": "47eeea954e185d636651c56f7edf60eec7fa02db1b6a1c9990ce0ce242c0f070",
+      "processed_at": "2026-08-27T04:12:52.624703"
+    },
+    "Orçamentos de Estado Europeus\\Regulamento NextGenerationEU - Mecanismo de Recuperação e Resiliência.pdf": {
+      "hash": "7c7534606165b0899745d1b0753aa8dc654bc82dec127c926baaa05ae317fad4",
+      "processed_at": "2026-08-27T04:12:54.553648"
+    },
+    "Orçamentos de Estado Europeus\\Sistema de Recursos Próprios da União Europeia.pdf": {
+      "hash": "1d8a459d19f99141ec3850e2832e3efa75b4ace5ecaf2b677e49ad594b59fb63",
+      "processed_at": "2026-08-27T04:12:55.029187"
+    }
+  }
+}
