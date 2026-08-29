@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_b058e9607727f1449359",
-  "content_hash": "b058e9607727f1449359eb0c36f68554a778be3bb843ea37d364d41e71cb0fee",
+  "draft_id": "draft_51c7d95966ce82e72ba3",
+  "content_hash": "51c7d95966ce82e72ba32ccc5caeeb7c462d767349ed004d559ca9674533ce0d",
   "post_type": "sunday_standard",
-  "created_at": "2026-08-29T19:39:30.449132+00:00",
+  "created_at": "2026-08-29T19:41:20.377423+00:00",
   "is_test": false,
-  "post_sha256": "3f846d760b9852cd2a62f82fb90acb1e04152ca95441cfec75b1222572572f94",
+  "post_sha256": "3b3effda3110f71c4869d1f276d0d175ba7d193bd666fa11911adcf637a14ae9",
   "caption_sha256": "8754d354f8c0f68caf3228861f8fb74359adacabe38c3cbc52dc6f21e34ccba4",
   "approval": {
     "approved": false
@@ -113,14 +113,14 @@
       "entityId": "imdb:tt4686844",
       "score": 1.0,
       "coverHash": "b6400818489f3aefec49db4969d81b848fa75dad68001944c071f5363899652f",
-      "verifiedAt": "2026-08-29T19:40:04.303565Z",
+      "verifiedAt": "2026-08-29T19:40:04.304578Z",
       "resolvedTitle": "The Death of Stalin",
       "resolvedAuthor": "Armando Iannucci",
       "sourceDescription": "Sátira sobre sucessão política, medo e luta pelo poder no círculo dirigente soviético.",
       "coverOverride": {
         "status": "approved",
         "source": "discord-review",
-        "approvedAt": "2026-08-29T19:40:04.303565Z"
+        "approvedAt": "2026-08-29T19:40:04.304578Z"
       }
     }
   },
