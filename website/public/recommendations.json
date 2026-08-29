@@ -158,7 +158,7 @@
       "title": "The Death of Stalin",
       "authorOrMeta": "Armando Iannucci",
       "description": "Sátira sobre sucessão política, medo e luta pelo poder no círculo dirigente soviético.",
-      "imageUrl": "/covers/movie_the_death_of_stalin_59ad13e1_f238b2d61f79.jpg",
+      "imageUrl": "/covers/movie_the_death_of_stalin_59ad13e1_f238b2d61f79_review_b6400818489f.jpg",
       "link": "https://www.imdb.com/title/tt4686844/",
       "priority": 3,
       "expiryDate": null,
@@ -172,11 +172,16 @@
         "source": "wikidata+imdb",
         "entityId": "imdb:tt4686844",
         "score": 1.0,
-        "coverHash": "84280bf5b71b60733d918dead170d8e8ff39204096a54d7e32eef65d67e935ae",
-        "verifiedAt": "2026-07-18T23:33:14.280457Z",
+        "coverHash": "b6400818489f3aefec49db4969d81b848fa75dad68001944c071f5363899652f",
+        "verifiedAt": "2026-08-29T19:40:04.304578Z",
         "resolvedTitle": "The Death of Stalin",
         "resolvedAuthor": "Armando Iannucci",
-        "sourceDescription": "Sátira sobre sucessão política, medo e luta pelo poder no círculo dirigente soviético."
+        "sourceDescription": "Sátira sobre sucessão política, medo e luta pelo poder no círculo dirigente soviético.",
+        "coverOverride": {
+          "status": "approved",
+          "source": "discord-review",
+          "approvedAt": "2026-08-29T19:40:04.304578Z"
+        }
       }
     },
     {
