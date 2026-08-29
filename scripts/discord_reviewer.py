@@ -706,7 +706,6 @@ async def replace_review_cover(
             json.dumps(manifest, indent=2, ensure_ascii=False).encode("utf-8"),
             "Bind reviewed cover manifest [bot]",
             None,
-            None,
         ),
         (
             "website/public/recommendations.json",
@@ -721,8 +720,8 @@ async def replace_review_cover(
             draft_sha,
         ),
     )
-    for path, content, message, sha in writes:
-        result = update_github_file(path, content, message, sha=sha)
+    for path, content, commit_message, sha in writes:
+        result = update_github_file(path, content, commit_message, sha=sha)
         if result is not True:
             return f"Erro ao guardar {path}: {result}"
 
@@ -2703,12 +2702,23 @@ async def on_message(message):
                 item = selected.get(quad)
                 if item:
                     try:
-                        req = urllib.request.Request(
-                            attachment_url, 
-                            headers={'User-Agent': 'Mozilla/5.0'}
-                        )
-                        with urllib.request.urlopen(req) as response:
-                            image_bytes = response.read()
+                        if message.attachments:
+                            image_bytes = await message.attachments[0].read()
+                        else:
+                            loop = asyncio.get_event_loop()
+
+                            def _fetch_url_content(url):
+                                resp = requests.get(
+                                    url,
+                                    headers={"User-Agent": "Mozilla/5.0"},
+                                    timeout=20,
+                                )
+                                resp.raise_for_status()
+                                return resp.content
+
+                            image_bytes = await loop.run_in_executor(
+                                None, _fetch_url_content, attachment_url
+                            )
                         
                         result = await replace_review_cover(
                             quad_info["original_msg_id"],

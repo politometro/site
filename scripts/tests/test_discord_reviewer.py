@@ -773,6 +773,133 @@ class PostApprovalButtonTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn("agendada", edit_content.lower())
         self.assertIn("domingo às 10:00", edit_content)
 
+    async def test_replace_review_cover_updates_manifest_recommendations_and_draft(self):
+        draft = {
+            "draft_id": "draft_123",
+            "content_hash": "abc123fullhash",
+            "q1": {
+                "id": "rec_test_1",
+                "imageUrl": "/covers/book_test_cover.jpg",
+                "verification": {},
+            },
+        }
+        manifest = {
+            "entityId": "openlibrary:/works/OL12345W",
+            "canonicalLink": "https://openlibrary.org/works/OL12345W",
+            "coverHash": "old-hash",
+        }
+        recs = {
+            "queue": [
+                {
+                    "id": "rec_test_1",
+                    "imageUrl": "/covers/book_test_cover.jpg",
+                    "verification": {},
+                }
+            ],
+            "history": [],
+        }
+        written = {}
+
+        def fake_get(path):
+            if "review_draft" in path:
+                return json.dumps(draft).encode("utf-8"), "draft-sha"
+            if "book_test_cover.json" in path:
+                return json.dumps(manifest).encode("utf-8"), "manifest-sha"
+            if "recommendations.json" in path:
+                return json.dumps(recs).encode("utf-8"), "rec-sha"
+            return None, "not found"
+
+        def fake_update(path, content, message, sha=None):
+            written[path] = content
+            return True
+
+        from io import BytesIO
+        from PIL import Image
+
+        img = Image.new("RGB", (100, 150), color="blue")
+        buf = BytesIO()
+        img.save(buf, format="JPEG")
+        raw_bytes = buf.getvalue()
+
+        with (
+            mock.patch.object(
+                discord_reviewer, "get_github_file", side_effect=fake_get
+            ),
+            mock.patch.object(
+                discord_reviewer, "update_github_file", side_effect=fake_update
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "trigger_review_regeneration",
+                return_value=True,
+            ),
+        ):
+            result = await discord_reviewer.replace_review_cover(
+                "123456", "q1", raw_bytes, "draft_123", "abc123"
+            )
+
+        self.assertTrue(result)
+        self.assertIn("website/public/recommendations.json", written)
+        self.assertIn("scripts/review_draft.json", written)
+        updated_draft = json.loads(written["scripts/review_draft.json"].decode("utf-8"))
+        self.assertTrue(updated_draft["q1"]["imageUrl"].startswith("/covers/book_test_cover_review_"))
+        self.assertTrue(updated_draft["q1"]["imageUrl"].endswith(".jpg"))
+
+    async def test_manual_cover_file_attachment_uses_read_method(self):
+        fake_attachment = SimpleNamespace(
+            url="https://cdn.discordapp.com/attachments/123/456/cover.jpg",
+            read=mock.AsyncMock(return_value=b"fake-image-bytes"),
+        )
+        fake_message = SimpleNamespace(
+            author=SimpleNamespace(bot=False, id=42),
+            channel=SimpleNamespace(id=discord_reviewer.CHANNEL_ID),
+            mentions=[],
+            reference=None,
+            content="",
+            attachments=[fake_attachment],
+            reply=mock.AsyncMock(),
+        )
+
+        discord_reviewer.waiting_for_image_quadrant = {
+            "quadrant": "q1",
+            "original_msg_id": "123456",
+            "expected_draft_id": "draft_123",
+            "expected_hash_prefix": "abc123",
+        }
+
+        with (
+            mock.patch.object(
+                discord_reviewer,
+                "get_github_file",
+                return_value=(
+                    json.dumps({"q1": {"id": "rec_1"}}).encode("utf-8"),
+                    "sha",
+                ),
+            ),
+            mock.patch.object(
+                discord_reviewer,
+                "replace_review_cover",
+                return_value=True,
+            ) as mock_replace,
+            mock.patch.object(
+                discord_reviewer,
+                "mark_review_superseded",
+                return_value=True,
+            ),
+            mock.patch.object(
+                discord_reviewer.bot,
+                "get_context",
+                return_value=SimpleNamespace(valid=False),
+            ),
+        ):
+            await discord_reviewer.on_message(fake_message)
+
+        fake_attachment.read.assert_awaited_once()
+        mock_replace.assert_awaited_once_with(
+            "123456", "q1", b"fake-image-bytes", "draft_123", "abc123"
+        )
+        self.assertIsNone(discord_reviewer.waiting_for_image_quadrant)
+
 
 if __name__ == "__main__":
     unittest.main()
