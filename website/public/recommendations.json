@@ -171,7 +171,7 @@
         "status": "verified",
         "source": "wikidata+imdb",
         "entityId": "imdb:tt4686844",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "84280bf5b71b60733d918dead170d8e8ff39204096a54d7e32eef65d67e935ae",
         "verifiedAt": "2026-07-18T23:33:14.280457Z",
         "resolvedTitle": "The Death of Stalin",
@@ -1357,6 +1357,10 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "257fb9ee3e6e1ae2509ed172527618e628d71b21cab8cd7c23201cb0890343d2",
         "editorialDescriptionProvider": "extractive"
+      },
+      "selectionRecovery": {
+        "slot": "q2",
+        "mode": "recency_relaxed"
       }
     }
   ],
