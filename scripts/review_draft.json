@@ -17,7 +17,7 @@
     "title": "Democracy in America",
     "authorOrMeta": "Alexis de Tocqueville",
     "description": "Observação fundamental sobre democracia, igualdade, costumes cívicos e instituições nos Estados Unidos.",
-    "imageUrl": "/covers/book_democracy_in_america_b99e93b9_a4091cd10295.jpg",
+    "imageUrl": "/covers/book_democracy_in_america_b99e93b9_a4091cd10295_review_e858942aaefc.jpg",
     "link": "https://openlibrary.org/works/OL32342092W/Democracy_in_America",
     "priority": 3,
     "expiryDate": null,
@@ -31,11 +31,16 @@
       "source": "openlibrary",
       "entityId": "openlibrary:/works/OL32342092W",
       "score": 1.0,
-      "coverHash": "f1d50569f8a560639675b95da70ec4e50f0470975ab8f84a22df4f739bc7ca7a",
-      "verifiedAt": "2026-08-17T13:13:15.857759Z",
+      "coverHash": "e858942aaefc64a68714d9658f8959c4bf7291cee088a8585a71277b3ca9dead",
+      "verifiedAt": "2026-08-29T19:38:05.214360Z",
       "resolvedTitle": "Democracy in America",
       "resolvedAuthor": "Alexis de Tocqueville",
-      "sourceDescription": "Observação fundamental sobre democracia, igualdade, costumes cívicos e instituições nos Estados Unidos."
+      "sourceDescription": "Observação fundamental sobre democracia, igualdade, costumes cívicos e instituições nos Estados Unidos.",
+      "coverOverride": {
+        "status": "approved",
+        "source": "discord-review",
+        "approvedAt": "2026-08-29T19:38:05.214360Z"
+      }
     },
     "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=Democracy+in+America&author=Alexis+de+Tocqueville&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Max retries exceeded with url: /search.json?title=Democracy+in+America&author=Alexis+de+Tocqueville&limit=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='openlibrary.org', port=443) at 0x7f2e1a7045e0>, 'Connection to openlibrary.org timed out. (connect timeout=5)'))"
   },
