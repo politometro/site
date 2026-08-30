@@ -813,6 +813,58 @@ class RecoveryWindowTests(unittest.TestCase):
                 self.assertFalse(needed)
                 self.assertTrue(reason.startswith("Outside"))
 
+    def test_publication_recovery_dispatches_when_approved_draft_is_within_window(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            tmp_path = Path(tmp)
+            draft_path = tmp_path / "review_draft.json"
+            publication_path = tmp_path / "instagram_publication.json"
+            sunday = datetime.datetime(
+                2026, 7, 19, 10, 15, tzinfo=datetime.timezone.utc
+            )
+            draft = {
+                "schema_version": 2,
+                "draft_id": "draft_prod",
+                "content_hash": "hash_prod",
+                "created_at": "2026-07-18T20:00:00+00:00",
+                "is_test": False,
+                "approval": {
+                    "approved": True,
+                    "draft_id": "draft_prod",
+                    "content_hash": "hash_prod",
+                    "approved_at": "2026-07-18T21:00:00+00:00",
+                },
+            }
+            draft_path.write_text(json.dumps(draft), encoding="utf-8")
+            with (
+                mock.patch.object(
+                    recover_weekly_generation, "DRAFT_PATH", str(draft_path)
+                ),
+                mock.patch.object(
+                    recover_weekly_generation,
+                    "PUBLICATION_PATH",
+                    str(publication_path),
+                ),
+            ):
+                needed, _ = recover_weekly_generation._publication_needed(sunday)
+                self.assertTrue(needed)
+
+                # When already published, recovery is not needed
+                publication_path.write_text(
+                    json.dumps(
+                        {
+                            "draft_id": "draft_prod",
+                            "content_hash": "hash_prod",
+                            "post_id": "12345",
+                        }
+                    ),
+                    encoding="utf-8",
+                )
+                needed, reason = recover_weekly_generation._publication_needed(
+                    sunday
+                )
+                self.assertFalse(needed)
+                self.assertIn("já foi publicado", reason)
+
 
 class PostQualityGateTests(unittest.TestCase):
     def test_long_podcast_guest_list_gets_concise_editorial_title(self):
