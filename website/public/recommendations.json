@@ -1182,7 +1182,7 @@
       "category": "Podcast",
       "title": "O Estado deve financiar cursos com pouca saída? — Ouvintes",
       "authorOrMeta": "Fora do Baralho",
-      "description": "Análise sobre episódio “O Estado deve financiar cursos com pouca saída? — Ouvintes” do podcast Fora do Baralho, publicado em 30/08/2026.",
+      "description": "Análise sobre os temas e questões de o estado deve financiar cursos com pouca saída? — ouvintes.",
       "imageUrl": "/covers/podcast_o_estado_deve_financiar_cursos_com_pouca_sa_da____ou_290e6562_7c6eb9f98a3b.jpg",
       "link": "https://omny.fm/shows/fora-do-baralho/o-estado-deve-financiar-cursos-com-pouca-sa-da-ouvintes",
       "externalId": "093102cc-6217-43bb-8a97-b4b401420a27",
@@ -1212,10 +1212,10 @@
         "resolvedTitle": "O Estado deve financiar cursos com pouca saída? — Ouvintes",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-08-30T05:00:00Z",
-        "sourceDescription": "Episódio “O Estado deve financiar cursos com pouca saída? — Ouvintes” do podcast Fora do Baralho, publicado em 30/08/2026.",
-        "editorialDescription": "Análise sobre episódio “O Estado deve financiar cursos com pouca saída? — Ouvintes” do podcast Fora do Baralho, publicado em 30/08/2026.",
+        "sourceDescription": "Análise sobre episódio “O Estado deve financiar cursos com pouca saída? — Ouvintes” do podcast Fora do Baralho, publicado em 30/08/2026.",
+        "editorialDescription": "Análise sobre os temas e questões de o estado deve financiar cursos com pouca saída? — ouvintes.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "1ea559c9e240fe783fa68a11dadd2cd839f6a625224890f439e2e56728e936c0",
+        "editorialSourceHash": "c7eeba427b967e49fe011c3b37520fcf79c421023047d1c18a9c6f6a0ad45969",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1259,7 +1259,7 @@
         "sourceDescription": "Este regresso a 2021 recorda a noite eleitoral em que Carlos Moedas se tornou presidente da Câmara Municipal de Lisboa. António Costa, ainda primeiro-ministro, no discurso de derrota deixou várias mensagens para Medina nas entrelinhas: “A primeira vez que concorri a uma Câmara perdi, na segunda ganhei por poucochinho, à terceira vez tive maioria absoluta, à…",
         "editorialDescription": "Análise sobre este regresso a 2021 recorda a noite eleitoral em que Carlos Moedas se tornou presidente da Câmara Municipal de Lisboa.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "64380a8e874c3ae64e1ad68ddd5747dfaeea9a03aed833f6c31ff8d22b507938",
+        "editorialSourceHash": "739426d405fba6193f302215ed5148f4e0ab0e7806ea4a7218fc9cf46cd5c97b",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1289,6 +1289,57 @@
         "resolvedTitle": "Milk",
         "resolvedAuthor": "Gus Van Sant",
         "sourceDescription": "Biografia política de Harvey Milk e da mobilização pelos direitos LGBT nos Estados Unidos."
+      }
+    },
+    {
+      "id": "rss_highlight_1ad5e80137e6b4fc",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Luís Neves. Chega dá duas semanas para acabar com \"lamaçal\"",
+      "authorOrMeta": "observador.pt",
+      "description": "O deputado Rui Afonso revela que o Chega avançará com uma moção de censura até 15 de setembro, caso Luís Neves continue no Governo. António Mendonça Mendes (PS) pede mais explicações.",
+      "imageUrl": "/covers/highlight_lu_s_neves__chega_d__duas_semanas_para_acabar_com__34c86fc9_85ce70c3b2c6.jpg",
+      "link": "https://observador.pt/programas/explicador/luis-neves-chega-da-duas-semanas-para-acabar-com-lamacal/",
+      "externalId": "article:url:1ad5e80137e6b4fc6b29dc3f",
+      "priority": 4,
+      "sourcePublishedAt": "2026-08-31T09:00:16Z",
+      "expiryDate": "2026-09-30T09:00:16Z",
+      "createdAt": "2026-08-31T11:00:12.684169Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/luis-neves-chega-da-duas-semanas-para-acabar-com-lamacal/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "Governo",
+          "Política",
+          "PSD",
+          "Administração Interna",
+          "País",
+          "Sociedade",
+          "Ministério Administração Interna",
+          "Censura",
+          "Novo Governo",
+          "Partido Chega",
+          "PS"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:1ad5e80137e6b4fc6b29dc3f",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-08-31T11:00:12.866928Z",
+        "resolvedTitle": "Luís Neves. Chega dá duas semanas para acabar com \"lamaçal\"",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-08-31T09:00:16Z",
+        "sourceDescription": "O deputado Rui Afonso revela que o Chega avançará com uma moção de censura até 15 de setembro, caso Luís Neves continue no Governo. António Mendonça Mendes (PS) pede mais explicações."
       }
     }
   ],
@@ -2426,7 +2477,7 @@
       "movie": 4,
       "nostalgia": 3,
       "investigation": 1,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
