@@ -1182,7 +1182,7 @@
       "category": "Podcast",
       "title": "O Estado deve financiar cursos com pouca saída? — Ouvintes",
       "authorOrMeta": "Fora do Baralho",
-      "description": "Análise sobre os temas e questões de o estado deve financiar cursos com pouca saída? — ouvintes.",
+      "description": "Análise sobre análise sobre os temas e questões de o estado deve financiar cursos com pouca saída?",
       "imageUrl": "/covers/podcast_o_estado_deve_financiar_cursos_com_pouca_sa_da____ou_290e6562_7c6eb9f98a3b.jpg",
       "link": "https://omny.fm/shows/fora-do-baralho/o-estado-deve-financiar-cursos-com-pouca-sa-da-ouvintes",
       "externalId": "093102cc-6217-43bb-8a97-b4b401420a27",
@@ -1212,10 +1212,10 @@
         "resolvedTitle": "O Estado deve financiar cursos com pouca saída? — Ouvintes",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-08-30T05:00:00Z",
-        "sourceDescription": "Análise sobre episódio “O Estado deve financiar cursos com pouca saída? — Ouvintes” do podcast Fora do Baralho, publicado em 30/08/2026.",
-        "editorialDescription": "Análise sobre os temas e questões de o estado deve financiar cursos com pouca saída? — ouvintes.",
+        "sourceDescription": "Análise sobre os temas e questões de o estado deve financiar cursos com pouca saída? — ouvintes.",
+        "editorialDescription": "Análise sobre análise sobre os temas e questões de o estado deve financiar cursos com pouca saída?",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "c7eeba427b967e49fe011c3b37520fcf79c421023047d1c18a9c6f6a0ad45969",
+        "editorialSourceHash": "4c38eff6cf364ef73ff24ebe87a6e308b282e05955e810e73874056042d97399",
         "editorialDescriptionProvider": "extractive"
       }
     },
