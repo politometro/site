@@ -776,7 +776,7 @@ class PostQualityGateTests(unittest.TestCase):
 
         self.assertEqual(
             description,
-            "Investigação sobre Henrique Vassal acusado de burla na construção.",
+            "Análise aprofundada sobre Henrique Vassal acusado de burla na construção.",
         )
 
     def test_best_description_prefers_curated_watchlist_copy(self):

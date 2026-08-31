@@ -6,18 +6,73 @@ import {
   type UserChatMessage,
 } from "@/lib/chatSecurity";
 
-// Shared memory in the Node process to track daily limit exhaustions
-// (Keys are model names, value is the timestamp when it can be retried)
+// Memória partilhada no processo Node para registar esgotamentos de limite diário
+// (as chaves são nomes de modelos; o valor é o instante a partir do qual pode voltar a tentar)
 const modelDailyExhaustionTimes: { [model: string]: number } = {};
 
-// Shared memory to track request counts for rate limiting (100 requests per user per day)
+// Memória partilhada para registar contagens de pedidos e limitar a taxa
+// (máximo de 100 pedidos por utilizador por dia)
 const requestCounts: { [key: string]: { count: number; day: string } } = {};
+
+// Mensagem padrão quando a geração (API Groq) falha: a base de dados pode estar
+// acessível, mas o modelo não responde. Informamos o utilizador e listamos as
+// restantes funcionalidades do site que continuam disponíveis.
+const AI_DOWN_MESSAGE =
+  "Neste momento a inteligência artificial está em baixo, mas ainda pode consultar todas as outras funcionalidades do site: a Documentação (pesquisa de documentos e programas), as Notícias, as Promessas e Votos, as Recomendações e as Sugestões. Esperemos voltar rapidamente.";
 
 interface RetrievedSource {
   party: string;
   year: string;
   category: string;
   page: unknown;
+}
+
+  // O texto integral dos chunks vive no Turso (o plano gratuito do Pinecone limita o
+  // armazenamento a 2 GB; os vetores ficam no Pinecone). O chat resolve o texto por id.
+async function fetchChunksByIds(ids: string[]): Promise<Map<string, any>> {
+  const map = new Map<string, any>();
+  const url = process.env.TURSO_URL;
+  const token = process.env.TURSO_TOKEN;
+  if (!url || !token || ids.length === 0) return map;
+  try {
+    const res = await fetch(`${url.replace(/\/$/, "")}/v1/sql`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        statements: [
+          {
+            q:
+              "SELECT id, text, source_url, filename, page, party, year, category, source_type " +
+              "FROM chunks WHERE id IN (" +
+              ids.map(() => "?").join(",") +
+              ")",
+            args: ids.map((id) => ({ type: "text", value: id })),
+          },
+        ],
+      }),
+    });
+    if (!res.ok) {
+      console.error("[chat] Falhou a consulta ao Turso:", res.status);
+      return map;
+    }
+    const data = await res.json();
+    const result = data?.results?.[0];
+    if (!result || !Array.isArray(result.rows)) return map;
+    const columns: string[] = result.columns || [];
+    for (const row of result.rows) {
+      const obj: any = {};
+      columns.forEach((col: string, i: number) => {
+        obj[col] = row[i];
+      });
+      if (obj.id) map.set(obj.id, obj);
+    }
+  } catch (err) {
+    console.error("[chat] Erro na consulta ao Turso:", err);
+  }
+  return map;
 }
 
 function retrievalPlanFor(query: string) {
@@ -179,18 +234,24 @@ export async function POST(req: NextRequest) {
     const pineconeApiKey = process.env.PINECONE_API_KEY;
     const pineconeIndexName = process.env.PINECONE_INDEX_NAME || "politometro";
 
-    if (!groqApiKey || !pineconeApiKey || !pineconeIndexName || groqApiKey.includes("your_actual")) {
-      return NextResponse.json(
-        { error: "O chat está temporariamente indisponível." },
-        { status: 500 }
-      );
+    const baseDeDadosEmBaixo = !pineconeApiKey || !pineconeIndexName;
+    const inteligenciaArtificialEmBaixo =
+      !groqApiKey || groqApiKey.includes("your_actual");
+    if (baseDeDadosEmBaixo || inteligenciaArtificialEmBaixo) {
+      const mensagem =
+        baseDeDadosEmBaixo && inteligenciaArtificialEmBaixo
+          ? "Neste momento a base de dados e a inteligência artificial estão em baixo. Esperemos voltar rapidamente."
+          : baseDeDadosEmBaixo
+            ? "Neste momento a base de dados está em baixo. Tenta novamente mais tarde."
+            : AI_DOWN_MESSAGE;
+      return NextResponse.json({ error: mensagem }, { status: 500 });
     }
 
-    // Rate limiting: 100 requests per user per day
+    // Limitação de taxa: 100 pedidos por utilizador por dia
     const clientId = req.headers.get("x-client-id") || "anonymous";
     const isTwitchClient = clientId.toLowerCase().startsWith("twitch-bot:");
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() || req.headers.get("x-real-ip") || "unknown";
-    const todayStr = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+    const todayStr = new Date().toISOString().split("T")[0]; // formato AAAA-MM-DD
 
     if (clientId && clientId !== "anonymous") {
       const clientKey = `client:${clientId}`;
@@ -222,7 +283,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Get the last user message
+    // Obtém a última mensagem do utilizador
     const userMessages = messages.filter((message) => message.role === "user");
     const lastUserMessage = userMessages[userMessages.length - 1]?.content || "";
     const retrievalPlan = retrievalPlanFor(lastUserMessage);
@@ -233,7 +294,7 @@ export async function POST(req: NextRequest) {
 
     if (lastUserMessage) {
       try {
-        // Step 1: Get index details (specifically the host url)
+        // Passo 1: obter os detalhes do índice (em particular o url do host)
         const indexRes = await fetch(
           `https://api.pinecone.io/indexes/${encodeURIComponent(pineconeIndexName)}`,
           {
@@ -258,9 +319,9 @@ export async function POST(req: NextRequest) {
           throw new Error("PINECONE_INDEX_HOST_MISSING");
         }
 
-        // Step 2: Generate a query vector with the same model used to build
-        // the index. Prefer Hugging Face so Pinecone's inference quota does
-        // not affect document search.
+        // Passo 2: gerar um vetor de query com o mesmo modelo usado para construir
+        // o índice. Prefere-se o Hugging Face para que o quota de inferência do
+        // Pinecone não afete a pesquisa documental.
         let queryVector = null;
         let pineconeEmbedStatus = "not_attempted";
         let huggingFaceEmbedStatus = "not_configured";
@@ -282,33 +343,33 @@ export async function POST(req: NextRequest) {
             if (hfRes.ok) {
               const hfData = await hfRes.json();
               if (Array.isArray(hfData)) {
-                // Feature extraction might return a 2D array or 1D array
+                // A extração de características pode devolver um array 2D ou 1D
                 queryVector = Array.isArray(hfData[0]) ? hfData[0] : hfData;
                 huggingFaceEmbedStatus = queryVector
                   ? "ok"
                   : "invalid_response";
-                console.log(
-                  "Successfully generated query embedding using Hugging Face."
-                );
+              console.log(
+                "Embedding da query gerado com sucesso através do Hugging Face."
+              );
               } else {
                 huggingFaceEmbedStatus = "invalid_response";
-                console.error("Hugging Face API returned an invalid response.");
+                console.error("A API do Hugging Face devolveu uma resposta inválida.");
               }
             } else {
               huggingFaceEmbedStatus = `http_${hfRes.status}`;
               console.error(
-                "Hugging Face embedding fallback failed:",
+                "Falhou a alternativa de embeddings do Hugging Face:",
                 hfRes.status
               );
             }
           } catch {
             huggingFaceEmbedStatus = "request_failed";
-            console.error("Hugging Face embedding request failed.");
+            console.error("Falhou o pedido de embeddings ao Hugging Face.");
           }
         }
 
-        // Pinecone inference remains a fallback for environments without a
-        // working Hugging Face token.
+        // A inferência do Pinecone mantém-se como alternativa para ambientes sem
+        // um token válido do Hugging Face.
         if (!queryVector) {
           try {
             const embedRes = await fetch("https://api.pinecone.io/embed", {
@@ -348,7 +409,7 @@ export async function POST(req: NextRequest) {
         }
 
         if (queryVector) {
-          // Determine if query is regional
+          // Determina se a query é regional
           let filter:
             | Record<string, Record<string, string | string[]>>
             | undefined;
@@ -379,7 +440,7 @@ export async function POST(req: NextRequest) {
             filter = { party: { $eq: "ERGUE-TE/PNR" } };
           }
 
-          // Step 3: Query Pinecone index using the vector
+          // Passo 3: consultar o índice Pinecone com o vetor
           const queryRes = await fetch(`https://${indexHost}/query`, {
             method: "POST",
             headers: {
@@ -416,8 +477,8 @@ export async function POST(req: NextRequest) {
                 body: JSON.stringify({
                   namespace: "political-intelligence",
                   vector: queryVector,
-                  // Leave room for the original electoral-programme evidence:
-                  // fulfilment questions need both the promise and later facts.
+                  // Deixa espaço para as provas originais de programas eleitorais:
+                  // perguntas de cumprimento precisam tanto da promessa como dos factos posteriores.
                   topK: Math.min(6, Math.ceil(retrievalPlan.maxSources / 2)),
                   includeMetadata: true,
                 }),
@@ -432,6 +493,14 @@ export async function POST(req: NextRequest) {
               console.warn("A pesquisa de atualidade política falhou.");
             }
           }
+
+          // Resolve o texto integral de cada match no Turso (por id). O Pinecone
+          // guarda apenas o vetor + source_type para caber no limite de 2 GB gratuito.
+          const matchIds = (matches as any[])
+            .map((m) => m?.id)
+            .filter((id): id is string => Boolean(id));
+          const rowById = await fetchChunksByIds(matchIds);
+
           const maxSources = retrievalPlan.maxSources;
           const maxContextCharacters =
             retrievalPlan.maxContextCharacters;
@@ -439,7 +508,9 @@ export async function POST(req: NextRequest) {
           const sourcesPerYear = new Map<string, number>();
 
           for (const match of matches) {
-            const meta = match.metadata || {};
+            // Texto e metadados vêm do Turso (recurso para os metadados do Pinecone
+            // caso o texto ainda não esteja lá).
+            const meta = rowById.get(match.id) || match.metadata || {};
             const sourceType = String(meta.source_type || "");
             const isCurrentPoliticalSource = Boolean(sourceType);
             const sourceText = normalizePublicText(
@@ -556,12 +627,11 @@ export async function POST(req: NextRequest) {
           }
         }
       } catch {
-        console.error("[chat] Pesquisa documental indisponível.");
+        console.error("[chat] Falhou a consulta à base de dados.");
         return NextResponse.json(
           {
             error:
-              "A pesquisa documental está temporariamente indisponível. " +
-              "Tenta novamente dentro de instantes.",
+              "Neste momento a base de dados está em baixo. Tenta novamente mais tarde.",
           },
           {
             status: 503,
@@ -573,7 +643,7 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Persona & Instructions
+    // Persona e Instruções
     const systemPrompt = `És um assistente especializado em programas eleitorais portugueses, promessas políticas e atividade parlamentar. Fundamenta-te apenas nos documentos e factos recuperados no contexto abaixo.
 
 Tens acesso a uma vasta base documental indexada na tua base de dados (através do sistema de recuperação RAG), que inclui:
@@ -623,7 +693,7 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
 - dá apenas as medidas, conclusão ou comparação mais importantes;
 - não incluas saudações, introduções, fontes ou frases de encerramento.` : ""}`;
 
-    // Call Groq API with fallback chain
+    // Chama a API Groq com cadeia de alternativas
     const requestedModel = process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
     const fallbackChain = Array.from(new Set([
       requestedModel,
@@ -649,7 +719,7 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
       retrievalPlan.mode === "comparative";
 
     for (const model of modelsToTry) {
-      console.log(`[API CHAT] Trying model: ${model}`);
+      console.log(`[API CHAT] A tentar modelo: ${model}`);
       try {
         const groqRes = await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
@@ -677,8 +747,8 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
                     reasoning_format: "hidden",
                   }
                 : {}),
-            // Buffer server-side so confidential-value redaction happens
-            // before any bytes can be returned to the browser.
+            // Processa no servidor para que a redação de valores confidenciais ocorra
+            // antes de quaisquer bytes serem devolvidos ao navegador.
             stream: false,
           }),
         });
@@ -701,27 +771,27 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
               ))
           ) {
             console.warn(
-              `[API CHAT] Model ${model} returned an unusable completion.`,
+              `[API CHAT] O modelo ${model} devolveu uma resposta inutilizável.`,
             );
             lastStatus = 502;
             continue;
           }
           validatedCompletion = completion;
           chosenModel = model;
-          console.log(
-            `[API CHAT] Successfully generated response using model: ` +
-            chosenModel
-          );
-          break; // Success! Break the loop
+            console.log(
+              `[API CHAT] Resposta gerada com sucesso através do modelo: ` +
+              chosenModel
+            );
+          break; // Sucesso! Sai do ciclo
         }
 
-        // Inspect quota signals in memory, but never log or return provider
-        // response bodies because they can echo request details.
+        // Analisa sinais de quota na memória, mas nunca regista nem devolve corpos
+        // de resposta do fornecedor porque podem ecoar detalhes do pedido.
         const errText = await groqRes.text().catch(() => "");
         lastStatus = groqRes.status;
-        console.error(`[API CHAT] Model ${model} failed with HTTP ${groqRes.status}.`);
+        console.error(`[API CHAT] O modelo ${model} falhou com HTTP ${groqRes.status}.`);
 
-        // Check if this was a daily limit (token or request per day limit)
+        // Verifica se foi um limite diário (tokens ou pedidos por dia)
         const errStr = errText.toLowerCase();
         const isDailyLimit = 
           errStr.includes("tokens_per_day") || 
@@ -729,35 +799,35 @@ ${isTwitchClient ? `Formato obrigatório para esta resposta no chat da Twitch:
           errStr.includes("daily") || 
           errStr.includes("tpd") || 
           errStr.includes("rpd") ||
-          groqRes.status === 403; // Quota exceeded is sometimes 403 or 429 depending on API
+          groqRes.status === 403; // O limite de quota aparece por vezes como 403 ou 429, conforme a API
           
         if (isDailyLimit) {
-          // Blacklist the model for 12 hours
+          // Bloqueia o modelo durante 12 horas
           modelDailyExhaustionTimes[model] = Date.now() + 12 * 60 * 60 * 1000;
-          console.warn(`[API CHAT] Model ${model} blacklisted due to daily limit exhaustion.`);
+          console.warn(`[API CHAT] Modelo ${model} bloqueado devido a esgotamento do limite diário.`);
         }
       } catch {
-        console.error(`[API CHAT] Request failed for model ${model}.`);
+        console.error(`[API CHAT] Pedido falhou para o modelo ${model}.`);
         lastStatus = 502;
       }
     }
 
     if (!validatedCompletion) {
       return NextResponse.json(
-        { error: "Não foi possível gerar a resposta neste momento." },
+        { error: AI_DOWN_MESSAGE },
         { status: lastStatus >= 400 && lastStatus < 600 ? lastStatus : 502 }
       );
     }
 
-    // Set headers for SSE streaming
+    // Define os cabeçalhos para transmissão SSE
     const responseHeaders = new Headers({
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
       Connection: "keep-alive",
     });
 
-    // If there are sources, we can append them in a header or as a special message chunk
-    // We will inject the sources metadata in the stream or in custom headers
+    // Se houver fontes, podemos anexá-las num cabeçalho ou como um bloco de mensagem especial.
+    // Vamos injetar os metadados das fontes no stream ou em cabeçalhos personalizados.
     responseHeaders.set("X-Sources", encodeURIComponent(JSON.stringify(retrievedSources)));
     responseHeaders.set("X-Retrieval-Mode", retrievalPlan.mode);
     responseHeaders.set(

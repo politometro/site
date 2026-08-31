@@ -32,7 +32,7 @@ if not exist "%~dp0scripts\political_intelligence.py" (
 echo [1/4] A extrair programas e orcamentos para os corpora temporarios...
 "%PYTHON_EXE%" -u scripts\extract_text.py
 if errorlevel 1 goto process_failed
-"%PYTHON_EXE%" -u scripts\extract_eu_budget.py --force
+"%PYTHON_EXE%" -u scripts\extract_eu_budget.py
 if errorlevel 1 goto process_failed
 
 echo [2/4] A recolher noticias, promessas, iniciativas e votacoes...
@@ -41,24 +41,8 @@ set "EXIT_CODE=%ERRORLEVEL%"
 
 if not "%EXIT_CODE%"=="0" goto process_finished
 
-if "%PINECONE_API_KEY%"=="" (
-    :: Try to load from .env file if it exists
-    if exist "%~dp0.env" (
-        for /f "tokens=*" %%a in ('findstr /r / "^PINECONE_API_KEY=" "%~dp0.env"') do (
-            set "PINECONE_API_KEY=%%a"
-            set "PINECONE_API_KEY=%PINECONE_API_KEY:PINECONE_API_KEY="
-        )
-    )
-    if "%PINECONE_API_KEY%"=="" (
-        echo.
-        echo [AVISO] PINECONE_API_KEY nao esta definida; a ingestao foi ignorada.
-        echo Configure a chave e execute novamente para enviar apenas os chunks novos ou alterados.
-        echo.
-        goto process_finished
-    )
-)
-
 echo [3/4] A enviar apenas chunks novos ou alterados para o Pinecone...
+echo A chave e lida do ficheiro .env ou da variavel de ambiente PINECONE_API_KEY.
 "%PYTHON_EXE%" -u scripts\upload_pinecone.py --embedding-mode local
 set "EXIT_CODE=%ERRORLEVEL%"
 

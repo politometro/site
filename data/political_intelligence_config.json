@@ -3,10 +3,12 @@
   "pruneStaleSeenEntries": true,
   "crawl": {
     "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-    "delaySeconds": 0.05,
+    "delaySeconds": 0.0,
+    "blockedHostCooldownSeconds": 900,
+    "requestBackoffSeconds": [5, 15, 45],
     "requestTimeoutSeconds": 10,
-    "maxConcurrentRequests": 4,
-    "maxConcurrentSources": 1,
+    "maxConcurrentRequests": 12,
+    "maxConcurrentSources": 4,
     "useConditionalGet": true,
     "verboseRejections": true,
     "maxSitemapDepth": null,
@@ -198,12 +200,6 @@
         "https://www.tsf.pt/feed/news/sitemap.xml",
         "https://www.tsf.pt/feed/sitemap.xml"
       ],
-      "archiveSitemap": {
-        "urlTemplate": "https://www.tsf.pt/sitemaps/{year}-{month}.xml",
-        "firstAvailableMonth": "2000-01",
-        "completedMonthsOnly": true,
-        "refreshRecentMonths": 2
-      },
       "sitemapDateFloor": "2000-01-01",
       "enabled": true
     },
@@ -280,14 +276,9 @@
         "https://feeds.feedburner.com/PublicoRSS"
       ],
       "sitemapSeeds": [
-        "https://www.publico.pt/sitemaps/news.xml"
+        "https://www.publico.pt/sitemaps/news.xml",
+        "https://www.publico.pt/sitemaps/sitemapindex.xml"
       ],
-      "archiveSitemap": {
-        "urlTemplate": "https://www.publico.pt/sitemaps/articles/{year}-{month}.xml",
-        "firstAvailableMonth": "1998-01",
-        "completedMonthsOnly": true,
-        "refreshRecentMonths": 2
-      },
       "sitemapDateFloor": "1998-01-01",
       "enabled": true
     }
@@ -299,6 +290,7 @@
     "activitiesPage": "DAatividades.aspx",
     "currentLegislature": "XVII",
     "syncIntervalHours": 24,
+    "requestTimeoutSeconds": 180,
     "detailUrlTemplate": "https://www.parlamento.pt/ActividadeParlamentar/Paginas/DetalheIniciativa.aspx?ACT_TP=INI&BID={bid}",
     "projectVoteDetailUrlTemplate": "https://www.parlamento.pt/ActividadeParlamentar/Paginas/DetalheProjetoVoto.aspx?BID={bid}",
     "sourceAttribution": "Dados abertos da Assembleia da República"

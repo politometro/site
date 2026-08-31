@@ -145,25 +145,42 @@ TOPIC_TERMS = {
         "uniao europeia", "comissao europeia", "parlamento europeu", "conselho europeu", "conselho da ue", "bruxelas",
         "eurodeputado", "eurodeputados", "eurodeputada", "eurodeputadas",
         "tratado", "diplomacia", "diplomatico", "geopolitica", "relacoes internacionais", "politica externa", "negociacoes",
-        "onu", "nacoes unidas", "embaixada", "embaixador", "imigracao", "imigrante", "imigrantes", "migrantes", "asilo", "fronteiras", "sef", "aima",
-        "sns", "servico nacional de saude", "saude", "hospital", "hospitais", "urgencias", "centros de saude",
-        "educacao", "escola", "escolas", "professores", "docentes", "ensino superior", "universidades",
+        "onu", "nacoes unidas", "conselho de seguranca", "assembleia geral da onu", "secretario-geral da onu",
+        "nato", "otan", "alianca atlantica", "cimeira da nato", "artigo 5", "secretario-geral da nato",
+        "embaixada", "embaixador", "imigracao", "imigrante", "imigrantes", "migrantes", "asilo", "fronteiras", "sef", "aima",
+        "sns", "servico nacional de saude", "saude", "hospital", "hospitais", "urgencia", "urgencias",
+        "urgencias obstetricas", "urgencia pediatrica", "urgencia geral", "centros de saude", "centro de saude",
+        "maternidade", "maternidades", "inem", "ambulancia", "ambulancias", "emergencia medica", "codu",
+        "tempos de espera", "tempo de espera", "lista de espera", "triagem", "triagem de manchester",
+        "pulseira amarela", "pulseira vermelha", "pulseira laranja", "pulseira verde",
+        "fecho de urgencias", "encerramento de urgencias", "fecho de maternidades", "encerramento de maternidades",
+        "gravida", "gravidas", "parto", "partos", "obstetricia", "pediatria",
+        "medico de familia", "medicos de familia", "direcao executiva do sns", "unidades locais de saude", "unidade local de saude", "uls",
+        "ordem dos medicos", "ordem dos enfermeiros", "sindicato dos medicos", "sindicato dos enfermeiros",
+        "greve dos medicos", "greve dos enfermeiros", "greve na saude", "dgs", "direcao-geral da saude", "infarmed", "igass",
+        "autoridade tributaria", "autoridade tributaria e aduaneira", "fisco", "administracao tributaria", "administracao fiscal",
+        "reembolso do irs", "reembolso de irs", "liquidacao de irs", "declaracao de irs", "penhoras das financas", "portal das financas", "e-fatura",
+        "climaximo", "ativismo climatico", "justica climatica", "ativistas do clima", "acao climatica",
+        "educacao", "escola", "escolas", "professores", "docentes", "ensino superior", "universidade", "universidades",
+        "utad", "politecnicos", "politecnico", "reitor", "reitores", "propinas", "bolsas de estudo", "alojamento estudantil", "acao social escolar", "mctes", "dges",
         "seguranca social", "habitacao social", "casas sociais",
         "guerra", "missil", "misseis", "sancoes", "mne", "negocios estrangeiros",
-        "prisioneiros de guerra", "cessar fogo", "cessar fogo",
+        "prisioneiros de guerra", "cessar fogo",
     },
     "economia": {
         "economia", "economico", "economica", "economicos", "economicas",
         "orcamento", "orcamento do estado", "orcamentario", "financas", "financas publicas",
         "fiscal", "fiscalidade", "imposto", "impostos", "irs", "irc", "iva", "imi", "imposto do selo",
+        "autoridade tributaria", "autoridade tributaria e aduaneira", "fisco", "administracao fiscal", "administracao tributaria",
+        "reembolso de irs", "reembolso do irs", "liquidacao de irs", "declaracao de irs", "irs automatico", "penhoras fiscais", "portal das financas", "e-fatura",
         "taxa", "taxas", "tarifas", "deficit", "defice", "superavit", "divida publica", "divida",
-        "inflacao", "precos", "custo de vida", "poder de compra",
+        "inflacao", "precos", "custo de vida", "poder de compra", "cabaz alimentar",
         "combustivel", "combustiveis", "gasolina", "gasoleo", "preco dos combustiveis", "preco eficiente",
         "energia", "eletricidade", "gas", "erse", "tarifa da luz", "tarifa de gas",
         "salario", "salarios", "salario minimo", "salario medio", "emprego", "desemprego",
         "trabalho", "trabalhadores", "pensao", "pensoes", "pensionistas", "reforma", "reformas",
         "subsidio", "subsidios", "subsidio de desemprego", "rendimento social de insercao", "rsi", "apoios sociais", "concertacao social",
-        "habitacao", "habitacao acessivel", "rendas", "renda acessivel", "arrendamento", "senhorios", "inquilinos", "imobiliario", "casas", "alojamento local", "casas sociais",
+        "habitacao", "habitacao acessivel", "rendas", "renda acessivel", "arrendamento", "senhorios", "inquilinos", "imobiliario", "alojamento local", "casas sociais",
         "pib", "crescimento economico", "recessao", "banco", "bancos", "banca", "banco de portugal", "bce", "banco central europeu",
         "juros", "taxa de juro", "taxas de juro", "euribor", "credito", "credito a habitacao", "credito pessoal",
         "mercado", "mercados", "bolsa", "empresas", "exportacoes", "importacoes", "balanca comercial",
@@ -240,7 +257,7 @@ PROGRAMME_NORMATIVE_COMMITMENT_PATTERN = re.compile(
     r"reduzir|aumentar|eliminar|revogar|aprovar))\b"
 )
 PROGRAMME_PROMISE_EXTRACTOR_VERSION = "5"
-NEWS_FILTER_VERSION = "10"
+NEWS_FILTER_VERSION = "15"
 # Review markers let repeat runs skip deterministic re-classification of
 # unchanged articles.  They are derived from the filter version so any filter
 # bump automatically invalidates every stored review.
@@ -302,6 +319,29 @@ MATCH_VS_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Frases de navegação/rodapé que as fontes injetam nos excertos (confundiam
+# entidades e tópicos: "posições políticas, mas somos inflexíveis", "País e do
+# Mundo", "famosos"...). Texto sem relação com a notícia — removido do
+# excerto antes da classificação e antes de ser guardado.
+BOILERPLATE_RE = re.compile(
+    r"(?is)(?:"
+    r"podcasts?,?\s+videocast[^.!?]*"
+    r"|a\s+informa[cç][aã]o\s+do\s+pa[ií]s\s+e\s+do\s+mundo[^.!?]*"
+    r"|not[ií]cias\s+em\s+primeira\s+m[aã]o[^.!?]*"
+    r"|fotos?\s+e\s+v[ií]deos\s+dos\s+seus\s+famosos[^.!?]*"
+    r"|vers[aã]o\s+online\s+da\s+revista[^.!?]*"
+    r"|tem\s+sugest[õo]es\s+ou\s+not[ií]cias\s+para\s+partilhar[^.!?]*"
+    r"|escreve?r?\s+um\s+coment[aá]rio[^.!?]*"
+    r"|nunca\s+censuramos\s+posi[cç][oõ]es\s+pol[ií]ticas[^.!?]*"
+    r"|siga\s+[^.!?]{0,90}?receba\s+um\s+alerta[^.!?]*"
+    r"|receba\s+um\s+alerta\s+assim\s+que[^.!?]*"
+    r")"
+)
+
+
+def limpar_boilerplate(texto: Any) -> str:
+    return re.sub(r"\s{2,}", " ", BOILERPLATE_RE.sub(" ", str(texto or ""))).strip()
+
 # Indicadores de que a notícia diz respeito a Portugal ou à UE enquanto espaço
 # político/económico. Usada para validar tópicos sem entidade nomeada.
 AMBITO_PT_UE_RE = re.compile(
@@ -314,7 +354,9 @@ AMBITO_PT_UE_RE = re.compile(
     r"\beuro\b|euros?[\s]|minist[eé]rio p[uú]blico|tribunal constitucional|"
     r"presid[eê]ncia(?:\s+do\s+conselho)?|primeiro[- ]ministro|"
     r"oposi[cç][aã]o|conselho de ministros|deputados?|"
-    r"segurana[cç]a social|servi[cç]o nacional de sa[uú]de|sns\b|"
+    r"segurana[cç]a social|servi[cç]o nacional de sa[uú]de|sns\b|inem\b|"
+    r"autoridade tribut[aá]ria|fisco|clim[aá]ximo|utad\b|"
+    r"nato\b|otan\b|alian[cç]a atl[aâ]ntica|onu\b|na[cç][oõ]es unidas|"
     r"iref\b|dgt\b|ine\b|banco de portugal"
     r")\b",
     re.IGNORECASE,
@@ -383,16 +425,36 @@ SCIENCE_DISCOVERY_RE = re.compile(
     re.IGNORECASE,
 )
 
-# Saúde/médico puro (sem âncora política - políticas de saúde ficam)
+# Saúde/médico puramente clínico ou de bem-estar/lifestyle (sem políticas públicas de saúde)
 HEALTH_MEDICAL_RE = re.compile(
     r"\b(?:"
     r"suic[ií]dio|prevenção\s+do\s+suic[ií]dio|voz\s+amiga|linha\s+de\s+apoio|"
     r"depressão|ansiedade|transtorno|psiquiatria|psicologia|terapia|"
-    r"doença|sintoma|tratamento|cura|vacina|epidemia|pandemia|vírus|bactéria|"
-    r"câncer|tumor|quimioterapia|radioterapia|transplante|doação\s+de\s+órgãos|"
-    r"diabetes|hipertensão|colesterol|obesidade|nutrição|dieta|exercício|"
-    r"hospital|urgência|consulta|médico|enfermeiro|farmacêutico|"
+    r"sintomas?\s+(?:de\s+)?|tratamento\s+caseiro|cura\s+caseira|remédio\s+caseiro|"
+    r"câncer|tumor|quimioterapia|radioterapia|transplante\s+de\s+órgãos|"
+    r"diabetes|hipertensão|colesterol|obesidade|nutrição|dieta|perder\s+peso|"
+    r"alimentos\s+ricos|receita\s+saudável|exercício\s+físico|"
     r"bem-estar|wellness|mindfulness|meditação|ioga|pilates"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Anúncios de prémios Nobel (sem tomada de posição política ou relevância nacional)
+NOBEL_PRIZE_RE = re.compile(
+    r"\b(?:"
+    r"pr[eé]mio\s+nobel|nobel\s+da\s+(?:paz|literatura|economia|f[ií]sica|qu[ií]mica|medicina)|"
+    r"ig\s+nobel|laureado\s+(?:com\s+o\s+)?nobel"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Festivais de música e concertos em cidades/municípios (sem dimensão política)
+MUSIC_FESTIVAL_CONCERT_RE = re.compile(
+    r"\b(?:"
+    r"festival\s+de\s+m[uú]sica|festival\s+musical|festival\s+de\s+ver[aã]o|concertos?\s+de|"
+    r"cartaz\s+do\s+festival|alinhamento\s+do\s+festival|bilhetes\s+(?:para\s+o\s+festival|do\s+festival)|"
+    r"palco\s+principal|m[uú]sica\s+ao\s+vivo|atua[cç][aã]o\s+de|concerto\s+de\s+(?:rock|jazz|pop|fado|m[uú]sica)|"
+    r"noite\s+de\s+fado|festas?\s+da\s+cidade|festa\s+em\s+honra"
     r")\b",
     re.IGNORECASE,
 )
@@ -415,7 +477,7 @@ ENTERTAINMENT_CULTURE_RE = re.compile(
     r"\b(?:"
     r"festival|concerto|espetáculo|peça\s+de\s+teatro|filme|cinema|série|streaming|"
     r"netflix|hbo|disney\+|prime\s+video|apple\s+tv|"
-    r"livro|romance|autor|escritor|prémio\s+literário|nobel\s+de\s+literatura|"
+    r"livro|romance|autor|escritor|prémio\s+literário|pr[eé]mio\s+nobel|nobel\s+de\s+literatura|nobel\s+da\s+paz|nobel\s+da\s+economia|"
     r"exposição|museu|galeria|arte|pintura|escultura|arquitetura|design|"
     r"moda|desfile|semana\s+de\s+moda|beauty|maquiagem|cosmético|perfume|"
     r"gastronomia|restaurante|chef|receita|vinho|cerveja|café|chocolate|"
@@ -459,7 +521,7 @@ AUTO_MOTOR_RE = re.compile(
 _FOOTBALL_LEXICON = (
     r"gol[oa]s?\b|gol[oa]\s+(?:de|na|ao)|marc(?:ou|a|aram)\s+(?:o\s+)?(?:golo|golos)|"
     r"derby|d[eé]rbi\b|jogo\s+(?:amig[aá]vel|da\s+(?:jornada|ta[çc]a|liga))|"
-    r"refor[çc]o\b|contrata[cç][aã]o\b|contratad[oa]\s+pelo|transfer[eê]ncia\b|"
+    r"refor[çc]o\s+do\s+plantel|contrata[cç][aã]o\s+de\s+jogador|contratad[oa]\s+pelo\s+clube|"
     r"treinador\b|plantel\b|"
     r"liga\s+(?:dos\s+campe[oõ]es|portugal|espanhola)|ta[çc]a\s+de\s+portugal|"
     r"campe[aã]o\s+nacional\b|t[ií]tulo\s+(?:nacional|continental|europeu)|"
@@ -502,10 +564,60 @@ CIVIC_CONTEXT_RE = re.compile(
 # segurança em jogos continua dentro do âmbito político.
 POLICY_CONTEXT_RE = re.compile(
     r"\b(?:"
-    r"governo|governante|ministr[oa]s?\b|primeir[oa]-ministr[oa]|"
+    r"governos?|governante|ministr[oa]s?\b|primeir[oa]-ministr[oa]|"
     r"parlamento|assembleia\s+da\s+rep[uú]blica|decreto|legislatura|"
     r"lei\s+(?:n[ºo.]|\b)|leis\b|or[çc]amento\s+(?:do\s+estado|de)"
     r")\b",
+    re.IGNORECASE,
+)
+
+# Marcadores estritamente portugueses (sem UE genérica) — usados na validação
+# de peças da secção Mundo: "União Europeia" numa citação de político
+# estrangeiro não torna a peça âmbito PT/UE.
+PORTUGAL_MARKER_RE = re.compile(
+    r"\b(?:"
+    r"portugal|portugu[eê]s(?:a)?s?|luso\b|lusos?|lusas?|"
+    r"a[cç]ores|madeira|lisboa|\bporto\b|coimbra|braga|faro|funchal|"
+    r"s[aã]o\s+bento|bel[eé]m|"
+    r"rep[uú]blica\s+portuguesa|presidente\s+da\s+rep[uú]blica|"
+    r"assembleia\s+da\s+rep[uú]blica|governo\s+portugu[eê]s|parlamento\s+portugu[eê]s"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Avisos municipais de saúde pública/ambiente (banhos interditados, qualidade
+# da água, bandeira azul): não são política — só ficam com político nomeado.
+LOCAL_NOTICE_RE = re.compile(
+    r"\b(?:"
+    r"banhos?\s+[^.]{0,40}?(?:desaconselhad|interditad|proibid|suspen)|"
+    r"contamina[cç][aã]o\s+microbiol[oó]gic|qualidade\s+da\s+[aá]gua|"
+    r"bandeira\s+azul|praia?s?\s+encerrad"
+    r")",
+    re.IGNORECASE,
+)
+
+# Grandes empresas portuguesas — notícias sobre elas são âmbito do projeto
+# (economia PT), mesmo quando o sucedido ocorre no estrangeiro ("Jerónimo
+# Martins fecha 200 lojas na Colômbia", "Mota-Engil ganha obra no Canadá").
+# Validado ao nível do título+resumo: a peça tem de ser SOBRE a empresa.
+# Aceita espaços e hífens (slugs de URL: "mota-engil", "pingo-doce", …).
+PT_MAJOR_COMPANIES_RE = re.compile(
+    r"\b(?:"
+    r"mota[\s-]+engil|jer[oó]nimo[\s-]+martins|pingo[\s-]+doce|recheio|"
+    r"\bedp\b|\bren\b|galp|sonae|corticeira[\s-]+amorim|semapa|"
+    r"navigator[\s-]+company|\bctt\b|tap[\s-]+air[\s-]+portugal|\btap\b|"
+    r"vista[\s-]+alegre|novo[\s-]+banco|banco[\s-]+comercial[\s-]+portugu[eê]s|"
+    r"millennium[\s-]+bcp|\bbcp\b|caixa[\s-]+geral[\s-]+de[\s-]+dep[oó]sitos|"
+    r"\bcgd\b|\bbpi\b|\bmontepio\b|teixeira[\s-]+duarte|super[\s-]+bock|"
+    r"delta[\s-]+caf[eé]s|grupo[\s-]+nabeiro|lactogal|jeronimo[\s-]+martins"
+    r")\b",
+    re.IGNORECASE,
+)
+
+# Assunto central = ONU (organismo internacional): peças assim só ficam se
+# houver ator político português nomeado (partido/político) no artigo.
+ONU_SUBJECT_RE = re.compile(
+    r"\b(?:onu|na[cç][oõ]es\s+unidas|organiza[cç][aã]o\s+das\s+na[cç][oõ]es\s+unidas)\b",
     re.IGNORECASE,
 )
 
@@ -539,7 +651,7 @@ _FOREIGN_TERMS_ALT = (
     r"angola|angolano(?:a)?|angolanos|angolanas|mo[cç]ambique|mo[cç]ambicano(?:a)?|cabo\s+verde|cabo-verdiano(?:a)?|guin[eé]-bissau|guineense|timor-leste|timorense|"
     r"china|chin[eê]s(?:a)?|chineses|chinesas|jap[aã]o|japon[eê]s(?:a)?|[ií]ndia|indiano(?:a)?|"
     r"israel|israelita|israelitas|israelense|palestina|palestiniano(?:a)?|palestinianos|palestinianas|faixa\s+de\s+gaza|gaza|"
-    r"ir[aã]o|iraniano(?:a)?|iraque|iraquiano(?:a)?|s[ií]ria|s[ií]rio(?:a)?|l[ií]bano|liban[eê]s(?:a)?|ar[aá]bia\s+saudita|saudita|sauditas|egito|eg[ií]pcio(?:a)?|marrocos|marroquino(?:a)?|arg[eé]lia|argelino(?:a)?|tun[ií]sia|tunisino(?:a)?|[aá]frica\s+do\s+sul|sul-africano(?:a)?|"
+    r"ir[aã]o|ir[aâ]niano(?:a)?|iranianos|iraque|iraquiano(?:a)?|s[ií]ria|s[ií]rio(?:a)?|l[ií]bano|liban[eê]s(?:a)?|ar[aá]bia\s+saudita|saudita|sauditas|egito|eg[ií]pcio(?:a)?|marrocos|marroquino(?:a)?|arg[eé]lia|argelino(?:a)?|tun[ií]sia|tunisino(?:a)?|[aá]frica\s+do\s+sul|sul-africano(?:a)?|"
     r"coreia\s+do\s+norte|coreia\s+do\s+sul|norte-coreano(?:a)?|sul-coreano(?:a)?|"
     r"i[eé]men|iemenita|iemenitas|afeganist[aã]o|afeg[aã]o(?:s)?|paquist[aã]o|paquistan[êe]s|bangladesh|nepal|sri\s+lanka|"
     r"mianmar|birmania|tail[aâ]ndia|tailand[êe]s|vietname|vietnamita|camboja|cambojano|indon[eé]sia|indon[eé]sio|mal[aá]sia|mal[aá]sio|filipinas|filipino|"
@@ -565,7 +677,8 @@ FOREIGN_JURISDICTION_RE = re.compile(rf"\b(?:{_FOREIGN_TERMS_ALT})\b", re.IGNORE
 # "Governo espanhol", "ministério francês", etc. não são âncora portuguesa:
 # remover antes da extração de entidades para o GOVERNO genérico não casar.
 GOVERNO_ESTRANGEIRO_RE = re.compile(
-    rf"\b(?:governo|ministra[cç][aã]o?|presid[eê]ncia|parlamento|assembleia|tribunal)\s+(?:{_FOREIGN_TERMS_ALT})\b",
+    rf"\b(?:governo|ministra[cç][aã]o?|presid[eê]ncia|parlamento|assembleia|tribunal)"
+    rf"(?:\s+(?:de|do|da|dos|das))?\s+(?:{_FOREIGN_TERMS_ALT})\b",
     re.IGNORECASE,
 )
 
@@ -575,8 +688,13 @@ PORTUGAL_OR_EU_OVERRIDE_RE = re.compile(
     r"a[cç]ores|madeira|lisboa|porto|coimbra|braga|faro|set[uú]bal|aveiro|leiria|santar[eé]m|[eé]vora|beja|portalegre|castelo\s+branco|guarda|viseu|vila\s+real|bragan[cç]a|funchal|ponta\s+delgada|"
     r"cascais|sintra|oeiras|loures|almada|guimar[aã]es|matosinhos|gaia|vila\s+nova\s+de\s+gaia|albufeira|cerveira|vila\s+nova\s+de\s+cerveira|"
     r"s[aã]o\s+bento|bel[eé]m|assembleia\s+da\s+rep[uú]blica|governo\s+portugu[eê]s|rep[uú]blica\s+portuguesa|embaixada\s+de\s+portugal|consulado\s+de\s+portugal|mne|minist[eé]rio\s+dos\s+neg[oó]cios\s+estrangeiros|"
+    r"presidente\s+da\s+rep[uú]blica|parlamento\s+portugu[eê]s|ant[oó]nio\s+(?:jos[eé]\s+)?seguro|presidente\s+seguro|seguro\s+(?:promulga|promulgou|aprova|visita|defende|garante)||seguro\s+proibe|seguro\s+proíbe|"
     r"ue|uni[aã]o\s+europeia|comiss[aã]o\s+europeia|parlamento\s+europeu|conselho\s+europeu|conselho\s+da\s+ue|bruxelas|bce|banco\s+central\s+europeu|eurodeputad[oas]+|zona\s+euro|prr|copernicus|frontex|"
-    r"onu|organiza[cç][aã]o\s+das\s+na[cç][oõ]es\s+unidas|guterres|ant[oó]nio\s+guterres|ant[oó]nio\s+costa|maria\s+lu[ií]s\s+albuquerque"
+    r"bolsas?\s+europeias?|"
+    r"nato|otan|alian[cç]a\s+atl[aâ]ntica|cimeira\s+da\s+nato|secret[aá]rio-geral\s+da\s+nato|"
+    r"onu|na[cç][oõ]es\s+unidas|conselho\s+de\s+seguran[cç]a\s+da\s+onu|assembleia\s+geral\s+da\s+onu|"
+    r"sns|servi[cç]o\s+nacional\s+de\s+sa[uú]de|inem|autoridade\s+tribut[aá]ria|fisco|clim[aá]ximo|utad|"
+    r"guterres|ant[oó]nio\s+guterres|ant[oó]nio\s+costa|maria\s+lu[ií]s\s+albuquerque"
     r")\b",
     re.IGNORECASE,
 )
@@ -585,35 +703,28 @@ PORTUGAL_OR_EU_OVERRIDE_RE = re.compile(
 def is_purely_foreign_news(evidence: str, entities: Sequence[Mapping[str, Any]]) -> bool:
     if not FOREIGN_JURISDICTION_RE.search(evidence):
         return False
-    # Check if there is a Portuguese or EU anchor that makes this foreign news relevant to Portugal / EU
-    # Expanded entity kinds/IDs that count as Portuguese/EU anchor
-    pt_eu_kinds = {
-        "party", "coalition", "youth_wing", "person",
-        "government", "institution", "eu_institution",
-        "president", "parliament", "court", "regulator",
-        "central_bank", "security_forces", "health_service",
-        "local_government", "public_service"
-    }
-    pt_eu_ids = {
-        "UNIAO-EUROPEIA", "ONU", "AUTARQUIAS", "JUSTICA", "PRESIDENCIA",
-        "PARLAMENTO", "REGULADORES", "BANCO-DE-PORTUGAL", "ESTADO", "SNS",
-        "FORCAS-SEGURANCA", "SEGURANCA-SOCIAL", "INEM", "ACT", "CMVM",
-        "ERSE", "ANACOM", "CNPD", "EDP", "REN", "TAP", "CP", "CARRIS",
-        "METRO-LISBOA", "METRO-PORTO", "STCP", "CARRIS-METROPOLITANA"
-    }
-    has_specific_pt_entity = any(
-        item.get("kind") in pt_eu_kinds
-        or item.get("id") in pt_eu_ids
+    # Atores e instituições portuguesas identificadas no próprio texto mantêm
+    # notícias nacionais mesmo quando a notícia também contém termos estrangeiros.
+    if re.search(r"\b(?:tribunal da rela[cç][aã]o|c[aâ]mara de [a-záéíóúãõç ]+|minist[eé]rio p[uú]blico|mp)\b", evidence, re.IGNORECASE):
+        return False
+    # Só um ator político NOMEADO (partido/político PT ou figura UE do ficheiro
+    # de entidades) mantém notícia estrangeira no âmbito. Instituições genéricas
+    # nunca resgatam: casam por palavras comuns em qualquer peça estrangeira
+    # ("governo canadiano"→GOVERNO, "hospital"→SNS, "escola"→EDUCACAO,
+    # "juros/banca"→Banco de Portugal) e era isso que mantinha digests de
+    # mercados/geopolítica no corpus.
+    if any(
+        item.get("kind") in {"party", "coalition", "youth_wing", "person", "movement"}
+        or item.get("id") in {"UNIAO-EUROPEIA", "ONU", "NATO"}
         for item in entities
-    )
-    if has_specific_pt_entity:
+    ):
         return False
-    # Also check for Portuguese/EU scope markers in text (fallback if no entities matched)
-    if PORTUGAL_OR_EU_OVERRIDE_RE.search(evidence):
-        return False
-    if AMBITO_PT_UE_RE.search(evidence):
-        return False
-    return True
+    # Sem ator nomeado, só marcadores fortes de Portugal/UE (portugal, bruxelas,
+    # comissão europeia, guterres…) mantêm a peça. O AMBITO_PT_UE_RE deixou de
+    # resgatar aqui: tokens como "euros", "primeiro-ministro" (Mark Carney),
+    # "Conselho de Ministros" (alemão) ou "âmbito europeu" aparecem em qualquer
+    # digest internacional e mantinham Brent/dívida dos EUA/Alemanha no corpus.
+    return not PORTUGAL_OR_EU_OVERRIDE_RE.search(evidence)
 
 
 def is_blocked_non_political(candidate: Mapping[str, Any] | str) -> bool:
@@ -836,10 +947,15 @@ def json_load(path: Path, fallback: Any) -> Any:
                         handle.fileno(), 0, access=mmap.ACCESS_READ
                     ) as mapped:
                         return orjson.loads(memoryview(mapped))
-                except (ValueError, OSError, TypeError):
+                except (ValueError, OSError, TypeError, Exception):
                     pass
-            raw = path.read_bytes()
-            return orjson.loads(raw) if orjson is not None else json.loads(raw)
+                try:
+                    raw = path.read_bytes()
+                    return orjson.loads(raw)
+                except (ValueError, OSError, TypeError, Exception):
+                    pass
+            with path.open("r", encoding="utf-8", errors="replace") as handle:
+                return json.load(handle)
         except (OSError, ValueError) as exc:
             if attempt < 3:
                 time.sleep(2.0)
@@ -896,7 +1012,9 @@ def write_json_list_shards(
     """Write a large JSON list as small files plus a relative-path manifest."""
 
     shard_dir.mkdir(parents=True, exist_ok=True)
-    for existing in shard_dir.glob(f"{shard_prefix}-*.json"):
+    staging_dir = shard_dir / f".staging-{shard_prefix}-{os.getpid()}"
+    staging_dir.mkdir(parents=True, exist_ok=True)
+    for existing in staging_dir.glob(f"{shard_prefix}-*.json"):
         try:
             existing.unlink()
         except OSError:
@@ -912,9 +1030,11 @@ def write_json_list_shards(
         if not batch:
             return
         filename = f"{shard_prefix}-{shard_number:04d}.json"
-        shard_path = shard_dir / filename
-        json_save(shard_path, batch)
-        paths.append(shard_path.relative_to(manifest_path.parent).as_posix())
+        staged_path = staging_dir / filename
+        json_save(staged_path, batch)
+        final_path = shard_dir / filename
+        os.replace(staged_path, final_path)
+        paths.append(final_path.relative_to(manifest_path.parent).as_posix())
         shard_number += 1
         batch = []
         batch_bytes = 2
@@ -1101,6 +1221,31 @@ class Entity:
 class EntityMatcher:
     """Fast compiled matcher which treats terse acronyms conservatively."""
 
+    # Aliases que colidem com vocabulário comum do português: em minúsculas são
+    # palavras normais ("mas", "chega", "rir", "a tua", "da costa", "as portas",
+    # "está louca"...), pelo que só casam com a grafia capitalizada usada em
+    # referências à entidade. Casar case-insensitive gerava partidos/pessoas
+    # falsas em quase todos os artigos e desfazia o filtro de notícias
+    # estrangeiras/desporto.
+    _COMMON_WORD_ALIASES = {
+        # Partidos/coligações
+        "mas", "chega", "livre", "bloco", "volt", "pnr", "adn", "ppv", "rir",
+        "a tua", "(a)tua", "purp", "a21",
+        # Apelidos comuns (costa=litoral, portas=portas, moedas, centeno=cereal,
+        # temido=adjetivo, louça/louca, cristas, "à ventura"...)
+        "costa", "portas", "moedas", "passos", "cavaco", "centeno", "medina",
+        "ventura", "louça", "louca", "cristas", "temido", "rangel", "cunhal",
+        "barroso", "raimundo",
+    }
+
+    # Contexto proibido após o alias capitalizado: "Bloco" (BE) também designa
+    # concessões petrolíferas ("no Bloco 24 da Bacia de Benguela") e frações
+    # imobiliárias — o apelido só vale sem número a seguir. O nome completo
+    # "Bloco de Esquerda" continua a casar sempre.
+    _COMMON_WORD_ALIAS_LOOKAHEADS = {
+        "bloco": r"(?!\s*\d)",
+    }
+
     def __init__(self, payload: Mapping[str, Any]):
         raw_entities = list(payload.get("entities", [])) + [
             {**item, "kind": item.get("kind", "person")}
@@ -1136,12 +1281,20 @@ class EntityMatcher:
                 # 2-letter all-caps acronyms (PS, IL, BE, CH, AD) remain uppercase
                 # to prevent false matches with common Portuguese words.
                 # 3+ letter aliases (PSD, CDS, PCP, CHEGA, PAN, etc.) are matched case-insensitively.
+                folded = alias.casefold()
+                norm_alias = normalise_text(alias)
                 if len(alias) <= 2 and alias.isupper():
                     exact_map.setdefault(alias, []).append(entity)
+                elif folded in self._COMMON_WORD_ALIASES or norm_alias in self._COMMON_WORD_ALIASES:
+                    # Palavra comum: exige a grafia capitalizada (partido MAS,
+                    # partido CHEGA, apelido Costa...) em vez de qualquer "mas"
+                    # ou "costa" no meio do texto.
+                    for form in dict.fromkeys((alias, alias.upper())):
+                        if form:
+                            exact_map.setdefault(form, []).append(entity)
                 else:
-                    ci_map.setdefault(alias.casefold(), []).append(entity)
-                    norm_alias = normalise_text(alias)
-                    if norm_alias and norm_alias != alias.casefold() and len(norm_alias) > 2:
+                    ci_map.setdefault(folded, []).append(entity)
+                    if norm_alias and norm_alias != folded and len(norm_alias) > 2:
                         norm_map.setdefault(norm_alias, []).append(entity)
 
                 if entity.kind in {"party", "coalition"}:
@@ -1152,8 +1305,12 @@ class EntityMatcher:
         self._norm_map = norm_map
 
         exact_keys = sorted(exact_map.keys(), key=len, reverse=True)
+        exact_patterns = [
+            key + self._COMMON_WORD_ALIAS_LOOKAHEADS.get(key.casefold(), "")
+            for key in exact_keys
+        ]
         self._exact_re = (
-            re.compile(rf"(?<![\w])(?:{'|'.join(re.escape(k) for k in exact_keys)})(?![\w])")
+            re.compile(rf"(?<![\w])(?:{'|'.join(exact_patterns)})(?![\w])")
             if exact_keys
             else None
         )
@@ -1267,6 +1424,10 @@ def decode_response_text(response: requests.Response) -> str:
 
 NAVEGADOR_ESTADO: dict[str, Any] = {"pw": None, "browser": None, "contexto": None}
 NAVEGADOR_LOCK = threading.Lock()
+DEFAULT_BROWSER_UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+)
 
 
 def obter_html_navegador(url: str, timeout_ms: int = 35000) -> str:
@@ -1290,8 +1451,9 @@ def obter_html_navegador(url: str, timeout_ms: int = 35000) -> str:
                 headless=True,
                 args=["--disable-blink-features=AutomationControlled"],
             )
+            browser_ua = str(NAVEGADOR_ESTADO.get("user_agent") or DEFAULT_BROWSER_UA)
             contexto = browser.new_context(
-                user_agent=str(NAVEGADOR_ESTADO.get("user_agent") or ""),
+                user_agent=browser_ua,
                 viewport={"width": 1280, "height": 800},
                 locale="pt-PT",
             )
@@ -1305,7 +1467,7 @@ def obter_html_navegador(url: str, timeout_ms: int = 35000) -> str:
         page = estado["contexto"].new_page()
         try:
             page.goto(url, timeout=timeout_ms, wait_until="commit")
-            page.wait_for_timeout(3000)
+            page.wait_for_timeout(3500)
             html = page.content()
             return html
         except Exception:
@@ -1324,10 +1486,19 @@ def cookies_do_navegador(url: str) -> list[dict[str, str]]:
         contexto = NAVEGADOR_ESTADO.get("contexto")
         if contexto is None:
             return []
-        return [
-            {"name": c["name"], "value": c["value"], "domain": c["domain"], "path": c["path"]}
-            for c in contexto.cookies(urls=[url])
-        ]
+        try:
+            return [
+                {"name": c["name"], "value": c["value"], "domain": c.get("domain", ""), "path": c.get("path", "/")}
+                for c in contexto.cookies(urls=[url])
+            ]
+        except Exception:
+            try:
+                return [
+                    {"name": c["name"], "value": c["value"], "domain": c.get("domain", ""), "path": c.get("path", "/")}
+                    for c in contexto.cookies()
+                ]
+            except Exception:
+                return []
 
 
 def fechar_navegador() -> None:
@@ -1348,19 +1519,18 @@ def fechar_navegador() -> None:
 
 
 class HttpClient:
-    """Polite HTTP client with a shared per-host delay and safe concurrency.
-
-    Requests from worker threads stay rate-limited per destination host while
-    different hosts are fetched in parallel.
-    """
+    """HTTP client with bounded concurrency, proxy support, and temporary block handling."""
 
     def __init__(self, config: Mapping[str, Any]):
         self.timeout = int(config.get("requestTimeoutSeconds", 20))
         self.delay = max(0.0, float(config.get("delaySeconds", 1.0)))
+        self.blocked_host_cooldown = max(0.0, float(config.get("blockedHostCooldownSeconds", 900)))
+        configured_backoff = config.get("requestBackoffSeconds", [5, 15, 45])
+        self.backoff = [max(1.0, float(value)) for value in configured_backoff] if isinstance(configured_backoff, list) else [5.0, 15.0, 45.0]
         self.retries = max(0, int(config.get("requestRetries", 2)))
         self.playwright_fallback = bool(config.get("playwrightFallback", True))
         self.max_concurrent = max(1, int(config.get("maxConcurrentRequests", 12)))
-        self.user_agent = str(config.get("userAgent") or "PolitometroResearchBot/1.0")
+        self.user_agent = str(config.get("userAgent") or DEFAULT_BROWSER_UA)
         NAVEGADOR_ESTADO["user_agent"] = self.user_agent
         self.session = requests.Session()
         pool_size = max(20, self.max_concurrent * 2)
@@ -1380,71 +1550,161 @@ class HttpClient:
                 "Connection": "keep-alive",
             }
         )
+        # Proxies (configuração ou variáveis de ambiente)
+        raw_proxies = config.get("proxies")
+        if isinstance(raw_proxies, str) and raw_proxies.strip():
+            self.proxies: dict[str, str] | None = {"http": raw_proxies.strip(), "https": raw_proxies.strip()}
+        elif isinstance(raw_proxies, Mapping) and raw_proxies:
+            self.proxies = {str(k): str(v) for k, v in raw_proxies.items() if str(v).strip()}
+        else:
+            env_http = os.environ.get("HTTP_PROXY") or os.environ.get("http_proxy")
+            env_https = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy") or os.environ.get("ALL_PROXY") or os.environ.get("all_proxy")
+            if env_http or env_https:
+                self.proxies = {}
+                if env_http:
+                    self.proxies["http"] = env_http
+                if env_https:
+                    self.proxies["https"] = env_https
+            else:
+                self.proxies = None
+        if self.proxies:
+            self.session.proxies.update(self.proxies)
+
+        self.proxy_list = [str(p).strip() for p in config.get("proxyList", []) if str(p).strip()]
+        self._proxy_idx = 0
+
         self._host_gates: dict[str, tuple[threading.Lock, float]] = {}
+        self._blocked_hosts: dict[str, float] = {}
         self._gates_lock = threading.Lock()
 
-    def _host_gate(self, host: str) -> None:
-        """Serialise requests per host keeping at least ``delay`` between them."""
+    def resolver_waf_se_necessario(self, url: str) -> bool:
+        """Abre a página no Chromium headless para resolver o challenge WAF e guarda os cookies."""
+        if not self.playwright_fallback:
+            return False
+        try:
+            html = obter_html_navegador(url)
+            cookies = cookies_do_navegador(url)
+            if cookies:
+                for c in cookies:
+                    domain = c.get("domain") or ""
+                    # Remove leading dot if any for requests cookie jar
+                    clean_domain = domain.lstrip(".") if domain else None
+                    self.session.cookies.set(
+                        c["name"], c["value"], domain=clean_domain, path=c.get("path", "/")
+                    )
+                LOGGER.info("Cookies WAF obtidos com sucesso para %s (%d cookies)", url, len(cookies))
+                return True
+            if html and not pagina_eh_antibot(html):
+                return True
+        except Exception as exc:
+            LOGGER.warning("Falha ao resolver challenge WAF via Playwright para %s: %s", url, exc)
+        return False
 
-        with self._gates_lock:
-            gate = self._host_gates.get(host)
-            if gate is None:
-                gate = (threading.Lock(), 0.0)
-                self._host_gates[host] = gate
-        lock, _ = gate
-        with lock:
-            _lock, last_request = self._host_gates[host]
-            sleep_for = self.delay - (time.monotonic() - last_request)
-            if sleep_for > 0:
-                time.sleep(sleep_for)
-            self._host_gates[host] = (lock, time.monotonic())
-
-    def get(self, url: str, extra_headers: Mapping[str, str] | None = None) -> requests.Response:
+    def get(
+        self,
+        url: str,
+        extra_headers: Mapping[str, str] | None = None,
+        timeout: int | float | None = None,
+    ) -> requests.Response:
         safe = safe_url(url)
         if not safe:
             raise PipelineError(f"URL inseguro ou inválido: {url!r}")
         host = urllib.parse.urlsplit(safe).netloc
         merged_headers = dict(extra_headers) if extra_headers else None
+        req_timeout = float(timeout) if timeout is not None else self.timeout
         last_error: Exception | None = None
+
+        # Per-host pacing gate: ensure polite spacing between requests to the same domain
+        with self._gates_lock:
+            if host not in self._host_gates:
+                self._host_gates[host] = (threading.Lock(), 0.0)
+            host_lock, _last_time = self._host_gates[host]
+
         for attempt in range(self.retries + 1):
+            with self._gates_lock:
+                blocked_until = self._blocked_hosts.get(host, 0.0)
+            if blocked_until > time.monotonic():
+                raise PipelineError(f"{safe} temporariamente bloqueado; retry após {int(blocked_until - time.monotonic())}s")
+
+            # Host pacing
+            with host_lock:
+                now = time.monotonic()
+                with self._gates_lock:
+                    _, last_req_time = self._host_gates.get(host, (host_lock, 0.0))
+                elapsed = now - last_req_time
+                if elapsed < self.delay and self.delay > 0:
+                    time.sleep(self.delay - elapsed)
+                with self._gates_lock:
+                    self._host_gates[host] = (host_lock, time.monotonic())
+
             try:
-                self._host_gate(host)
                 response = self.session.get(
-                    safe, timeout=self.timeout, allow_redirects=True, headers=merged_headers
+                    safe, timeout=req_timeout, allow_redirects=True, headers=merged_headers
                 )
             except requests.RequestException as exc:
-                with self._gates_lock:
-                    lock, _ = self._host_gates.get(host, (threading.Lock(), 0.0))
-                    self._host_gates[host] = (lock, time.monotonic())
                 last_error = exc
                 if attempt >= self.retries:
                     break
-                time.sleep(min(8.0, 1.5 * (attempt + 1)))
+                time.sleep(min(120.0, self.backoff[min(attempt, len(self.backoff) - 1)]))
                 continue
             if response.status_code < 400:
                 return response
-            if response.status_code not in {408, 425, 429, 500, 502, 503, 504} or attempt >= self.retries:
+            if response.status_code == 429:
+                # Rate limited: wait and retry with backoff, DO NOT block whole host for 15 mins!
+                retry_after = response.headers.get("Retry-After", "")
+                try:
+                    wait_seconds = max(2.0, float(retry_after))
+                except (TypeError, ValueError):
+                    wait_seconds = self.backoff[min(attempt, len(self.backoff) - 1)]
+                if attempt < self.retries:
+                    time.sleep(min(60.0, wait_seconds))
+                    continue
+                raise PipelineError(f"{safe} rate limited (HTTP 429)")
+            if response.status_code in {403, 406, 409, 418}:
+                if self.playwright_fallback and attempt < self.retries:
+                    if self.resolver_waf_se_necessario(safe):
+                        continue
+                if attempt >= self.retries:
+                    with self._gates_lock:
+                        self._blocked_hosts[host] = time.monotonic() + min(60.0, self.blocked_host_cooldown)
+            if response.status_code not in {408, 425, 500, 502, 503, 504} or attempt >= self.retries:
                 raise PipelineError(f"{safe} respondeu com HTTP {response.status_code}")
             retry_after = response.headers.get("Retry-After", "")
             try:
                 wait_seconds = float(retry_after)
             except (TypeError, ValueError):
                 wait_seconds = 1.5 * (attempt + 1)
-            time.sleep(min(30.0, max(self.delay, wait_seconds)))
+            backoff = self.backoff[min(attempt, len(self.backoff) - 1)]
+            time.sleep(min(120.0, max(0.0, wait_seconds, backoff)))
+
         raise PipelineError(f"Pedido falhou para {safe}: {last_error}") from last_error
 
-    def text(self, url: str) -> tuple[str, Mapping[str, str], str]:
-        response = self.get(url)
-        # Páginas enormes (alguns arquivos servem HTML de dezenas de MB)
-        # multiplicam o pico de memória em paralelo; o extrato útil cabe em
-        # folga nos primeiros 2 MB.
+    def text(
+        self,
+        url: str,
+        timeout: int | float | None = None,
+    ) -> tuple[str, Mapping[str, str], str]:
+        response = self.get(url, timeout=timeout)
         limite = 2 * 1024 * 1024
         try:
             if len(response.content) > limite:
                 response._content = response.content[:limite]
         except (AttributeError, TypeError):
             pass
-        return decode_response_text(response), response.headers, response.url
+        decoded_html = decode_response_text(response)
+        if pagina_eh_antibot(decoded_html) and self.playwright_fallback:
+            if self.resolver_waf_se_necessario(response.url or url):
+                response = self.get(url, timeout=timeout)
+                try:
+                    if len(response.content) > limite:
+                        response._content = response.content[:limite]
+                except (AttributeError, TypeError):
+                    pass
+                decoded_html = decode_response_text(response)
+                if not pagina_eh_antibot(decoded_html):
+                    return decoded_html, response.headers, response.url
+            raise PipelineError(f"Página de {url} bloqueada por barreira anti-bot (WAF)")
+        return decoded_html, response.headers, response.url
 
 
 class ArticleParser(HTMLParser):
@@ -1503,7 +1763,7 @@ class ArticleParser(HTMLParser):
             self._paragraph_depth -= 1
             if not self._paragraph_depth:
                 text = compact_text("".join(self._paragraph_parts), 900)
-                if len(text) >= 35:
+                if len(text) >= 35 and not BOILERPLATE_RE.search(text):
                     target = self.article_paragraphs if self._article_depth else self.fallback_paragraphs
                     target.append(text)
                 self._paragraph_parts = []
@@ -1613,6 +1873,11 @@ def source_state(state: dict[str, Any], source_id: str) -> dict[str, Any]:
 def initial_state() -> dict[str, Any]:
     return {
         "schemaVersion": 1,
+        "maintenance": {
+            "lastFullScanAt": None,
+            "lastCleanupAt": None,
+            "lastRecoveryMergeAt": None,
+        },
         "updatedAt": None,
         "sources": {},
         "articles": {},
@@ -1758,16 +2023,35 @@ def parse_sitemap(raw_xml: str, source_url: str) -> tuple[list[str], list[dict[s
     for node in root:
         if local_name(node.tag) != "url":
             continue
-        tag_map = {local_name(child.tag): (child.text or "").strip() for child in node.iter()}
-        loc = tag_map.get("loc")
+        loc = ""
+        lastmod = ""
+        title = ""
+        section = ""
+        for child in node:
+            c_name = local_name(child.tag)
+            if c_name == "loc":
+                loc = (child.text or "").strip()
+            elif c_name == "lastmod":
+                lastmod = (child.text or "").strip()
+            elif c_name == "title":
+                title = (child.text or "").strip()
+            elif c_name == "news":
+                for sub in child:
+                    sub_name = local_name(sub.tag)
+                    if sub_name == "title" and not title:
+                        title = (sub.text or "").strip()
+                    elif sub_name == "publication_date" and not lastmod:
+                        lastmod = (sub.text or "").strip()
+                    elif sub_name == "genres" and not section:
+                        section = (sub.text or "").strip()
         if not loc:
             continue
         records.append(
             {
                 "url": loc,
-                "lastmod": tag_map.get("lastmod") or tag_map.get("publication_date") or "",
-                "title": tag_map.get("title") or "",
-                "section": tag_map.get("genres") or "",
+                "lastmod": lastmod,
+                "title": title,
+                "section": section,
             }
         )
     return [], records
@@ -2145,7 +2429,7 @@ def iter_sitemap_records(
                 ):
                     transferidos += 1
                     etiqueta = f"{transferidos}/{total_conhecidos}" if total_conhecidos else str(transferidos)
-                    print(f"\r    📥 transferidos {etiqueta} sitemaps", end="", flush=True)
+                    safe_print(f"[sitemaps] transferidos {etiqueta}")
                     progresso_ativo = True
                     if parsed is None:
                         exc_message = error or "erro desconhecido"
@@ -2168,9 +2452,8 @@ def iter_sitemap_records(
                     if not total_conhecidos and len(children) > 1:
                         total_conhecidos = len(visited) + len(queue) + len(batch)
                         if total_conhecidos > transferidos:
-                            print(
-                                f"\r    📥 {total_conhecidos} sitemaps detetados no índice",
-                                end="",
+                            safe_print(
+                                f"    📥 {total_conhecidos} sitemaps detetados no índice",
                                 flush=True,
                             )
 
@@ -2244,10 +2527,14 @@ def discover_sitemap_records(
 def article_evidence(article: Mapping[str, Any]) -> str:
     url = urllib.parse.unquote(str(article.get("url") or ""))
     readable_url = re.sub(r"[-_/]+", " ", urllib.parse.urlsplit(url).path)
+    # O excerto vem do corpo da página e traz navegação/rodapé das fontes;
+    # limpar antes de classificar (a decisão de âmbito/relevância não pode ser
+    # conduzida por texto que não é da notícia).
+    excerpt = limpar_boilerplate(article.get("excerpt"))
     evidence = " ".join(
         str(article.get(key) or "")
-        for key in ("title", "summary", "section", "excerpt")
-    ) + " " + readable_url
+        for key in ("title", "summary", "section")
+    ) + " " + excerpt + " " + readable_url
     # "Governo iemenita/espanhol/…" não é âncora portuguesa — remover a
     # qualificação estrangeira antes de extrair entidades e tópicos.
     return GOVERNO_ESTRANGEIRO_RE.sub(" ", evidence)
@@ -2261,17 +2548,17 @@ def is_foreign_or_non_news_section(path_tokens: set[str]) -> tuple[bool, bool]:
 
 def has_relevant_political_anchor(entities: Sequence[Mapping[str, Any]]) -> bool:
     pt_eu_kinds = {
-        "party", "coalition", "youth_wing", "person",
+        "party", "coalition", "youth_wing", "person", "movement",
         "government", "institution", "eu_institution",
         "president", "parliament", "court", "regulator",
         "central_bank", "security_forces", "health_service",
         "local_government", "public_service"
     }
     pt_eu_ids = {
-        "UNIAO-EUROPEIA", "ONU", "AUTARQUIAS", "JUSTICA", "PRESIDENCIA",
+        "UNIAO-EUROPEIA", "ONU", "NATO", "OTAN", "AUTARQUIAS", "JUSTICA", "PRESIDENCIA",
         "PARLAMENTO", "REGULADORES", "BANCO-DE-PORTUGAL", "ESTADO", "SNS",
-        "FORCAS-SEGURANCA", "SEGURANCA-SOCIAL", "EDUCACAO",
-        "INEM", "ACT", "CMVM", "ERSE", "ANACOM", "CNPD",
+        "FORCAS-SEGURANCA", "SEGURANCA-SOCIAL", "EDUCACAO", "AUTORIDADE-TRIBUTARIA",
+        "CLIMAXIMO", "UTAD", "INEM", "ACT", "CMVM", "ERSE", "ANACOM", "CNPD", "DGS", "INFARMED",
         "EDP", "REN", "TAP", "CP", "CARRIS",
         "METRO-LISBOA", "METRO-PORTO", "STCP", "CARRIS-METROPOLITANA"
     }
@@ -2332,10 +2619,25 @@ def candidate_may_be_relevant(
             for padrao in (
                 CELEBRITY_LIFESTYLE_RE, CRIME_ACCIDENT_RE, SPORTS_TRANSFER_RE,
                 SCIENCE_DISCOVERY_RE, HEALTH_MEDICAL_RE, WEATHER_DISASTER_RE,
-                ENTERTAINMENT_CULTURE_RE, TECH_PRODUCT_RE, AUTO_MOTOR_RE
+                ENTERTAINMENT_CULTURE_RE, TECH_PRODUCT_RE, AUTO_MOTOR_RE,
+                NOBEL_PRIZE_RE, MUSIC_FESTIVAL_CONCERT_RE
             )
         ):
-            return False
+            # Ator político nomeado ou grande empresa portuguesa no
+            # título/resumo ("PSD defende novo modelo turístico … após
+            # atropelamento na Oura", "Jerónimo Martins fecha lojas na
+            # Colômbia devido a sismo"): estes padrões são de domínio, não de
+            # política — deixar o classificador completo decidir.
+            matched = matcher.match(f"{title} {summary}")
+            if (
+                not any(
+                    item.get("kind") in {"party", "coalition", "youth_wing", "person", "movement"}
+                    for item in matched
+                )
+                and not has_relevant_political_anchor(matched)
+                and not PT_MAJOR_COMPANIES_RE.search(f"{title} {summary}")
+            ):
+                return False
 
     # Skip is_purely_foreign_news here - it needs full article text to be accurate.
     # The full classifier will handle scope checking after download.
@@ -2349,44 +2651,131 @@ def classify_article(
     evidence = article_evidence(article)
     entities = matcher.match(evidence)
 
+    titulo = str(article.get("title") or "")
+    resumo = str(article.get("summary") or "")
+    titulo_casefold = f"{titulo} {resumo}".casefold()
+    evidence_casefold = evidence.casefold()
+
+    specific_political_actor = any(
+        item.get("kind") in {"party", "coalition", "youth_wing", "person"}
+        or item.get("id") in {"PRESIDENCIA", "PARLAMENTO", "PRIMEIRO-MINISTRO", "GOVERNO"}
+        for item in entities
+    )
+
+    # Prémios Nobel puros (anúncios científicos, literários, etc.) sem ator político
+    # nacional/comentário político e sem contexto de políticas públicas são excluídos.
+    if NOBEL_PRIZE_RE.search(titulo_casefold) and not specific_political_actor and not POLICY_CONTEXT_RE.search(evidence):
+        return [], entities, False
+
+    # Festivais de música e concertos em cidades/municípios sem dimensão política ou
+    # legislativa são excluídos mesmo se mencionarem câmaras/municípios como apoio.
+    if MUSIC_FESTIVAL_CONCERT_RE.search(titulo_casefold) and not specific_political_actor and not POLICY_CONTEXT_RE.search(evidence):
+        return sorted(topic_labels(evidence)), entities, False
+
     # Celebridade/estilo de vida, crime e desporto só rejeitam quando não há
     # âncora política nem tópico claro — evita perder peças como "Governo apoia
     # férias de verão dos jovens" ou "Montenegro lamenta morte de…".
-    titulo_casefold = f"{article.get('title') or ''} {article.get('summary') or ''}".casefold()
-    evidence_casefold = evidence.casefold()
     if (
         not has_relevant_political_anchor(entities)
         and not topic_labels(evidence)
+        and not PT_MAJOR_COMPANIES_RE.search(titulo_casefold)
         and any(
             padrao.search(titulo_casefold)
             for padrao in (
                 CELEBRITY_LIFESTYLE_RE, CRIME_ACCIDENT_RE, SPORTS_TRANSFER_RE,
                 SCIENCE_DISCOVERY_RE, HEALTH_MEDICAL_RE, WEATHER_DISASTER_RE,
-                ENTERTAINMENT_CULTURE_RE, TECH_PRODUCT_RE, AUTO_MOTOR_RE
+                ENTERTAINMENT_CULTURE_RE, TECH_PRODUCT_RE, AUTO_MOTOR_RE,
+                NOBEL_PRIZE_RE, MUSIC_FESTIVAL_CONCERT_RE
             )
         )
     ):
         return [], entities, False
 
-    # Âmbito do projeto: notícias estrangeiras sem âncora portuguesa/UE ficam
-    # de fora (decisão editorial original).
-    if is_purely_foreign_news(evidence, entities):
-        return [], entities, False
+    # Âmbito (estrangeiro vs PT/UE) decide-se ao nível do título+resumo+secção
+    # +URL — não do corpo. O texto todo arrastava peças estrangeiras para
+    # dentro quando um político português era só citado no excerto ("…
+    # Paulo Rangel participou por videoconferência" salvava peças de guerra)
+    # e era onde o boilerplate das fontes criava âncoras falsas.
+    headline = " ".join(
+        parte
+        for parte in (
+            titulo,
+            resumo,
+            str(article.get("section") or ""),
+            re.sub(r"[-_/]+", " ", urllib.parse.urlsplit(str(article.get("url") or "")).path),
+        )
+        if parte
+    )
+    headline_entities = matcher.match(headline)
+    headline_company = bool(PT_MAJOR_COMPANIES_RE.search(headline))
+    local_public_institution = bool(re.search(
+        r"\b(?:tribunal da rela[cç][aã]o|c[aâ]mara(?:\s+municipal)?(?:\s+de)?\s+[a-záéíóúãõç -]+|"
+        r"minist[eé]rio p[uú]blico|\bmp\b)\b", headline, re.IGNORECASE
+    ))
+    headline_named = [
+        e for e in headline_entities
+        if e.get("kind") in {"party", "coalition", "youth_wing", "person", "movement"}
+    ]
+    if not headline_company:
+        scope_tokens = set(
+            re.findall(r"[a-z0-9]+", normalise_text(f"{article.get('section') or ''} {headline}"))
+        )
+        if {"mundo", "internacional"} & scope_tokens:
+            # A UE, a ONU e a NATO são âncoras de âmbito próprio; notícias sobre medidas,
+            # fundos, diplomacia ou defesa internacional não precisam de mencionar Portugal.
+            if not headline_named and not PORTUGAL_MARKER_RE.search(headline) and not any(
+                item.get("id") in {"UNIAO-EUROPEIA", "ONU", "NATO"} for item in headline_entities
+            ):
+                return [], entities, False
+        elif is_purely_foreign_news(headline, headline_entities):
+            return [], entities, False
+        # O corpo pode revelar peças estrangeiras que o título não denuncia
+        # (cotação do Brent): segundo gate sobre a evidência completa, SEM
+        # resgate por atores citados apenas no corpo.
+        if (
+            not headline_named
+            and not any(item.get("id") in {"UNIAO-EUROPEIA", "ONU", "NATO"} for item in headline_entities)
+            and FOREIGN_JURISDICTION_RE.search(evidence)
+            and not PORTUGAL_OR_EU_OVERRIDE_RE.search(evidence)
+        ):
+            return [], entities, False
+        # Avisos municipais de praia/água: só com político nomeado.
+        if LOCAL_NOTICE_RE.search(titulo) and not any(
+            e.get("kind") in {"party", "coalition", "youth_wing", "person"} for e in entities
+        ):
+            return sorted(topic_labels(evidence)), entities, False
     topics = set(topic_labels(evidence))
+    # Tópicos genuínos do título+resumo, antes da injeção por secção/âncora:
+    # sem isto, qualquer URL /economia/ fornecia o tópico "economia" (pelo path
+    # do URL ou por injeção) e ficava relevante por si mesmo — mantinha "lucro
+    # da Xiaomi" só por estar na secção economia.
+    topics_from_text = set(topic_labels(f"{titulo} {resumo}"))
     normal_path = normalise_text(re.sub(r"[-_/]+", " ", urllib.parse.urlsplit(str(article.get("url") or "")).path))
     path_tokens = set(re.findall(r"[a-z0-9]+", normal_path))
+    # Fontes como o Observador não têm secção no URL (observador.pt/2026/08/27/...)
+    # mas expõem-na nos metadados ("Desporto", "Mundo", "Auto"...): sem isto,
+    # peças de desporto/internacionais nunca eram apanhadas pelo gate de secção.
+    path_tokens.update(re.findall(r"[a-z0-9]+", normalise_text(str(article.get("section") or ""))))
     strong_section = bool({"politica", "economia"} & path_tokens)
     broad_section = bool(RELEVANT_SECTION_MARKERS & path_tokens)
     is_foreign, is_non_news = is_foreign_or_non_news_section(path_tokens)
-    specific = any(item.get("kind") in {"party", "coalition", "youth_wing", "person"} for item in entities)
+    specific = any(item.get("kind") in {"party", "coalition", "youth_wing", "person", "movement"} for item in entities)
+
+    if re.search(r"\b(?:ue|uni[aã]o europeia)\b", headline, re.IGNORECASE) and any(
+        term in evidence_casefold for term in ("copernicus", "meios", "fogos", "sancoes")
+    ):
+        topics.add("politica")
     has_anchor = has_relevant_political_anchor(entities)
     has_foreign_anchor = any(
-        item.get("kind") in {"party", "coalition", "youth_wing", "person"}
-        or item.get("id") in {"UNIAO-EUROPEIA", "ONU"}
+        item.get("kind") in {"party", "coalition", "youth_wing", "person", "movement"}
+        or item.get("id") in {"UNIAO-EUROPEIA", "ONU", "NATO"}
         for item in entities
     )
 
-    if any(item.get("id") in {"REGULADORES", "BANCO-DE-PORTUGAL"} for item in entities):
+    if any(item.get("id") in {"REGULADORES", "BANCO-DE-PORTUGAL", "AUTORIDADE-TRIBUTARIA"} for item in entities):
+        topics.add("economia")
+    if headline_company:
+        # Grande empresa portuguesa no título: a peça é, por si, economia PT.
         topics.add("economia")
     if has_anchor or specific or strong_section:
         if not topics:
@@ -2412,16 +2801,72 @@ def classify_article(
     if is_foreign and not strong_section and not has_foreign_anchor:
         return sorted_topics, entities, False
 
+    # Require STRONG political/policy relevance:
+    # - Either clear policy context (policymaking, legislation, government action)
+    # - Or political section WITH political topics AND political entities
+    # - Or specific political entities (parties, politicians) WITH political topics
+    # Mere mention of "Governo", "Câmara", "Ministro" etc. is NOT enough
+    # if the article is about crime, accidents, sports, entertainment, etc.
+    has_policy_context = POLICY_CONTEXT_RE.search(evidence) is not None
+
+    # Tópicos e âmbito municipal avaliados no título+resumo: palavras genéricas
+    # no corpo ("autarquias do Norte", "a Câmara Municipal esclareceu", "casas
+    # e animais", "freguesia de Campia") davam tópico político a peças de
+    # praias/crime/fogos e a citações institucionais incrustadas no texto.
+    headline_text = f"{titulo} {resumo}"
+    has_headline_topic = bool({"politica", "economia"} & set(topic_labels(headline_text)))
+    has_headline_civic = bool(CIVIC_CONTEXT_RE.search(headline_text))
+
+    # Political entities that count as "political" (not just any institution).
+    # Persons and movements count in full; key public institutions (SNS, INEM,
+    # Autoridade Tributária, UTAD, Climáximo, NATO, ONU) represent core policy domains.
+    political_entities = [
+        e for e in entities
+        if e.get("kind") in {"party", "coalition", "youth_wing", "person", "movement"}
+        or e.get("id") in {
+            "PRESIDENCIA", "PARLAMENTO", "PRIMEIRO-MINISTRO", "GOVERNO", "ASSEMBLEIA",
+            "SNS", "INEM", "DGS", "INFARMED", "AUTORIDADE-TRIBUTARIA", "CLIMAXIMO",
+            "UTAD", "EDUCACAO", "JUSTICA", "NATO", "ONU", "UNIAO-EUROPEIA", "COPERNICUS"
+        }
+    ]
+    has_political_entity = len(political_entities) > 0
+    if any(item.get("id") in {"UNIAO-EUROPEIA", "COPERNICUS", "NATO", "ONU"} for item in entities):
+        has_political_entity = True
+    has_local_public_institution = bool(re.search(
+        r"\b(?:tribunal da rela[cç][aã]o|c[aâ]mara(?:\s+municipal)?(?:\s+de)?\s+[a-záéíóúãõç -]+|"
+        r"minist[eé]rio p[uú]blico|\bmp\b|\bue\b|uni[aã]o europeia|copernicus|"
+        r"sns|servi[cç]o nacional de sa[uú]de|inem|dgs|infarmed|urg[eê]ncias?|hospita(?:l|is)|"
+        r"maternidades?|centros?\s+de\s+sa[uú]de|autoridade tribut[aá]ria|\bat\b|fisco|"
+        r"clim[aá]ximo|utad|ensino superior|universidades?|nato|otan|onu|na[cç][oõ]es unidas)\b",
+        evidence, re.IGNORECASE
+    ))
+
+    # Politically relevant topics
+    political_topics = {"politica", "economia"}
+    has_political_topic = bool(sorted_topics and political_topics & set(sorted_topics))
+    if has_political_entity and not has_political_topic:
+        topics.add("politica")
+        sorted_topics = sorted(topics)
+        has_political_topic = True
+
+    # Strong political relevance requires:
+    # 1. Policy context + political topic, OR
+    # 2. Strong political section (politica/economia) + political topic —
+    #    economia PT/UE sem político nomeado (Novo Banco, cabaz alimentar,
+    #    bolsas europeias); peças estrangeiras já caíram no gate de âmbito, OR
+    # 3. Political entity (party/politician/institution/movement) + political topic, OR
+    # 4. Civic context + political topic ambos no título, OR
+    # 5. Local public institution + political topic, OR
+    # 6. Portuguese major company, OR
+    # 7. Foreign news with EU/Portugal/NATO/UN anchor and political topic.
     relevant = bool(
-        (has_foreign_anchor if is_foreign else has_anchor)
-        or (sorted_topics and entities)
-        # Tópico sem entidade nomeada só basta quando o texto ancora claramente
-        # em Portugal/UE ("Governo e oposição querem…" ✓; "Governo iemenita
-        # ordena…" ✗). Evita tanto perder notícias nacionais genéricas como
-        # aceitar governos estrangeiros que escapam à lista de jurisdições.
-        or (sorted_topics and AMBITO_PT_UE_RE.search(evidence))
-        or (strong_section and (sorted_topics or entities))
-        or (specific and (sorted_topics or broad_section))
+        (has_policy_context and has_political_topic)
+        or (strong_section and bool({"politica", "economia"} & topics_from_text))
+        or (has_political_entity and has_political_topic)
+        or (has_headline_civic and has_headline_topic)
+        or (has_local_public_institution and has_political_topic)
+        or headline_company
+        or (is_foreign and has_foreign_anchor and has_political_topic)
     )
     return sorted_topics, entities, relevant
 
@@ -2442,13 +2887,27 @@ def prune_irrelevant_articles(
     removed = 0
     removed_ids: set[str] = set()
     reviewed_now = 0
+    seen_title_keys: set[tuple[str, str]] = set()
     for article_id, article in list(state.get("articles", {}).items()):
-        if (
-            article.get("reviewVersion") == ARTICLE_REVIEW_VERSION
-            and article.get("reviewedContentHash")
-            and article.get("reviewedContentHash") == article.get("contentHash")
-        ):
-            continue
+        # Dedupe por (fonte, título): runs anteriores guardaram a mesma notícia
+        # sob URLs diferentes; remove a repetição e mantém a primeira guardada.
+        source_key = str(article.get("sourceId") or "")
+        title_key = normalise_text(article.get("title") or "")
+        if source_key and title_key:
+            dedupe_key = (source_key, title_key)
+            if dedupe_key in seen_title_keys:
+                state["articles"].pop(article_id, None)
+                removed += 1
+                removed_ids.add(article_id)
+                if article.get("url"):
+                    removed_ids.add(str(article["url"]))
+                    removed_ids.add(stable_id("news", article["url"]))
+                continue
+            seen_title_keys.add(dedupe_key)
+        # Não saltar artigos já marcados como revistos: a versão do filtro pode
+        # ter sido alterada sem atualização do marcador persistido. A limpeza
+        # deve reclassificar todo o corpus para remover as notícias guardadas
+        # indevidamente em execuções anteriores.
         if is_blocked_non_political(article):
             state["articles"].pop(article_id, None)
             removed_ids.add(article_id)
@@ -2458,6 +2917,12 @@ def prune_irrelevant_articles(
                 removed_ids.add(str(article["url"]))
                 removed_ids.add(stable_id("news", article["url"]))
             removed += 1
+            continue
+        if (
+            article.get("reviewVersion") == ARTICLE_REVIEW_VERSION
+            and article.get("topics")
+            and article.get("entities")
+        ):
             continue
         topics, entities, relevant = classify_article(article, matcher)
         if not relevant:
@@ -2477,6 +2942,8 @@ def prune_irrelevant_articles(
             "|".join(str(article.get(key) or "") for key in ("title", "summary", "excerpt", "publishedAt"))
         )
         reviewed_now += 1
+        if reviewed_now % 25000 == 0:
+            safe_print(f"   ↳ {reviewed_now} artigos avaliados e atualizados...")
 
     if "promises" in state:
         for promise_id, promise in list(state.get("promises", {}).items()):
@@ -2502,6 +2969,27 @@ def prune_irrelevant_articles(
                         seen[rem_id]["decision"] = "metadata_irrelevant"
 
     return removed
+
+
+def clear_news_processing_state(state: dict[str, Any]) -> int:
+    """Remove only transient per-news URL decisions, preserving saved evidence.
+
+    The next run must revisit URLs that were classified with an older/broken
+    filter, while articles already persisted are reclassified by prune above.
+    """
+    cleared = 0
+    for source_data in (state.get("sources") or {}).values():
+        if not isinstance(source_data, Mapping):
+            continue
+        seen = source_data.get("seen")
+        if not isinstance(seen, dict):
+            continue
+        for entry in seen.values():
+            if isinstance(entry, dict) and entry.get("filterVersion") != NEWS_FILTER_VERSION:
+                entry.pop("filterVersion", None)
+                entry.pop("decision", None)
+                cleared += 1
+    return cleared
 
 
 def fetch_article(
@@ -2571,16 +3059,24 @@ def fetch_article(
                 candidate["_validator"] = stored_validator
         if not metadata["title"]:
             metadata["title"] = compact_text(candidate.get("title"), 300)
+        elif isinstance(candidate, dict):
+            candidate["title"] = metadata["title"]
         if not metadata["summary"]:
             metadata["summary"] = compact_text(candidate.get("summary"), 600)
         if not metadata["publishedAt"]:
             metadata["publishedAt"] = iso_datetime(candidate.get("lastmod")) or ""
         if not metadata["section"]:
             metadata["section"] = compact_text(candidate.get("section"), 120)
+        elif isinstance(candidate, dict):
+            candidate["section"] = metadata["section"]
     except PipelineError as exc:
         # Keep RSS/Google News metadata when the article itself is unavailable;
         # it still gets filtered and is never represented as a full-text copy.
         LOGGER.info("Artigo indisponível (%s): %s", url, exc)
+        err_str = str(exc).lower()
+        if "404" in err_str or "410" in err_str:
+            # Ligação morta permanente / 404: rejeição definitiva sem retry
+            return None
         if isinstance(candidate, dict) and cached_article is None:
             # Fontes com RSS rico (título+resumo oficiais): classificar pelos
             # metadados do feed com critério estrito em vez de descartar.
@@ -2627,6 +3123,11 @@ def fetch_article(
             if isinstance(candidate, dict):
                 candidate["_reusedUnchanged"] = True
             return reused
+        # Falha de rede / timeout / WAF num candidato sem cache e sem feed rico:
+        # Registar explicitamente como indisponível para retry posterior (não rejeitar como "Não guardada").
+        if isinstance(candidate, dict):
+            candidate["_indisponivel"] = True
+        return None
     metadata["url"] = safe_url(metadata["canonicalUrl"] or url, source_hosts(source)) or url
     topics, entities, relevant = classify_article(metadata, matcher)
     if not relevant or not metadata["title"]:
@@ -2664,6 +3165,8 @@ def clean_slug_title(slug: str) -> str:
     # Strip trailing numeric IDs
     slug = re.sub(r"[-_]\d+$", "", slug)
     slug = re.sub(r"[-_]+", " ", slug).strip()
+    if not slug or slug.isdigit() or slug.casefold() in {"titulo", "noticia", "artigo", "galeria", "editorial", "opiniao", "index", "default"}:
+        return ""
     return slug.capitalize() if slug else ""
 
 
@@ -2828,6 +3331,52 @@ def print_progress_record(
     )
 
 
+def integrate_recovered_company_articles(state: dict[str, Any], sidecar_path: Path | None = None) -> dict[str, int]:
+    """Merge the one-off company recovery sidecar idempotently before each run.
+
+    The sidecar is deliberately retained as an audit trail; articles are merged
+    by stable id and duplicate titles per source are ignored. Seen entries are
+    also marked collected so the normal crawler will not immediately re-download
+    them.
+    """
+    path = sidecar_path or (ROOT / "scripts" / "noticias_empresas_recuperadas.json")
+    if not path.exists():
+        return {"articles": 0, "seen": 0, "duplicates": 0}
+    payload = json_load(path, {})
+    if not isinstance(payload, Mapping):
+        return {"articles": 0, "seen": 0, "duplicates": 0}
+    articles = payload.get("articles") or []
+    seen = payload.get("seen") or []
+    by_title = {
+        (str(item.get("sourceId") or ""), normalise_text(item.get("title") or ""))
+        for item in state.get("articles", {}).values()
+        if isinstance(item, Mapping)
+    }
+    merged = duplicates = 0
+    for article in articles:
+        if not isinstance(article, Mapping) or not article.get("id"):
+            continue
+        key = (str(article.get("sourceId") or ""), normalise_text(article.get("title") or ""))
+        if str(article["id"]) in state["articles"] or (key[0] and key in by_title):
+            duplicates += 1
+            continue
+        state["articles"][str(article["id"])] = dict(article)
+        by_title.add(key)
+        merged += 1
+    seen_count = 0
+    for entry in seen:
+        if not isinstance(entry, (list, tuple)) or len(entry) != 3:
+            continue
+        source_id, article_id, metadata = entry
+        if not isinstance(metadata, Mapping):
+            continue
+        state.setdefault("sources", {}).setdefault(str(source_id), {"seen": {}}).setdefault("seen", {})[str(article_id)] = dict(metadata)
+        seen_count += 1
+    if merged or seen_count:
+        state.setdefault("maintenance", {})["lastRecoveryMergeAt"] = iso_now()
+    return {"articles": merged, "seen": seen_count, "duplicates": duplicates}
+
+
 def prune_stale_seen(state: dict[str, Any]) -> int:
     """Drop rejected ``seen`` entries recorded under older filter versions.
 
@@ -2971,6 +3520,17 @@ def sync_news(
     source_total = len(sources)
     robots_policies = fetch_robots_policies(sources, client, crawl_config)
 
+    # Dedupe partilhado (fontes correm em paralelo): sitemaps/feeds da mesma
+    # fonte listam a mesma notícia sob URLs diferentes (slug com/sem carimbo
+    # de data). Índice (fonte, título normalizado) → id da primeira guardada.
+    dedupe_lock = threading.Lock()
+    title_index: dict[tuple[str, str], str] = {}
+    for existing in state.get("articles", {}).values():
+        source_key = str(existing.get("sourceId") or "")
+        title_key = normalise_text(existing.get("title") or "")
+        if source_key and title_key:
+            title_index.setdefault((source_key, title_key), str(existing.get("id") or ""))
+
     def register_disabled(source_index: int, source: Mapping[str, Any]) -> None:
         source_id = str(source.get("id") or "")
         status = {
@@ -3077,7 +3637,11 @@ def sync_news(
         errors: list[str] = []
         handled_urls: set[str] = set()
         processed_count = 0
-        verbose_rejections = bool(crawl_config.get("verboseRejections", False))
+        # As rejeições são sempre impressas: funcionam como auditoria da recolha
+        # e permitem distinguir um filtro legítimo de uma fonte que deixou de
+        # fornecer conteúdo. A opção antiga `verboseRejections` já não pode
+        # silenciar esta informação operacional.
+        verbose_rejections = True
         pending_fetches: list[tuple[str, dict[str, Any]]] = []
 
         def consider_candidate(candidate: Mapping[str, Any]) -> bool:
@@ -3107,7 +3671,7 @@ def sync_news(
             if (
                 seen
                 and seen.get("filterVersion") == NEWS_FILTER_VERSION
-                and seen.get("decision") in {"metadata_irrelevant", "article_irrelevant"}
+                and seen.get("decision") in {"metadata_irrelevant", "article_irrelevant", "duplicated"}
             ):
                 return True
 
@@ -3196,6 +3760,20 @@ def sync_news(
                 # guardada — não é uma nova recolha.
                 return
             if article:
+                title_key = normalise_text(article.get("title") or "")
+                index_key = (str(source.get("id") or ""), title_key or str(article["id"]))
+                with dedupe_lock:
+                    duplicate_of = title_index.setdefault(index_key, str(article["id"]))
+                if duplicate_of != str(article["id"]):
+                    # Mesma notícia já guardada por outro URL da mesma fonte:
+                    # manter a primeira versão, sem duplicar no estado.
+                    entry["decision"] = "duplicated"
+                    local_state["seen"][article_id] = entry
+                    safe_print(
+                        f"[{date_str}] [{source['name']}] 🔁 Duplicada (já guardada): "
+                        f"{article.get('title') or display_title}"
+                    )
+                    return
                 saved_date = (article.get("publishedAt") or "")[:10] or date_str
                 if candidate.get("_cachedArticle"):
                     note = "🔄 Atualizada: "
@@ -3299,9 +3877,13 @@ def sync_news(
                         article = future.result()
                     except PipelineError as exc:
                         errors.append(str(exc))
+                        # Erro de rede/WAF não é rejeição editorial. O resultado fica
+                        # pendente para retry e não deve aparecer como "Não guardada".
+                        candidate["_indisponivel"] = True
                         article = None
                     except Exception as exc:  # defensive: never lose the bookkeeping
                         LOGGER.warning("Falha a obter %s: %s", candidate.get("url"), exc)
+                        candidate["_indisponivel"] = True
                         article = None
                     record_fetch_result(article_id, candidate, article)
                     completed_since_flush += 1
@@ -3781,6 +4363,20 @@ def official_data_hosts() -> set[str]:
     return {"parlamento.pt", "app.parlamento.pt"}
 
 
+def _http_text(client: Any, url: str, timeout: int | float | None = None) -> tuple[str, Mapping[str, str], str]:
+    try:
+        return client.text(url, timeout=timeout)
+    except TypeError:
+        return client.text(url)
+
+
+def _http_get(client: Any, url: str, timeout: int | float | None = None, extra_headers: Mapping[str, str] | None = None) -> requests.Response:
+    try:
+        return client.get(url, extra_headers=extra_headers, timeout=timeout)
+    except TypeError:
+        return client.get(url, extra_headers=extra_headers)
+
+
 def discover_open_data_json(
     client: HttpClient,
     assembly_config: Mapping[str, Any],
@@ -3797,7 +4393,8 @@ def discover_open_data_json(
     page_url = safe_url(urllib.parse.urljoin(base, resource_page), official_data_hosts())
     if not page_url:
         raise PipelineError(f"Página de dados abertos inválida: {resource_page}")
-    raw, _headers, resolved = client.text(page_url)
+    open_data_timeout = int(assembly_config.get("requestTimeoutSeconds", 180))
+    raw, _headers, resolved = _http_text(client, page_url, timeout=open_data_timeout)
     direct_links = extract_links(raw, resolved)
     resource_key = normalise_key(resource_page)
     prefix = "iniciativas" if "iniciativa" in resource_key else "atividades" if "atividade" in resource_key else ""
@@ -3822,8 +4419,16 @@ def discover_open_data_json(
         if normalise_text(label) == wanted_label
         and resource_basename in urllib.parse.urlsplit(url).path.rsplit("/", 1)[-1].casefold()
     ]
-    for candidate in dict.fromkeys(url for url in legislature_links if url):
-        linked_raw, _linked_headers, linked_resolved = client.text(candidate)
+    candidates = list(dict.fromkeys(url for url in legislature_links if url))
+    direct_leg_url = safe_url(f"{page_url}?leg={legislature}", official_data_hosts())
+    if direct_leg_url and direct_leg_url not in candidates:
+        candidates.append(direct_leg_url)
+
+    for candidate in candidates:
+        try:
+            linked_raw, _linked_headers, linked_resolved = _http_text(client, candidate, timeout=open_data_timeout)
+        except Exception:
+            continue
         for url, label in extract_links(linked_raw, linked_resolved):
             safe = safe_url(url, official_data_hosts())
             if safe and is_json_link(safe, label):
@@ -3841,7 +4446,8 @@ def fetch_open_data_records(
     hints: Sequence[str],
 ) -> tuple[list[Mapping[str, Any]], str, str]:
     resource_url = discover_open_data_json(client, assembly_config, resource_page, legislature)
-    response = client.get(resource_url)
+    open_data_timeout = int(assembly_config.get("requestTimeoutSeconds", 180))
+    response = _http_get(client, resource_url, timeout=open_data_timeout)
     raw = decode_response_text(response)
     resolved = response.url
     try:
@@ -3938,8 +4544,11 @@ def sync_assembly(
             }
         except PipelineError as exc:
             statuses.append({"legislature": legislature, "resource": "initiatives", "status": "error", "note": str(exc)})
+            # Falha de transporte não é rejeição editorial nem item não guardado;
+            # mostrar como erro técnico evita poluir o relatório com falsos
+            # "Não guardada".
             safe_print(
-                f"[----/--/--] [Assembleia {legislature}] ❌ Não guardada: iniciativas ({exc})"
+                f"[Assembleia {legislature}] ⚠️ Erro técnico ao obter iniciativas: {exc}"
             )
             continue
 
@@ -4091,8 +4700,13 @@ def sync_assembly(
         )
         if checkpoint:
             checkpoint()
-    if any(status.get("status") in {"ok", "partial"} for status in statuses):
+    # Só avançar o marcador global quando todas as legislaturas solicitadas
+    # terminaram sem erro. Assim, uma execução parcial volta a tentar as
+    # legislaturas que falharam, em vez de as considerar sincronizadas.
+    if statuses and all(status.get("status") == "ok" for status in statuses):
         assembly_state["lastSyncedAt"] = iso_now()
+    else:
+        assembly_state.pop("lastSyncedAt", None)
     return statuses
 
 
@@ -5676,46 +6290,68 @@ def rebuild_budget_matches(state: dict[str, Any], config: Mapping[str, Any]) -> 
             if isinstance(item, Mapping) and item.get("id")
         }
 
+    # Pré-carrega e indexa invertidamente todos os chunks de orçamento em memória uma única vez,
+    # evitando milhões de leituras I/O repetidas e permitindo filtragem instantânea por termo.
+    cached_chunks: list[dict[str, Any]] = []
+    inverted_chunks: dict[str, list[int]] = defaultdict(list)
+    for _path, _index, chunk in iter_budget_chunks():
+        category_scope = budget_chunk_category(chunk)
+        text_value = str(chunk.get("text") or "")
+        tokens = tokenise(text_value)
+        if not tokens:
+            continue
+        chunk_id = str(chunk.get("id") or stable_id(
+            "budchunk", chunk.get("rel_path"), chunk.get("page"), chunk.get("chunk_index")
+        ))
+        rel_path = str(chunk.get("rel_path") or "")
+        doc_id = stable_id("bud", rel_path)
+        document = documents_by_id.get(doc_id) or {}
+        year_raw = chunk.get("year")
+        year_text = str(year_raw or "")
+        year_value = int(year_text[:4]) if year_text[:4].isdigit() else None
+        idx = len(cached_chunks)
+        cached_chunks.append({
+            "chunk_id": chunk_id,
+            "doc_id": doc_id,
+            "category": category_scope,
+            "year": year_value,
+            "filename": chunk.get("filename"),
+            "page": chunk.get("page"),
+            "text": text_value,
+            "preview": compact_text(text_value, 240),
+            "governmentLabel": document.get("governmentLabel"),
+            "tokens": tokens,
+        })
+        for tok in tokens:
+            inverted_chunks[tok].append(idx)
+
     matched_total = 0
     for promise in state["promises"].values():
         promise_tokens = tokenise(promise.get("statement"))
         suggestions: list[dict[str, Any]] = []
         if promise_tokens:
-            # As rubricas são varridas com um pré-filtro barato de sobreposição
-            # (≥2 termos partilhados) antes de calcular a similaridade.
-            for _path, _index, chunk in iter_budget_chunks():
-                category_scope = budget_chunk_category(chunk)
-                text_value = str(chunk.get("text") or "")
-                tokens = tokenise(text_value)
-                if not tokens:
-                    continue
-                overlap_count = sum(1 for token in promise_tokens if token in tokens)
-                if overlap_count < min_shared_terms:
-                    continue
-                chunk_id = str(chunk.get("id") or stable_id(
-                    "budchunk", chunk.get("rel_path"), chunk.get("page"), chunk.get("chunk_index")
-                ))
+            overlap_counts: Counter[int] = Counter()
+            for tok in promise_tokens:
+                overlap_counts.update(inverted_chunks.get(tok, []))
+            candidate_indices = [idx for idx, hits in overlap_counts.items() if hits >= min_shared_terms]
+            for idx in candidate_indices:
+                item = cached_chunks[idx]
+                tokens = item["tokens"]
                 shared = sorted(promise_tokens & tokens)
-                score, _unused = promise_similarity(promise, {"title": text_value, "type": ""})
+                score, _unused = promise_similarity(promise, {"title": item["text"], "type": ""})
                 if len(shared) == 2 and score < threshold_two:
                     continue
                 if len(shared) >= 3 and score < threshold_three:
                     continue
-                rel_path = str(chunk.get("rel_path") or "")
-                doc_id = stable_id("bud", rel_path)
-                document = documents_by_id.get(doc_id) or {}
-                year_raw = chunk.get("year")
-                year_text = str(year_raw or "")
-                year_value = int(year_text[:4]) if year_text[:4].isdigit() else None
                 suggestions.append({
-                    "budgetChunkId": chunk_id,
-                    "budgetDocId": doc_id,
-                    "category": category_scope,
-                    "year": year_value,
-                    "filename": chunk.get("filename"),
-                    "page": chunk.get("page"),
-                    "rubricPreview": compact_text(text_value, 240),
-                    "governmentLabel": document.get("governmentLabel"),
+                    "budgetChunkId": item["chunk_id"],
+                    "budgetDocId": item["doc_id"],
+                    "category": item["category"],
+                    "year": item["year"],
+                    "filename": item["filename"],
+                    "page": item["page"],
+                    "rubricPreview": item["preview"],
+                    "governmentLabel": item["governmentLabel"],
                     "score": score,
                     "sharedTerms": shared[:12],
                     "reviewRequired": True,
@@ -5724,6 +6360,7 @@ def rebuild_budget_matches(state: dict[str, Any], config: Mapping[str, Any]) -> 
         top = suggestions[:max_per_promise]
         promise["budgetMatches"] = top
         matched_total += len(top)
+    safe_print(f"   ↳ {matched_total} correspondências sugeridas entre promessas e rubricas orçamentais.")
 
     # Recalcula as contagens agregadas por documento a partir de todas as promessas.
     fresh_counts: Counter[str] = Counter()
@@ -6481,6 +7118,9 @@ def export_outputs(state: Mapping[str, Any], config: Mapping[str, Any], matcher:
     public_shard_dir = public_path.parent / f"{public_path.stem}-shards"
     # Cada array precisa de vários shards próprios; o particionador recebe uma
     # lista por chamada para não misturar artigos, promessas, iniciativas e votos.
+    # Os shards são escritos para nomes temporários e publicados apenas depois
+    # do manifesto final, evitando um Público parcialmente visível durante uma
+    # interrupção ou falha de exportação.
     shard_paths = {}
     for key in public_array_keys:
         manifest = write_json_list_shards(
@@ -6587,6 +7227,10 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 def chosen_legislatures(args: argparse.Namespace, config: Mapping[str, Any]) -> list[str]:
     if args.all_history:
         return list(ALL_LEGISLATURES)
+    # Por defeito, atualizar apenas a legislatura corrente: os recursos antigos
+    # são históricos e não recebem iniciativas novas, além de poderem falhar por
+    # timeout sem acrescentar dados úteis. O histórico continua disponível de
+    # forma explícita através de --legislatures/--all-history.
     values = args.legislatures or [config.get("assembly", {}).get("currentLegislature", "XVII")]
     result: list[str] = []
     for value in values:
@@ -6664,6 +7308,11 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
         raise PipelineError("A configuração ou a lista de entidades não contém um objeto JSON válido.")
     print_collection_banner(config)
     state = ensure_state(json_load(args.state, initial_state()))
+    recovery = {"articles": 0, "seen": 0, "duplicates": 0}
+    if not args.dry_run:
+        recovery = integrate_recovered_company_articles(state)
+        if recovery["articles"] or recovery["seen"]:
+            safe_print(f"🔁 Recuperação de empresas: {recovery['articles']} integradas, {recovery['seen']} URLs atualizados, {recovery['duplicates']} duplicadas.")
     matcher = EntityMatcher(entities)
     client = HttpClient(config.get("crawl", {}))
     removed_seen_entries = prune_stale_seen(state) if config.get("pruneStaleSeenEntries", True) else 0
@@ -6674,6 +7323,8 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
     cleanup_stale_tmp_files(args.state, args.public_output, args.memory_output)
     result: dict[str, Any] = {
         "command": args.command,
+        "maintenance": {"recovery": recovery},
+
         "news": [],
         "assembly": [],
         "promises": {},
@@ -6704,8 +7355,8 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
                 config,
                 matcher,
                 client,
-                since_days=max(0, args.since_days),
-                max_urls_override=args.max_urls_per_source,
+                since_days=0,
+                max_urls_override=None,
                 checkpoint=checkpoint,
                 source_filter=(
                     [item for item in str(args.sources or "").replace(";", ",").split(",") if item.strip()]
@@ -6777,6 +7428,7 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
         )
 
         safe_print("\n🧹 A validar relevância e a filtrar notícias...")
+        result["newsProcessingStateCleared"] = clear_news_processing_state(state)
         result["articlesRemovedAsIrrelevant"] = prune_irrelevant_articles(state, matcher)
         safe_print(
             f"   ↳ {result['articlesRemovedAsIrrelevant']} artigos irrelevantes ou não políticos removidos."
@@ -6802,6 +7454,7 @@ def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
         if state.get("budgetDocuments") or state.get("budgetCorpusFingerprint"):
             result["promises"]["budgetMatches"] = rebuild_budget_matches(state, config)
         state["updatedAt"] = iso_now()
+        state.setdefault("maintenance", {})["lastFullScanAt"] = iso_now()
         state["lastRun"] = {
             "at": iso_now(),
             "command": args.command,

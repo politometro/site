@@ -125,14 +125,8 @@ class PoliticalIntelligenceTests(unittest.TestCase):
             source for source in self.config["sources"] if source["id"] == "publico"
         )
 
-        self.assertEqual(
-            publico["archiveSitemap"]["urlTemplate"],
-            "https://www.publico.pt/sitemaps/articles/{year}-{month}.xml",
-        )
-        self.assertEqual(
-            publico["archiveSitemap"]["firstAvailableMonth"], "1998-01"
-        )
-        self.assertTrue(publico["archiveSitemap"]["completedMonthsOnly"])
+        self.assertIn("https://www.publico.pt/sitemaps/sitemapindex.xml", publico["sitemapSeeds"])
+        self.assertIn("https://www.publico.pt/sitemaps/news.xml", publico["sitemapSeeds"])
         self.assertEqual(publico["sitemapDateFloor"], "1998-01-01")
 
     def test_dated_sitemaps_outside_verified_range_never_reach_http(self):
@@ -197,6 +191,31 @@ class PoliticalIntelligenceTests(unittest.TestCase):
             self.assertTrue(intelligence.sitemap_child_allowed(observador, "https://observador.pt/wp-sitemap-posts-post-1.xml"))
             self.assertFalse(intelligence.sitemap_child_allowed(observador, "https://observador.pt/wp-sitemap-posts-podcast-1.xml"))
 
+    def test_default_legislature_is_current_only(self):
+        args = intelligence.parse_args(["news"])
+        self.assertEqual(intelligence.chosen_legislatures(args, {"assembly": {"currentLegislature": "XVII"}}), ["XVII"])
+
+    def test_assembly_does_not_mark_sync_complete_when_a_legislature_fails(self):
+        state = intelligence.initial_state()
+        config = {"assembly": {"enabled": True, "syncIntervalHours": 24}}
+        with mock.patch.object(intelligence, "assembly_due", return_value=True), \
+             mock.patch.object(intelligence, "fetch_open_data_records", side_effect=intelligence.PipelineError("timeout")), \
+             mock.patch.object(intelligence, "safe_print"):
+            statuses = intelligence.sync_assembly(
+                state, config, self.matcher, object(), ["XVII", "XVI"], force=True
+            )
+        self.assertEqual([item["status"] for item in statuses], ["error", "error"])
+        self.assertNotIn("lastSyncedAt", state["assembly"])
+
+    def test_clear_news_processing_state_reopens_old_decisions(self):
+        state = intelligence.initial_state()
+        seen = intelligence.source_state(state, "tsf")["seen"]
+        seen["old"] = {"filterVersion": "old", "decision": "article_irrelevant", "checkedAt": "x"}
+        seen["current"] = {"filterVersion": intelligence.NEWS_FILTER_VERSION, "decision": "collected"}
+        self.assertEqual(intelligence.clear_news_processing_state(state), 1)
+        self.assertNotIn("decision", seen["old"])
+        self.assertEqual(seen["current"]["decision"], "collected")
+
     def test_all_detail_pages_option_has_no_numeric_cap(self):
         args = intelligence.parse_args(["assembly", "--max-detail-pages", "all"])
         self.assertIsNone(args.max_detail_pages)
@@ -227,6 +246,32 @@ class PoliticalIntelligenceTests(unittest.TestCase):
         # Regressão: nenhuma fonte pode terminar em "error" (ex.: dependências
         # não inicializadas dentro do worker de cada fonte).
         self.assertEqual([s.get("status") for s in statuses], ["ok"])
+
+    def test_rejected_news_are_printed_even_when_verbose_option_is_false(self):
+        state = intelligence.initial_state()
+        source = {
+            "id": "fixture",
+            "name": "Fonte de teste",
+            "homepage": "https://example.test/",
+            "enabled": True,
+        }
+        config = {
+            "crawl": {
+                "maxUrlsPerSource": None,
+                "newsRetentionDays": None,
+                "verboseRejections": False,
+            },
+            "sources": [source],
+        }
+        with mock.patch.object(intelligence, "robots_policy", return_value=(None, [], None)), \
+             mock.patch.object(intelligence, "iter_sitemap_records", return_value=iter([{
+                 "url": "https://example.test/desporto/jogo",
+                 "title": "Jogo de futebol",
+             }])), \
+             mock.patch.object(intelligence, "safe_print") as printer:
+            intelligence.sync_news(state, config, self.matcher, object(), since_days=0)
+
+        self.assertTrue(any("Não guardada" in str(call.args[0]) for call in printer.call_args_list))
 
     def test_news_prefilter_rejects_irrelevant_sections_before_article_fetch(self):
         self.assertFalse(intelligence.candidate_may_be_relevant(
@@ -752,6 +797,20 @@ class PoliticalIntelligenceTests(unittest.TestCase):
         self.assertNotIn("stale-initiative", state["initiatives"])
         self.assertNotIn("stale-vote", state["votes"])
         self.assertIn("initiatives:XVII", state["assembly"]["resourceSnapshots"])
+    def test_transport_errors_are_not_reported_as_rejected_articles(self):
+        candidate = {"lastmod": "2026-01-01", "url": "https://example.test/news", "title": "Notícia"}
+        source = {"id": "fixture", "name": "Fonte", "homepage": "https://example.test/"}
+        class FailingClient:
+            def text(self, _url):
+                raise intelligence.PipelineError("read timeout")
+        with mock.patch.object(intelligence, "can_fetch", return_value=True), \
+             mock.patch.object(intelligence, "safe_print"):
+            result = intelligence.fetch_article(candidate, source, FailingClient(), None, {
+                "maxArticleExcerptCharacters": 1200,
+            }, self.matcher)
+        self.assertIsNone(result)
+        self.assertFalse(intelligence.classify_article({"title": "Notícia", "url": "https://example.test/news"}, self.matcher)[2])
+
     def test_is_blocked_non_political(self):
         # Betting / Odds / Casino / Sports match
         self.assertTrue(intelligence.is_blocked_non_political("Odds e prognostico chelsea vs tottenham premier league 19 05 2026"))
@@ -1251,6 +1310,228 @@ class PoliticalIntelligenceTests(unittest.TestCase):
             first = next(iter(matches))
             self.assertTrue(first["reviewRequired"])
             self.assertEqual(first["year"], 2025)
+
+    def test_health_and_sns_news_are_classified_as_relevant(self):
+        cases = [
+            (
+                "Tempos de espera nas urgências do SNS sobem para 14 horas no Hospital de Santa Maria",
+                "https://example.test/sociedade/urgencias-sns-tempos-espera",
+            ),
+            (
+                "Grávida perde bebé após fecho de urgência de obstetrícia e maternidade",
+                "https://example.test/pais/gravida-urgencia-obstetricia-maternidade",
+            ),
+            (
+                "Morte em ambulância à porta do hospital por falta de resposta rápida do INEM",
+                "https://example.test/sociedade/inem-morte-ambulancia-hospital",
+            ),
+            (
+                "Grávida dá à luz em ambulância a caminho do hospital devido a encerramento de maternidades",
+                "https://example.test/nacional/gravida-ambulancia-maternidade",
+            ),
+            (
+                "Greve dos médicos e enfermeiros paralisa consultas nos centros de saúde e hospitais",
+                "https://example.test/portugal/greve-medicos-enfermeiros-sns",
+            ),
+        ]
+        for title, url in cases:
+            article = {
+                "title": title,
+                "url": url,
+                "summary": title,
+                "excerpt": title,
+                "section": "sociedade",
+            }
+            topics, entities, relevant = intelligence.classify_article(article, self.matcher)
+            self.assertTrue(
+                relevant,
+                f"Notícia de saúde deveria ser relevante: {title} (topics={topics}, entities={[e.get('id') for e in entities]})",
+            )
+            self.assertIn("politica", topics)
+
+    def test_autoridade_tributaria_news_are_classified_as_relevant(self):
+        cases = [
+            (
+                "Autoridade Tributária alerta para prazo de validação de faturas no e-fatura",
+                "https://example.test/economia/at-alerta-faturas",
+            ),
+            (
+                "Fisco começa a pagar primeiros reembolsos do IRS esta semana",
+                "https://example.test/economia/fisco-reembolsos-irs",
+            ),
+            (
+                "Administração Tributária avança com penhoras por dívidas fiscais não regularizadas",
+                "https://example.test/economia/at-penhoras-dividas",
+            ),
+        ]
+        for title, url in cases:
+            article = {
+                "title": title,
+                "url": url,
+                "summary": title,
+                "excerpt": title,
+                "section": "economia",
+            }
+            topics, entities, relevant = intelligence.classify_article(article, self.matcher)
+            self.assertTrue(
+                relevant,
+                f"Notícia da AT deveria ser relevante: {title} (topics={topics}, entities={[e.get('id') for e in entities]})",
+            )
+            self.assertTrue(bool({"politica", "economia"} & set(topics)))
+
+    def test_climaximo_activism_news_are_classified_as_relevant(self):
+        cases = [
+            (
+                "Ativistas do Climáximo cortam trânsito na Segunda Circular em protesto pelo clima",
+                "https://example.test/sociedade/climaximo-corta-segunda-circular",
+            ),
+            (
+                "Coletivo Climáximo pinta fachada de ministério em Lisboa em ação de desobediência civil",
+                "https://example.test/pais/climaximo-protesto-ministerio",
+            ),
+        ]
+        for title, url in cases:
+            article = {
+                "title": title,
+                "url": url,
+                "summary": title,
+                "excerpt": title,
+                "section": "sociedade",
+            }
+            topics, entities, relevant = intelligence.classify_article(article, self.matcher)
+            self.assertTrue(
+                relevant,
+                f"Notícia do Climáximo deveria ser relevante: {title} (topics={topics}, entities={[e.get('id') for e in entities]})",
+            )
+            self.assertIn("politica", topics)
+
+    def test_utad_and_higher_education_news_are_classified_as_relevant(self):
+        cases = [
+            (
+                "UTAD aprova novo plano de expansão do alojamento estudantil",
+                "https://example.test/nacional/utad-alojamento-estudantil",
+            ),
+            (
+                "Reitores das universidades debatem fim das propinas no Ensino Superior",
+                "https://example.test/sociedade/reitores-propinas-ensino-superior",
+            ),
+        ]
+        for title, url in cases:
+            article = {
+                "title": title,
+                "url": url,
+                "summary": title,
+                "excerpt": title,
+                "section": "sociedade",
+            }
+            topics, entities, relevant = intelligence.classify_article(article, self.matcher)
+            self.assertTrue(
+                relevant,
+                f"Notícia de ensino superior/UTAD deveria ser relevante: {title} (topics={topics}, entities={[e.get('id') for e in entities]})",
+            )
+            self.assertIn("politica", topics)
+
+    def test_nato_and_un_international_news_are_classified_as_relevant(self):
+        cases = [
+            (
+                "Cimeira da NATO debate reforço da defesa coletiva e cumprimento do artigo 5",
+                "https://example.test/mundo/cimeira-nato-defesa-artigo5",
+            ),
+            (
+                "Conselho de Segurança da ONU aprova resolução sobre cessar-fogo com mediação internacional",
+                "https://example.test/mundo/onu-conselho-seguranca-resolucao",
+            ),
+            (
+                "Guterres apela a acordo global sobre ação climática e desarmamento",
+                "https://example.test/mundo/guterres-apelo-clima-desarmamento",
+            ),
+        ]
+        for title, url in cases:
+            article = {
+                "title": title,
+                "url": url,
+                "summary": title,
+                "excerpt": title,
+                "section": "mundo",
+            }
+            topics, entities, relevant = intelligence.classify_article(article, self.matcher)
+            self.assertTrue(
+                relevant,
+                f"Notícia de NATO/ONU deveria ser relevante: {title} (topics={topics}, entities={[e.get('id') for e in entities]})",
+            )
+            self.assertIn("politica", topics)
+
+    def test_pure_nobel_prize_and_music_festival_announcements_are_rejected(self):
+        rejected = [
+            (
+                "Prémio Nobel da Economia é anunciado hoje em Estocolmo",
+                "https://example.test/economia/premio-nobel-economia-anunciado",
+            ),
+            (
+                "Francês Jean Tirole é o Nobel da Economia de 2014",
+                "https://example.test/economia/jean-tirole-nobel-economia",
+            ),
+            (
+                "Ig Nobel premeia as pesquisas científicas mais insólitas do ano",
+                "https://example.test/ciencia/ig-nobel-premios",
+            ),
+            (
+                "Câmara de Sesimbra apoia festival de música de verão com cartaz de luxo",
+                "https://example.test/cultura/festival-musica-sesimbra",
+            ),
+            (
+                "Bilhetes para o festival de música em Coimbra esgotam em poucas horas",
+                "https://example.test/local/festival-musica-coimbra-bilhetes",
+            ),
+            (
+                "Concerto de Capicua e de Vitorino anima as noites de verão na cidade",
+                "https://example.test/cultura/concerto-vitorino-verao",
+            ),
+        ]
+        kept_political_controversies = [
+            (
+                'Mariana Leitão elogia atribuição de Nobel a "símbolo de luta contra regimes opressores"',
+                "https://example.test/politica/mariana-leitao-nobel",
+            ),
+            (
+                "PSD congratula-se com atribuição do Nobel da Paz a María Corina Machado",
+                "https://example.test/politica/psd-nobel-paz",
+            ),
+            (
+                "Ventura critica ida de Montenegro a festival Alive",
+                "https://example.test/politica/ventura-critica-montenegro-alive",
+            ),
+            (
+                "DGS quer lugares sentados nos concertos do Avante, mas PCP quer público de pé",
+                "https://example.test/politica/dgs-pcp-avante-concertos",
+            ),
+        ]
+        for title, url in rejected:
+            article = {
+                "title": title,
+                "url": url,
+                "summary": title,
+                "excerpt": title,
+                "section": "cultura",
+            }
+            topics, entities, relevant = intelligence.classify_article(article, self.matcher)
+            self.assertFalse(
+                relevant,
+                f"Falso positivo deveria ter sido rejeitado: {title} (topics={topics}, entities={[e.get('id') for e in entities]})",
+            )
+        for title, url in kept_political_controversies:
+            article = {
+                "title": title,
+                "url": url,
+                "summary": title,
+                "excerpt": title,
+                "section": "politica",
+            }
+            topics, entities, relevant = intelligence.classify_article(article, self.matcher)
+            self.assertTrue(
+                relevant,
+                f"Notícia com controvérsia política deveria ser mantida: {title} (topics={topics}, entities={[e.get('id') for e in entities]})",
+            )
 
 
 if __name__ == "__main__":

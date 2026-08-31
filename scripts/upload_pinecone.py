@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Upload every Politómetro corpus to Pinecone incrementally.
+"""Envio incremental de todos os corpora do Politómetro para o Pinecone.
 
-The default embedding mode is local, so weekly runs do not consume Pinecone's
-hosted embedding quota. A fingerprint is stored per namespace/id; unchanged
-chunks are skipped and changed chunks are upserted with the same vector ID.
+O modo de embeddings predefinido é local, pelo que as execuções semanais não
+consomem o quota de embeddings alojado do Pinecone. Guarda-se uma impressão
+digital por namespace/id; os chunks inalterados são ignorados e os alterados
+são reenviados com o mesmo ID de vetor.
 """
 
 from __future__ import annotations
@@ -16,6 +17,8 @@ import os
 import sys
 import tempfile
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
@@ -28,10 +31,35 @@ DEFAULT_BASE_SOURCES = (
     SCRIPT_DIR / "extracted_chunks_ocr.json",
     SCRIPT_DIR / "extracted_chunks_eu_budget.json",
 )
-DEFAULT_MODEL = "multilingual-e5-large"
+DEFAULT_MODEL = "intfloat/multilingual-e5-large"
 DEFAULT_POLITICAL_NAMESPACE = "political-intelligence"
 MAX_PINECONE_EMBEDDING_TOKENS = 4_500_000
 LOGGER = logging.getLogger("upload_pinecone")
+
+
+def load_env_file() -> None:
+    """Lê as chaves do ficheiro .env do projeto (apenas para variáveis não definidas).
+
+    Isto permite que execuções locais via CMD obtenham o PINECONE_API_KEY sem o
+    operador definir uma variável de ambiente global. O GitHub Actions continua
+    a sobrepor através do seu próprio ambiente, pelo que os valores de CI têm
+    sempre precedência.
+    """
+    env_path = ROOT / ".env"
+    if not env_path.exists():
+        return
+    try:
+        for line in env_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            if key and key not in os.environ:
+                os.environ[key] = value
+    except OSError:
+        pass
 
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
@@ -73,7 +101,7 @@ def json_save(path: Path, payload: Any) -> None:
 
 
 def load_list(path: Path) -> list[dict[str, Any]]:
-    """Load a normal list or the sharded-list manifest produced by the pipeline."""
+    """Carrega uma lista normal ou o manifesto de shards produzido pelo pipeline."""
     if not path.exists():
         print(f"Aviso: corpus ausente, ignorado: {path}")
         return []
@@ -155,9 +183,82 @@ def pinecone_upsert(index: Any, vectors: list[dict[str, Any]], namespace: str) -
     index.upsert(**kwargs)
 
 
+# --------------------------------------------------------------------------- #
+# Arquivo de texto no Turso (libSQL)
+#
+# O escalão free do Pinecone limita o armazenamento a 2 GB; o texto integral dos
+# chunks (~418 MB) ultrapassaria esse limite. Mantemos no Pinecone apenas os
+# vetores + uma pequena flag `source_type` e guardamos o texto integral e os
+# metadados estruturados no Turso (free: 5 GB, 500M leituras, 10M escritas/mês).
+# A aplicação de chat junta os dados pelo `id` do chunk.
+# --------------------------------------------------------------------------- #
+def turso_enabled() -> bool:
+    return bool(os.environ.get("TURSO_URL") and os.environ.get("TURSO_TOKEN"))
+
+
+def _turso_request(statements: list[dict[str, Any]]) -> dict[str, Any]:
+    url = os.environ["TURSO_URL"].rstrip("/") + "/v1/sql"
+    token = os.environ["TURSO_TOKEN"]
+    body = json.dumps({"statements": statements}).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=body,
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        return json.loads(resp.read().decode("utf-8", "replace"))
+
+
+def _turso_int(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    text = str(value or "").strip()
+    return int(text) if text.isdigit() else None
+
+
+def _turso_upsert_chunks(rows: list[dict[str, Any]]) -> None:
+    """Escreve as linhas de texto dos chunks de forma idempotente. Seguro repetir (ON CONFLICT)."""
+    statements: list[dict[str, Any]] = []
+    for r in rows:
+        statements.append({
+            "q": (
+                "INSERT INTO chunks "
+                "(id, namespace, text, page, party, year, category, filename, source_url, source_type, embedding_model) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) "
+                "ON CONFLICT(id) DO UPDATE SET "
+                "namespace=excluded.namespace, text=excluded.text, page=excluded.page, "
+                "party=excluded.party, year=excluded.year, category=excluded.category, "
+                "filename=excluded.filename, source_url=excluded.source_url, "
+                "source_type=excluded.source_type, embedding_model=excluded.embedding_model"
+            ),
+            "args": [
+                {"type": "text", "value": str(r.get("id") or "")},
+                {"type": "text", "value": str(r.get("namespace") or "")},
+                {"type": "text", "value": str(r.get("text") or "")},
+                {"type": "integer", "value": _turso_int(r.get("page"))},
+                {"type": "text", "value": str(r.get("party") or "")},
+                {"type": "text", "value": str(r.get("year") or "")},
+                {"type": "text", "value": str(r.get("category") or "")},
+                {"type": "text", "value": str(r.get("filename") or "")},
+                {"type": "text", "value": str(r.get("source_url") or "")},
+                {"type": "text", "value": str(r.get("source_type") or "")},
+                {"type": "text", "value": str(r.get("embedding_model") or DEFAULT_MODEL)},
+            ],
+        })
+    for i in range(0, len(statements), 200):
+        _turso_request(statements[i:i + 200])
+
+
 def run(args: argparse.Namespace) -> dict[str, Any]:
     if args.batch_size < 1:
         raise RuntimeError("--batch-size tem de ser positivo.")
+    load_env_file()
     tracking = load_tracking(args.tracking)
     pending: list[tuple[dict[str, Any], str, str]] = []
     totals: dict[str, int] = {}
@@ -188,6 +289,11 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
     api_key = os.environ.get("PINECONE_API_KEY")
     if not api_key:
         raise RuntimeError("Defina PINECONE_API_KEY antes de enviar para Pinecone.")
+    if not turso_enabled():
+        raise RuntimeError(
+            "Defina TURSO_URL e TURSO_TOKEN no .env (texto dos chunks vai para o Turso, "
+            "para caber no limite de 2 GB do Pinecone free). Veja scripts/turso_schema.sql e scripts/init_turso.py."
+        )
     try:
         from pinecone import Pinecone
     except ImportError as exc:
@@ -246,13 +352,32 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
             batch = namespace_pending[start:start + batch_size]
             encoded = embed([str(item[0]["text"]) for item in batch])
             vectors = []
-            for offset, (item, _item_namespace, _digest) in enumerate(batch):
-                metadata = {
-                    key: item.get(key)
-                    for key in ("text", "page", "party", "year", "category", "filename", "rel_path", "source_type", "source_url")
-                    if item.get(key) not in (None, "")
-                }
+            turso_rows = []
+            for offset, (item, item_namespace, _digest) in enumerate(batch):
+                # Pinecone fica apenas com o vetor + flag mínima (source_type) para
+                # caber no limite de 2 GB do plano free. O texto integral vai para o Turso.
+                metadata = (
+                    {"source_type": item["source_type"]}
+                    if item.get("source_type") not in (None, "")
+                    else {}
+                )
                 vectors.append({"id": str(item["id"]), "values": as_values(encoded[offset]), "metadata": metadata})
+                turso_rows.append({
+                    "id": item["id"],
+                    "namespace": item_namespace,
+                    "text": item.get("text", ""),
+                    "page": item.get("page"),
+                    "party": item.get("party"),
+                    "year": item.get("year"),
+                    "category": item.get("category"),
+                    "filename": item.get("filename"),
+                    "source_url": item.get("source_url"),
+                    "source_type": item.get("source_type"),
+                    "embedding_model": DEFAULT_MODEL,
+                })
+            # 1) Persiste o texto no Turso primeiro (chat resolve por id).
+            _turso_upsert_chunks(turso_rows)
+            # 2) Upsert dos vetores no Pinecone.
             for attempt in range(6):
                 try:
                     pinecone_upsert(index, vectors, namespace)
@@ -278,6 +403,7 @@ def run(args: argparse.Namespace) -> dict[str, Any]:
 
 def main(argv: Sequence[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
+    load_env_file()
     try:
         result = run(parse_args(argv))
     except (OSError, ValueError, RuntimeError) as exc:

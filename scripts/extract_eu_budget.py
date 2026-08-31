@@ -12,6 +12,7 @@ Uso:  python scripts/extract_eu_budget.py [--force]
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -30,11 +31,34 @@ logging.getLogger("pypdf").setLevel(logging.ERROR)
 ROOT = Path(__file__).resolve().parent.parent
 DATA_DIR = ROOT / "data" / "Orçamentos de Estado Europeus"
 OUTPUT = ROOT / "scripts" / "extracted_chunks_eu_budget.json"
+STATE_FILE = ROOT / "scripts" / "eu_budget_extract_state.json"
 
 
 def clean_vector_id(raw_id: str) -> str:
     normalized = unicodedata.normalize("NFKD", raw_id).encode("ASCII", "ignore").decode("ASCII")
     return re.sub(r"[^a-zA-Z0-9_\-]", "_", normalized)
+
+
+def file_hash(path: Path) -> str:
+    """SHA-256 hash of file contents."""
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def load_state() -> dict:
+    if not STATE_FILE.exists():
+        return {}
+    try:
+        return json.loads(STATE_FILE.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def save_state(state: dict) -> None:
+    STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def chunk_text(text: str, chunk_size: int = 1000, overlap: int = 200) -> list[str]:
@@ -80,25 +104,40 @@ def main() -> int:
         print(f"Pasta ausente: {DATA_DIR}")
         return 1
 
+    state = load_state()
+    existing_chunks = []
     if OUTPUT.exists() and not args.force:
-        existing_size = OUTPUT.stat().st_size
-        newer = OUTPUT.stat().st_mtime > max(
-            (pdf.stat().st_mtime for pdf in DATA_DIR.glob("*.pdf")), default=0.0
-        )
-        if existing_size > 1000 and newer:
-            print(f"Saída em dia ({existing_size:,} bytes); use --force para reextrair.")
-            return 0
+        try:
+            existing_chunks = json.loads(OUTPUT.read_text(encoding="utf-8"))
+        except Exception:
+            existing_chunks = []
+
+    pdf_files = sorted(DATA_DIR.glob("*.pdf"))
+    print(f"A extrair {len(pdf_files)} PDF de {DATA_DIR} ...")
+
+    # Map existing chunks by PDF fingerprint
+    chunks_by_pdf: dict[str, list[dict]] = {}
+    for chunk in existing_chunks:
+        fp = chunk.get("source_fingerprint") or chunk.get("fingerprint")
+        if fp:
+            chunks_by_pdf.setdefault(fp, []).append(chunk)
 
     chunks_db: list[dict] = []
     processed: list[tuple[str, int, int]] = []
     errors: list[tuple[str, str]] = []
 
-    pdf_files = sorted(DATA_DIR.glob("*.pdf"))
-    print(f"A extrair {len(pdf_files)} PDF de {DATA_DIR} ...")
     for pdf_path in pdf_files:
         rel_path = f"Orçamentos de Estado Europeus/{pdf_path.name}"
         category = category_for(pdf_path.name)
         year_value = year_for(pdf_path, pdf_path.name)
+        pdf_hash = file_hash(pdf_path)
+        stored = state.get(rel_path)
+        if not args.force and stored == pdf_hash and pdf_hash in chunks_by_pdf:
+            # Reuse existing chunks
+            chunks_db.extend(chunks_by_pdf[pdf_hash])
+            print(f"  Inalterado: {rel_path} ({len(chunks_by_pdf[pdf_hash])} excertos reutilizados)")
+            continue
+
         try:
             reader = pypdf.PdfReader(str(pdf_path))
             if reader.is_encrypted:
@@ -129,14 +168,17 @@ def main() -> int:
                     "category": category,
                     "filename": pdf_path.name,
                     "rel_path": rel_path,
+                    "source_fingerprint": pdf_hash,
                 })
             processed.append((rel_path, len(reader.pages), len(page_chunks)))
             print(f"  Processado: {rel_path} ({len(reader.pages)} páginas, {len(page_chunks)} excertos)")
+            state[rel_path] = pdf_hash
         except Exception as exc:  # noqa: BLE001 — falhas individuais não param a extração
             errors.append((rel_path, str(exc)))
             print(f"  Erro {rel_path}: {exc}")
 
     OUTPUT.write_text(json.dumps(chunks_db, ensure_ascii=False), encoding="utf-8")
+    save_state(state)
     from collections import Counter
 
     categories = Counter(item["category"] for item in chunks_db)
