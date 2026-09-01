@@ -1093,49 +1093,6 @@
       }
     },
     {
-      "id": "rss_podcast_6456db8f32e46c40",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "O que esperar do caso Luís Neves e da não reforma da Segurança Social",
-      "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre os temas e questões de o que esperar do caso luís neves e da não reforma da segurança social.",
-      "imageUrl": "/covers/podcast_o_que_esperar_do_caso_lu_s_neves_e_da_n_o_reforma_da_9fa60d84_6456db8f32e4.jpg",
-      "link": "https://omny.fm/shows/linhas-vermelhas/o-que-esperar-do-caso-lu-s-neves-e-da-n-o-reforma-da-seguran-a-social",
-      "externalId": "d8d9d9a7-729e-4cbc-8f68-b4b0013940e1",
-      "sourceSeriesId": "1596904063",
-      "sourceSeriesTitle": "Linhas Vermelhas",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-25T07:40:00Z",
-      "expiryDate": "2026-09-04T07:40:00Z",
-      "createdAt": "2026-08-25T13:17:52.608492Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
-        "guid": "d8d9d9a7-729e-4cbc-8f68-b4b0013940e1",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
-        "show": "Linhas Vermelhas"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "d8d9d9a7-729e-4cbc-8f68-b4b0013940e1",
-        "score": 1.0,
-        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
-        "verifiedAt": "2026-08-25T13:17:56.243648Z",
-        "resolvedTitle": "O que esperar do caso Luís Neves e da não reforma da Segurança Social",
-        "resolvedAuthor": "Linhas Vermelhas",
-        "sourcePublishedAt": "2026-08-25T07:40:00Z",
-        "sourceDescription": "Cecília Meireles e Miguel Prata Roque debatem os desenvolvimentos nas polémicas em torno de Luís Neves e o que esperar do caso nos próximos tempos, bem como a decisão do Governo de não avançar com uma reforma estrutural da Segurança Social.",
-        "editorialDescription": "Análise sobre os temas e questões de o que esperar do caso luís neves e da não reforma da segurança social.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "44fd0c7c5a1d58264d62647e45c371c3cad76087a00fa90a166e8110a3e66adc",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_4bf031feb2cb1b7b",
       "type": "highlight",
       "category": "Destaque",
@@ -1192,7 +1149,7 @@
       "sourcePublishedAt": "2026-08-30T05:00:00Z",
       "expiryDate": "2026-09-02T05:00:00Z",
       "createdAt": "2026-08-30T10:00:40.161896Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1201,7 +1158,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1217,7 +1174,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "4c38eff6cf364ef73ff24ebe87a6e308b282e05955e810e73874056042d97399",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [O Estado deve financiar cursos com pouca saída? — Ouvintes]: Conteúdo expira em 2026-09-02T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_podcast_ae4bb6499137b371",
@@ -1340,6 +1298,50 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-08-31T09:00:16Z",
         "sourceDescription": "O deputado Rui Afonso revela que o Chega avançará com uma moção de censura até 15 de setembro, caso Luís Neves continue no Governo. António Mendonça Mendes (PS) pede mais explicações."
+      }
+    },
+    {
+      "id": "rss_podcast_5992ebe0cdde78f3",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Porque espera André Ventura pelas declarações de Luís Neves para decidir sobre a moção de censura ao Governo?",
+      "editorialTitle": "Porque espera André Ventura pelas declarações de Luís Neves",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre os temas e questões de porque espera andré ventura pelas declarações de luís neves.",
+      "imageUrl": "/covers/podcast_porque_espera_andr__ventura_pelas_declara__es_de_lu__e9c1a0bd_5992ebe0cdde.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/porque-espera-andr-ventura-pelas-declara-es-de-lu-s-neves-para-decidir-sobre-a-mo-o-de-censura-ao-governo",
+      "externalId": "58802948-1e0b-426d-aa52-b4b701374196",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-01T08:23:57Z",
+      "expiryDate": "2026-09-11T08:23:57Z",
+      "createdAt": "2026-09-01T09:31:23.473740Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "58802948-1e0b-426d-aa52-b4b701374196",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "58802948-1e0b-426d-aa52-b4b701374196",
+        "score": 1.0,
+        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
+        "verifiedAt": "2026-09-01T09:31:26.864991Z",
+        "resolvedTitle": "Porque espera André Ventura pelas declarações de Luís Neves para decidir sobre a moção de censura ao Governo?",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-09-01T08:23:57Z",
+        "sourceDescription": "Cecília Meireles e Miguel Prata Roque analisam a moção de censura ao Governo apresentada pelo Chega, na sequência das polémicas em torno de Luís Neves, e discutem os novos dados do INE sobre a economia portuguesa, com destaque para a subida da inflação, o crescimento do PIB e o aumento do preço das rendas.",
+        "editorialDescription": "Análise sobre os temas e questões de porque espera andré ventura pelas declarações de luís neves.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "cf2394061fc697fd615b198c8beb268dc920ac9bb27c215fff1e979d610deb0f",
+        "editorialDescriptionProvider": "extractive"
       }
     }
   ],
