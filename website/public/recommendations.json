@@ -1254,7 +1254,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Luís Neves. Chega dá duas semanas para acabar com \"lamaçal\"",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Paulo Ferreira",
       "description": "O deputado Rui Afonso revela que o Chega avançará com uma moção de censura até 15 de setembro, caso Luís Neves continue no Governo. António Mendonça Mendes (PS) pede mais explicações.",
       "imageUrl": "/covers/highlight_lu_s_neves__chega_d__duas_semanas_para_acabar_com__34c86fc9_85ce70c3b2c6.jpg",
       "link": "https://observador.pt/programas/explicador/luis-neves-chega-da-duas-semanas-para-acabar-com-lamacal/",
@@ -1289,13 +1289,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:1ad5e80137e6b4fc6b29dc3f",
         "score": 1.0,
         "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
         "verifiedAt": "2026-08-31T11:00:12.866928Z",
         "resolvedTitle": "Luís Neves. Chega dá duas semanas para acabar com \"lamaçal\"",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Paulo Ferreira",
         "sourcePublishedAt": "2026-08-31T09:00:16Z",
         "sourceDescription": "O deputado Rui Afonso revela que o Chega avançará com uma moção de censura até 15 de setembro, caso Luís Neves continue no Governo. António Mendonça Mendes (PS) pede mais explicações."
       }
@@ -1307,7 +1307,7 @@
       "title": "Porque espera André Ventura pelas declarações de Luís Neves para decidir sobre a moção de censura ao Governo?",
       "editorialTitle": "Porque espera André Ventura pelas declarações de Luís Neves",
       "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre os temas e questões de porque espera andré ventura pelas declarações de luís neves.",
+      "description": "Análise sobre os temas e questões de porque espera andré ventura pelas declarações de luís neves para decidir sobre a moção de censura ao.",
       "imageUrl": "/covers/podcast_porque_espera_andr__ventura_pelas_declara__es_de_lu__e9c1a0bd_5992ebe0cdde.jpg",
       "link": "https://omny.fm/shows/linhas-vermelhas/porque-espera-andr-ventura-pelas-declara-es-de-lu-s-neves-para-decidir-sobre-a-mo-o-de-censura-ao-governo",
       "externalId": "58802948-1e0b-426d-aa52-b4b701374196",
@@ -1338,9 +1338,9 @@
         "resolvedAuthor": "Linhas Vermelhas",
         "sourcePublishedAt": "2026-09-01T08:23:57Z",
         "sourceDescription": "Cecília Meireles e Miguel Prata Roque analisam a moção de censura ao Governo apresentada pelo Chega, na sequência das polémicas em torno de Luís Neves, e discutem os novos dados do INE sobre a economia portuguesa, com destaque para a subida da inflação, o crescimento do PIB e o aumento do preço das rendas.",
-        "editorialDescription": "Análise sobre os temas e questões de porque espera andré ventura pelas declarações de luís neves.",
+        "editorialDescription": "Análise sobre os temas e questões de porque espera andré ventura pelas declarações de luís neves para decidir sobre a moção de censura ao.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "cf2394061fc697fd615b198c8beb268dc920ac9bb27c215fff1e979d610deb0f",
+        "editorialSourceHash": "d1d13c8c0476e042480400b25223469566ab013c981a29b93f135b318fd1f0d4",
         "editorialDescriptionProvider": "extractive"
       }
     }
