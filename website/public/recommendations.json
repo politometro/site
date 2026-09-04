@@ -1049,50 +1049,6 @@
       }
     },
     {
-      "id": "rss_highlight_21f5e9253783d7ce",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "As legislativas de 2028",
-      "authorOrMeta": "Rui Pedro Antunes",
-      "description": "A aprovação do OE2027 está quase garantida, mas, no ano seguinte, será provável Carneiro ceder à tentação de provocar crise política. Já Ventura está sempre pronto para ela. Seguro pouco poderá fazer.",
-      "imageUrl": "/covers/highlight_as_legislativas_de_2028_ea145183_7c50389e88e6.jpg",
-      "link": "https://observador.pt/opiniao/as-legislativas-de-2028/",
-      "externalId": "article:url:21f5e9253783d7ce116409cd",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-24T23:22:05Z",
-      "expiryDate": "2026-09-23T23:22:05Z",
-      "createdAt": "2026-08-25T05:00:16.763086Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/as-legislativas-de-2028/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2414%3A2414%3Anowe%3A74%3A952%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170559%2Frui-pedro-antunes.jpg",
-        "categories": [
-          "Orçamento do Estado",
-          "Economia",
-          "PSD",
-          "Política",
-          "PS",
-          "Partido Chega"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:21f5e9253783d7ce116409cd",
-        "score": 1.0,
-        "coverHash": "091614f66c8e38f4d50dce0197adfe04107fef54e87ab6ea019930c916fd002c",
-        "verifiedAt": "2026-08-25T05:00:17.070774Z",
-        "resolvedTitle": "As legislativas de 2028",
-        "resolvedAuthor": "Rui Pedro Antunes",
-        "sourcePublishedAt": "2026-08-24T23:22:05Z",
-        "sourceDescription": "A aprovação do OE2027 está quase garantida, mas, no ano seguinte, será provável Carneiro ceder à tentação de provocar crise política. Já Ventura está sempre pronto para ela. Seguro pouco poderá fazer."
-      }
-    },
-    {
       "id": "rss_highlight_4bf031feb2cb1b7b",
       "type": "highlight",
       "category": "Destaque",
@@ -1342,6 +1298,45 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "d1d13c8c0476e042480400b25223469566ab013c981a29b93f135b318fd1f0d4",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_f1f43891036442aa",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Rentrée política a todo o vapor",
+      "authorOrMeta": "www.rtp.pt",
+      "description": "Com o ministro da Administração Interna sob todas as miras, uma carta das vítimas do acidente do Elevador da Glória a apontar o dedo ao presidente da Câmra de Lisboa e uma moção de censura a marcar a agenda, o arranque de novo ano político não está a poupar energias.",
+      "imageUrl": "/covers/highlight_rentr_e_pol_tica_a_todo_o_vapor_a6a6152e_8140e15a5c30.jpg",
+      "link": "https://www.rtp.pt/noticias/opiniao/nuno-silva-e-ana-augusto/rentree-politica-a-todo-o-vapor_1763288",
+      "externalId": "article:url:f1f43891036442aae1384664",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-03T22:15:39Z",
+      "expiryDate": "2026-10-03T22:15:39Z",
+      "createdAt": "2026-09-04T08:55:39.817003Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://www.rtp.pt/noticias/rss",
+        "guid": "https://www.rtp.pt/noticias/opiniao/nuno-silva-e-ana-augusto/rentree-politica-a-todo-o-vapor_1763288",
+        "imageUrl": "https://cdn-images.rtp.pt/noticias/images/default_rtpnoticias.png?w=350&q=50&auto=format",
+        "categories": [
+          "Nuno Artur Silva e Ana Pedrosa Augusto"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:www.rtp.pt",
+        "entityId": "article:url:f1f43891036442aae1384664",
+        "score": 1.0,
+        "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
+        "verifiedAt": "2026-09-04T08:55:40.669600Z",
+        "resolvedTitle": "Rentrée política a todo o vapor",
+        "resolvedAuthor": "www.rtp.pt",
+        "sourcePublishedAt": "2026-09-03T22:15:39Z",
+        "sourceDescription": "Com o ministro da Administração Interna sob todas as miras, uma carta das vítimas do acidente do Elevador da Glória a apontar o dedo ao presidente da Câmra de Lisboa e uma moção de censura a marcar a agenda, o arranque de novo ano político não está a poupar energias."
       }
     }
   ],
