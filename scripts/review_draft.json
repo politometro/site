@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_550ffcc9f2669af90884",
-  "content_hash": "550ffcc9f2669af908842072a45cac096cb8bf083a82e31f233b5801409eb716",
+  "draft_id": "draft_3bd8305bebc2f227bb05",
+  "content_hash": "3bd8305bebc2f227bb05419a561f7f9cdd9e693e65eea537782db8c5d9a0ea0f",
   "post_type": "sunday_standard",
-  "created_at": "2026-09-05T17:50:42.144149+00:00",
+  "created_at": "2026-09-05T19:34:11.522471+00:00",
   "is_test": false,
   "post_sha256": "f53a6ed48a04ddcf4d19eb21bad3ea00176b1b8ff120b0ab1513beca577a6a4f",
   "caption_sha256": "63b22c63d5b3a2f6c92f26bebdc31c78e9b8d3e94cd7b553917ae488cf3ce73c",
@@ -108,7 +108,7 @@
       "resolvedTitle": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
       "resolvedAuthor": "NOW Canal",
       "sourcePublishedAt": "2025-11-30T13:00:13Z",
-      "sourceDescription": "Vídeo “Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes”, publicado por NOW Canal em 30/11/2025."
+      "sourceDescription": "Episódio do Repórter Sábado sobre um advogado acusado de corrupção de uma inspetora do SEF."
     },
     "sourcePublishedAt": "2025-11-30T13:00:13Z",
     "editorialTitle": "Repórter Sábado: Advogado acusado de ter corrompido inspetora"
