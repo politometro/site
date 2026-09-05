@@ -8,7 +8,14 @@
   "post_sha256": "f53a6ed48a04ddcf4d19eb21bad3ea00176b1b8ff120b0ab1513beca577a6a4f",
   "caption_sha256": "63b22c63d5b3a2f6c92f26bebdc31c78e9b8d3e94cd7b553917ae488cf3ce73c",
   "approval": {
-    "approved": false
+    "approved": true,
+    "draft_id": "draft_c98d85e389e9605571e2",
+    "content_hash": "c98d85e389e9605571e2dd4bc79e0e3948dd6f3d30dbe10ac5f597e6bf31751b",
+    "approved_at": "2026-09-05T22:50:06.379281+00:00",
+    "approved_by_id": "948240528632324107",
+    "approved_by_name": "artista",
+    "scheduled_for": "2026-09-06T09:00:00+00:00",
+    "scheduled_timezone": "Europe/Lisbon"
   },
   "q1": {
     "id": "ai_book_a58b6f60a86f4765",
