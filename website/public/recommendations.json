@@ -265,7 +265,7 @@
       "imageUrl": "/covers/investigation_rep_rter_s_bado__advogado_acusado_de_ter_corro_ff49b3e5_1182f1ec2665.jpg",
       "expiryDate": null,
       "createdAt": "2026-07-20T18:30:28.534839Z",
-      "status": "skip",
+      "status": "queue",
       "sourceHint": "curated-episode-watchlist",
       "externalId": "youtube:lChT1gKqjWQ",
       "resolutionStatus": "verified",
@@ -282,9 +282,7 @@
         "sourceDescription": "Episódio do Repórter Sábado sobre um advogado acusado de corrupção de uma inspetora do SEF."
       },
       "sourcePublishedAt": "2025-11-30T13:00:13Z",
-      "editorialTitle": "Repórter Sábado: Advogado acusado de ter corrompido inspetora",
-      "rejectedAt": "2026-09-05T22:20:16.141070+00:00",
-      "rejectedBy": "602275316156727296"
+      "editorialTitle": "Repórter Sábado: Advogado acusado de ter corrompido inspetora"
     },
     {
       "type": "nostalgia",
@@ -635,7 +633,7 @@
       "priority": 3,
       "expiryDate": null,
       "createdAt": "2026-08-04T12:24:38.210715Z",
-      "status": "skip",
+      "status": "queue",
       "sourceHint": "ai-catalogue-candidate",
       "externalId": "openlibrary:/works/OL15663481W",
       "resolutionStatus": "verified",
@@ -650,9 +648,7 @@
         "resolvedAuthor": "Karl Marx",
         "sourceDescription": "Crítica da economia política centrada no trabalho, no capital e nas dinâmicas de exploração do capitalismo."
       },
-      "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=Capital&author=Karl+Marx&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Max retries exceeded with url: /search.json?title=Capital&author=Karl+Marx&limit=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='openlibrary.org', port=443) at 0x7f2e1a705120>, 'Connection to openlibrary.org timed out. (connect timeout=5)'))",
-      "rejectedAt": "2026-09-05T22:20:16.141070+00:00",
-      "rejectedBy": "602275316156727296"
+      "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=Capital&author=Karl+Marx&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Max retries exceeded with url: /search.json?title=Capital&author=Karl+Marx&limit=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='openlibrary.org', port=443) at 0x7f2e1a705120>, 'Connection to openlibrary.org timed out. (connect timeout=5)'))"
     },
     {
       "id": "ai_book_23d518845ade4349",
@@ -1279,7 +1275,7 @@
       "sourcePublishedAt": "2026-09-05T05:30:00Z",
       "expiryDate": "2026-09-08T05:30:00Z",
       "createdAt": "2026-09-05T08:26:44.876665Z",
-      "status": "skip",
+      "status": "queue",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1304,9 +1300,7 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "28e9c248ca59c93109542422f4ec857461cbf89d50b36794653a4af04c808717",
         "editorialDescriptionProvider": "extractive"
-      },
-      "rejectedAt": "2026-09-05T22:20:16.141070+00:00",
-      "rejectedBy": "602275316156727296"
+      }
     },
     {
       "id": "rss_podcast_327412ed81ee9ced",
@@ -1406,7 +1400,7 @@
       "sourcePublishedAt": "2026-09-04T23:25:58Z",
       "expiryDate": "2026-10-04T23:25:58Z",
       "createdAt": "2026-09-05T08:26:50.548987Z",
-      "status": "skip",
+      "status": "queue",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1431,9 +1425,7 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-09-04T23:25:58Z",
         "sourceDescription": "As palavras presidenciais pesam, mas os silêncios presidenciais também. E, quando um Presidente não toma decisões, podem ter a certeza de que a realidade toma decisões por ele."
-      },
-      "rejectedAt": "2026-09-05T22:20:16.141070+00:00",
-      "rejectedBy": "602275316156727296"
+      }
     },
     {
       "id": "rss_podcast_555df649a4fe0f87",
