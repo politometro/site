@@ -215,7 +215,7 @@
         "status": "verified",
         "source": "wikidata+imdb",
         "entityId": "imdb:tt0870111",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "a3d125a8537ecb28dffff17ee99fca4473234350fda71fc2896e92b5a97ed13b",
         "verifiedAt": "2026-07-20T12:29:18.999177Z",
         "resolvedTitle": "Frost/Nixon",
@@ -255,7 +255,7 @@
     },
     {
       "type": "investigation",
-      "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora",
+      "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
       "authorOrMeta": "NOW Canal",
       "description": "Episódio do Repórter Sábado sobre um advogado acusado de corrupção de uma inspetora do SEF.",
       "link": "https://www.youtube.com/watch?v=lChT1gKqjWQ",
@@ -734,12 +734,12 @@
         "entityId": "openlibrary:/works/OL18139175W",
         "score": 0.94,
         "coverHash": "eb24a840462b8281445c7f57cdf0b10f803c2b9e7c123813542950d4aeadb7a1",
-        "verifiedAt": "2026-08-17T13:13:43.086907Z",
+        "verifiedAt": "2026-09-05T22:21:53.703228Z",
         "resolvedTitle": "How Democracies Die",
         "resolvedAuthor": "Steven Levitsky, Daniel Ziblatt",
         "sourceDescription": "Explica como democracias podem degradar-se por dentro através de normas quebradas, polarização e abuso institucional."
       },
-      "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=How+Democracies+Die&author=Steven+Levitsky%2C+Daniel+Ziblatt&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Max retries exceeded with url: /search.json?title=How+Democracies+Die&author=Steven+Levitsky%2C+Daniel+Ziblatt&limit=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='openlibrary.org', port=443) at 0x7f2e1a704d60>, 'Connection to openlibrary.org timed out. (connect timeout=5)'))"
+      "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=How+Democracies+Die&author=Steven+Levitsky%2C+Daniel+Ziblatt&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Read timed out. (read timeout=5)"
     },
     {
       "type": "nostalgia",
@@ -1434,6 +1434,77 @@
       },
       "rejectedAt": "2026-09-05T22:20:16.141070+00:00",
       "rejectedBy": "602275316156727296"
+    },
+    {
+      "id": "rss_podcast_555df649a4fe0f87",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Até quando vai resistir Luís Neves?",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre os temas e questões de até quando vai resistir luís neves.",
+      "imageUrl": "/covers/podcast_at__quando_vai_resistir_lu_s_neves__4db4dcf8_555df649a4fe.jpg",
+      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/at-quando-vai-resistir-lu-s-neves",
+      "externalId": "43e6903c-efe5-4f26-9e42-b4bb017ba68e",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-05T05:30:00Z",
+      "expiryDate": "2026-09-08T05:30:00Z",
+      "createdAt": "2026-09-05T22:21:54.846787Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "43e6903c-efe5-4f26-9e42-b4bb017ba68e",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "43e6903c-efe5-4f26-9e42-b4bb017ba68e",
+        "score": 1.0,
+        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
+        "verifiedAt": "2026-09-05T08:26:48.187156Z",
+        "resolvedTitle": "Até quando vai resistir Luís Neves?",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-09-05T05:30:00Z",
+        "sourceDescription": "O Presidente da República teve de dar um murro na mesa e disse que não manda recados por ninguém. Alguns dos mais próximos de Seguro chegaram mesmo a falar do “irregular funcionamento das instituições”. No caso de Luís Neves, Montenegro fala em jogo político, referindo-se à moção de censura e diz que não está a mando dos comentadores.",
+        "editorialDescription": "Análise sobre os temas e questões de até quando vai resistir luís neves.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "28e9c248ca59c93109542422f4ec857461cbf89d50b36794653a4af04c808717",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "ai_book_6df0482ccb804fe9",
+      "type": "book",
+      "category": "Livro",
+      "title": "The Shock Doctrine",
+      "authorOrMeta": "Naomi Klein",
+      "description": "Investigação sobre crises políticas e económicas usadas para impor reformas radicais com pouco escrutínio democrático.",
+      "imageUrl": "/covers/book_the_shock_doctrine_6db90217_bc2d2cb1aef5.jpg",
+      "link": "https://openlibrary.org/works/OL6017238W/The_Shock_Doctrine",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-09-05T22:22:02.243226Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL6017238W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL6017238W",
+        "score": 1.0,
+        "coverHash": "6186ce6ed773e345c5f489e1e26a2296cd6cde10462df8d5f4e89bd69e156b33",
+        "verifiedAt": "2026-09-05T22:22:11.315605Z",
+        "resolvedTitle": "The Shock Doctrine",
+        "resolvedAuthor": "Naomi Klein",
+        "sourceDescription": "Investigação sobre crises políticas e económicas usadas para impor reformas radicais com pouco escrutínio democrático."
+      }
     }
   ],
   "history": [
@@ -2569,8 +2640,8 @@
       "podcast": 2,
       "movie": 4,
       "nostalgia": 4,
-      "investigation": 1,
-      "highlight": 3
+      "investigation": 0,
+      "highlight": 2
     },
     "missingSlots": [],
     "fallbackRequired": false
