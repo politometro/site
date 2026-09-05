@@ -255,7 +255,7 @@
     },
     {
       "type": "investigation",
-      "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
+      "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora",
       "authorOrMeta": "NOW Canal",
       "description": "Episódio do Repórter Sábado sobre um advogado acusado de corrupção de uma inspetora do SEF.",
       "link": "https://www.youtube.com/watch?v=lChT1gKqjWQ",
@@ -643,7 +643,7 @@
         "entityId": "openlibrary:/works/OL15663481W",
         "score": 1.0,
         "coverHash": "092162dea5a7dd9483c19f5a3a7d08c156f3bf0f147cab9b711d5b77bebeac8b",
-        "verifiedAt": "2026-08-17T13:13:22.913332Z",
+        "verifiedAt": "2026-09-05T22:44:58.041368Z",
         "resolvedTitle": "Capital",
         "resolvedAuthor": "Karl Marx",
         "sourceDescription": "Crítica da economia política centrada no trabalho, no capital e nas dinâmicas de exploração do capitalismo."
@@ -1051,50 +1051,6 @@
         "editorialDescriptionProvider": "extractive"
       },
       "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [O Estado deve financiar cursos com pouca saída? — Ouvintes]: Conteúdo expira em 2026-09-02T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
-    },
-    {
-      "id": "rss_podcast_ae4bb6499137b371",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Regresso a 2021: “Um programa de rescaldo sobre a noite eleitoral de ontem, o que acaba por ser apropriado porque a maioria dos candidatos fez o mesmo com os seus programas”",
-      "editorialTitle": "Regresso a 2021: “Um programa de rescaldo sobre a noite eleitoral",
-      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Análise sobre este regresso a 2021 recorda a noite eleitoral em que Carlos Moedas se tornou presidente da Câmara Municipal de Lisboa.",
-      "imageUrl": "/covers/podcast_regresso_a_2021___um_programa_de_rescaldo_sobre_a_no_629f497a_ae4bb6499137.jpg",
-      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/regresso-a-2021-um-programa-de-rescaldo-eleitoral-sobre-a-noite-de-ontem-o-que-acaba-por-ser-apropriado-porque-a-maioria-dos-candidatos-fez-o-mesmo-com-os-seus-programas",
-      "externalId": "9ed2aeb7-e11f-4c54-a71e-b49b00c4cbbe",
-      "sourceSeriesId": "1585178009",
-      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-30T14:21:41Z",
-      "expiryDate": "2026-09-09T14:21:41Z",
-      "createdAt": "2026-08-30T16:51:06.897495Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
-        "guid": "9ed2aeb7-e11f-4c54-a71e-b49b00c4cbbe",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/image.jpg?t=1668425400&size=Large",
-        "show": "Isto É Gozar Com Quem Trabalha"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "9ed2aeb7-e11f-4c54-a71e-b49b00c4cbbe",
-        "score": 1.0,
-        "coverHash": "7cf2e9fe63d6c0f324df402973a58d21a64ce08e1db59a7a7dfe77828a620730",
-        "verifiedAt": "2026-08-30T16:51:10.004038Z",
-        "resolvedTitle": "Regresso a 2021: “Um programa de rescaldo sobre a noite eleitoral de ontem, o que acaba por ser apropriado porque a maioria dos candidatos fez o mesmo com os seus programas”",
-        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
-        "sourcePublishedAt": "2026-08-30T14:21:41Z",
-        "sourceDescription": "Este regresso a 2021 recorda a noite eleitoral em que Carlos Moedas se tornou presidente da Câmara Municipal de Lisboa. António Costa, ainda primeiro-ministro, no discurso de derrota deixou várias mensagens para Medina nas entrelinhas: “A primeira vez que concorri a uma Câmara perdi, na segunda ganhei por poucochinho, à terceira vez tive maioria absoluta, à…",
-        "editorialDescription": "Análise sobre este regresso a 2021 recorda a noite eleitoral em que Carlos Moedas se tornou presidente da Câmara Municipal de Lisboa.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "739426d405fba6193f302215ed5148f4e0ab0e7806ea4a7218fc9cf46cd5c97b",
-        "editorialDescriptionProvider": "extractive"
-      }
     },
     {
       "id": "ai_movie_cfa2fc94013e44d2",
@@ -2628,12 +2584,12 @@
   "readiness": {
     "postType": "sunday_standard",
     "strictCounts": {
-      "book": 4,
-      "podcast": 2,
+      "book": 5,
+      "podcast": 3,
       "movie": 4,
       "nostalgia": 4,
-      "investigation": 0,
-      "highlight": 2
+      "investigation": 1,
+      "highlight": 3
     },
     "missingSlots": [],
     "fallbackRequired": false
