@@ -255,9 +255,9 @@
     },
     {
       "type": "investigation",
-      "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
+      "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora",
       "authorOrMeta": "NOW Canal",
-      "description": "Vídeo “Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes”, publicado por NOW Canal em 30/11/2025.",
+      "description": "Episódio do Repórter Sábado sobre um advogado acusado de corrupção de uma inspetora do SEF.",
       "link": "https://www.youtube.com/watch?v=lChT1gKqjWQ",
       "priority": 4,
       "id": "watch_investigation_edcb6b3869b94510",
@@ -1233,7 +1233,7 @@
       "sourcePublishedAt": "2026-09-03T22:15:39Z",
       "expiryDate": "2026-10-03T22:15:39Z",
       "createdAt": "2026-09-04T08:55:39.817003Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1244,7 +1244,7 @@
           "Nuno Artur Silva e Ana Pedrosa Augusto"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news:www.rtp.pt",
@@ -1256,7 +1256,8 @@
         "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-09-03T22:15:39Z",
         "sourceDescription": "Com o ministro da Administração Interna sob todas as miras, uma carta das vítimas do acidente do Elevador da Glória a apontar o dedo ao presidente da Câmra de Lisboa e uma moção de censura a marcar a agenda, o arranque de novo ano político não está a poupar energias."
-      }
+      },
+      "validationError": "SOURCE_MISMATCH [Rentrée política a todo o vapor]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
       "id": "rss_podcast_555df649a4fe0f87",
@@ -2561,7 +2562,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 1,
-      "highlight": 4
+      "highlight": 3
     },
     "missingSlots": [],
     "fallbackRequired": false
