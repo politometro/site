@@ -1224,7 +1224,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Rentrée política a todo o vapor",
-      "authorOrMeta": "www.rtp.pt",
+      "authorOrMeta": "Rádio e Televisão de Portugal",
       "description": "Com o ministro da Administração Interna sob todas as miras, uma carta das vítimas do acidente do Elevador da Glória a apontar o dedo ao presidente da Câmra de Lisboa e uma moção de censura a marcar a agenda, o arranque de novo ano político não está a poupar energias.",
       "imageUrl": "/covers/highlight_rentr_e_pol_tica_a_todo_o_vapor_a6a6152e_8140e15a5c30.jpg",
       "link": "https://www.rtp.pt/noticias/opiniao/nuno-silva-e-ana-augusto/rentree-politica-a-todo-o-vapor_1763288",
@@ -1247,13 +1247,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:www.rtp.pt",
+        "source": "news:www.rtp.pt",
         "entityId": "article:url:f1f43891036442aae1384664",
         "score": 1.0,
         "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
         "verifiedAt": "2026-09-04T08:55:40.669600Z",
         "resolvedTitle": "Rentrée política a todo o vapor",
-        "resolvedAuthor": "www.rtp.pt",
+        "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-09-03T22:15:39Z",
         "sourceDescription": "Com o ministro da Administração Interna sob todas as miras, uma carta das vítimas do acidente do Elevador da Glória a apontar o dedo ao presidente da Câmra de Lisboa e uma moção de censura a marcar a agenda, o arranque de novo ano político não está a poupar energias."
       }
