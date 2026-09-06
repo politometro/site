@@ -255,7 +255,7 @@
     },
     {
       "type": "investigation",
-      "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora",
+      "title": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
       "authorOrMeta": "NOW Canal",
       "description": "Episódio do Repórter Sábado sobre um advogado acusado de corrupção de uma inspetora do SEF.",
       "link": "https://www.youtube.com/watch?v=lChT1gKqjWQ",
@@ -273,7 +273,7 @@
         "status": "verified",
         "source": "youtube:NOW Canal",
         "entityId": "youtube:lChT1gKqjWQ",
-        "score": 1.0,
+        "score": 0.7567,
         "coverHash": "a2bfb1945fb71950b05399b47f5717c5120eaf8a7fe4697d6b91c0310fa58b1b",
         "verifiedAt": "2026-07-20T18:30:31.855270Z",
         "resolvedTitle": "Repórter Sábado: Advogado acusado de ter corrompido inspetora do SEF continua a legalizar imigrantes",
@@ -1259,54 +1259,11 @@
       }
     },
     {
-      "id": "rss_podcast_327412ed81ee9ced",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Vamos ter um politburo europeu? E Luís Neves é o xerife?",
-      "authorOrMeta": "Fora do Baralho",
-      "description": "Análise sobre episódio “Vamos ter um politburo europeu? E Luís Neves é o xerife?” do podcast Fora do Baralho, publicado em 04/09/2026.",
-      "imageUrl": "/covers/podcast_vamos_ter_um_politburo_europeu__e_lu_s_neves___o_xer_b6998881_327412ed81ee.jpg",
-      "link": "https://omny.fm/shows/fora-do-baralho/vamos-ter-um-politburo-europeu-e-lu-s-neves-o-xerife",
-      "externalId": "8c30fec4-623c-46cf-8ea7-b4bb013cf787",
-      "sourceSeriesId": "1597496780",
-      "sourceSeriesTitle": "Fora do Baralho",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-04T19:20:54Z",
-      "expiryDate": "2026-09-14T19:20:54Z",
-      "createdAt": "2026-09-05T08:26:45.446952Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
-        "guid": "8c30fec4-623c-46cf-8ea7-b4bb013cf787",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
-        "show": "Fora do Baralho"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "8c30fec4-623c-46cf-8ea7-b4bb013cf787",
-        "score": 1.0,
-        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
-        "verifiedAt": "2026-09-05T08:26:48.899053Z",
-        "resolvedTitle": "Vamos ter um politburo europeu? E Luís Neves é o xerife?",
-        "resolvedAuthor": "Fora do Baralho",
-        "sourcePublishedAt": "2026-09-04T19:20:54Z",
-        "sourceDescription": "Episódio “Vamos ter um politburo europeu? E Luís Neves é o xerife?” do podcast Fora do Baralho, publicado em 04/09/2026.",
-        "editorialDescription": "Análise sobre episódio “Vamos ter um politburo europeu? E Luís Neves é o xerife?” do podcast Fora do Baralho, publicado em 04/09/2026.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "bd5c7b0c7bc6529fd02affe24f34d520446ca5f2838ef04e635ad180153b03b0",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_3214bca9b978ad37",
       "type": "highlight",
       "category": "Destaque",
       "title": "O Rei, o Presidente e as regras do Jogo",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "João Távora",
       "description": "Àqueles que reclamam a intervenção de Seguro na actual crise, aconselho que recorram ao colo do vosso pai para chorar as injustiças da vida democrática. Já somos todos crescidinhos ou não?",
       "imageUrl": "/covers/highlight_o_rei__o_presidente_e_as_regras_do_jogo_87599530_078831f147ec.jpg",
       "link": "https://observador.pt/opiniao/o-rei-o-presidente-e-as-regras-do-jogo/",
@@ -1331,13 +1288,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:3214bca9b978ad3730955d86",
         "score": 1.0,
         "coverHash": "2f1c29e8b29bab62a4b1577997de490f43056a37ce8ec5a24ba2525578d4fd04",
         "verifiedAt": "2026-09-05T08:26:50.713784Z",
         "resolvedTitle": "O Rei, o Presidente e as regras do Jogo",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "João Távora",
         "sourcePublishedAt": "2026-09-04T23:14:09Z",
         "sourceDescription": "Àqueles que reclamam a intervenção de Seguro na actual crise, aconselho que recorram ao colo do vosso pai para chorar as injustiças da vida democrática. Já somos todos crescidinhos ou não?"
       }
@@ -1347,7 +1304,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "A Presidência do “Silencioso António José”",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Miguel Pinheiro",
       "description": "As palavras presidenciais pesam, mas os silêncios presidenciais também. E, quando um Presidente não toma decisões, podem ter a certeza de que a realidade toma decisões por ele.",
       "imageUrl": "/covers/highlight_a_presid_ncia_do__silencioso_ant_nio_jos___6202d453_fc2e454e6973.jpg",
       "link": "https://observador.pt/opiniao/a-presidencia-do-silencioso-antonio-jose/",
@@ -1372,13 +1329,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:dfdcdee4a5007613905fccc5",
         "score": 1.0,
         "coverHash": "3d77a998923e5c6952a2bcd07bfd95500ed139f8ac0766a002a92847957dc386",
         "verifiedAt": "2026-09-05T08:26:52.088799Z",
         "resolvedTitle": "A Presidência do “Silencioso António José”",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Miguel Pinheiro",
         "sourcePublishedAt": "2026-09-04T23:25:58Z",
         "sourceDescription": "As palavras presidenciais pesam, mas os silêncios presidenciais também. E, quando um Presidente não toma decisões, podem ter a certeza de que a realidade toma decisões por ele."
       }
@@ -1452,6 +1409,90 @@
         "resolvedTitle": "The Shock Doctrine",
         "resolvedAuthor": "Naomi Klein",
         "sourceDescription": "Investigação sobre crises políticas e económicas usadas para impor reformas radicais com pouco escrutínio democrático."
+      }
+    },
+    {
+      "id": "rss_podcast_a2ebf8534eb1ac7d",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "O preço das casas já passou o patamar do absurdo? — Ouvintes",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “O preço das casas já passou o patamar do absurdo? — Ouvintes” do podcast Fora do Baralho, publicado em 06/09/2026.",
+      "imageUrl": "/covers/podcast_o_pre_o_das_casas_j__passou_o_patamar_do_absurdo_____80b1d320_a2ebf8534eb1.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/o-pre-o-das-casas-j-passou-o-patamar-do-absurdo-ouvintes",
+      "externalId": "a7ead241-5b18-4537-8583-b4bb013dc1d8",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-06T05:00:00Z",
+      "expiryDate": "2026-09-09T05:00:00Z",
+      "createdAt": "2026-09-06T08:45:07.283831Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "a7ead241-5b18-4537-8583-b4bb013dc1d8",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "a7ead241-5b18-4537-8583-b4bb013dc1d8",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-09-06T08:45:09.250632Z",
+        "resolvedTitle": "O preço das casas já passou o patamar do absurdo? — Ouvintes",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-09-06T05:00:00Z",
+        "sourceDescription": "Episódio “O preço das casas já passou o patamar do absurdo? — Ouvintes” do podcast Fora do Baralho, publicado em 06/09/2026.",
+        "editorialDescription": "Análise sobre episódio “O preço das casas já passou o patamar do absurdo? — Ouvintes” do podcast Fora do Baralho, publicado em 06/09/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "dc9464d12db329e1bc0facafd33c4e122a411ae4588473742b1b5aff99694e41",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_4eb2fad23b596e60",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Meloni e a Itália",
+      "authorOrMeta": "observador.pt",
+      "description": "Em grande medida, o feito de Meloni é este: o sistema político conseguiu finalmente colocar na chefia do governo um líder partidário escolhido por uma maioria do povo, à frente de uma coligação",
+      "imageUrl": "/covers/highlight_meloni_e_a_it_lia_231af667_5332be4ee7dd.jpg",
+      "link": "https://observador.pt/opiniao/meloni-e-a-italia/",
+      "externalId": "article:url:4eb2fad23b596e6006008c90",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-05T23:25:08Z",
+      "expiryDate": "2026-10-05T23:25:08Z",
+      "createdAt": "2026-09-06T08:45:10.705782Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/meloni-e-a-italia/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1843%3A1838%3Anowe%3A1084%3A166%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F06%2F23181612%2Fdventura-miguel-morgado-4-scaled.jpg",
+        "categories": [
+          "Itália",
+          "Europa",
+          "Mundo"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:4eb2fad23b596e6006008c90",
+        "score": 1.0,
+        "coverHash": "3cd9b3ba1b6dc141e63d27987d934b77cc9a7f8efdb5309346a8664466927b2f",
+        "verifiedAt": "2026-09-06T08:45:10.877603Z",
+        "resolvedTitle": "Meloni e a Itália",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-05T23:25:08Z",
+        "sourceDescription": "Em grande medida, o feito de Meloni é este: o sistema político conseguiu finalmente colocar na chefia do governo um líder partidário escolhido por uma maioria do povo, à frente de uma coligação"
       }
     }
   ],
@@ -2589,7 +2630,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 1,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
