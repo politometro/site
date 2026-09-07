@@ -1230,7 +1230,7 @@
       "category": "Podcast",
       "title": "O preço das casas já passou o patamar do absurdo? — Ouvintes",
       "authorOrMeta": "Fora do Baralho",
-      "description": "Análise sobre os temas e questões de o preço das casas já passou o patamar do absurdo? — ouvintes.",
+      "description": "Análise sobre análise sobre os temas e questões de o preço das casas já passou o patamar do absurdo?",
       "imageUrl": "/covers/podcast_o_pre_o_das_casas_j__passou_o_patamar_do_absurdo_____80b1d320_a2ebf8534eb1.jpg",
       "link": "https://omny.fm/shows/fora-do-baralho/o-pre-o-das-casas-j-passou-o-patamar-do-absurdo-ouvintes",
       "externalId": "a7ead241-5b18-4537-8583-b4bb013dc1d8",
@@ -1260,10 +1260,10 @@
         "resolvedTitle": "O preço das casas já passou o patamar do absurdo? — Ouvintes",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-09-06T05:00:00Z",
-        "sourceDescription": "Análise sobre episódio “O preço das casas já passou o patamar do absurdo? — Ouvintes” do podcast Fora do Baralho, publicado em 06/09/2026.",
-        "editorialDescription": "Análise sobre os temas e questões de o preço das casas já passou o patamar do absurdo? — ouvintes.",
+        "sourceDescription": "Análise sobre os temas e questões de o preço das casas já passou o patamar do absurdo? — ouvintes.",
+        "editorialDescription": "Análise sobre análise sobre os temas e questões de o preço das casas já passou o patamar do absurdo?",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "441f3ee518f5cf59483fe4cfb93f811cbb7bea8a6acdd8f67374e1c6d31c0c02",
+        "editorialSourceHash": "c6b4a4f1336139a89a49984fde89e16470ba2b1a92c0152303f6f644132ca326",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1348,7 +1348,7 @@
         "sourceDescription": "Está de regresso o Isto É Gozar Com Quem Trabalha. Ricardo Araújo Pereira e a sua equipa analisam as polémicas que envolvem o ministro da Administração Interna. Luís Neves, antigo diretor da Polícia Judiciária, não teve um verão fácil.",
         "editorialDescription": "Análise sobre luís Neves, antigo diretor da Polícia Judiciária, não teve um verão fácil.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "580ba03b3408d5af16290bcb967d6bde4fc56201455def111b0f721cee0b69c5",
+        "editorialSourceHash": "e616323f3f203325f946bd7d7297e4a98afb6bbfeec4486df638445ca6cdd905",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1392,8 +1392,51 @@
         "sourceDescription": "A polémica em torno de Luís Neves e a moção de censura apresentada pelo Chega dominam o debate político. Pedro Duarte despede-se d'O Princípio da Incerteza e cede o seu lugar a José de Matos Correia. Nesta edição, também Alexandra Leitão teve que se ausentar. Em vez dela, ao lado de Pacheco Pereira, está Ana Catarina Mendes.",
         "editorialDescription": "Análise sobre a polémica em torno de Luís Neves e a moção de censura apresentada pelo Chega dominam o debate político.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "04a82eef4d881785a5f1f98208101967ab07a4d2f0637fe3a783e02f80ab9a45",
+        "editorialSourceHash": "597a4ba3c4774a9fc571597ef72671dd98bbe0b1be5fdb5c11ea66731109b87e",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_9997f92905812f6d",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Açores abrem concurso para cinco bolsas de doutoramento",
+      "authorOrMeta": "observador.pt",
+      "description": "Os dois concursos selecionados permitirão atribuir quatro bolsas em ambiente não académico e uma bolsa em contexto académico, adianta esta segunda-feira o executivo açoriano.",
+      "imageUrl": "/covers/highlight_a_ores_abrem_concurso_para_cinco_bolsas_de_doutora_f1ce16cc_e61b692e64bf.jpg",
+      "link": "https://observador.pt/2026/09/07/acores-abrem-concurso-para-cinco-bolsas-de-doutoramento-para-reforcar-capacidade-cientifica/",
+      "externalId": "article:url:9997f92905812f6da571eeb4",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-07T16:28:58Z",
+      "expiryDate": "2026-10-07T16:28:58Z",
+      "createdAt": "2026-09-07T17:47:47.814800Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/2026/09/07/acores-abrem-concurso-para-cinco-bolsas-de-doutoramento-para-reforcar-capacidade-cientifica/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:2000:1121:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2021/04/16145337/31202065.jpg",
+        "categories": [
+          "Açores",
+          "País",
+          "Sociedade",
+          "Investigação",
+          "Observador"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:9997f92905812f6da571eeb4",
+        "score": 1.0,
+        "coverHash": "656fc9925d1473b865ba4a186e26fa04fd5da383c01de99e1775cd56ce2b567d",
+        "verifiedAt": "2026-09-07T17:47:47.990959Z",
+        "resolvedTitle": "Açores abrem concurso para cinco bolsas de doutoramento",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-07T16:28:58Z",
+        "sourceDescription": "Os dois concursos selecionados permitirão atribuir quatro bolsas em ambiente não académico e uma bolsa em contexto académico, adianta esta segunda-feira o executivo açoriano."
       }
     }
   ],
@@ -2687,7 +2730,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
