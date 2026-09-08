@@ -1218,11 +1218,12 @@
         "entityId": "openlibrary:/works/OL6017238W",
         "score": 1.0,
         "coverHash": "6186ce6ed773e345c5f489e1e26a2296cd6cde10462df8d5f4e89bd69e156b33",
-        "verifiedAt": "2026-09-05T22:22:11.315605Z",
+        "verifiedAt": "2026-09-08T08:57:23.658924Z",
         "resolvedTitle": "The Shock Doctrine",
         "resolvedAuthor": "Naomi Klein",
         "sourceDescription": "Investigação sobre crises políticas e económicas usadas para impor reformas radicais com pouco escrutínio democrático."
-      }
+      },
+      "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=The+Shock+Doctrine&author=Naomi+Klein&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Read timed out. (read timeout=5)"
     },
     {
       "id": "rss_podcast_a2ebf8534eb1ac7d",
@@ -1240,7 +1241,7 @@
       "sourcePublishedAt": "2026-09-06T05:00:00Z",
       "expiryDate": "2026-09-09T05:00:00Z",
       "createdAt": "2026-09-06T08:45:07.283831Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1249,7 +1250,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1265,7 +1266,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "c6b4a4f1336139a89a49984fde89e16470ba2b1a92c0152303f6f644132ca326",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [O preço das casas já passou o patamar do absurdo? — Ouvintes]: Conteúdo expira em 2026-09-09T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_4eb2fad23b596e60",
