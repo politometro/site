@@ -1412,7 +1412,7 @@
       "sourcePublishedAt": "2026-09-07T16:28:58Z",
       "expiryDate": "2026-10-07T16:28:58Z",
       "createdAt": "2026-09-07T17:47:47.814800Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1427,7 +1427,7 @@
           "Observador"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -1439,7 +1439,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-09-07T16:28:58Z",
         "sourceDescription": "Os dois concursos selecionados permitirão atribuir quatro bolsas em ambiente não académico e uma bolsa em contexto académico, adianta esta segunda-feira o executivo açoriano."
-      }
+      },
+      "validationError": "NEWS_NOT_ALLOWED [Açores abrem concurso para cinco bolsas de doutoramento]: Notícias correntes não são elegíveis para Destaque."
     }
   ],
   "history": [
@@ -2732,7 +2733,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 4
+      "highlight": 3
     },
     "missingSlots": [],
     "fallbackRequired": false
