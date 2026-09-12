@@ -1,0 +1,26 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL1068091W/On_Liberty",
+  "coverHash": "4ed21cb867da34e2ccba53180c4c642ac0dfa8827868d2a688ec3ebab89b6013",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "discord-review://manual-upload",
+  "entityId": "openlibrary:/works/OL1068091W",
+  "expiryDate": null,
+  "height": 1000,
+  "isbn": "",
+  "resolvedAuthor": "John Stuart Mill",
+  "resolvedTitle": "On Liberty",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "On Liberty",
+  "titleNormalized": "on liberty",
+  "type": "book",
+  "verifiedAt": "2026-09-12T18:05:38.318288Z",
+  "width": 647,
+  "coverOverride": {
+    "status": "approved",
+    "source": "discord-review",
+    "approvedAt": "2026-09-12T18:05:38.318288Z"
+  }
+}
