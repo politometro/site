@@ -202,7 +202,7 @@
       "title": "Frost/Nixon",
       "authorOrMeta": "Ron Howard",
       "description": "Drama político sobre entrevistas que expõem responsabilidade, poder mediático e memória pública.",
-      "imageUrl": "/covers/movie_frost_nixon_495818f2_46d6ab2ebe8d.jpg",
+      "imageUrl": "/covers/movie_frost_nixon_495818f2_46d6ab2ebe8d_review_3c988eab9c1d.jpg",
       "link": "https://www.imdb.com/title/tt0870111/",
       "priority": 3,
       "expiryDate": null,
@@ -216,11 +216,16 @@
         "source": "wikidata+imdb",
         "entityId": "imdb:tt0870111",
         "score": 1.0,
-        "coverHash": "a3d125a8537ecb28dffff17ee99fca4473234350fda71fc2896e92b5a97ed13b",
-        "verifiedAt": "2026-07-20T12:29:18.999177Z",
+        "coverHash": "3c988eab9c1d074a66dd81cd0882f6952a38ad94cf61a5a4f32aab2bb821f8d6",
+        "verifiedAt": "2026-09-12T18:03:34.077562Z",
         "resolvedTitle": "Frost/Nixon",
         "resolvedAuthor": "Ron Howard",
-        "sourceDescription": "Drama político sobre entrevistas que expõem responsabilidade, poder mediático e memória pública."
+        "sourceDescription": "Drama político sobre entrevistas que expõem responsabilidade, poder mediático e memória pública.",
+        "coverOverride": {
+          "status": "approved",
+          "source": "discord-review",
+          "approvedAt": "2026-09-12T18:03:34.077562Z"
+        }
       }
     },
     {
