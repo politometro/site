@@ -1021,57 +1021,6 @@
       }
     },
     {
-      "id": "rss_highlight_1ad5e80137e6b4fc",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Luís Neves. Chega dá duas semanas para acabar com \"lamaçal\"",
-      "authorOrMeta": "Paulo Ferreira",
-      "description": "O deputado Rui Afonso revela que o Chega avançará com uma moção de censura até 15 de setembro, caso Luís Neves continue no Governo. António Mendonça Mendes (PS) pede mais explicações.",
-      "imageUrl": "/covers/highlight_lu_s_neves__chega_d__duas_semanas_para_acabar_com__34c86fc9_85ce70c3b2c6.jpg",
-      "link": "https://observador.pt/programas/explicador/luis-neves-chega-da-duas-semanas-para-acabar-com-lamacal/",
-      "externalId": "article:url:1ad5e80137e6b4fc6b29dc3f",
-      "priority": 4,
-      "sourcePublishedAt": "2026-08-31T09:00:16Z",
-      "expiryDate": "2026-09-30T09:00:16Z",
-      "createdAt": "2026-08-31T11:00:12.684169Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/programas/explicador/luis-neves-chega-da-duas-semanas-para-acabar-com-lamacal/",
-        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
-        "categories": [
-          "Rádio Observador",
-          "Observador",
-          "Governo",
-          "Política",
-          "PSD",
-          "Administração Interna",
-          "País",
-          "Sociedade",
-          "Ministério Administração Interna",
-          "Censura",
-          "Novo Governo",
-          "Partido Chega",
-          "PS"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:1ad5e80137e6b4fc6b29dc3f",
-        "score": 1.0,
-        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
-        "verifiedAt": "2026-08-31T11:00:12.866928Z",
-        "resolvedTitle": "Luís Neves. Chega dá duas semanas para acabar com \"lamaçal\"",
-        "resolvedAuthor": "Paulo Ferreira",
-        "sourcePublishedAt": "2026-08-31T09:00:16Z",
-        "sourceDescription": "O deputado Rui Afonso revela que o Chega avançará com uma moção de censura até 15 de setembro, caso Luís Neves continue no Governo. António Mendonça Mendes (PS) pede mais explicações."
-      }
-    },
-    {
       "id": "rss_podcast_5992ebe0cdde78f3",
       "type": "podcast",
       "category": "Podcast",
@@ -1442,6 +1391,175 @@
         "sourceDescription": "Os dois concursos selecionados permitirão atribuir quatro bolsas em ambiente não académico e uma bolsa em contexto académico, adianta esta segunda-feira o executivo açoriano."
       },
       "validationError": "NEWS_NOT_ALLOWED [Açores abrem concurso para cinco bolsas de doutoramento]: Notícias correntes não são elegíveis para Destaque."
+    },
+    {
+      "id": "rss_podcast_c117057eab1a40e6",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "11 de setembro: o momento em que a liberdade e segurança entraram em choque",
+      "editorialTitle": "11 de setembro: o momento em que a liberdade e segurança entraram",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre os temas e questões de 11 de setembro: o momento em que a liberdade e segurança entraram.",
+      "imageUrl": "/covers/podcast_11_de_setembro__o_momento_em_que_a_liberdade_e_segur_cc58e792_c117057eab1a.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/11-de-setembro-o-momento-em-que-a-liberdade-e-seguran-a-entraram-em-choque",
+      "externalId": "5bf0fea8-43bd-4f3d-9c93-b4c2015203ca",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-11T22:21:30Z",
+      "expiryDate": "2026-09-21T22:21:30Z",
+      "createdAt": "2026-09-12T08:42:51.068292Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "5bf0fea8-43bd-4f3d-9c93-b4c2015203ca",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "5bf0fea8-43bd-4f3d-9c93-b4c2015203ca",
+        "score": 1.0,
+        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
+        "verifiedAt": "2026-09-12T08:42:53.309567Z",
+        "resolvedTitle": "11 de setembro: o momento em que a liberdade e segurança entraram em choque",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-09-11T22:21:30Z",
+        "sourceDescription": "Neste Linhas Vermelhas especial, Miguel Prata Roque sublinha que “passámos a aceitar facilmente a privação da nossa reserva de intimidade privada”, enquanto Diogo Feio avisa que não vê hoje “um mundo melhor do que aquilo que sucedia no 11 de Setembro”.",
+        "editorialDescription": "Análise sobre os temas e questões de 11 de setembro: o momento em que a liberdade e segurança entraram.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "02e1f7c427dda2530c277078d94a158e3e320c1ead65b5e91d4f25a568d832ab",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_64d123b7e6d8586d",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "PISA: Portugal recua para resultados de há 20 anos",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre os temas e questões de pisa: portugal recua para resultados de há 20 anos.",
+      "imageUrl": "/covers/podcast_pisa__portugal_recua_para_resultados_de_h__20_anos_f07eb5d9_64d123b7e6d8.jpg",
+      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/pisa-portugal-recua-para-resultados-de-h-20-anos",
+      "externalId": "591b62e7-b4e3-4314-b999-b4c30000e0fd",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-12T08:25:55Z",
+      "expiryDate": "2026-09-15T08:25:55Z",
+      "createdAt": "2026-09-12T08:42:51.869478Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "591b62e7-b4e3-4314-b999-b4c30000e0fd",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "591b62e7-b4e3-4314-b999-b4c30000e0fd",
+        "score": 1.0,
+        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
+        "verifiedAt": "2026-09-12T08:42:57.131520Z",
+        "resolvedTitle": "PISA: Portugal recua para resultados de há 20 anos",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-09-12T08:25:55Z",
+        "sourceDescription": "Portugal recuou cerca de 20 anos nos resultados do Programme for International Student Assessment (PISA), o estudo trienal da OCDE que avalia as competências de alunos de 15 anos em leitura, matemática e ciências.",
+        "editorialDescription": "Análise sobre os temas e questões de pisa: portugal recua para resultados de há 20 anos.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "e655c412c5ab75e92233dc4ae292b50c73b750d2dd99a9a7528099d3f44b9ff6",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_74a61a3655e57ee8",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Não basta trabalhar: “o Luís” tem de correr",
+      "authorOrMeta": "observador.pt",
+      "description": "A nossa classe política acredita que André Ventura nunca chegará ao poder. Trata-se de um misto de ilusão e ignorância de quem acha que o mundo começa no Cabo da Roca e acaba em Paradela.",
+      "imageUrl": "/covers/highlight_n_o_basta_trabalhar___o_lu_s__tem_de_correr_c41fb834_2262f608e5e5.jpg",
+      "link": "https://observador.pt/opiniao/nao-basta-trabalhar-o-luis-tem-de-correr/",
+      "externalId": "article:url:74a61a3655e57ee8d683f1ed",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-11T23:26:44Z",
+      "expiryDate": "2026-10-11T23:26:44Z",
+      "createdAt": "2026-09-12T08:42:59.344299Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/nao-basta-trabalhar-o-luis-tem-de-correr/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2124%3A2124%3Anowe%3A955%3A75%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F04%2F23151538%2Fjporfirio-retratos-redacao-2026-01-81-scaled.jpg",
+        "categories": [
+          "André Ventura",
+          "Partido Chega",
+          "Política",
+          "Luís Montenegro"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:74a61a3655e57ee8d683f1ed",
+        "score": 1.0,
+        "coverHash": "3d77a998923e5c6952a2bcd07bfd95500ed139f8ac0766a002a92847957dc386",
+        "verifiedAt": "2026-09-12T08:42:59.518516Z",
+        "resolvedTitle": "Não basta trabalhar: “o Luís” tem de correr",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-11T23:26:44Z",
+        "sourceDescription": "A nossa classe política acredita que André Ventura nunca chegará ao poder. Trata-se de um misto de ilusão e ignorância de quem acha que o mundo começa no Cabo da Roca e acaba em Paradela."
+      }
+    },
+    {
+      "id": "rss_highlight_36c5706aca046a40",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Afinal, a democracia está segura?",
+      "authorOrMeta": "observador.pt",
+      "description": "Não é o colapso da democracia que devíamos temer, mas sim a possibilidade de que \"isto\" seja o que a democracia vai ser durante muito tempo",
+      "imageUrl": "/covers/highlight_afinal__a_democracia_est__segura__925af175_6251f91396fb.jpg",
+      "link": "https://observador.pt/opiniao/afinal-a-democracia-esta-segura/",
+      "externalId": "article:url:36c5706aca046a4024bb9a39",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-11T23:23:50Z",
+      "expiryDate": "2026-10-11T23:23:50Z",
+      "createdAt": "2026-09-12T08:42:59.344920Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/afinal-a-democracia-esta-segura/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A600%3A600%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2022%2F10%2F27190624%2Fmafalda-pratas-fernandes-467x467-acf-cropped.jpeg",
+        "categories": [
+          "Democracia",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:36c5706aca046a4024bb9a39",
+        "score": 1.0,
+        "coverHash": "9c07f6712669c58e279da81f21e5e8bc9bf0f99b785dcc33fb482cddd471422b",
+        "verifiedAt": "2026-09-12T08:42:59.684126Z",
+        "resolvedTitle": "Afinal, a democracia está segura?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-11T23:23:50Z",
+        "sourceDescription": "Não é o colapso da democracia que devíamos temer, mas sim a possibilidade de que \"isto\" seja o que a democracia vai ser durante muito tempo"
+      }
     }
   ],
   "history": [
@@ -2730,11 +2848,11 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 4,
-      "podcast": 2,
+      "podcast": 3,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
