@@ -1,11 +1,11 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_dff42ee280687a4ac08c",
-  "content_hash": "dff42ee280687a4ac08c617a7c8f76faa251c3bf5eb981af84a1d4f2fe74ea2c",
+  "draft_id": "draft_ea0ce7613eb02ecd5e9e",
+  "content_hash": "ea0ce7613eb02ecd5e9e822c909cc54524501ce44c7cb90a5658727baa82a39f",
   "post_type": "sunday_standard",
-  "created_at": "2026-09-12T18:05:09.569757+00:00",
+  "created_at": "2026-09-12T18:07:17.159619+00:00",
   "is_test": false,
-  "post_sha256": "c2040cac702a8e29790b66ad6ca376956e0a69ccb779444d4a22a710386ed3c6",
+  "post_sha256": "00ff136da39c01b0da206567031c5c158d073482a7065600c1e55cbb458de374",
   "caption_sha256": "6a3809b986a542ffdad6919bcd05ef75a92bcd94dd4d1d808049d39c0b766e6e",
   "approval": {
     "approved": false
@@ -32,14 +32,14 @@
       "entityId": "openlibrary:/works/OL1068091W",
       "score": 1.0,
       "coverHash": "4ed21cb867da34e2ccba53180c4c642ac0dfa8827868d2a688ec3ebab89b6013",
-      "verifiedAt": "2026-09-12T18:05:38.318220Z",
+      "verifiedAt": "2026-09-12T18:05:38.318288Z",
       "resolvedTitle": "On Liberty",
       "resolvedAuthor": "John Stuart Mill",
       "sourceDescription": "Defesa influente da liberdade individual, do debate público e dos limites do poder social e estatal.",
       "coverOverride": {
         "status": "approved",
         "source": "discord-review",
-        "approvedAt": "2026-09-12T18:05:38.318220Z"
+        "approvedAt": "2026-09-12T18:05:38.318288Z"
       }
     },
     "validationError": "NETWORK_ERROR: Falha de rede ao obter https://openlibrary.org/search.json?title=On+Liberty&author=John+Stuart+Mill&limit=20: HTTPSConnectionPool(host='openlibrary.org', port=443): Max retries exceeded with url: /search.json?title=On+Liberty&author=John+Stuart+Mill&limit=20 (Caused by ConnectTimeoutError(<HTTPSConnection(host='openlibrary.org', port=443) at 0x7f2e1a704550>, 'Connection to openlibrary.org timed out. (connect timeout=5)'))"
