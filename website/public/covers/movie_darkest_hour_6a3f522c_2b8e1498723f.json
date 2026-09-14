@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt4555426/",
+  "coverHash": "d7c8be6f882e4a090277047723b055e256811395710ec59da30412b3708d1b8a",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9c/Sir_Winston_S_Churchill.jpg/1280px-Sir_Winston_S_Churchill.jpg",
+  "entityId": "imdb:tt4555426",
+  "expiryDate": null,
+  "height": 1597,
+  "isbn": "",
+  "resolvedAuthor": "Joe Wright",
+  "resolvedTitle": "Darkest Hour",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Darkest Hour",
+  "titleNormalized": "darkest hour",
+  "type": "movie",
+  "verifiedAt": "2026-09-14T09:59:59.949767Z",
+  "width": 1280
+}
