@@ -440,7 +440,8 @@ class RollingFreshnessTests(unittest.TestCase):
 
         missing = auto_populate_ai._strict_sunday_slot_deficits(queue, [])
 
-        self.assertIn("q3/movie-or-investigation", missing)
+        self.assertIn("quadrante-aleatorio/investigation", missing)
+        self.assertIn("quadrante-aleatorio/movie", missing)
 
     def test_transiently_invalid_item_is_re_resolved_in_same_preflight(self):
         item = verified_item("book", "transient", status="invalid")
@@ -859,10 +860,37 @@ class PostQualityGateTests(unittest.TestCase):
             ),
         ):
             selected, _ = generate_post.get_recommendations_with_valid_covers(
-                queue
+                queue,
+                slot_types={
+                    "q1": "book",
+                    "q2": "podcast",
+                    "q3": "movie",
+                    "q4": "highlight",
+                },
             )
 
         self.assertEqual(selected["q4"]["id"], "highlight_opinion")
+
+    def test_weekly_draw_assignes_four_distinct_types(self):
+        drawn = generate_post.weekly_sunday_slot_types((2026, 37))
+
+        self.assertEqual(set(drawn), {"q1", "q2", "q3", "q4"})
+        self.assertEqual(len(set(drawn.values())), 4)
+        self.assertTrue(
+            all(
+                media_type in generate_post.SUNDAY_QUADRANT_POOL
+                for media_type in drawn.values()
+            )
+        )
+        # Determinístico dentro da mesma semana ISO.
+        self.assertEqual(
+            drawn,
+            generate_post.weekly_sunday_slot_types((2026, 37)),
+        )
+        self.assertNotEqual(
+            drawn,
+            generate_post.weekly_sunday_slot_types((2026, 38)),
+        )
 
 
 class PodcastEditorialDescriptionTests(unittest.TestCase):
@@ -1294,7 +1322,8 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             ),
         ):
             selected, _ = generate_post.get_recommendations_with_valid_covers(
-                queue
+                queue,
+                slot_types=dict(generate_post.REQUIRED_TYPES),
             )
 
         self.assertEqual(selected["q1"]["id"], "book_editorial")
@@ -1326,7 +1355,8 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             ),
         ):
             selected, _ = generate_post.get_recommendations_with_valid_covers(
-                queue
+                queue,
+                slot_types=dict(generate_post.REQUIRED_TYPES),
             )
 
         self.assertEqual(selected["q2"]["id"], "podcast_fallback")
@@ -1363,7 +1393,8 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             ),
         ):
             selected, _ = generate_post.get_recommendations_with_valid_covers(
-                queue
+                queue,
+                slot_types=dict(generate_post.REQUIRED_TYPES),
             )
 
         self.assertEqual(selected["q2"]["id"], "podcast_latest")
@@ -1405,6 +1436,7 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             selected, _ = generate_post.get_recommendations_with_valid_covers(
                 queue,
                 history=[history_item],
+                slot_types=dict(generate_post.REQUIRED_TYPES),
             )
 
         self.assertEqual(selected["q2"]["id"], "podcast_current")
@@ -1439,6 +1471,7 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             selected, _ = generate_post.get_recommendations_with_valid_covers(
                 queue,
                 history=[],
+                slot_types=dict(generate_post.REQUIRED_TYPES),
             )
 
         self.assertEqual(selected["q2"]["type"], "highlight")
@@ -1485,6 +1518,7 @@ class PodcastEditorialDescriptionTests(unittest.TestCase):
             selected, _ = generate_post.get_recommendations_with_valid_covers(
                 queue,
                 history=[],
+                slot_types=dict(generate_post.REQUIRED_TYPES),
             )
 
         self.assertEqual(selected["q1"]["id"], "book_approved")

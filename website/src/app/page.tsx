@@ -6,10 +6,15 @@ import {
   useEffect,
   useRef,
   useMemo,
-  type ReactNode,
 } from "react";
 import Header from "@/components/Header";
 import PoliticalIntelligencePanel from "@/components/PoliticalIntelligencePanel";
+import { ChatMarkdown } from "@/components/ChatMarkdown";
+import { conversationImagesPdf, downloadBlob } from "@/lib/conversationImages";
+import {
+  pickStarterSuggestions,
+  fallbackSuggestions,
+} from "@/lib/suggestionPool";
 import styles from "./page.module.css";
 
 interface MessageNode {
@@ -40,56 +45,6 @@ const initialMessagesMap: Record<string, MessageNode> = {
   }
 };
 
-const INLINE_MARKDOWN_PATTERN =
-  /(\*\*[^*\n]+\*\*|`[^`\n]+`|\[[^\]\n]+\]\([^)\s]+\))/g;
-
-function safeExternalHref(value: string): string | null {
-  try {
-    const url = new URL(value);
-    return url.protocol === "https:" || url.protocol === "http:"
-      ? url.toString()
-      : null;
-  } catch {
-    return null;
-  }
-}
-
-function renderInlineMarkdown(value: string, keyPrefix: string): ReactNode[] {
-  const nodes: ReactNode[] = [];
-  let cursor = 0;
-  let tokenIndex = 0;
-
-  for (const match of value.matchAll(INLINE_MARKDOWN_PATTERN)) {
-    const start = match.index ?? 0;
-    if (start > cursor) nodes.push(value.slice(cursor, start));
-
-    const token = match[0];
-    const key = `${keyPrefix}-${tokenIndex}`;
-    if (token.startsWith("**")) {
-      nodes.push(<strong key={key}>{token.slice(2, -2)}</strong>);
-    } else if (token.startsWith("`")) {
-      nodes.push(<code key={key}>{token.slice(1, -1)}</code>);
-    } else {
-      const linkMatch = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
-      const href = linkMatch ? safeExternalHref(linkMatch[2]) : null;
-      nodes.push(
-        href && linkMatch ? (
-          <a key={key} href={href} target="_blank" rel="noopener noreferrer">
-            {linkMatch[1]}
-          </a>
-        ) : (
-          token
-        ),
-      );
-    }
-    cursor = start + token.length;
-    tokenIndex += 1;
-  }
-
-  if (cursor < value.length) nodes.push(value.slice(cursor));
-  return nodes;
-}
-
 function readableError(error: unknown): string {
   return error instanceof Error
     ? error.message
@@ -114,7 +69,16 @@ export default function Home() {
   const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareLink, setShareLink] = useState("");
+  const [shareState, setShareState] = useState<"idle" | "creating" | "done" | "error">("idle");
+  const [shareError, setShareError] = useState("");
+  const [sharePdfHint, setSharePdfHint] = useState("");
+  const [sharePdfBusy, setSharePdfBusy] = useState(false);
+  const [copiedShareLink, setCopiedShareLink] = useState(false);
+
   const messageListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -148,6 +112,8 @@ export default function Home() {
         }
       }
     }
+    // Sugestões iniciais: conjunto curado, variando entre visitas.
+    setSuggestions(pickStarterSuggestions(3));
   }, []);
 
   // Persist conversation to sessionStorage when it changes
@@ -205,6 +171,97 @@ export default function Home() {
     }
   };
 
+  const getClientId = (): string => {
+    let clientId = "anonymous";
+    try {
+      let storedId = localStorage.getItem("politometro_client_id");
+      if (!storedId) {
+        storedId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem("politometro_client_id", storedId);
+      }
+      clientId = storedId;
+    } catch (e) {
+      console.warn("localStorage not available:", e);
+    }
+    return clientId;
+  };
+
+  // Sugestões de acompanhamento: depois de cada resposta do bot, pede 3
+  // perguntas curtas relacionadas com a resposta; se a geração falhar, usa a
+  // reserva local por tema.
+  const refreshSuggestions = async (question: string, answer: string) => {
+    setSuggestionsLoading(true);
+    try {
+      const response = await fetch("/api/chat/suggestions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Client-ID": getClientId() },
+        body: JSON.stringify({ lastQuestion: question, lastAnswer: answer }),
+      });
+      const payload = (await response.json()) as { suggestions?: string[] };
+      const list = (payload.suggestions ?? []).filter((item) => typeof item === "string" && item.trim());
+      setSuggestions(list.length === 3 ? list : fallbackSuggestions(answer));
+    } catch {
+      setSuggestions(fallbackSuggestions(answer));
+    } finally {
+      setSuggestionsLoading(false);
+    }
+  };
+
+  const createShare = async () => {
+    setShareState("creating");
+    setShareError("");
+    setShareLink("");
+    const activeMessages = activePath
+      .filter((msg) => msg.role === "user" || msg.content.trim() !== "")
+      .map((msg) => ({ role: msg.role, content: msg.content }));
+    try {
+      const response = await fetch("/api/share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Client-ID": getClientId() },
+        body: JSON.stringify({ messages: activeMessages }),
+      });
+      const payload = (await response.json()) as { id?: string; error?: string };
+      if (!response.ok || !payload.id) {
+        throw new Error(payload.error || "Não foi possível criar a partilha.");
+      }
+      const url = `${window.location.origin}/partilhar/${payload.id}`;
+      setShareLink(url);
+      setShareState("done");
+    } catch (error: unknown) {
+      setShareState("error");
+      setShareError(error instanceof Error ? error.message : "Falha ao partilhar a conversa.");
+    }
+  };
+
+  const copyShareLink = async () => {
+    if (!shareLink) return;
+    try {
+      await navigator.clipboard.writeText(shareLink);
+      setCopiedShareLink(true);
+      setTimeout(() => setCopiedShareLink(false), 2000);
+    } catch {
+      console.error("Erro ao copiar link de partilha");
+    }
+  };
+
+  const downloadConversationPdf = async () => {
+    if (sharePdfBusy) return;
+    setSharePdfBusy(true);
+    setSharePdfHint("");
+    const activeMessages = activePath
+      .filter((msg) => msg.role === "user" || msg.content.trim() !== "")
+      .map((msg) => ({ role: msg.role, content: msg.content }));
+    try {
+      const { blob, pageCount } = await conversationImagesPdf(activeMessages);
+      downloadBlob(blob, `politometro-conversa-${Date.now()}.pdf`);
+      setSharePdfHint(`PDF gerado com ${pageCount} imagem(ns) da conversa.`);
+    } catch (error: unknown) {
+      setSharePdfHint(error instanceof Error ? error.message : "Falha ao gerar o PDF.");
+    } finally {
+      setSharePdfBusy(false);
+    }
+  };
+
   const handleCopy = (text: string, msgId: string) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopiedMessageId(msgId);
@@ -231,14 +288,14 @@ export default function Home() {
     }
   };
 
-  const handleSend = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
+  const handleSend = async (e?: React.FormEvent, overrideText?: string) => {
+    if (e) e.preventDefault();
+    const userMessageText = (overrideText ?? input).trim();
+    if (!userMessageText || isLoading) return;
+    setInput("");
+    setSuggestions([]);
 
     const userMessageId = Date.now().toString();
-    const userMessageText = input.trim();
-    setInput("");
-    
     const currentParentId = activeMessageId;
     
     const newUserNode: MessageNode = {
@@ -387,6 +444,10 @@ export default function Home() {
             } catch {}
           }
         }
+      }
+
+      if (accumulatedContent.trim()) {
+        void refreshSuggestions(userMessageText, accumulatedContent);
       }
     } catch (err: unknown) {
       console.error(err);
@@ -577,6 +638,10 @@ export default function Home() {
           }
         }
       }
+
+      if (accumulatedContent.trim()) {
+        void refreshSuggestions(newText.trim(), accumulatedContent);
+      }
     } catch (err: unknown) {
       console.error(err);
       setMessagesMap(prev => ({
@@ -604,51 +669,6 @@ export default function Home() {
   };
 
   const canClear = Object.keys(messagesMap).length > 1;
-
-  const renderMarkdown = (text: string) => {
-    const lines = text.split("\n");
-    return lines.map((line, idx) => {
-      if (line.startsWith("### ")) {
-        return (
-          <h3 key={idx} className={styles.mdH3}>
-            {renderInlineMarkdown(line.slice(4), `h3-${idx}`)}
-          </h3>
-        );
-      }
-      if (line.startsWith("## ")) {
-        return (
-          <h2 key={idx} className={styles.mdH2}>
-            {renderInlineMarkdown(line.slice(3), `h2-${idx}`)}
-          </h2>
-        );
-      }
-      if (line.startsWith("🗳️ ")) {
-        return (
-          <p key={idx} className={styles.mdParagraph}>
-            {renderInlineMarkdown(line, `ballot-${idx}`)}
-          </p>
-        );
-      }
-      
-      if (line.startsWith("- ") || line.startsWith("* ")) {
-        const bulletContent = line.slice(2);
-        return (
-          <ul key={idx} className={styles.mdUl}>
-            <li>{renderInlineMarkdown(bulletContent, `bullet-${idx}`)}</li>
-          </ul>
-        );
-      }
-
-      return (
-        <p 
-          key={idx} 
-          className={line.trim() === "" ? styles.mdSpacing : styles.mdParagraph}
-        >
-          {line ? renderInlineMarkdown(line, `line-${idx}`) : "\u00A0"}
-        </p>
-      );
-    });
-  };
 
   return (
     <div className={styles.container}>
@@ -721,7 +741,16 @@ export default function Home() {
                               <span></span>
                             </div>
                           ) : (
-                            renderMarkdown(msg.content)
+                            <ChatMarkdown
+                              content={msg.content}
+                              classes={{
+                                mdH2: styles.mdH2,
+                                mdH3: styles.mdH3,
+                                mdParagraph: styles.mdParagraph,
+                                mdUl: styles.mdUl,
+                                mdSpacing: styles.mdSpacing,
+                              }}
+                            />
                           )}
                         </div>
                       )}
@@ -790,6 +819,44 @@ export default function Home() {
             })}
           </div>
 
+          {!isLoading && input.trim() === "" && (suggestions.length > 0 || suggestionsLoading) && (
+            <div className={styles.suggestionRow} role="group" aria-label="Sugestões do que perguntar">
+              {suggestionsLoading && suggestions.length === 0 ? (
+                <span className={styles.suggestionsHint}>A preparar sugestões…</span>
+              ) : (
+                <>
+                  {suggestions.map((suggestion) => (
+                    <button
+                      key={suggestion}
+                      type="button"
+                      className={styles.suggestionChip}
+                      onClick={() => handleSend(undefined, suggestion)}
+                    >
+                      {suggestion}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    className={styles.suggestionRefresh}
+                    title="Mostrar outras sugestões"
+                    aria-label="Mostrar outras sugestões"
+                    onClick={() => {
+                      const leaf = activePath[activePath.length - 1];
+                      if (leaf && leaf.role === "assistant" && leaf.content.trim()) {
+                        const question = [...activePath].reverse().find((m) => m.role === "user");
+                        void refreshSuggestions(question?.content ?? "", leaf.content);
+                      } else {
+                        setSuggestions(pickStarterSuggestions(3));
+                      }
+                    }}
+                  >
+                    ↻
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+
           <form onSubmit={handleSend} className={styles.inputArea}>
             <input
               type="text"
@@ -799,6 +866,34 @@ export default function Home() {
               disabled={isLoading}
               className={styles.input}
             />
+            <button
+              type="button"
+              onClick={() => {
+                setShareOpen(true);
+                setSharePdfHint("");
+              }}
+              disabled={isLoading || !canClear}
+              className={styles.clearBtn}
+              title="Partilhar conversa"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle cx="18" cy="5" r="3"></circle>
+                <circle cx="6" cy="12" r="3"></circle>
+                <circle cx="18" cy="19" r="3"></circle>
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+              </svg>
+            </button>
             <button
               type="button"
               onClick={handleClear}
@@ -850,6 +945,80 @@ export default function Home() {
               )}
             </button>
           </form>
+
+          {shareOpen && (
+            <div
+              className={styles.shareOverlay}
+              role="dialog"
+              aria-modal="true"
+              aria-label="Partilhar conversa"
+              onClick={(event) => {
+                if (event.target === event.currentTarget) setShareOpen(false);
+              }}
+            >
+              <div className={`${styles.shareModal} glass`}>
+                <div className={styles.shareModalHeader}>
+                  <strong>Partilhar conversa</strong>
+                  <button
+                    type="button"
+                    className={styles.shareClose}
+                    onClick={() => setShareOpen(false)}
+                    aria-label="Fechar"
+                  >
+                    ×
+                  </button>
+                </div>
+
+                <p className={styles.shareDescription}>
+                  Gera um link com um identificador único que abre esta conversa
+                  no próprio site, ou guarda a conversa como imagens num PDF.
+                </p>
+
+                <div className={styles.shareActions}>
+                  <button
+                    type="button"
+                    className={styles.sharePrimary}
+                    onClick={createShare}
+                    disabled={shareState === "creating"}
+                  >
+                    {shareState === "creating" ? "A gerar link…" : "Gerar link de partilha"}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.shareSecondary}
+                    onClick={downloadConversationPdf}
+                    disabled={sharePdfBusy}
+                  >
+                    {sharePdfBusy ? "A gerar imagens…" : "Guardar como imagens (PDF)"}
+                  </button>
+                </div>
+
+                {shareLink && (
+                  <div className={styles.shareLinkRow}>
+                    <input
+                      type="text"
+                      readOnly
+                      value={shareLink}
+                      className={styles.shareLinkInput}
+                      onFocus={(event) => event.currentTarget.select()}
+                    />
+                    <button type="button" className={styles.shareSecondary} onClick={copyShareLink}>
+                      {copiedShareLink ? "Copiado!" : "Copiar"}
+                    </button>
+                  </div>
+                )}
+                {shareState === "error" && shareError && (
+                  <p className={styles.shareError}>{shareError}</p>
+                )}
+                {sharePdfHint && <p className={styles.shareNotice}>{sharePdfHint}</p>}
+
+                <small className={styles.shareFootnote}>
+                  As imagens são geradas com altura ajustada ao conteúdo: nenhuma
+                  mensagem fica cortada a meio e não há espaços vazios grandes.
+                </small>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>

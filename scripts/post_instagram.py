@@ -23,6 +23,8 @@ import time
 
 import requests
 
+import publication_schedule
+
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(SCRIPT_DIR)
@@ -91,7 +93,7 @@ def _approved_draft():
     if not os.path.exists(DRAFT_PATH):
         raise RuntimeError("O rascunho aprovado não existe.")
     draft = _load_json(DRAFT_PATH)
-    approval = draft.get("approval") or {}
+    approval = publication_schedule.effective_approval(draft) or {}
     if draft.get("is_test") or not approval.get("approved"):
         raise RuntimeError("O rascunho não está aprovado para publicação.")
     if (

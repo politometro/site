@@ -294,10 +294,60 @@ def query_politometro_chat(query, user_id="unknown"):
         # The AI model already incorporates sources in-text if needed.
         if not full_text:
             return "Não foi possível obter uma resposta para a tua pergunta."
-            
+
         return full_text
     except Exception as e:
         return f"❌ Ocorreu um erro ao ligar à API do Politómetro: {e}"
+
+
+# Sugestões de arranque (antes de qualquer pergunta) e de recurso quando a
+# geração ligada à resposta não está disponível.
+STARTER_SUGGESTIONS = [
+    "O que propõem os partidos para a saúde?",
+    "Quais são as prioridades da IL para a economia?",
+    "O que promete a AD para a habitação?",
+]
+
+SUGGESTIONS_MARKER = "🤔 **Perguntas rápidas:**"
+
+
+def format_quick_suggestions(suggestions):
+    """Formata as 3 sugestões como lista numerada copiável no Discord."""
+    clean = [str(item).strip() for item in (suggestions or []) if str(item).strip()]
+    if not clean:
+        return ""
+    lines = [SUGGESTIONS_MARKER]
+    for index, suggestion in enumerate(clean[:3], start=1):
+        lines.append(f"{index}. {suggestion}")
+    return "\n".join(lines)
+
+
+def query_chat_suggestions(question, answer, user_id="unknown", timeout=12):
+    """Pede 3 sugestões ligadas à última resposta do bot.
+
+    Usa o endpoint /api/chat/suggestions com um client-id próprio
+    (discord-suggestions:{user}), que não consome o limite diário de
+    perguntas do utilizador — só a pergunta efetivamente enviada conta.
+    """
+    url = f"{WEBSITE_URL.rstrip('/')}/api/chat/suggestions"
+    headers = {
+        "Content-Type": "application/json",
+        "x-client-id": f"discord-suggestions:{user_id}",
+    }
+    payload = {"lastQuestion": str(question or ""), "lastAnswer": str(answer or "")}
+    try:
+        response = requests.post(url, json=payload, headers=headers, timeout=timeout)
+        if response.status_code != 200:
+            return list(STARTER_SUGGESTIONS)
+        data = response.json()
+        suggestions = [
+            str(item).strip()
+            for item in (data.get("suggestions") or [])
+            if str(item).strip()
+        ]
+        return suggestions[:3] or list(STARTER_SUGGESTIONS)
+    except Exception:
+        return list(STARTER_SUGGESTIONS)
 
 
 def _discord_chunks(value, limit=2000):
@@ -2269,15 +2319,34 @@ async def on_message(message):
                 return
             query = query.replace(f"<@{bot_user.id}>", "").strip()
             query = query.replace(f"<@!{bot_user.id}>", "").strip()
-            
+
         if not query:
-            await message.reply("Olá! Em que posso ajudar hoje sobre os programas eleitorais?")
+            greeting = "Olá! Em que posso ajudar hoje sobre os programas eleitorais?"
+            await message.reply(
+                f"{greeting}\n\n{format_quick_suggestions(STARTER_SUGGESTIONS)}"
+            )
             return
-            
+
         async with message.channel.typing():
             loop = asyncio.get_event_loop()
             response_text = await loop.run_in_executor(None, query_politometro_chat, query, message.author.id)
-            
+
+            # Sugestões do que perguntar a seguir, ligadas à resposta dada.
+            # O pedido usa um client-id próprio (discord-suggestions), por isso
+            # a GERAÇÃO das sugestões não conta para o limite diário de 100
+            # perguntas; só uma pergunta efetivamente enviada conta.
+            suggestions = await loop.run_in_executor(
+                None,
+                query_chat_suggestions,
+                query,
+                response_text,
+                str(message.author.id),
+            )
+            if suggestions:
+                response_text = (
+                    f"{response_text}\n\n{format_quick_suggestions(suggestions)}"
+                )
+
             if len(response_text) <= 2000:
                 await message.reply(response_text)
             else:

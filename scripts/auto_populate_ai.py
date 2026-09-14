@@ -1791,7 +1791,13 @@ def _is_strict_post_candidate(item, history, now=None):
 
 
 def _strict_sunday_slot_deficits(queue, history, now=None):
-    """Return slots that the strict Sunday selector cannot currently fill."""
+    """Return slots that the strict Sunday selector cannot currently fill.
+
+    Os tipos por quadrante são sorteados a cada semana entre os cinco tipos
+    publicáveis (um por quadrante, sem repetição), pelo que a reserva
+    precisa de, no mínimo, um candidato estrito de cada tipo: qualquer um
+    deles pode calhar a qualquer quadrante.
+    """
     ready = [
         item
         for item in queue
@@ -1803,42 +1809,9 @@ def _strict_sunday_slot_deficits(queue, history, now=None):
         for media_type in ALLOWED_TYPES
     }
     missing = []
-    if counts["book"] < 1:
-        missing.append("q1/book")
-    if counts["podcast"] < 1:
-        missing.append("q2/podcast")
-
-    # Q3 consumes one movie/investigation. Q4 then prefers a highlight but can
-    # safely use another verified investigation, movie or podcast.
-    available = dict(counts)
-    if available["book"]:
-        available["book"] -= 1
-    if available["podcast"]:
-        available["podcast"] -= 1
-    q3_options = [
-        media_type
-        for media_type in ("movie", "investigation")
-        if available[media_type] > 0
-    ]
-    strict_tail_covered = False
-    for q3_type in q3_options:
-        remaining = dict(available)
-        remaining[q3_type] -= 1
-        if any(
-            remaining[media_type] > 0
-            for media_type in (
-                "highlight",
-                "investigation",
-                "movie",
-                "podcast",
-            )
-        ):
-            strict_tail_covered = True
-            break
-    if not q3_options:
-        missing.append("q3/movie-or-investigation")
-    elif not strict_tail_covered:
-        missing.append("q4/highlight-or-safe-alternative")
+    for media_type in ("book", "podcast", "movie", "investigation", "highlight"):
+        if counts.get(media_type, 0) < 1:
+            missing.append(f"quadrante-aleatorio/{media_type}")
     return missing
 
 

@@ -260,3 +260,148 @@ class PublicationScheduleTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class UndecidedDraftAutopublishTests(unittest.TestCase):
+    """Rascunhos entregues no Discord sem aprovação nem rejeição."""
+
+    def setUp(self):
+        self.created_at = "2026-07-18T20:00:00+00:00"
+        self.draft = {
+            "schema_version": 2,
+            "draft_id": "draft-undecided",
+            "content_hash": "hash-undecided",
+            "created_at": self.created_at,
+            "is_test": False,
+            "approval": {"approved": False},
+            "q1": {"id": "item-1"},
+            "q2": {"id": "item-2"},
+            "q3": {"id": "item-3"},
+            "q4": {"id": "item-4"},
+        }
+        self.notification = {
+            "schema_version": 1,
+            "draft_id": "draft-undecided",
+            "content_hash": "hash-undecided",
+            "review_message_id": "111",
+            "caption_message_id": "222",
+        }
+        self.recommendations = {
+            "queue": [
+                {"id": "item-1", "status": "queue"},
+                {"id": "item-2", "status": "queue"},
+                {"id": "item-3", "status": "queue"},
+                {"id": "item-4", "status": "queue"},
+            ]
+        }
+
+    def _patch_files(self):
+        return (
+            mock.patch.object(
+                publication_schedule,
+                "REVIEW_NOTIFICATION_PATH",
+                "review_notification.json",
+            ),
+            mock.patch.object(
+                publication_schedule,
+                "RECOMMENDATIONS_PATH",
+                "recommendations.json",
+            ),
+            mock.patch.object(
+                publication_schedule,
+                "_load_optional",
+                side_effect=lambda path: (
+                    self.notification
+                    if path == "review_notification.json"
+                    else self.recommendations
+                ),
+            ),
+        )
+
+    def test_undecided_delivered_draft_publishes_in_window(self):
+        patches = self._patch_files()
+        with patches[0], patches[1], patches[2]:
+            decision = publication_schedule.publication_decision(
+                self.draft,
+                now=datetime.datetime(
+                    2026, 7, 19, 10, 0, tzinfo=datetime.timezone.utc
+                ),
+            )
+
+        self.assertTrue(decision[0])
+        self.assertIn("publicação automática", decision[1])
+        self.assertEqual(
+            decision[2].isoformat(),
+            "2026-07-19T09:00:00+00:00",
+        )
+
+    def test_undecided_draft_without_delivery_is_not_published(self):
+        self.notification = {}
+        patches = self._patch_files()
+        with patches[0], patches[1], patches[2]:
+            decision = publication_schedule.publication_decision(
+                self.draft,
+                now=datetime.datetime(
+                    2026, 7, 19, 10, 0, tzinfo=datetime.timezone.utc
+                ),
+            )
+
+        self.assertFalse(decision[0])
+        self.assertIn("ainda não foi aprovado", decision[1])
+
+    def test_rejected_items_block_autopublish(self):
+        self.recommendations["queue"][2]["status"] = "skip"
+        patches = self._patch_files()
+        with patches[0], patches[1], patches[2]:
+            decision = publication_schedule.publication_decision(
+                self.draft,
+                now=datetime.datetime(
+                    2026, 7, 19, 10, 0, tzinfo=datetime.timezone.utc
+                ),
+            )
+
+        self.assertFalse(decision[0])
+
+    def test_reviewer_feedback_blocks_autopublish(self):
+        self.draft["reviewFeedback"] = [
+            {"text": "trocar o quadrante 3", "createdAt": self.created_at}
+        ]
+        patches = self._patch_files()
+        with patches[0], patches[1], patches[2]:
+            decision = publication_schedule.publication_decision(
+                self.draft,
+                now=datetime.datetime(
+                    2026, 7, 19, 10, 0, tzinfo=datetime.timezone.utc
+                ),
+            )
+
+        self.assertFalse(decision[0])
+
+    def test_env_flag_disables_autopublish(self):
+        patches = self._patch_files()
+        with patches[0], patches[1], patches[2]:
+            with mock.patch.dict(
+                "os.environ",
+                {"AUTO_PUBLISH_UNDECIDED_DRAFTS": "false"},
+            ):
+                decision = publication_schedule.publication_decision(
+                    self.draft,
+                    now=datetime.datetime(
+                        2026, 7, 19, 10, 0, tzinfo=datetime.timezone.utc
+                    ),
+                )
+
+        self.assertFalse(decision[0])
+
+    def test_test_draft_never_autopublishes(self):
+        self.draft["is_test"] = True
+        patches = self._patch_files()
+        with patches[0], patches[1], patches[2]:
+            decision = publication_schedule.publication_decision(
+                self.draft,
+                now=datetime.datetime(
+                    2026, 7, 19, 10, 0, tzinfo=datetime.timezone.utc
+                ),
+            )
+
+        self.assertFalse(decision[0])

@@ -163,32 +163,11 @@ interface VoteStatistics {
   voteCount: number;
 }
 
-interface IntelligenceData {
+interface IntelligenceInline {
   currentLegislature: string;
   parties: Party[];
   legislatures: string[];
   notices: string[];
-  promises: PromiseItem[];
-  votes: Vote[];
-  articles: Article[];
-  europeanUnion?: {
-    initiativesMatched?: Array<{
-      id?: string;
-      identifier?: string;
-      label?: string;
-      title?: string;
-      type?: string;
-      status?: string;
-      parliamentaryTerm?: number | null;
-      sourceUrl?: string;
-    }>;
-    proceduresKnown?: number;
-    votesKnown?: number;
-  };
-  budgets?: {
-    documents?: BudgetDocument[];
-    documentsKnown?: number;
-  };
   statistics: {
     allTime: VoteStatistics;
     byLegislature: Record<string, VoteStatistics>;
@@ -197,37 +176,123 @@ interface IntelligenceData {
 
 type IntelligenceShardManifest = {
   format?: string;
-  inline?: Record<string, unknown>;
+  inline?: IntelligenceInline;
   shards?: Record<string, string[]>;
 };
 
-async function loadIntelligenceData(): Promise<IntelligenceData> {
-  const response = await fetch("/political-intelligence.json", { cache: "no-store" });
-  if (!response.ok) throw new Error("Não foi possível carregar o quadro público.");
-  const payload = (await response.json()) as IntelligenceData | IntelligenceShardManifest;
-  if ((payload as IntelligenceShardManifest).format !== "political-intelligence-shards") {
-    return payload as IntelligenceData;
+const ITEMS_PER_PAGE = 25;
+
+/**
+ * Lista preguiçosa sobre os shards públicos: só vai buscar mais shards ao
+ * servidor quando a página atual precisa de mais itens que correspondam ao
+ * filtro. Evita carregar os ~660 MB do arquivo completo no browser.
+ */
+class LazyShardList<T> {
+  private shardIndex = 0;
+  private buffer: T[] = [];
+  private seenKeys = new Set<string>();
+  loading = false;
+  exhausted = false;
+
+  constructor(
+    private readonly paths: string[],
+    private readonly keyOf: (item: T) => string,
+  ) {}
+
+  get loadedItems(): T[] {
+    return this.buffer;
   }
 
-  const manifest = payload as IntelligenceShardManifest;
-  const shardEntries = Object.entries(manifest.shards ?? {});
-  const arrays = await Promise.all(
-    shardEntries.map(async ([key, paths]) => {
-      const parts = await Promise.all(
-        paths.map(async (path) => {
-          const shardResponse = await fetch(`/${path}`, { cache: "no-store" });
-          if (!shardResponse.ok) throw new Error(`Não foi possível carregar o shard ${path}.`);
-          const shard = await shardResponse.json();
-          return Array.isArray(shard) ? shard : [];
-        }),
-      );
-      return [key, parts.flat()] as const;
-    }),
+  reset(): void {
+    this.buffer = [];
+    this.seenKeys.clear();
+    this.shardIndex = 0;
+    this.exhausted = false;
+  }
+
+  async ensure(
+    needed: number,
+    matches: (item: T) => boolean,
+    onBatch: (items: T[]) => void,
+  ): Promise<T[]> {
+    if (this.buffer.length >= needed && !this.needsScan(matches, needed)) {
+      return this.buffer;
+    }
+    if (this.exhausted) return this.buffer;
+    this.loading = true;
+    try {
+      while (this.buffer.length < needed && this.shardIndex < this.paths.length) {
+        const path = this.paths[this.shardIndex];
+        const response = await fetch(`/${path}`, { cache: "force-cache" });
+        if (!response.ok) {
+          throw new Error(`Não foi possível carregar o ficheiro ${path}.`);
+        }
+        const shard = (await response.json()) as T[];
+        this.shardIndex += 1;
+        const fresh: T[] = [];
+        for (const item of Array.isArray(shard) ? shard : []) {
+          if (!matches(item)) continue;
+          const key = this.keyOf(item);
+          if (this.seenKeys.has(key)) continue;
+          this.seenKeys.add(key);
+          this.buffer.push(item);
+          fresh.push(item);
+        }
+        if (fresh.length > 0) onBatch(this.buffer);
+      }
+      if (this.shardIndex >= this.paths.length) this.exhausted = true;
+    } finally {
+      this.loading = false;
+    }
+    return this.buffer;
+  }
+
+  /**
+   * True quando o buffer visível pode crescer mesmo depois de atingir
+   * `needed` — por exemplo, se um filtro aplicado ao buffer já carregado
+   * ainda não varreu todos os shards. Como `ensure` já filtra ao carregar,
+   * basta comparar com `needed`.
+   */
+  private needsScan(_matches: (item: T) => boolean, needed: number): boolean {
+    return this.buffer.length < needed;
+  }
+}
+
+function loadIntelligenceManifest(): Promise<{
+  inline: IntelligenceInline;
+  shards: Record<string, string[]>;
+}> {
+  return fetch("/political-intelligence.json", { cache: "no-store" }).then(
+    async (response) => {
+      if (!response.ok) {
+        throw new Error("Não foi possível carregar o quadro público.");
+      }
+      const payload = (await response.json()) as
+        | IntelligenceShardManifest
+        | (IntelligenceInline & Record<string, unknown>);
+      if ((payload as IntelligenceShardManifest).format !== "political-intelligence-shards") {
+        // Compatibilidade com exportações antigas em ficheiro único.
+        const legacy = payload as IntelligenceInline & {
+          promises?: PromiseItem[];
+          votes?: Vote[];
+          articles?: Article[];
+        };
+        return {
+          inline: legacy,
+          shards: {
+            promises: legacy.promises ?? [],
+            votes: legacy.votes ?? [],
+            articles: legacy.articles ?? [],
+          } as unknown as Record<string, string[]>,
+        };
+      }
+      const manifest = payload as IntelligenceShardManifest;
+      return {
+        inline: (manifest.inline ?? {}) as IntelligenceInline,
+        shards: manifest.shards ?? {},
+      };
+    },
   );
-  return {
-    ...(manifest.inline ?? {}),
-    ...Object.fromEntries(arrays),
-  } as unknown as IntelligenceData;
 }
 
 const POSITION_LABELS: Record<string, string> = {
@@ -350,6 +415,42 @@ function articleMatchesParty(article: Article, partyId: string): boolean {
   });
 }
 
+/** Texto longo apresentado em bloco compacto, expansível a pedido. */
+function ClampedText({
+  text,
+  className,
+  lines = 4,
+  threshold = 200,
+}: {
+  text: string;
+  className: string;
+  lines?: number;
+  threshold?: number;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const long = (text || "").length > threshold;
+  if (!text) return null;
+  return (
+    <>
+      <p
+        className={`${className} ${long && !expanded ? styles.clamped : ""}`}
+        style={long && !expanded ? ({ "--clamp-lines": lines } as React.CSSProperties) : undefined}
+      >
+        {text}
+      </p>
+      {long && (
+        <button
+          type="button"
+          className={styles.clampToggle}
+          onClick={() => setExpanded((value) => !value)}
+        >
+          {expanded ? "Mostrar menos" : "Ler mais"}
+        </button>
+      )}
+    </>
+  );
+}
+
 function VoteBox({ vote, parties }: { vote: Vote; parties: Party[] }) {
   const [expanded, setExpanded] = useState(false);
   const positionByParty = useMemo(
@@ -374,7 +475,7 @@ function VoteBox({ vote, parties }: { vote: Vote; parties: Party[] }) {
 
       {expanded && (
         <div className={styles.voteExpanded}>
-          {vote.subject && <p className={styles.voteSubject}>{vote.subject}</p>}
+          <ClampedText text={vote.subject || ""} className={styles.voteSubject} lines={3} threshold={180} />
           <div className={styles.positionGrid} aria-label="Sentidos de voto por partido">
             {parties.map((party) => {
               const position = positionByParty.get(party.id);
@@ -456,26 +557,41 @@ function StatisticsTable({
   );
 }
 
+function normalisePromiseKey(promise: PromiseItem): string {
+  return `${promise.party}::${promise.statement.replace(/\s+/g, " ").trim().toLowerCase()}`;
+}
+
 export default function PoliticalIntelligencePanel() {
   const rootRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(false);
   const [tab, setTab] = useState<Tab>("promessas");
-  const [data, setData] = useState<IntelligenceData | null>(null);
+  const [inline, setInline] = useState<IntelligenceInline | null>(null);
   const [loadError, setLoadError] = useState("");
   const [selectedParty, setSelectedParty] = useState("todos");
   const [selectedContest, setSelectedContest] = useState("todos");
   const [scope, setScope] = useState("atual");
   const [comparisonLeft, setComparisonLeft] = useState("");
   const [comparisonRight, setComparisonRight] = useState("");
-  const [promiseLimit, setPromiseLimit] = useState(25);
-  const [voteLimit, setVoteLimit] = useState(25);
-  const [articleLimit, setArticleLimit] = useState(25);
   const [promisePage, setPromisePage] = useState(1);
   const [votePage, setVotePage] = useState(1);
   const [articlePage, setArticlePage] = useState(1);
-  const ITEMS_PER_PAGE = 25;
+  const [dataTick, setDataTick] = useState(0);
+  const [articlesLoading, setArticlesLoading] = useState(false);
+  const [promisesLoading, setPromisesLoading] = useState(false);
+  const [matchedPromises, setMatchedPromises] = useState<PromiseItem[] | null>(null);
+  const [votesLoaded, setVotesLoaded] = useState(false);
+
+  const listsRef = useRef<{
+    articles?: LazyShardList<Article>;
+    promises?: LazyShardList<PromiseItem>;
+    matched?: LazyShardList<PromiseItem>;
+  }>({});
+  const shardsRef = useRef<Record<string, string[]>>({});
+  const votesRef = useRef<Vote[] | null>(null);
+  const votesLoadingRef = useRef(false);
+  const bump = () => setDataTick((value) => value + 1);
 
   const close = () => {
     if (closeTimer.current) {
@@ -488,13 +604,29 @@ export default function PoliticalIntelligencePanel() {
 
   useEffect(() => {
     let active = true;
-    loadIntelligenceData()
-      .then((payload) => {
+    loadIntelligenceManifest()
+      .then(({ inline: payload, shards }) => {
         if (!active) return;
-        setData(payload);
-        const firstParty = payload.parties[0]?.id ?? "";
+        setInline(payload);
+        shardsRef.current = shards;
+        listsRef.current = {
+          articles: new LazyShardList<Article>(
+            shards.articles ?? [],
+            (article) => article.id,
+          ),
+          promises: new LazyShardList<PromiseItem>(
+            shards.promises ?? [],
+            normalisePromiseKey,
+          ),
+          matched: new LazyShardList<PromiseItem>(
+            shards["promises-matched"] ?? [],
+            (promise) => promise.id,
+          ),
+        };
+        const firstParty = payload.parties?.[0]?.id ?? "";
         setComparisonLeft(firstParty);
-        setComparisonRight(payload.parties[1]?.id ?? firstParty);
+        setComparisonRight(payload.parties?.[1]?.id ?? firstParty);
+        bump();
       })
       .catch((error: unknown) => {
         if (active) setLoadError(error instanceof Error ? error.message : "Não foi possível carregar os dados.");
@@ -515,12 +647,10 @@ export default function PoliticalIntelligencePanel() {
     };
     document.addEventListener("pointerdown", outside);
     document.addEventListener("touchmove", outside, { passive: true });
-    document.addEventListener("scroll", outside, true);
     document.addEventListener("keydown", onKeyDown);
     return () => {
       document.removeEventListener("pointerdown", outside);
       document.removeEventListener("touchmove", outside);
-      document.removeEventListener("scroll", outside, true);
       document.removeEventListener("keydown", onKeyDown);
     };
   }, [isOpen]);
@@ -541,27 +671,200 @@ export default function PoliticalIntelligencePanel() {
     closeTimer.current = setTimeout(() => setIsOpen(false), 180);
   };
 
-const currentScope = scope === "atual" ? data?.currentLegislature : scope;
-  const statistics = data
-    ? (currentScope === "sempre" ? data.statistics.allTime : data.statistics.byLegislature[currentScope ?? ""])
-    : undefined;
+  const parties = inline?.parties ?? [];
+
+  // A legislatura corrente pode ainda não ter dados oficiais publicados.
+  // Nesse caso mostramos a legislatura mais recente com dados e um aviso.
+  const availableLegislatures = useMemo(
+    () => Object.keys(inline?.statistics.byLegislature ?? {}),
+    [inline],
+  );
+  const currentLegislatureHasData = useMemo(() => {
+    if (!inline) return true;
+    return Boolean(inline.statistics.byLegislature[inline.currentLegislature]);
+  }, [inline]);
+  const fallbackScope = availableLegislatures[0] ?? "";
+  const effectiveScope = scope === "atual" && !currentLegislatureHasData
+    ? fallbackScope
+    : scope;
+
+  const statistics = useMemo(() => {
+    if (!inline) return undefined;
+    const currentScope = effectiveScope === "atual"
+      ? inline.currentLegislature
+      : effectiveScope;
+    if (currentScope === "sempre") return inline.statistics.allTime;
+    return inline.statistics.byLegislature[currentScope ?? ""];
+  }, [inline, effectiveScope]);
+
   const contests = useMemo(() => Array.from(new Set(
-    (data?.promises ?? [])
+    (listsRef.current.promises?.loadedItems ?? [])
       .map((promise) => promise.source?.contest)
       .filter((contest): contest is string => Boolean(contest)),
-  )).sort((left, right) => left.localeCompare(right, "pt")), [data]);
-  const promises = useMemo(() => (data?.promises ?? []).filter((promise) => (
-    (selectedParty === "todos" || promise.party === selectedParty)
-    && (selectedContest === "todos" || promise.source?.contest === selectedContest)
-  )), [data, selectedParty, selectedContest]);
-  const votes = useMemo(() => (data?.votes ?? []).filter((vote) => (
-    (!currentScope || currentScope === "sempre" || vote.legislature === currentScope)
-    && (selectedParty === "todos" || vote.positions.some((position) => position.party === selectedParty))
-  )), [data, currentScope, selectedParty]);
-  const articles = useMemo(() => (data?.articles ?? []).filter((article) => (
-    selectedParty === "todos" || articleMatchesParty(article, selectedParty)
-  )), [data, selectedParty]);
-  const voteById = useMemo(() => new Map((data?.votes ?? []).map((vote) => [vote.id, vote])), [data]);
+  )).sort((left, right) => left.localeCompare(right, "pt")), [inline, dataTick]);
+
+  const promiseFilter = useMemo(() => {
+    return (promise: PromiseItem) =>
+      (selectedParty === "todos" || promise.party === selectedParty)
+      && (selectedContest === "todos" || promise.source?.contest === selectedContest);
+  }, [selectedParty, selectedContest]);
+
+  // Carrega shards de promessas progressivamente até preencher a página.
+  useEffect(() => {
+    const list = listsRef.current.promises;
+    if (!list || !inline) return;
+    let active = true;
+    const needed = promisePage * ITEMS_PER_PAGE;
+    setPromisesLoading(list.loading);
+    list
+      .ensure(
+        needed,
+        promiseFilter,
+        () => {
+          if (active) bump();
+        },
+      )
+      .then(() => {
+        if (active) setPromisesLoading(list.loading);
+      })
+      .catch((error: unknown) => {
+        if (active) setLoadError(error instanceof Error ? error.message : "Falha ao carregar promessas.");
+      });
+    return () => {
+      active = false;
+    };
+  }, [inline, promisePage, promiseFilter, tab, dataTick]);
+
+  const promises = listsRef.current.promises?.loadedItems ?? [];
+  const totalPromisePages = Math.max(1, Math.ceil(promises.length / ITEMS_PER_PAGE));
+  const paginatedPromises = useMemo(
+    () => promises.slice((promisePage - 1) * ITEMS_PER_PAGE, promisePage * ITEMS_PER_PAGE),
+    [promises, promisePage, dataTick],
+  );
+
+  // Carrega votações quando são realmente necessárias (separador Votações
+  // ou caixas de voto em promessas com propostas associadas).
+  const ensureVotes = () => {
+    if (votesRef.current || votesLoadingRef.current) return;
+    const shardPaths = shardsRef.current?.votes ?? [];
+    if (shardPaths.length === 0) return;
+    votesLoadingRef.current = true;
+    Promise.all(
+      shardPaths.map(async (path) => {
+        const response = await fetch(`/${path}`, { cache: "force-cache" });
+        if (!response.ok) throw new Error(`Não foi possível carregar ${path}.`);
+        return (await response.json()) as Vote[];
+      }),
+    )
+      .then((parts) => {
+        votesRef.current = parts.flat();
+        setVotesLoaded(true);
+        bump();
+      })
+      .catch((error: unknown) => {
+        setLoadError(error instanceof Error ? error.message : "Falha ao carregar votações.");
+      })
+      .finally(() => {
+        votesLoadingRef.current = false;
+      });
+  };
+
+  const needsVotes = tab === "votacoes" || paginatedPromises.some(
+    (promise) => (promise.proposalMatches ?? []).length > 0,
+  );
+  useEffect(() => {
+    if (needsVotes) ensureVotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [needsVotes, tab]);
+
+  const voteById = useMemo(
+    () => new Map((votesRef.current ?? []).map((vote) => [vote.id, vote])),
+    [votesLoaded, dataTick],
+  );
+
+  const votes = useMemo(() => (votesRef.current ?? []).filter((vote) => {
+    const currentScope = effectiveScope === "atual"
+      ? inline?.currentLegislature
+      : effectiveScope;
+    return (currentScope === "sempre" || vote.legislature === currentScope)
+      && (selectedParty === "todos" || vote.positions.some((position) => position.party === selectedParty));
+  }), [inline, effectiveScope, selectedParty, votesLoaded, dataTick]);
+  const totalVotePages = Math.max(1, Math.ceil(votes.length / ITEMS_PER_PAGE));
+  const paginatedVotes = useMemo(
+    () => votes.slice((votePage - 1) * ITEMS_PER_PAGE, votePage * ITEMS_PER_PAGE),
+    [votes, votePage],
+  );
+
+  const articleFilter = useMemo(() => {
+    return (article: Article) =>
+      selectedParty === "todos" || articleMatchesParty(article, selectedParty);
+  }, [selectedParty]);
+
+  // Varre os shards de artigos em segundo plano até a página estar cheia.
+  // Só arranca quando o separador Notícias é aberto (evita tráfego desnecessário).
+  useEffect(() => {
+    const list = listsRef.current.articles;
+    if (!list || !inline || tab !== "noticias") return;
+    let active = true;
+    const needed = articlePage * ITEMS_PER_PAGE;
+    if (list.loadedItems.length < needed && !list.exhausted) {
+      setArticlesLoading(true);
+    }
+    list
+      .ensure(
+        needed,
+        articleFilter,
+        () => {
+          if (active) bump();
+        },
+      )
+      .then(() => {
+        if (active) setArticlesLoading(list.loading);
+      })
+      .catch((error: unknown) => {
+        if (active) setLoadError(error instanceof Error ? error.message : "Falha ao carregar notícias.");
+      });
+    return () => {
+      active = false;
+    };
+  }, [inline, articlePage, articleFilter, tab, dataTick]);
+
+  const articles = listsRef.current.articles?.loadedItems ?? [];
+  const totalArticlePages = Math.max(1, Math.ceil(articles.length / ITEMS_PER_PAGE));
+  const paginatedArticles = useMemo(
+    () => articles.slice((articlePage - 1) * ITEMS_PER_PAGE, articlePage * ITEMS_PER_PAGE),
+    [articles, articlePage, dataTick],
+  );
+
+  // Europa/Orçamentos usam o ficheiro compacto de promessas com ligações.
+  useEffect(() => {
+    if (tab !== "europa" && tab !== "orcamentos") return;
+    const list = listsRef.current.matched;
+    if (!list || matchedPromises) return;
+    list
+      .ensure(
+        Number.MAX_SAFE_INTEGER,
+        () => true,
+        (items) => {
+          setMatchedPromises([...items]);
+        },
+      )
+      .catch((error: unknown) => {
+        setLoadError(error instanceof Error ? error.message : "Falha ao carregar correspondências.");
+      });
+  }, [tab, matchedPromises]);
+
+  const matchedForTabs = useMemo(() => {
+    const base = (matchedPromises ?? []).filter(promiseFilter);
+    if (tab === "europa") {
+      return base.filter((promise) => (promise.europeanMatches ?? []).length > 0);
+    }
+    if (tab === "orcamentos") {
+      return base.filter((promise) => (promise.budgetMatches ?? []).length > 0);
+    }
+    return base;
+  }, [matchedPromises, promiseFilter, tab]);
+
   const comparison = useMemo(() => {
     if (!statistics || !comparisonLeft || !comparisonRight || comparisonLeft === comparisonRight) return null;
     return statistics.pairs.find((pair) => (
@@ -570,34 +873,15 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
     )) ?? null;
   }, [statistics, comparisonLeft, comparisonRight]);
 
-  // Paginated data
-  const paginatedPromises = useMemo(() => {
-    const start = (promisePage - 1) * ITEMS_PER_PAGE;
-    return promises.slice(start, start + ITEMS_PER_PAGE);
-  }, [promises, promisePage]);
-  const totalPromisePages = Math.ceil(promises.length / ITEMS_PER_PAGE);
-
-  const paginatedVotes = useMemo(() => {
-    const start = (votePage - 1) * ITEMS_PER_PAGE;
-    return votes.slice(start, start + ITEMS_PER_PAGE);
-  }, [votes, votePage]);
-  const totalVotePages = Math.ceil(votes.length / ITEMS_PER_PAGE);
-
-  const paginatedArticles = useMemo(() => {
-    const start = (articlePage - 1) * ITEMS_PER_PAGE;
-    return articles.slice(start, start + ITEMS_PER_PAGE);
-  }, [articles, articlePage]);
-  const totalArticlePages = Math.ceil(articles.length / ITEMS_PER_PAGE);
-
   const setPanelTab = (nextTab: Tab) => {
     setTab(nextTab);
-    setPromiseLimit(25);
-    setVoteLimit(25);
-    setArticleLimit(25);
     setPromisePage(1);
     setVotePage(1);
     setArticlePage(1);
   };
+
+  const articlesExhausted = listsRef.current.articles?.exhausted ?? false;
+  const promisesExhausted = listsRef.current.promises?.exhausted ?? false;
 
   return (
     <div
@@ -663,15 +947,23 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
           <div className={styles.filters}>
             <label>
               Partido
-              <select value={selectedParty} onChange={(event) => setSelectedParty(event.target.value)}>
+              <select value={selectedParty} onChange={(event) => {
+                setSelectedParty(event.target.value);
+                setPromisePage(1);
+                setVotePage(1);
+                setArticlePage(1);
+              }}>
                 <option value="todos">Todos os partidos</option>
-                {(data?.parties ?? []).map((party) => <option key={party.id} value={party.id}>{party.name}</option>)}
+                {parties.map((party) => <option key={party.id} value={party.id}>{party.name}</option>)}
               </select>
             </label>
             {tab === "promessas" && contests.length > 0 && (
               <label>
                 Eleição / origem
-                <select value={selectedContest} onChange={(event) => setSelectedContest(event.target.value)}>
+                <select value={selectedContest} onChange={(event) => {
+                  setSelectedContest(event.target.value);
+                  setPromisePage(1);
+                }}>
                   <option value="todos">Todos os concursos</option>
                   {contests.map((contest) => <option key={contest} value={contest}>{contest}</option>)}
                 </select>
@@ -680,12 +972,17 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
             {tab === "votacoes" && (
               <label>
                 Período
-                <select value={scope} onChange={(event) => setScope(event.target.value)}>
-                  <option value="atual">Legislatura atual{data?.currentLegislature ? ` (${data.currentLegislature})` : ""}</option>
+                <select value={effectiveScope} onChange={(event) => setScope(event.target.value)}>
+                  <option value="atual">
+                    Legislatura atual{inline?.currentLegislature ? ` (${inline.currentLegislature})` : ""}
+                    {!currentLegislatureHasData && " — sem dados"}
+                  </option>
                   <option value="sempre">Todos os tempos</option>
-                  {(data?.legislatures ?? []).filter((value) => value !== data?.currentLegislature).map((value) => (
-                    <option key={value} value={value}>{value} Legislatura</option>
-                  ))}
+                  {(inline?.legislatures ?? [])
+                    .filter((value) => value !== inline?.currentLegislature)
+                    .map((value) => (
+                      <option key={value} value={value}>{value} Legislatura</option>
+                    ))}
                 </select>
               </label>
             )}
@@ -693,32 +990,51 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
 
           <div className={styles.panelBody}>
             {loadError && <p className={styles.error}>{loadError}</p>}
-            {!data && !loadError && <p className={styles.empty}>A preparar o quadro público…</p>}
+            {!inline && !loadError && <p className={styles.empty}>A preparar o quadro público…</p>}
 
-{data && tab === "promessas" && (
+            {tab === "votacoes" && inline && !currentLegislatureHasData && effectiveScope !== "sempre" && (
+              <p className={styles.empty}>
+                Ainda não existem dados oficiais publicados para a {inline.currentLegislature}ª Legislatura
+                {" "}(a sincronização semanal procura-os automaticamente). A mostrar a {fallbackScope}ª Legislatura,
+                a mais recente com dados.
+              </p>
+            )}
+
+            {inline && tab === "promessas" && (
               <div className={styles.promiseList}>
-                {promises.length === 0 && <p className={styles.empty}>Ainda não há promessas verificáveis neste filtro. A próxima sincronização irá preencher esta área.</p>}
+                {promises.length === 0 && promisesLoading && (
+                  <p className={styles.empty}>A carregar promessas do arquivo…</p>
+                )}
+                {promises.length === 0 && !promisesLoading && promisesExhausted && (
+                  <p className={styles.empty}>Ainda não há promessas verificáveis neste filtro. A próxima sincronização irá preencher esta área.</p>
+                )}
                 {paginatedPromises.map((promise) => {
                   const relatedProposals = (promise.proposalMatches ?? []).map((proposal, index) => ({
                     proposal,
                     matchingVotes: (proposal.voteIds ?? [])
                       .map((id) => voteById.get(id))
                       .filter((vote): vote is Vote => Boolean(vote)),
+                    pendingVotes: (proposal.voteIds ?? []).some((id) => !voteById.get(id)),
                     key: `${promise.id}-proposal-${index}`,
                   }));
                   return (
                     <article key={promise.id} className={styles.promiseRow}>
                       <section className={styles.promiseCell}>
-                        <span className={styles.partyTag}>{partyName(promise.party, data.parties)}</span>
-                        <p>{promise.statement}</p>
+                        <span className={styles.partyTag}>{partyName(promise.party, parties)}</span>
+                        <ClampedText
+                          text={promise.statement}
+                          className={styles.promiseStatement}
+                          lines={5}
+                          threshold={260}
+                        />
                         <small>
                           {promise.origin === "noticia"
                             ? "Promessa identificada numa notícia"
-                            : `Programa eleitoral${promise.source.contest ? ` — ${promise.source.contest}` : ""}`}
+                            : `Programa eleitoral${promise.source?.contest ? ` — ${promise.source.contest}` : ""}`}
                         </small>
-                        {promise.source.url ? (
+                        {promise.source?.url ? (
                           <a className={styles.sourceLink} href={promise.source.url} target="_blank" rel="noreferrer">{sourceLabel(promise.source)}</a>
-                        ) : <small>{sourceLabel(promise.source)}</small>}
+                        ) : <small>{sourceLabel(promise.source ?? {})}</small>}
                       </section>
                       <section className={styles.proposalCell}>
                         {relatedProposals.length > 0 ? relatedProposals.map(({ proposal, key }) => {
@@ -737,7 +1053,12 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
                                   {outcomeLabel(outcome.outcome)}
                                 </span>
                               ) : null}
-                              <p>{proposal.number && <strong>{proposal.number} · </strong>}{proposalTitle(proposal)}</p>
+                              <ClampedText
+                                text={proposalTitle(proposal)}
+                                className={styles.proposalTitle}
+                                lines={3}
+                                threshold={180}
+                              />
                               {authorRelationLabel && <small className={styles.authorRelation}>{authorRelationLabel}</small>}
                               {outcome?.presidentAction && (
                                 <small className={styles.authorRelation}>
@@ -761,18 +1082,25 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
                         }) : <p className={styles.noMatch}>Ainda não foi encontrada uma proposta relacionada.</p>}
                       </section>
                       <section className={styles.votingCell}>
-                        {relatedProposals.length > 0 ? relatedProposals.map(({ proposal, matchingVotes, key }) => (
+                        {relatedProposals.length > 0 ? relatedProposals.map(({ proposal, matchingVotes, pendingVotes, key }) => (
                           <div className={styles.proposalVotes} key={`${key}-votes`}>
                             <small className={styles.voteGroupLabel}>Votações associadas: {proposalTitle(proposal)}</small>
                             {matchingVotes.length > 0 ? matchingVotes.map((vote) => (
-                              <VoteBox key={vote.id} vote={vote} parties={data.parties} />
-                            )) : <p className={styles.noMatch}>Sem votação oficial associada até ao momento.</p>}
+                              <VoteBox key={vote.id} vote={vote} parties={parties} />
+                            )) : pendingVotes && !votesLoaded ? (
+                              <p className={styles.noMatch}>A carregar votações associadas…</p>
+                            ) : (
+                              <p className={styles.noMatch}>Sem votação oficial associada até ao momento.</p>
+                            )}
                           </div>
                         )) : <p className={styles.noMatch}>Sem votação oficial associada até ao momento.</p>}
                       </section>
                     </article>
                   );
                 })}
+                {promisesLoading && promises.length > 0 && (
+                  <p className={styles.empty}>A carregar mais promessas do arquivo…</p>
+                )}
                 {totalPromisePages > 1 && (
                   <div className={styles.pagination}>
                     <button
@@ -784,7 +1112,7 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
                       Anterior
                     </button>
                     <span className={styles.pageInfo}>
-                      Página {promisePage} de {totalPromisePages} ({promises.length} promessas)
+                      Página {promisePage} de {totalPromisePages} ({promises.length}{promisesExhausted ? "" : "+"} promessas)
                     </span>
                     <button
                       type="button"
@@ -799,7 +1127,7 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
               </div>
             )}
 
-            {data && tab === "votacoes" && <>
+            {inline && tab === "votacoes" && <>
               {statistics ? <>
                 <div className={styles.summaryLine}>
                   <span>{statistics.initiativeCount} propostas</span>
@@ -811,11 +1139,11 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
                   <h3>Partido vs. partido</h3>
                   <div className={styles.compareControls}>
                     <select value={comparisonLeft} onChange={(event) => setComparisonLeft(event.target.value)} aria-label="Primeiro partido">
-                      {data.parties.map((party) => <option key={party.id} value={party.id}>{party.name}</option>)}
+                      {parties.map((party) => <option key={party.id} value={party.id}>{party.name}</option>)}
                     </select>
                     <span>vs.</span>
                     <select value={comparisonRight} onChange={(event) => setComparisonRight(event.target.value)} aria-label="Segundo partido">
-                      {data.parties.map((party) => <option key={party.id} value={party.id}>{party.name}</option>)}
+                      {parties.map((party) => <option key={party.id} value={party.id}>{party.name}</option>)}
                     </select>
                   </div>
                   {comparison ? <p className={styles.compareResult}><strong>{comparison.agreementRate ?? 0}%</strong> de concordância em {comparison.bothObserved} votações com posição observada por ambos ({comparison.same} iguais, {comparison.different} diferentes).</p> : <p className={styles.noMatch}>Não há ainda posições observadas em comum para esta comparação.</p>}
@@ -824,7 +1152,9 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
 
               <section className={styles.rawVotes}>
                 <h3>Votações detalhadas</h3>
-                {votes.length === 0 ? <p className={styles.empty}>Ainda não há votações detalhadas neste filtro.</p> : paginatedVotes.map((vote) => <VoteBox key={vote.id} vote={vote} parties={data.parties} />)}
+                {!votesLoaded && <p className={styles.empty}>A carregar votações detalhadas…</p>}
+                {votesLoaded && votes.length === 0 && <p className={styles.empty}>Ainda não há votações detalhadas neste filtro.</p>}
+                {paginatedVotes.map((vote) => <VoteBox key={vote.id} vote={vote} parties={parties} />)}
                 {totalVotePages > 1 && (
                   <div className={styles.pagination}>
                     <button
@@ -851,17 +1181,28 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
               </section>
             </>}
 
-            {data && tab === "noticias" && (
+            {inline && tab === "noticias" && (
               <div className={styles.articleList}>
-                {articles.length === 0 && <p className={styles.empty}>Ainda não foram recolhidos excertos noticiosos permitidos.</p>}
+                {articles.length === 0 && articlesLoading && <p className={styles.empty}>A carregar notícias do arquivo…</p>}
+                {articles.length === 0 && !articlesLoading && articlesExhausted && (
+                  <p className={styles.empty}>Ainda não foram recolhidos excertos noticiosos permitidos.</p>
+                )}
                 {paginatedArticles.map((article) => (
                   <article key={article.id} className={styles.articleCard}>
                     <div><span>{article.source}</span><time>{formatDate(article.publishedAt)}</time></div>
                     <h3>{article.title}</h3>
-                    <p>{article.summary || article.excerpt}</p>
+                    <ClampedText
+                      text={article.summary || article.excerpt}
+                      className={styles.articleSummary}
+                      lines={3}
+                      threshold={180}
+                    />
                     <a className={styles.sourceLink} href={article.url} target="_blank" rel="noreferrer">Ler na fonte</a>
                   </article>
                 ))}
+                {articlesLoading && articles.length > 0 && (
+                  <p className={styles.empty}>A carregar mais notícias do arquivo…</p>
+                )}
                 {totalArticlePages > 1 && (
                   <div className={styles.pagination}>
                     <button
@@ -873,7 +1214,7 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
                       Anterior
                     </button>
                     <span className={styles.pageInfo}>
-                      Página {articlePage} de {totalArticlePages} ({articles.length} notícias)
+                      Página {articlePage} de {totalArticlePages} ({articles.length}{articlesExhausted ? "" : "+"} notícias)
                     </span>
                     <button
                       type="button"
@@ -888,87 +1229,89 @@ const currentScope = scope === "atual" ? data?.currentLegislature : scope;
               </div>
             )}
 
-            {data && tab === "europa" && (
+            {inline && tab === "europa" && (
               <div>
                 <p className={styles.empty}>
                   Sugestões automáticas entre promessas portuguesas e iniciativas do Parlamento Europeu (OEIL, dados oficiais). Tudo requer revisão humana.
                 </p>
-                {promises.filter((promise) => (promise.europeanMatches ?? []).length > 0).length === 0 ? (
+                {!matchedPromises && <p className={styles.empty}>A carregar correspondências europeias…</p>}
+                {matchedPromises && matchedForTabs.length === 0 && (
                   <p className={styles.empty}>Ainda não há correspondências europeias sugeridas neste filtro.</p>
-                ) : promises
-                  .filter((promise) => (promise.europeanMatches ?? []).length > 0)
-                  .slice(0, promiseLimit)
-                  .map((promise) => (
-                    <article key={promise.id} className={styles.promiseRow}>
-                      <section className={styles.promiseCell}>
-                        <span className={styles.partyTag}>{partyName(promise.party, data.parties)}</span>
-                        <p>{promise.statement}</p>
-                        <small>{promise.origin === "noticia" ? "Promessa identificada numa notícia" : "Programa eleitoral"}</small>
-                      </section>
-                      <section className={styles.proposalCell}>
-                        {(promise.europeanMatches ?? []).map((eu, index) => (
-                          <div className={styles.proposalMatch} key={`${promise.id}-eu-${index}`}>
-                            <span className={`${styles.matchBadge} ${styles.approximate}`}>Proposta europeia</span>
-                            <p>{eu.identifier && <strong>{eu.identifier} · </strong>}{eu.title || "Dossiê europeu"}</p>
-                            {eu.status && <small className={styles.authorRelation}>Fase: {eu.status}</small>}
-                            <small className={styles.review}>Ligação automática sujeita a confirmação pela equipa.</small>
-                            {eu.sourceUrl && (
-                              <a className={styles.sourceLink} href={eu.sourceUrl} target="_blank" rel="noreferrer">
-                                Registo oficial do PE
-                              </a>
-                            )}
-                          </div>
-                        ))}
-                      </section>
-                    </article>
-                  ))}
-                {promises.filter((promise) => (promise.europeanMatches ?? []).length > 0).length > promiseLimit && (
-                  <button type="button" className={styles.moreButton} onClick={() => setPromiseLimit((limit) => limit + 20)}>Mostrar mais correspondências</button>
                 )}
+                {matchedForTabs.slice(0, 50).map((promise) => (
+                  <article key={promise.id} className={styles.promiseRow}>
+                    <section className={styles.promiseCell}>
+                      <span className={styles.partyTag}>{partyName(promise.party, parties)}</span>
+                      <ClampedText
+                        text={promise.statement}
+                        className={styles.promiseStatement}
+                        lines={4}
+                        threshold={240}
+                      />
+                      <small>{promise.origin === "noticia" ? "Promessa identificada numa notícia" : "Programa eleitoral"}</small>
+                    </section>
+                    <section className={styles.proposalCell}>
+                      {(promise.europeanMatches ?? []).map((eu, index) => (
+                        <div className={styles.proposalMatch} key={`${promise.id}-eu-${index}`}>
+                          <span className={`${styles.matchBadge} ${styles.approximate}`}>Proposta europeia</span>
+                          <p>{eu.identifier && <strong>{eu.identifier} · </strong>}{eu.title || "Dossiê europeu"}</p>
+                          {eu.status && <small className={styles.authorRelation}>Fase: {eu.status}</small>}
+                          <small className={styles.review}>Ligação automática sujeita a confirmação pela equipa.</small>
+                          {eu.sourceUrl && (
+                            <a className={styles.sourceLink} href={eu.sourceUrl} target="_blank" rel="noreferrer">
+                              Registo oficial do PE
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </section>
+                  </article>
+                ))}
               </div>
             )}
 
-            {data && tab === "orcamentos" && (
+            {inline && tab === "orcamentos" && (
               <div>
                 <p className={styles.empty}>
                   Ligações automáticas entre promessas e rubricas dos Orçamentos do Estado e de documentação orçamental da UE (PDF em arquivo). Requerem sempre revisão humana.
                 </p>
-                {promises.filter((promise) => (promise.budgetMatches ?? []).length > 0).length === 0 ? (
+                {!matchedPromises && <p className={styles.empty}>A carregar ligações orçamentais…</p>}
+                {matchedPromises && matchedForTabs.length === 0 && (
                   <p className={styles.empty}>Ainda não há ligações orçamentais sugeridas neste filtro.</p>
-                ) : promises
-                  .filter((promise) => (promise.budgetMatches ?? []).length > 0)
-                  .slice(0, promiseLimit)
-                  .map((promise) => (
-                    <article key={promise.id} className={styles.promiseRow}>
-                      <section className={styles.promiseCell}>
-                        <span className={styles.partyTag}>{partyName(promise.party, data.parties)}</span>
-                        <p>{promise.statement}</p>
-                        <small>{promise.origin === "noticia" ? "Promessa identificada numa notícia" : "Programa eleitoral"}</small>
-                      </section>
-                      <section className={styles.proposalCell}>
-                        {(promise.budgetMatches ?? []).map((br, index) => (
-                          <div className={styles.proposalMatch} key={`${promise.id}-br-${index}`}>
-                            <span className={`${styles.matchBadge} ${styles.approximate}`}>{BudgetDocCategoryLabel(br.category)}</span>
-                            <p>
-                              <strong>{br.year ? `Orçamento ${br.year} · ` : ""}</strong>{br.filename || "Documento orçamental"}
-                              {typeof br.page === "number" ? ` (pág. ${br.page})` : ""}
-                            </p>
-                            <small className={styles.authorRelation}>{br.governmentLabel || "Período por classificar"}</small>
-                            {br.rubricPreview && <p className={styles.rubricPreview}>{br.rubricPreview}</p>}
-                            <small className={styles.review}>Ligação automática sujeita a confirmação pela equipa.</small>
-                          </div>
-                        ))}
-                      </section>
-                    </article>
-                  ))}
-                {promises.filter((promise) => (promise.budgetMatches ?? []).length > 0).length > promiseLimit && (
-                  <button type="button" className={styles.moreButton} onClick={() => setPromiseLimit((limit) => limit + 20)}>Mostrar mais ligações</button>
                 )}
+                {matchedForTabs.slice(0, 50).map((promise) => (
+                  <article key={promise.id} className={styles.promiseRow}>
+                    <section className={styles.promiseCell}>
+                      <span className={styles.partyTag}>{partyName(promise.party, parties)}</span>
+                      <ClampedText
+                        text={promise.statement}
+                        className={styles.promiseStatement}
+                        lines={4}
+                        threshold={240}
+                      />
+                      <small>{promise.origin === "noticia" ? "Promessa identificada numa notícia" : "Programa eleitoral"}</small>
+                    </section>
+                    <section className={styles.proposalCell}>
+                      {(promise.budgetMatches ?? []).map((br, index) => (
+                        <div className={styles.proposalMatch} key={`${promise.id}-br-${index}`}>
+                          <span className={`${styles.matchBadge} ${styles.approximate}`}>{BudgetDocCategoryLabel(br.category)}</span>
+                          <p>
+                            <strong>{br.year ? `Orçamento ${br.year} · ` : ""}</strong>{br.filename || "Documento orçamental"}
+                            {typeof br.page === "number" ? ` (pág. ${br.page})` : ""}
+                          </p>
+                          <small className={styles.authorRelation}>{br.governmentLabel || "Período por classificar"}</small>
+                          {br.rubricPreview && <p className={styles.rubricPreview}>{br.rubricPreview}</p>}
+                          <small className={styles.review}>Ligação automática sujeita a confirmação pela equipa.</small>
+                        </div>
+                      ))}
+                    </section>
+                  </article>
+                ))}
               </div>
             )}
           </div>
 
-          {data && <footer className={styles.panelFooter}>
+          {inline && <footer className={styles.panelFooter}>
             <p>As propostas semelhantes, os resultados e as ligações são confirmados antes de serem tratados como conclusões.</p>
             <p>As notícias são apresentadas como resumos curtos com referência à fonte.</p>
             <p>A revisão humana das ligações (propostas, UE e orçamentos) é contínua.</p>

@@ -164,6 +164,65 @@ jobs:
             done
           fi
 
+      # O mesmo post é publicado também no Facebook e no X. Falhas numa rede
+      # não impedem as outras nem a finalização da base de dados.
+      - name: Publish the Same Post to Facebook
+        id: publish_facebook
+        continue-on-error: true
+        env:
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
+          FACEBOOK_ACCESS_TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          META_GRAPH_API_VERSION: v25.0
+        run: |
+          python scripts/post_facebook.py --publish
+
+      - name: Publish the Same Post to X (Twitter)
+        id: publish_x
+        continue-on-error: true
+        env:
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_TOKEN_SECRET: ${{ secrets.X_ACCESS_TOKEN_SECRET }}
+          X_ACCOUNT_HANDLE: ${{ secrets.X_ACCOUNT_HANDLE }}
+        run: |
+          python scripts/post_x.py --publish
+
+      - name: Persist Social Publication Receipts
+        if: always()
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add scripts/facebook_publication.json scripts/x_publication.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Facebook/X publication receipts [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && exit 0
+              if [ "$attempt" -eq 3 ]; then
+                exit 1
+              fi
+              sleep 10
+            done
+          fi
+
+      - name: Summarize Social Network Failures
+        if: always()
+        run: |
+          failed=""
+          if [ "${{ steps.publish_facebook.outcome }}" = "failure" ]; then
+            failed="Facebook"
+          fi
+          if [ "${{ steps.publish_x.outcome }}" = "failure" ]; then
+            failed="${failed}${failed:+ e }X"
+          fi
+          if [ -n "$failed" ]; then
+            echo "::warning::A publicação falhou em: ${failed}. Verifica os segredos/tokens correspondentes."
+          else
+            echo "Facebook e X publicados (ou já publicados)."
+          fi
+
       - name: Finalize Confirmed Recommendations in Database
         run: |
           python scripts/generate_post.py --commit

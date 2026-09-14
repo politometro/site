@@ -89,6 +89,7 @@ interface PageMetadata {
   description: string;
   imageUrl: string;
   publishedAt: string;
+  paywall?: boolean;
   externalId?: string;
 }
 
@@ -134,6 +135,30 @@ const HIGHLIGHT_DOMAINS = [
   "jornaldenegocios.pt",
   "youtube.com",
   "youtu.be",
+  // Mais fontes portuguesas de artigos e reportagens.
+  "nowcanal.pt",
+  "cmjornal.pt",
+  "cmtv.iol.pt",
+  "nit.pt",
+  "shifter.pt",
+  "pt.euronews.com",
+  "24.sapo.pt",
+  "ionline.pt",
+  "gerador.eu",
+  "rr.pt",
+  "tsf.pt",
+  "visao.pt",
+  "sabado.pt",
+  "eco.sapo.pt",
+];
+
+// Caminhos editoriais associados a conteúdo premium; servem de sinal
+// adicional à deteção de paywall por metadados.
+const PAYWALL_URL_TOKENS = [
+  "/premium",
+  "/exclusivo",
+  "/subscritores",
+  "/assinantes",
 ];
 
 const PROVIDED_LINK_DOMAINS: Record<
@@ -148,6 +173,9 @@ const PROVIDED_LINK_DOMAINS: Record<
     "rtp.pt",
     "sicnoticias.pt",
     "nowcanal.pt",
+    "cmjornal.pt",
+    "shifter.pt",
+    "pt.euronews.com",
     "youtube.com",
     "youtu.be",
   ],
@@ -1212,8 +1240,38 @@ function extractPageMetadata(
     description,
     imageUrl,
     publishedAt,
+    paywall: pagePaywalled(html, finalUrl, canonicalUrl),
     externalId: externalId || undefined,
   };
+}
+
+// Metadados que declaram acesso pago ao conteúdo integral, definidos pelo
+// próprio editor (JSON-LD isAccessibleForFree, article:locked, access).
+function pagePaywalled(html: string, finalUrl: string, canonicalUrl: string): boolean {
+  for (const url of [finalUrl, canonicalUrl]) {
+    try {
+      const path = new URL(url).pathname.toLowerCase();
+      if (PAYWALL_URL_TOKENS.some((token) => path.includes(token))) return true;
+    } catch {
+      // URL inválido: ignorar este sinal.
+    }
+  }
+  const lockedMeta = extractMeta(html, [
+    "article:locked",
+    "og:article:locked",
+    "twitter:article:locked",
+  ]);
+  if (/^(true|1|yes|sim)$/i.test(lockedMeta.trim())) return true;
+  const accessMeta = extractMeta(html, ["access"]);
+  if (/^(paid|subscription|premium|pago)$/i.test(accessMeta.trim())) return true;
+  const jsonLd = html.slice(0, 400_000);
+  if (
+    /"isAccessibleForFree"\s*:\s*"?(false|no|0)"?/i.test(jsonLd) ||
+    /"isAccessibleForFree"\s*:\s*(false|no)\b/i.test(jsonLd)
+  ) {
+    return true;
+  }
+  return false;
 }
 
 async function pageMetadata(url: string, type: RecommendationType): Promise<PageMetadata> {
@@ -1409,6 +1467,12 @@ async function resolveFromProvidedLink(
       throw new RecommendationResolutionError(
         "A Wikipédia não é aceite como destino de um destaque.",
         "wikipedia_blocked",
+      );
+    }
+    if (input.type === "highlight" && metadata.paywall) {
+      throw new RecommendationResolutionError(
+        "O artigo está atrás de paywall e não pode ser recomendado.",
+        "paywalled",
       );
     }
 

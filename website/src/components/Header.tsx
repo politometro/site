@@ -48,14 +48,20 @@ export default function Header() {
         </Link>
 
         <nav className={styles.nav}>
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className={`${styles.navLink} ${pathname === "/" ? styles.active : ""}`}
           >
             Escrutínio IA
           </Link>
-          <Link 
-            href="/sugestoes" 
+          <Link
+            href="/programas"
+            className={`${styles.navLink} ${pathname === "/programas" ? styles.active : ""}`}
+          >
+            Comparar Programas
+          </Link>
+          <Link
+            href="/sugestoes"
             className={`${styles.navLink} ${pathname === "/sugestoes" ? styles.active : ""}`}
           >
             Sugerir Conteúdo
@@ -107,15 +113,22 @@ export default function Header() {
 
       {isOpen && (
         <div ref={menuRef} className={`${styles.mobileMenu} glass`}>
-          <Link 
-            href="/" 
+          <Link
+            href="/"
             className={`${styles.mobileNavLink} ${pathname === "/" ? styles.mobileActive : ""}`}
             onClick={() => setIsOpen(false)}
           >
             Escrutínio IA
           </Link>
-          <Link 
-            href="/sugestoes" 
+          <Link
+            href="/programas"
+            className={`${styles.mobileNavLink} ${pathname === "/programas" ? styles.mobileActive : ""}`}
+            onClick={() => setIsOpen(false)}
+          >
+            Comparar Programas
+          </Link>
+          <Link
+            href="/sugestoes"
             className={`${styles.mobileNavLink} ${pathname === "/sugestoes" ? styles.mobileActive : ""}`}
             onClick={() => setIsOpen(false)}
           >

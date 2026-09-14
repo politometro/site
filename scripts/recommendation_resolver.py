@@ -151,6 +151,16 @@ TRUSTED_HIGHLIGHT_DOMAINS = {
     "poligrafo.sapo.pt",
     "youtube.com",
     "youtu.be",
+    # Mais fontes portuguesas de artigos e reportagens.
+    "nowcanal.pt",
+    "cmjornal.pt",
+    "cmtv.iol.pt",
+    "nit.pt",
+    "shifter.pt",
+    "pt.euronews.com",
+    "24.sapo.pt",
+    "ionline.pt",
+    "gerador.eu",
 }
 
 BOOK_SEARCH_DOMAINS = (
@@ -176,6 +186,23 @@ TRUSTED_PODCAST_DOMAINS = {
     "observador.pt",
     "expresso.pt",
     "rtp.pt",
+    # Mais plataformas e emissoras com podcasts portugueses.
+    "rr.pt",
+    "tsf.pt",
+    "publico.pt",
+    "cmjornal.pt",
+    "cnnportugal.iol.pt",
+    "iol.pt",
+    "spreaker.com",
+    "ivoox.com",
+    "buzzsprout.com",
+    "shows.acast.com",
+    "acast.com",
+    "podbean.com",
+    "megaphone.fm",
+    "podtail.com",
+    "castbox.fm",
+    "player.fm",
 }
 
 SOURCE_DOMAIN_HINTS = {
@@ -199,6 +226,16 @@ SOURCE_DOMAIN_HINTS = {
     "sabado": {"sabado.pt"},
     "poligrafo": {"poligrafo.sapo.pt"},
     "perguntar nao ofende": {"perguntarnaoofende.pt"},
+    "now": {"nowcanal.pt"},
+    "now canal": {"nowcanal.pt"},
+    "cm": {"cmjornal.pt"},
+    "correio da manha": {"cmjornal.pt"},
+    "cmtv": {"cmtv.iol.pt"},
+    "nit": {"nit.pt"},
+    "shifter": {"shifter.pt"},
+    "euronews": {"pt.euronews.com"},
+    "sapo 24": {"24.sapo.pt"},
+    "ionline": {"ionline.pt"},
 }
 
 TYPE_ALIASES = {
@@ -1624,7 +1661,66 @@ def _page_metadata(url: str) -> dict[str, Any]:
             )
         ),
         "meta": meta,
+        "paywall": _page_paywalled(
+            final_url,
+            canonical,
+            meta,
+            ld_objects,
+        ),
     }
+
+
+PAYWALL_URL_TOKENS = (
+    "/premium",
+    "/exclusivo",
+    "/subscritores",
+    "/assinantes",
+)
+
+# Metadados normalizados que declaram acesso pago ao conteúdo integral.
+_PAYWALL_META_TRUE_KEYS = (
+    "article:locked",
+    "og:article:locked",
+    "twitter:article:locked",
+)
+_PAYWALL_META_ACCESS_VALUES = {"paid", "subscription", "premium", "pago"}
+_PAYWALL_FALSE_VALUES = {"false", "no", "não", "nao", "0"}
+
+
+def _page_paywalled(
+    final_url: str,
+    canonical: str,
+    meta: Mapping[str, str],
+    ld_objects: list[Mapping[str, Any]],
+) -> bool:
+    """True quando a página declara conteúdo integral atrás de paywall.
+
+    O sinal baseia-se em metadados declarados pelo próprio editor (JSON-LD
+    `isAccessibleForFree: false`, `article:locked`, `access: paid`) e em
+    caminhos editoriais de conteúdo premium. Não bloqueia o site: cada
+    ligação é avaliada individualmente.
+    """
+    for url in (final_url, canonical):
+        try:
+            path = urllib.parse.urlsplit(url).path.casefold()
+        except ValueError:
+            continue
+        if any(token in path for token in PAYWALL_URL_TOKENS):
+            return True
+
+    for key in _PAYWALL_META_TRUE_KEYS:
+        if str(meta.get(key, "")).strip().casefold() in {"true", "1", "yes", "sim"}:
+            return True
+    if str(meta.get("access", "")).strip().casefold() in _PAYWALL_META_ACCESS_VALUES:
+        return True
+
+    for obj in ld_objects:
+        for key, value in obj.items():
+            if str(key).casefold() != "isaccessibleforfree":
+                continue
+            if str(value).strip().casefold() in _PAYWALL_FALSE_VALUES:
+                return True
+    return False
 
 
 def _source_domains_for(author: str) -> set[str]:
@@ -2842,6 +2938,12 @@ def _validate_highlight_page(
             item=item,
         )
     metadata = _page_metadata(link)
+    if metadata.get("paywall"):
+        raise RecommendationResolutionError(
+            "PAYWALLED",
+            "O artigo está atrás de paywall e não pode ser recomendado.",
+            item=item,
+        )
     canonical_host = _hostname(metadata["canonical"])
     trusted_canonical = _host_in(
         canonical_host, TRUSTED_HIGHLIGHT_DOMAINS

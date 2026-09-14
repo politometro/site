@@ -145,3 +145,47 @@ a {
   border: 2px solid transparent;
   background-clip: padding-box;
 }
+
+/* Dropdowns nativos com o estilo do site (aplicado a todos os <select>). */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.45rem 2rem 0.45rem 0.65rem;
+  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.92);
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230a314a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.6rem center;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+select:hover:not(:disabled) {
+  border-color: var(--color-primary);
+  background-color: #fff;
+}
+
+select:focus-visible {
+  border-color: var(--color-primary);
+  outline: 2px solid var(--color-primary-glow);
+  outline-offset: 1px;
+}
+
+select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+select option {
+  color: var(--text-primary);
+  background: #fff8ec;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+}

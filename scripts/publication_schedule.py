@@ -16,6 +16,13 @@ from zoneinfo import ZoneInfo
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DRAFT_PATH = os.path.join(SCRIPT_DIR, "review_draft.json")
 RECEIPT_PATH = os.path.join(SCRIPT_DIR, "instagram_publication.json")
+REVIEW_NOTIFICATION_PATH = os.path.join(SCRIPT_DIR, "review_notification.json")
+RECOMMENDATIONS_PATH = os.path.join(
+    os.path.dirname(SCRIPT_DIR),
+    "website",
+    "public",
+    "recommendations.json",
+)
 PUBLICATION_TIMEZONE_NAME = "Europe/Lisbon"
 PUBLICATION_TIMEZONE = ZoneInfo(PUBLICATION_TIMEZONE_NAME)
 SUNDAY_WEEKDAY = 6  # Sunday
@@ -23,6 +30,7 @@ SUNDAY_HOUR = 10
 WEDNESDAY_WEEKDAY = 2  # Wednesday
 WEDNESDAY_HOUR = 9
 DISABLED_POST_TYPES = frozenset({"wednesday_nostalgia"})
+DRAFT_QUADRANT_KEYS = ("q1", "q2", "q3", "q4", "w1", "w2")
 
 
 def _get_draft_edition(draft):
@@ -33,6 +41,89 @@ def _get_draft_edition(draft):
 
 def is_disabled_post_type(post_type):
     return str(post_type or "").strip() in DISABLED_POST_TYPES
+
+
+def auto_publish_enabled():
+    """Decide se um rascunho entregue no Discord sem decisão pode ser publicado."""
+    return (
+        os.environ.get("AUTO_PUBLISH_UNDECIDED_DRAFTS", "true").strip().lower()
+        == "true"
+    )
+
+
+def _draft_quadrant_ids(draft):
+    ids = set()
+    for key in DRAFT_QUADRANT_KEYS:
+        item = draft.get(key)
+        if isinstance(item, dict) and item.get("id"):
+            ids.add(str(item.get("id")))
+    return ids
+
+
+def _draft_items_rejected(draft):
+    """Um rascunho rejeitado tem os seus itens marcados como 'skip' na fila."""
+    recommendations = _load_optional(RECOMMENDATIONS_PATH)
+    queue = recommendations.get("queue") if isinstance(recommendations, dict) else []
+    if not isinstance(queue, list):
+        return False
+    selected_ids = _draft_quadrant_ids(draft)
+    if not selected_ids:
+        return False
+    return any(
+        isinstance(item, dict)
+        and item.get("status") == "skip"
+        and str(item.get("id")) in selected_ids
+        for item in queue
+    )
+
+
+def undecided_draft_can_autopublish(draft):
+    """True quando o rascunho foi entregue no Discord e ninguém decidiu.
+
+    Requisitos: entrega provada (recibo do Discord com draft/hash iguais),
+    nenhuma rejeição registada (itens marcados 'skip') e nenhum pedido de
+    correção do revisor (`reviewFeedback`). Rascunhos de teste nunca são
+    publicados automaticamente.
+    """
+    if not auto_publish_enabled() or not isinstance(draft, dict) or not draft:
+        return False
+    if draft.get("is_test"):
+        return False
+    draft_id = str(draft.get("draft_id") or "")
+    content_hash = str(draft.get("content_hash") or "")
+    if not draft_id or not content_hash:
+        return False
+    approval = draft.get("approval") or {}
+    if approval.get("approved") or approval.get("rejected"):
+        return False
+    if draft.get("reviewFeedback"):
+        return False
+    notification = _load_optional(REVIEW_NOTIFICATION_PATH)
+    if (
+        notification.get("draft_id") != draft_id
+        or notification.get("content_hash") != content_hash
+        or not notification.get("review_message_id")
+        or not notification.get("caption_message_id")
+    ):
+        return False
+    return not _draft_items_rejected(draft)
+
+
+def effective_approval(draft):
+    """Return the approval dict to honour, synthesizing one for undecided
+    drafts that qualify for automatic publication (or None)."""
+    approval = draft.get("approval") if isinstance(draft, dict) else None
+    approval = approval if isinstance(approval, dict) else {}
+    if approval.get("approved"):
+        return approval
+    if undecided_draft_can_autopublish(draft):
+        synthesized = dict(approval)
+        synthesized["approved"] = True
+        synthesized["auto_published"] = True
+        synthesized.setdefault("draft_id", draft.get("draft_id"))
+        synthesized.setdefault("content_hash", draft.get("content_hash"))
+        return synthesized
+    return None
 
 
 def _parse_datetime(value):
@@ -102,8 +193,8 @@ def publication_decision(draft, receipt=None, *, now=None, force_now=False):
 
     draft_id = str(draft.get("draft_id") or "")
     content_hash = str(draft.get("content_hash") or "")
-    approval = draft.get("approval") or {}
-    if not approval.get("approved"):
+    approval = effective_approval(draft)
+    if not approval:
         return False, "O rascunho ainda não foi aprovado.", None
     if (
         not draft_id
@@ -183,6 +274,14 @@ def publication_decision(draft, receipt=None, *, now=None, force_now=False):
                 scheduled_for,
             )
 
+    if approval.get("auto_published"):
+        return (
+            True,
+            "Rascunho sem decisão no Discord; publicação automática na janela "
+            f"prevista das {expected_hour:02d}:00. Execução atrasada no mesmo "
+            "dia aceite.",
+            scheduled_for,
+        )
     return (
         True,
         f"Rascunho aprovado; janela prevista para as {expected_hour:02d}:00. "

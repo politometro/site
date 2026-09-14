@@ -17,6 +17,7 @@ import os
 import sys
 import json
 import datetime
+import random
 import re
 import copy
 import hashlib
@@ -47,6 +48,7 @@ from recommendation_approval import (
     is_post_workflow_eligible,
     requires_discord_approval,
 )
+import publication_schedule
 
 # --- PATHS ---
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -323,6 +325,13 @@ SUNDAY_Q3_TYPES = ("investigation", "movie")
 WEDNESDAY_Q3_TYPES = ("nostalgia",)
 ROTATING_Q3_TYPES = ("nostalgia", "investigation", "movie")
 
+# Os cinco tipos elegíveis para os quadrantes dominicais. Cada semana são
+# sorteados quatro tipos distintos — um por quadrante, sem ordem fixa — e o
+# tipo não sorteado fica de reserva. O sorteio usa a semana ISO como semente
+# para que retries/recuperação dentro da mesma semana sejam consistentes.
+SUNDAY_QUADRANT_POOL = ("book", "podcast", "movie", "investigation", "highlight")
+SUNDAY_QUADRANT_KEYS = ("q1", "q2", "q3", "q4")
+
 REQUIRED_SLOTS_FOR_POST_TYPE = {
     "sunday_standard": {
         "q1": "book",
@@ -363,7 +372,46 @@ def _is_recurring_content(item):
     )
 
 
-def _slot_types(qkey, post_type="sunday_standard", allow_fallback=False):
+def weekly_sunday_slot_types(week_key=None):
+    """Draw 4 distinct types from the 5-type pool, one per Sunday quadrant.
+
+    The ISO week is used as the deterministic seed so that retries and
+    recovery runs inside the same week keep the same mapping, while the
+    order changes from week to week (never the fixed q1=book layout).
+    """
+    if week_key is None:
+        iso = datetime.datetime.now(datetime.timezone.utc).date().isocalendar()
+        week_key = (iso[0], iso[1])
+    rng = random.Random(f"politometro-{week_key[0]}-W{int(week_key[1]):02d}")
+    pool = list(SUNDAY_QUADRANT_POOL)
+    rng.shuffle(pool)
+    return dict(zip(SUNDAY_QUADRANT_KEYS, pool[: len(SUNDAY_QUADRANT_KEYS)]))
+
+
+def _slot_types(
+    qkey,
+    post_type="sunday_standard",
+    allow_fallback=False,
+    assigned=None,
+):
+    assigned = assigned if isinstance(assigned, dict) else {}
+    if assigned.get(qkey):
+        primary = (str(assigned[qkey]),)
+        if not allow_fallback or post_type == "wednesday_nostalgia":
+            return primary
+        # Com um tipo sorteado para este quadrante, a substituição por
+        # categoria segue a ordem editorial do slot e depois qualquer
+        # outro tipo publicável ainda disponível.
+        ordered = primary + tuple(
+            media_type
+            for media_type in SLOT_FALLBACK_ORDER.get(qkey, ())
+            if media_type not in primary
+        )
+        return ordered + tuple(
+            media_type
+            for media_type in POST_CONTENT_TYPES
+            if media_type not in ordered
+        )
     if post_type == "wednesday_nostalgia" and qkey == "w1":
         primary = ("nostalgia",)
     elif qkey == "q1":
@@ -609,7 +657,12 @@ def _cover_hash(item, cover):
     return hashlib.sha256(cover.convert("RGB").tobytes()).hexdigest()
 
 
-def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday_standard"):
+def get_recommendations_with_valid_covers(
+    queue,
+    history=None,
+    post_type="sunday_standard",
+    slot_types=None,
+):
     """
     Resolve identity, canonical link and cover as one atomic unit.
 
@@ -734,12 +787,16 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
         return result
 
     target_slots = REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type, REQUIRED_SLOTS_FOR_POST_TYPE["sunday_standard"])
+    assigned = slot_types if isinstance(slot_types, dict) else {}
+    if post_type == "sunday_standard" and not assigned:
+        assigned = weekly_sunday_slot_types()
     for qkey, required_type in target_slots.items():
-        primary_types = _slot_types(qkey, post_type=post_type)
+        primary_types = _slot_types(qkey, post_type=post_type, assigned=assigned)
         flexible_types = _slot_types(
             qkey,
             post_type=post_type,
             allow_fallback=True,
+            assigned=assigned,
         )
         policies = (
             ("strict", primary_types, True, True, True),
@@ -858,9 +915,10 @@ def get_recommendations_with_valid_covers(queue, history=None, post_type="sunday
                 if failures
                 else "nenhum conteúdo aprovado e verificável na fila"
             )
+            expected_type = assigned.get(qkey) or required_type
             raise RuntimeError(
                 f"Não existe conteúdo seguro para preencher {qkey} depois "
-                f"das recuperações de {required_type!r}. {details}"
+                f"das recuperações de {expected_type!r}. {details}"
             )
 
     return selected, covers
@@ -1541,7 +1599,13 @@ def _parse_utc_datetime(value):
     return parsed.astimezone(datetime.timezone.utc)
 
 
-def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
+def _validate_publish_item(
+    qkey,
+    item,
+    now=None,
+    post_type="sunday_standard",
+    assigned_types=None,
+):
     required_slots = REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type)
     if not required_slots or qkey not in required_slots:
         raise RuntimeError(f"Slot {qkey} inválido para {post_type}")
@@ -1550,6 +1614,7 @@ def _validate_publish_item(qkey, item, now=None, post_type="sunday_standard"):
         qkey,
         post_type=post_type,
         allow_fallback=True,
+        assigned=assigned_types,
     )
     if not isinstance(item, dict) or item.get("type") not in allowed_types:
         raise RuntimeError(
@@ -1643,7 +1708,7 @@ def commit_approved_draft(
 
     draft_id = draft.get("draft_id")
     content_hash = draft.get("content_hash")
-    approval = draft.get("approval") or {}
+    approval = publication_schedule.effective_approval(draft) or {}
     if not draft_id or not content_hash:
         raise RuntimeError("O rascunho não possui identidade/hash de conteúdo.")
     if not approval.get("approved"):
@@ -1675,9 +1740,20 @@ def commit_approved_draft(
     required_slots = REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type)
     if not required_slots:
         raise RuntimeError(f"Tipo de publicação inválido: {post_type}")
+    draft_slot_types = (
+        draft.get("slot_types")
+        if isinstance(draft.get("slot_types"), dict)
+        else None
+    )
     quadrants = {key: draft.get(key) for key in required_slots}
     for qkey, item in quadrants.items():
-        _validate_publish_item(qkey, item, now=now, post_type=post_type)
+        _validate_publish_item(
+            qkey,
+            item,
+            now=now,
+            post_type=post_type,
+            assigned_types=draft_slot_types,
+        )
     expected_hash = _draft_content_hash(
         quadrants,
         post_sha,
@@ -1861,10 +1937,19 @@ def generate_production_post():
             print("ERROR: The requested Nostalgia recommendation was not found")
             sys.exit(1)
 
+    slot_types = None
+    if post_type == "sunday_standard":
+        slot_types = weekly_sunday_slot_types()
+        drawn = ", ".join(
+            f"{qkey}={slot_types[qkey]}" for qkey in SUNDAY_QUADRANT_KEYS
+        )
+        print(f"[SORTEIO] Tipos desta semana (sem repetição): {drawn}")
+
     selected, covers = get_recommendations_with_valid_covers(
         candidate_queue,
         history=history,
         post_type=post_type,
+        slot_types=slot_types,
     )
     
     slot_keys = list(selected.keys())
@@ -2216,6 +2301,8 @@ def generate_production_post():
             "approval": {"approved": False},
             **quadrants,
         }
+        if slot_types:
+            draft_data["slot_types"] = slot_types
         with open(DRAFT_FILE, "w", encoding="utf-8") as f:
             json.dump(draft_data, f, indent=2, ensure_ascii=False)
         print(

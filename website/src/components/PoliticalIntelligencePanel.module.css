@@ -221,6 +221,53 @@
   gap: 0.85rem;
 }
 
+/* Blocos de texto longo: compactos por omissão, expansíveis com "Ler mais". */
+.clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--clamp-lines, 4);
+  line-clamp: var(--clamp-lines, 4);
+  overflow: hidden;
+}
+
+.clampToggle {
+  align-self: flex-start;
+  border: 0;
+  padding: 0;
+  color: var(--color-primary);
+  background: transparent;
+  cursor: pointer;
+  font-size: 0.66rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.clampToggle:hover,
+.clampToggle:focus-visible {
+  color: var(--color-accent);
+  outline: none;
+}
+
+.promiseStatement {
+  width: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.proposalTitle {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.articleSummary {
+  margin-bottom: 0.45rem;
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
 .promiseRow {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.06fr) minmax(0, 1.05fr);
