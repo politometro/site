@@ -1489,7 +1489,7 @@
       "sourcePublishedAt": "2026-09-14T17:53:39Z",
       "expiryDate": "2026-10-14T17:53:39Z",
       "createdAt": "2026-09-14T18:11:38.745225Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1512,7 +1512,7 @@
           "Partido Chega"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -1524,7 +1524,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-09-14T17:53:39Z",
         "sourceDescription": "Porfírio Silva diz que os socialistas querem esclarecimentos. Pedro Alves do PSD diz que uma CPI ao ministro seria um \"número\" da oposição. Maria José Aguiar do Chega fala numa \"guerra de desculpas\"."
-      }
+      },
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [Faz sentido uma CPI ao Ministério da Educação?]: Artigo 'Faz sentido uma Comissão Parlamentar de Inquérito ao Ministro da Educação?' não corresponde ao título candidato."
     },
     {
       "id": "rss_podcast_1ca8c2be37421dbd",
@@ -1611,6 +1612,53 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "b8282859fed5394f4e36698c67e6dba5472870df931c148a785980821439a587",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_9952b38697a69189",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Afinal Portugal é o país das maravilhas?",
+      "authorOrMeta": "observador.pt",
+      "description": "A IL acusa o Governo de vender um país das maravilhas sem resultados reais. Já no Parlamento — com gritos de demissão e acusações do Chega — os debates transformam-se num verdadeiro circo.",
+      "imageUrl": "/covers/highlight_afinal_portugal___o_pa_s_das_maravilhas__73305268_fcbd59042ae3.jpg",
+      "link": "https://observador.pt/programas/ainda-bem-que-faz-essa-pergunta/afinal-portugal-e-o-pais-das-maravilhas/",
+      "externalId": "article:url:9952b38697a69189ff8f5ddf",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-16T06:55:15Z",
+      "expiryDate": "2026-10-16T06:55:15Z",
+      "createdAt": "2026-09-16T09:23:26.466905Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/ainda-bem-que-faz-essa-pergunta/afinal-portugal-e-o-pais-das-maravilhas/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2024/05/14100301/770-podcast-ainda-bem-que-faz-essa-pergunta-com-bruno-vieira-amaral.jpg",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "Iniciativa Liberal",
+          "Política",
+          "Partido Chega",
+          "Governo",
+          "Parlamento",
+          "Debate",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:9952b38697a69189ff8f5ddf",
+        "score": 1.0,
+        "coverHash": "a8f1e277484c310c890a7841eae2f68019ee8ec4acc6ca29f027ba5e354bf743",
+        "verifiedAt": "2026-09-16T09:23:27.423181Z",
+        "resolvedTitle": "Afinal Portugal é o país das maravilhas?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-16T06:55:15Z",
+        "sourceDescription": "A IL acusa o Governo de vender um país das maravilhas sem resultados reais. Já no Parlamento — com gritos de demissão e acusações do Chega — os debates transformam-se num verdadeiro circo."
       }
     }
   ],
