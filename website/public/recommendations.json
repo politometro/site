@@ -1577,7 +1577,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1607,10 +1607,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "09250fe69d8e4d87b091f655808b010f5e9725118430046d5c3cbd21456ed7cb",
+        "editorialSourceHash": "9861c09f21608d008c23c4044b72be4d4cbe32e724f46d5923ad11cd5e60b388",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1661,6 +1661,46 @@
         "sourceDescription": "A IL acusa o Governo de vender um país das maravilhas sem resultados reais. Já no Parlamento — com gritos de demissão e acusações do Chega — os debates transformam-se num verdadeiro circo."
       },
       "validationError": "NEWS_NOT_ALLOWED [Afinal Portugal é o país das maravilhas?]: Notícias correntes não são elegíveis para Destaque."
+    },
+    {
+      "id": "rss_highlight_688b52b556b43951",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Custo de vida: Governo devia (ou podia) ir mais longe?",
+      "authorOrMeta": "observador.pt",
+      "description": "Rui Afonso (CH) critica \"medidas de propaganda\". António Mendonça Mendes (PS) fala em \"insensibilidade\" do Governo. Paulo Núncio (CDS) rejeita regresso à bancarrota. As medidas do Governo em debate.",
+      "imageUrl": "/covers/highlight_custo_de_vida__governo_devia__ou_podia__ir_mais_lo_ddeb7527_fdb295567f96.jpg",
+      "link": "https://observador.pt/programas/explicador/custo-de-vida-governo-devia-ou-podia-ir-mais-longe/",
+      "externalId": "article:url:688b52b556b439511d6b8a75",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-18T09:02:20Z",
+      "expiryDate": "2026-10-18T09:02:20Z",
+      "createdAt": "2026-09-18T09:05:15.478498Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/custo-de-vida-governo-devia-ou-podia-ir-mais-longe/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:688b52b556b439511d6b8a75",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-09-18T09:05:15.682687Z",
+        "resolvedTitle": "Custo de vida: Governo devia (ou podia) ir mais longe?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-18T09:02:20Z",
+        "sourceDescription": "Rui Afonso (CH) critica \"medidas de propaganda\". António Mendonça Mendes (PS) fala em \"insensibilidade\" do Governo. Paulo Núncio (CDS) rejeita regresso à bancarrota. As medidas do Governo em debate."
+      }
     }
   ],
   "history": [
@@ -3118,7 +3158,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
