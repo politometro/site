@@ -1049,47 +1049,6 @@
       "validationError": "SOURCE_MISMATCH [Rentrée política a todo o vapor]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
-      "id": "rss_highlight_3214bca9b978ad37",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "O Rei, o Presidente e as regras do Jogo",
-      "authorOrMeta": "João Távora",
-      "description": "Àqueles que reclamam a intervenção de Seguro na actual crise, aconselho que recorram ao colo do vosso pai para chorar as injustiças da vida democrática. Já somos todos crescidinhos ou não?",
-      "imageUrl": "/covers/highlight_o_rei__o_presidente_e_as_regras_do_jogo_87599530_078831f147ec.jpg",
-      "link": "https://observador.pt/opiniao/o-rei-o-presidente-e-as-regras-do-jogo/",
-      "externalId": "article:url:3214bca9b978ad3730955d86",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-04T23:14:09Z",
-      "expiryDate": "2026-10-04T23:14:09Z",
-      "createdAt": "2026-09-05T08:26:50.551226Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/o-rei-o-presidente-e-as-regras-do-jogo/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2019%2F12%2F04133124%2Fhome-3_467x467_acf_cropped.jpg",
-        "categories": [
-          "António José Seguro",
-          "Presidente da República",
-          "Política"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:3214bca9b978ad3730955d86",
-        "score": 1.0,
-        "coverHash": "2f1c29e8b29bab62a4b1577997de490f43056a37ce8ec5a24ba2525578d4fd04",
-        "verifiedAt": "2026-09-05T08:26:50.713784Z",
-        "resolvedTitle": "O Rei, o Presidente e as regras do Jogo",
-        "resolvedAuthor": "João Távora",
-        "sourcePublishedAt": "2026-09-04T23:14:09Z",
-        "sourceDescription": "Àqueles que reclamam a intervenção de Seguro na actual crise, aconselho que recorram ao colo do vosso pai para chorar as injustiças da vida democrática. Já somos todos crescidinhos ou não?"
-      }
-    },
-    {
       "id": "ai_book_6df0482ccb804fe9",
       "type": "book",
       "category": "Livro",
@@ -1577,7 +1536,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1607,10 +1566,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "9861c09f21608d008c23c4044b72be4d4cbe32e724f46d5923ad11cd5e60b388",
+        "editorialSourceHash": "381f5b70943ef5573401b31fba97c935b73fcee4dd792162e74384f2b411e79c",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1700,6 +1659,50 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-09-18T09:02:20Z",
         "sourceDescription": "Rui Afonso (CH) critica \"medidas de propaganda\". António Mendonça Mendes (PS) fala em \"insensibilidade\" do Governo. Paulo Núncio (CDS) rejeita regresso à bancarrota. As medidas do Governo em debate."
+      }
+    },
+    {
+      "id": "rss_highlight_a27db8220f9bed00",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Papa Leão sentiu-se mal na Praça de São Pedro?",
+      "authorOrMeta": "observador.pt",
+      "description": "Publicação nas redes sociais alega que Papa Leão XIV sofreu um problema de saúde súbito na Praça de São Pedro e se encontra a travar uma \"grave batalha de saúde\". Mas é falsa.",
+      "imageUrl": "/covers/highlight_papa_le_o_sentiu_se_mal_na_pra_a_de_s_o_pedro__1f4e960f_d3968ef7d4db.jpg",
+      "link": "https://observador.pt/factchecks/fact-check-papa-leao-xiv-sentiu-se-mal-subitamente-na-praca-de-sao-pedro/",
+      "externalId": "article:url:a27db8220f9bed00ab29146e",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-18T15:59:19Z",
+      "expiryDate": "2026-10-18T15:59:19Z",
+      "createdAt": "2026-09-18T16:34:39.249413Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/factchecks/fact-check-papa-leao-xiv-sentiu-se-mal-subitamente-na-praca-de-sao-pedro/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2020/01/09142359/fact_check-errado.png",
+        "categories": [
+          "Fact Check",
+          "Observador",
+          "Papa Leão XIV",
+          "Igreja Católica",
+          "Religião",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:a27db8220f9bed00ab29146e",
+        "score": 1.0,
+        "coverHash": "33064a55d3fc33e4be7412acbe83679e52947471be506974c7185f650bc315e8",
+        "verifiedAt": "2026-09-18T16:34:39.438875Z",
+        "resolvedTitle": "Papa Leão sentiu-se mal na Praça de São Pedro?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-18T15:59:19Z",
+        "sourceDescription": "Publicação nas redes sociais alega que Papa Leão XIV sofreu um problema de saúde súbito na Praça de São Pedro e se encontra a travar uma \"grave batalha de saúde\". Mas é falsa."
       }
     }
   ],
