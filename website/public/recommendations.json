@@ -554,7 +554,7 @@
         "status": "verified",
         "source": "wikidata+imdb",
         "entityId": "imdb:tt0056218",
-        "score": 1,
+        "score": 1.0,
         "coverHash": "6efb73840732b5ec9c33172e7ecca062d8e48925fb8ea6b19e3f51fa874f1d79",
         "verifiedAt": "2026-08-03T13:58:34.903254Z",
         "resolvedTitle": "The Manchurian Candidate",
@@ -1449,10 +1449,10 @@
       "id": "rss_podcast_1ca8c2be37421dbd",
       "type": "podcast",
       "category": "Podcast",
-      "title": "José António Vieira da Silva: o nosso sistema de reformas é insustentável?",
+      "title": "José António Vieira da Silva: o nosso sistema de reformas é",
       "editorialTitle": "José António Vieira da Silva: o nosso sistema de reformas é",
       "authorOrMeta": "Perguntar Não Ofende",
-      "description": "Análise sobre os temas e questões de josé antónio vieira da silva: o nosso sistema de reformas é insustentável.",
+      "description": "Há duas décadas que o futuro da Segurança Social é apresentado como uma ameaça iminente, mas as previsões sobre o momento em que o sistema entraria em défice têm sido sucessivamente adiadas.",
       "imageUrl": "/covers/podcast_jos__ant_nio_vieira_da_silva__o_nosso_sistema_de_ref_02b49adf_1ca8c2be3742.jpg",
       "link": "https://omny.fm/shows/perguntar-n-o-ofende/jos-ant-nio-vieira-da-silva-o-nosso-sistema-de-reformas-insustent-vel",
       "externalId": "23d82725-c541-42cb-b36b-b4c500ff9080",
@@ -1482,11 +1482,7 @@
         "resolvedTitle": "José António Vieira da Silva: o nosso sistema de reformas é insustentável?",
         "resolvedAuthor": "Perguntar Não Ofende",
         "sourcePublishedAt": "2026-09-15T04:30:00Z",
-        "sourceDescription": "Há duas décadas que o futuro da Segurança Social é apresentado como uma ameaça iminente, mas as previsões sobre o momento em que o sistema entraria em défice têm sido sucessivamente adiadas.",
-        "editorialDescription": "Análise sobre os temas e questões de josé antónio vieira da silva: o nosso sistema de reformas é insustentável.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "41b38883ed0b5195348eca6d5be23b48b7fa1a7435cecfc04cfc47479f5e86b5",
-        "editorialDescriptionProvider": "extractive"
+        "sourceDescription": "Há duas décadas que o futuro da Segurança Social é apresentado como uma ameaça iminente, mas as previsões sobre o momento em que o sistema entraria em défice têm sido sucessivamente adiadas."
       }
     },
     {
@@ -1495,7 +1491,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1525,10 +1521,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "9861c09f21608d008c23c4044b72be4d4cbe32e724f46d5923ad11cd5e60b388",
+        "editorialSourceHash": "381f5b70943ef5573401b31fba97c935b73fcee4dd792162e74384f2b411e79c",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1634,7 +1630,7 @@
       "sourcePublishedAt": "2026-09-18T15:59:19Z",
       "expiryDate": "2026-10-18T15:59:19Z",
       "createdAt": "2026-09-18T16:34:39.249413Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1650,7 +1646,7 @@
           "Sociedade"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -1662,7 +1658,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-09-18T15:59:19Z",
         "sourceDescription": "Publicação nas redes sociais alega que Papa Leão XIV sofreu um problema de saúde súbito na Praça de São Pedro e se encontra a travar uma \"grave batalha de saúde\". Mas é falsa."
-      }
+      },
+      "validationError": "NEWS_NOT_ALLOWED [Papa Leão sentiu-se mal na Praça de São Pedro?]: Notícias correntes não são elegíveis para Destaque."
     },
     {
       "id": "rss_highlight_8f98b66b79ef9e66",
@@ -3160,7 +3157,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 4
+      "highlight": 3
     },
     "missingSlots": [],
     "fallbackRequired": false
