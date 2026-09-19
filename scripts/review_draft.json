@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_43bb6b144d9779af6238",
-  "content_hash": "43bb6b144d9779af623844ecab119d22c87531bc9e2accf4481c9c985161d0c3",
+  "draft_id": "draft_8962fe957e5b116dce41",
+  "content_hash": "8962fe957e5b116dce41f18a163b37dbf346f178f427b11bff39c980a8d7b853",
   "post_type": "sunday_standard",
-  "created_at": "2026-09-19T18:19:42.951439+00:00",
+  "created_at": "2026-09-19T18:26:24.405361+00:00",
   "is_test": false,
-  "post_sha256": "71c6a21da750703ff72aa2e4b67c93fbc07b9c3f2271163f681570c132562a8a",
-  "caption_sha256": "10c556abdf8cca6d4e9f2abe06e18533fd7e91decdabb6b5f2974769041147dc",
+  "post_sha256": "25af2827c0638bca0d5b581139a486e22f09cb8d1aa3ff8a72da03d39a35637d",
+  "caption_sha256": "48343ae72ad55a92db093d7da9b25dda34d6cb0e3d39d73b65b50a3ec6028255",
   "approval": {
     "approved": false
   },
@@ -43,8 +43,8 @@
     "id": "rss_podcast_1ca8c2be37421dbd",
     "type": "podcast",
     "category": "Podcast",
-    "title": "José António Vieira da Silva: o nosso sistema de reformas é",
-    "editorialTitle": "José António Vieira da Silva: o nosso sistema de reformas é",
+    "title": "José António Vieira da Silva: o sistema de reformas é incomportável",
+    "editorialTitle": "José António Vieira da Silva: o sistema de reformas é incomportável",
     "authorOrMeta": "Perguntar Não Ofende",
     "description": "Há duas décadas que o futuro da Segurança Social é apresentado como uma ameaça iminente, mas as previsões sobre o momento em que o sistema entraria em défice têm sido sucessivamente adiadas.",
     "imageUrl": "/covers/podcast_jos__ant_nio_vieira_da_silva__o_nosso_sistema_de_ref_02b49adf_1ca8c2be3742.jpg",
