@@ -1122,47 +1122,6 @@
       "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [O preço das casas já passou o patamar do absurdo? — Ouvintes]: Conteúdo expira em 2026-09-09T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
-      "id": "rss_highlight_4eb2fad23b596e60",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Meloni e a Itália",
-      "authorOrMeta": "Miguel Morgado",
-      "description": "Em grande medida, o feito de Meloni é este: o sistema político conseguiu finalmente colocar na chefia do governo um líder partidário escolhido por uma maioria do povo, à frente de uma coligação",
-      "imageUrl": "/covers/highlight_meloni_e_a_it_lia_231af667_5332be4ee7dd.jpg",
-      "link": "https://observador.pt/opiniao/meloni-e-a-italia/",
-      "externalId": "article:url:4eb2fad23b596e6006008c90",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-05T23:25:08Z",
-      "expiryDate": "2026-10-05T23:25:08Z",
-      "createdAt": "2026-09-06T08:45:10.705782Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/meloni-e-a-italia/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1843%3A1838%3Anowe%3A1084%3A166%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F06%2F23181612%2Fdventura-miguel-morgado-4-scaled.jpg",
-        "categories": [
-          "Itália",
-          "Europa",
-          "Mundo"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:4eb2fad23b596e6006008c90",
-        "score": 1.0,
-        "coverHash": "3cd9b3ba1b6dc141e63d27987d934b77cc9a7f8efdb5309346a8664466927b2f",
-        "verifiedAt": "2026-09-06T08:45:10.877603Z",
-        "resolvedTitle": "Meloni e a Itália",
-        "resolvedAuthor": "Miguel Morgado",
-        "sourcePublishedAt": "2026-09-05T23:25:08Z",
-        "sourceDescription": "Em grande medida, o feito de Meloni é este: o sistema político conseguiu finalmente colocar na chefia do governo um líder partidário escolhido por uma maioria do povo, à frente de uma coligação"
-      }
-    },
-    {
       "id": "rss_highlight_9997f92905812f6d",
       "type": "highlight",
       "category": "Destaque",
@@ -1536,7 +1495,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1566,10 +1525,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "381f5b70943ef5573401b31fba97c935b73fcee4dd792162e74384f2b411e79c",
+        "editorialSourceHash": "09250fe69d8e4d87b091f655808b010f5e9725118430046d5c3cbd21456ed7cb",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1703,6 +1662,46 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-09-18T15:59:19Z",
         "sourceDescription": "Publicação nas redes sociais alega que Papa Leão XIV sofreu um problema de saúde súbito na Praça de São Pedro e se encontra a travar uma \"grave batalha de saúde\". Mas é falsa."
+      }
+    },
+    {
+      "id": "rss_highlight_8f98b66b79ef9e66",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Nem toda a imigração é igual",
+      "authorOrMeta": "observador.pt",
+      "description": "Se Portugal precisa de imigração, os governos devem dizer porquê. Se há um limite à capacidade de absorção, devem dizer qual. Se determinadas políticas falharam, devem reconhecê-lo.",
+      "imageUrl": "/covers/highlight_nem_toda_a_imigra__o___igual_f03b49c8_2729abcec39b.jpg",
+      "link": "https://observador.pt/opiniao/nem-toda-a-imigracao-e-igual/",
+      "externalId": "article:url:8f98b66b79ef9e66c9d01417",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-18T23:19:20Z",
+      "expiryDate": "2026-10-18T23:19:20Z",
+      "createdAt": "2026-09-19T08:53:16.191814Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/nem-toda-a-imigracao-e-igual/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1000%3A1000%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F05%2F21160850%2Frahool-s-pai-panandiker.jpeg",
+        "categories": [
+          "Imigração",
+          "Mundo"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:8f98b66b79ef9e66c9d01417",
+        "score": 1.0,
+        "coverHash": "fc9e21f9e54bd37e59ac4a944d8f3ba41acc657bbb6a98cf20b60f1531cbe11d",
+        "verifiedAt": "2026-09-19T08:53:17.492482Z",
+        "resolvedTitle": "Nem toda a imigração é igual",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-18T23:19:20Z",
+        "sourceDescription": "Se Portugal precisa de imigração, os governos devem dizer porquê. Se há um limite à capacidade de absorção, devem dizer qual. Se determinadas políticas falharam, devem reconhecê-lo."
       }
     }
   ],
