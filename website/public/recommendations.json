@@ -1452,7 +1452,7 @@
       "title": "José António Vieira da Silva: o sistema de reformas é incomportável",
       "editorialTitle": "José António Vieira da Silva: o sistema de reformas é incomportável",
       "authorOrMeta": "Perguntar Não Ofende",
-      "description": "Há duas décadas que o futuro da Segurança Social é apresentado como uma ameaça iminente, mas as previsões sobre o momento em que o sistema entraria em défice têm sido sucessivamente adiadas.",
+      "description": "Análise sobre os temas e questões de josé antónio vieira da silva: o sistema de reformas é incomportável.",
       "imageUrl": "/covers/podcast_jos__ant_nio_vieira_da_silva__o_nosso_sistema_de_ref_02b49adf_1ca8c2be3742.jpg",
       "link": "https://omny.fm/shows/perguntar-n-o-ofende/jos-ant-nio-vieira-da-silva-o-nosso-sistema-de-reformas-insustent-vel",
       "externalId": "23d82725-c541-42cb-b36b-b4c500ff9080",
@@ -1482,7 +1482,11 @@
         "resolvedTitle": "José António Vieira da Silva: o nosso sistema de reformas é insustentável?",
         "resolvedAuthor": "Perguntar Não Ofende",
         "sourcePublishedAt": "2026-09-15T04:30:00Z",
-        "sourceDescription": "Há duas décadas que o futuro da Segurança Social é apresentado como uma ameaça iminente, mas as previsões sobre o momento em que o sistema entraria em défice têm sido sucessivamente adiadas."
+        "sourceDescription": "Há duas décadas que o futuro da Segurança Social é apresentado como uma ameaça iminente, mas as previsões sobre o momento em que o sistema entraria em défice têm sido sucessivamente adiadas.",
+        "editorialDescription": "Análise sobre os temas e questões de josé antónio vieira da silva: o sistema de reformas é incomportável.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "ff42f1849c6044f5534288316d23ac83071a0dcc63be23788d7cb33a6100dda3",
+        "editorialDescriptionProvider": "extractive"
       }
     },
     {
@@ -1491,7 +1495,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1521,10 +1525,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "9861c09f21608d008c23c4044b72be4d4cbe32e724f46d5923ad11cd5e60b388",
+        "editorialSourceHash": "381f5b70943ef5573401b31fba97c935b73fcee4dd792162e74384f2b411e79c",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1666,7 +1670,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Nem toda a imigração é igual",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Rahool S. Pai Panandiker",
       "description": "Se Portugal precisa de imigração, os governos devem dizer porquê. Se há um limite à capacidade de absorção, devem dizer qual. Se determinadas políticas falharam, devem reconhecê-lo.",
       "imageUrl": "/covers/highlight_nem_toda_a_imigra__o___igual_f03b49c8_2729abcec39b.jpg",
       "link": "https://observador.pt/opiniao/nem-toda-a-imigracao-e-igual/",
@@ -1690,15 +1694,55 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:8f98b66b79ef9e66c9d01417",
         "score": 1.0,
         "coverHash": "fc9e21f9e54bd37e59ac4a944d8f3ba41acc657bbb6a98cf20b60f1531cbe11d",
         "verifiedAt": "2026-09-19T08:53:17.492482Z",
         "resolvedTitle": "Nem toda a imigração é igual",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Rahool S. Pai Panandiker",
         "sourcePublishedAt": "2026-09-18T23:19:20Z",
         "sourceDescription": "Se Portugal precisa de imigração, os governos devem dizer porquê. Se há um limite à capacidade de absorção, devem dizer qual. Se determinadas políticas falharam, devem reconhecê-lo."
+      }
+    },
+    {
+      "id": "rss_highlight_1c5ac33bfa964ca9",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A morte da democracia em seu nome",
+      "authorOrMeta": "observador.pt",
+      "description": "a etnicização da política, a sexualização da política, ou a afirmação da vontade religiosa como subordinando a autonomia do Estado constituem a tribalização definitiva da política",
+      "imageUrl": "/covers/highlight_a_morte_da_democracia_em_seu_nome_a6ea00fa_887468b197cb.jpg",
+      "link": "https://observador.pt/opiniao/a-morte-da-democracia-em-seu-nome/",
+      "externalId": "article:url:1c5ac33bfa964ca905a711f1",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-19T23:24:52Z",
+      "expiryDate": "2026-10-19T23:24:52Z",
+      "createdAt": "2026-09-20T09:22:23.270667Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-morte-da-democracia-em-seu-nome/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1843%3A1838%3Anowe%3A1084%3A166%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F06%2F23181612%2Fdventura-miguel-morgado-4-scaled.jpg",
+        "categories": [
+          "Democracia",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:1c5ac33bfa964ca905a711f1",
+        "score": 1.0,
+        "coverHash": "17f13a54279d1518f4502901ede19f0f52a4bf8d66196873a1437273fdb15438",
+        "verifiedAt": "2026-09-20T09:22:23.484890Z",
+        "resolvedTitle": "A morte da democracia em seu nome",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-19T23:24:52Z",
+        "sourceDescription": "a etnicização da política, a sexualização da política, ou a afirmação da vontade religiosa como subordinando a autonomia do Estado constituem a tribalização definitiva da política"
       }
     }
   ],
@@ -3157,7 +3201,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
