@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL1089297W/The_Prince",
+  "coverHash": "3c58e9201b5ff99c8844446f88a852b418f9405700624b671c3d9d03d9485d41",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://ia800100.us.archive.org/view_archive.php?archive=%2F5%2Fitems%2Fl_covers_0012%2Fl_covers_0012_72.zip&file=0012726168-L.jpg",
+  "entityId": "openlibrary:/works/OL1089297W",
+  "expiryDate": null,
+  "height": 500,
+  "isbn": "",
+  "resolvedAuthor": "Niccolò Machiavelli",
+  "resolvedTitle": "The Prince",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "The Prince",
+  "titleNormalized": "the prince",
+  "type": "book",
+  "verifiedAt": "2026-09-20T16:21:49.947503Z",
+  "width": 307
+}

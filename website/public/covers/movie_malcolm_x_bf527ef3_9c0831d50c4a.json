@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0104797/",
+  "coverHash": "25775bf5cffed28cfa9c19e07fec5787000eab4db7de2d113be736775d6a3da9",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/27/Spike_Lee.jpg",
+  "entityId": "imdb:tt0104797",
+  "expiryDate": null,
+  "height": 329,
+  "isbn": "",
+  "resolvedAuthor": "Spike Lee",
+  "resolvedTitle": "Malcolm X",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Malcolm X",
+  "titleNormalized": "malcolm x",
+  "type": "movie",
+  "verifiedAt": "2026-09-20T16:21:51.678415Z",
+  "width": 427
+}
