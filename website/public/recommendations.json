@@ -1306,7 +1306,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1336,10 +1336,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "09250fe69d8e4d87b091f655808b010f5e9725118430046d5c3cbd21456ed7cb",
+        "editorialSourceHash": "9861c09f21608d008c23c4044b72be4d4cbe32e724f46d5923ad11cd5e60b388",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1741,10 +1741,10 @@
         "resolvedTitle": "\"O PSD podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida\"",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-09-21T07:43:42Z",
-        "sourceDescription": "Episódio “\"O PSD podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida\"” do podcast O Princípio da Incerteza, publicado em 21/09/2026.",
+        "sourceDescription": "Análise sobre os temas e questões de o psd podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida.",
         "editorialDescription": "Análise sobre os temas e questões de o psd podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "85845cbc51bb55ec1206479332817873aed4e32fed6832871455ffaee99c7860",
+        "editorialSourceHash": "cc241f035fe643b5bfd6d64cf6b77839bcc6f4a2bf1212f8d944af165c9e61b7",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1789,6 +1789,50 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-09-22T09:07:18Z",
         "sourceDescription": "Encontro inclui prémio no valor de 10.000 euros para o melhor trabalho de investigação em oncologia. Foco na investigação \"está a ser conseguido\", mas de forma \"lenta\", considera presidente."
+      }
+    },
+    {
+      "id": "rss_podcast_3c57fca2aba049dc",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "“Eu já vi este debate [no Parlamento sobre o aumento do custo de vida], só que ao contrário”",
+      "editorialTitle": "“Eu já vi este debate [no Parlamento sobre o aumento do custo de vida]",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre falam ainda dos resultados de três novas sondagens, nas quais o PS surge em primeiro lugar nas intenções de voto.",
+      "imageUrl": "/covers/podcast__eu_j__vi_este_debate__no_parlamento_sobre_o_aumento_5becff81_3c57fca2aba0.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/eu-j-vi-este-debate-no-parlamento-sobre-o-aumento-do-custo-de-vida-s-que-ao-contr-rio",
+      "externalId": "79ed1e83-3692-45c9-9039-b4c90148c0c6",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-22T12:55:37Z",
+      "expiryDate": "2026-10-02T12:55:37Z",
+      "createdAt": "2026-09-22T17:05:18.405356Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "79ed1e83-3692-45c9-9039-b4c90148c0c6",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "79ed1e83-3692-45c9-9039-b4c90148c0c6",
+        "score": 1.0,
+        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
+        "verifiedAt": "2026-09-22T17:05:22.579962Z",
+        "resolvedTitle": "“Eu já vi este debate [no Parlamento sobre o aumento do custo de vida], só que ao contrário”",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-09-22T12:55:37Z",
+        "sourceDescription": "Cecília Meireles e, esta semana, Pedro Delgado Alves discutem o debate no Parlamento sobre o aumento do custo de vida e analisam as medidas do Governo para mitigar a crise inflacionista. Falam ainda dos resultados de três novas sondagens, nas quais o PS surge em primeiro lugar nas intenções de voto.",
+        "editorialDescription": "Análise sobre falam ainda dos resultados de três novas sondagens, nas quais o PS surge em primeiro lugar nas intenções de voto.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "421037cd1ee6122ab74b14cbd2f0227323743a30eb98b3d1344c403755be5bf0",
+        "editorialDescriptionProvider": "extractive"
       }
     }
   ],
