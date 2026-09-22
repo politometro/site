@@ -1306,7 +1306,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1336,10 +1336,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "381f5b70943ef5573401b31fba97c935b73fcee4dd792162e74384f2b411e79c",
+        "editorialSourceHash": "09250fe69d8e4d87b091f655808b010f5e9725118430046d5c3cbd21456ed7cb",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1532,7 +1532,7 @@
       "sourcePublishedAt": "2026-09-20T05:00:00Z",
       "expiryDate": "2026-09-23T05:00:00Z",
       "createdAt": "2026-09-20T16:20:29.148755Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1541,7 +1541,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1557,7 +1557,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "23fe8cf8502f1db746b9be82fde9b76dabc1534e15f9b98d4ac23d7fbd200733",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Há responsáveis pelos resultados do PISA? — Ouvintes]: Conteúdo expira em 2026-09-23T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_f76edaefc5fbf516",
@@ -1745,6 +1746,49 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "85845cbc51bb55ec1206479332817873aed4e32fed6832871455ffaee99c7860",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_b6c90989ea7261bd",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Oncologia. Porto acolhe Encontro de Jovens Investigadores",
+      "authorOrMeta": "observador.pt",
+      "description": "Encontro inclui prémio no valor de 10.000 euros para o melhor trabalho de investigação em oncologia. Foco na investigação \"está a ser conseguido\", mas de forma \"lenta\", considera presidente.",
+      "imageUrl": "/covers/highlight_oncologia__porto_acolhe_encontro_de_jovens_investi_3d49d334_4e021cb726e5.jpg",
+      "link": "https://observador.pt/2026/09/22/porto-acolhe-encontro-nacional-de-jovens-investigadores-em-oncologia-3/",
+      "externalId": "article:url:b6c90989ea7261bd6f3e96ba",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-22T09:07:18Z",
+      "expiryDate": "2026-10-22T09:07:18Z",
+      "createdAt": "2026-09-22T09:23:04.475592Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/2026/09/22/porto-acolhe-encontro-nacional-de-jovens-investigadores-em-oncologia-3/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:1280:719:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2022/02/01181935/futuro-oncologia.jpg",
+        "categories": [
+          "Cancro",
+          "Medicina",
+          "Ciência",
+          "Investigação",
+          "Observador"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:b6c90989ea7261bd6f3e96ba",
+        "score": 1.0,
+        "coverHash": "dec89f06b7160204afe81a6cca07a6405d6c507de1154f37d55b1ae151bb1808",
+        "verifiedAt": "2026-09-22T09:23:04.669670Z",
+        "resolvedTitle": "Oncologia. Porto acolhe Encontro de Jovens Investigadores",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-22T09:07:18Z",
+        "sourceDescription": "Encontro inclui prémio no valor de 10.000 euros para o melhor trabalho de investigação em oncologia. Foco na investigação \"está a ser conseguido\", mas de forma \"lenta\", considera presidente."
       }
     }
   ],
@@ -3352,7 +3396,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
