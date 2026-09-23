@@ -1306,7 +1306,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1336,10 +1336,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "9861c09f21608d008c23c4044b72be4d4cbe32e724f46d5923ad11cd5e60b388",
+        "editorialSourceHash": "381f5b70943ef5573401b31fba97c935b73fcee4dd792162e74384f2b411e79c",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1762,7 +1762,7 @@
       "sourcePublishedAt": "2026-09-22T09:07:18Z",
       "expiryDate": "2026-10-22T09:07:18Z",
       "createdAt": "2026-09-22T09:23:04.475592Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1777,7 +1777,7 @@
           "Observador"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -1789,7 +1789,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-09-22T09:07:18Z",
         "sourceDescription": "Encontro inclui prémio no valor de 10.000 euros para o melhor trabalho de investigação em oncologia. Foco na investigação \"está a ser conseguido\", mas de forma \"lenta\", considera presidente."
-      }
+      },
+      "validationError": "NEWS_NOT_ALLOWED [Oncologia. Porto acolhe Encontro de Jovens Investigadores]: Notícias correntes não são elegíveis para Destaque."
     },
     {
       "id": "rss_podcast_3c57fca2aba049dc",
@@ -1831,8 +1832,58 @@
         "sourceDescription": "Cecília Meireles e, esta semana, Pedro Delgado Alves discutem o debate no Parlamento sobre o aumento do custo de vida e analisam as medidas do Governo para mitigar a crise inflacionista. Falam ainda dos resultados de três novas sondagens, nas quais o PS surge em primeiro lugar nas intenções de voto.",
         "editorialDescription": "Análise sobre falam ainda dos resultados de três novas sondagens, nas quais o PS surge em primeiro lugar nas intenções de voto.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "421037cd1ee6122ab74b14cbd2f0227323743a30eb98b3d1344c403755be5bf0",
+        "editorialSourceHash": "5d8d5257ed2c424599a38c3373ab236b40bb81bc39d40b962d8c976da09b66a9",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_4b790084d47a04bc",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Será a vida de eurodeputado assim tão cansativa e chata?",
+      "authorOrMeta": "observador.pt",
+      "description": "Eurodeputados queixam-se do trabalho duro entre Bruxelas e Estrasburgo. O telemóvel de Paulo Rangel faz interferência na entrevista e Miguel Sousa Tavares rejeita a política.",
+      "imageUrl": "/covers/highlight_ser__a_vida_de_eurodeputado_assim_t_o_cansativa_e__41a33fdf_07f43ccef23a.jpg",
+      "link": "https://observador.pt/programas/momentos-de-glria/sera-a-vida-de-eurodeputado-assim-tao-cansativa-e-chata/",
+      "externalId": "article:url:4b790084d47a04bcd30a23f0",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-23T07:31:56Z",
+      "expiryDate": "2026-10-23T07:31:56Z",
+      "createdAt": "2026-09-23T09:24:03.185852Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/momentos-de-glria/sera-a-vida-de-eurodeputado-assim-tao-cansativa-e-chata/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2025/10/13004433/770-podcast-momentos-de-gloria-sem-rita.jpg",
+        "categories": [
+          "Humor",
+          "Cultura",
+          "Rádio Observador",
+          "Observador",
+          "Entrevista",
+          "Bruxelas",
+          "Bélgica",
+          "Mundo",
+          "Estrasburgo",
+          "França",
+          "Europa",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:4b790084d47a04bcd30a23f0",
+        "score": 1.0,
+        "coverHash": "b13227e8338fb8035f242290960770c3cfbaf94bfd4d306cc07ad246a2aa9a4b",
+        "verifiedAt": "2026-09-23T09:24:03.394630Z",
+        "resolvedTitle": "Será a vida de eurodeputado assim tão cansativa e chata?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-23T07:31:56Z",
+        "sourceDescription": "Eurodeputados queixam-se do trabalho duro entre Bruxelas e Estrasburgo. O telemóvel de Paulo Rangel faz interferência na entrevista e Miguel Sousa Tavares rejeita a política."
       }
     }
   ],
