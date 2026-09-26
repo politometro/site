@@ -1306,7 +1306,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1336,10 +1336,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "09250fe69d8e4d87b091f655808b010f5e9725118430046d5c3cbd21456ed7cb",
+        "editorialSourceHash": "9861c09f21608d008c23c4044b72be4d4cbe32e724f46d5923ad11cd5e60b388",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1708,7 +1708,7 @@
       "id": "rss_podcast_b4500b5bc6388550",
       "type": "podcast",
       "category": "Podcast",
-      "title": "\"O PSD podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida\"",
+      "title": "\"O PSD podia perfeitamente escolher ter um défice, neste caso em defesa",
       "editorialTitle": "\"O PSD podia perfeitamente escolher ter um défice, neste caso em defesa",
       "authorOrMeta": "O Princípio da Incerteza",
       "description": "Análise sobre os temas e questões de o psd podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida.",
@@ -1741,11 +1741,7 @@
         "resolvedTitle": "\"O PSD podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida\"",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-09-21T07:43:42Z",
-        "sourceDescription": "Análise sobre os temas e questões de o psd podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida.",
-        "editorialDescription": "Análise sobre os temas e questões de o psd podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "cc241f035fe643b5bfd6d64cf6b77839bcc6f4a2bf1212f8d944af165c9e61b7",
-        "editorialDescriptionProvider": "extractive"
+        "sourceDescription": "Análise sobre os temas e questões de o psd podia perfeitamente escolher ter um défice, neste caso em defesa do custo de vida."
       }
     },
     {
