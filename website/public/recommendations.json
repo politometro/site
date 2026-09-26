@@ -1306,7 +1306,7 @@
       "category": "Podcast",
       "title": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
       "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+      "description": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
       "imageUrl": "/covers/podcast_eclipse_na_cmtv____assalto__ao_chega___conte_do_do_b_a298df2c_088c19bc05c3.jpg",
       "link": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
       "externalId": "https://www.youtube.com/watch?v=gk3TPM1KnWE",
@@ -1336,10 +1336,10 @@
         "resolvedTitle": "Eclipse na CMTV + \"Assalto\" ao Chega - Conteúdo do Batáguas T03 Ep08",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-14T18:19:27Z",
-        "sourceDescription": "Análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
-        "editorialDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "sourceDescription": "Análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
+        "editorialDescription": "Análise sobre análise sobre análise sobre os temas e questões de eclipse na cmtv + \"assalto\" ao chega - conteúdo do batáguas t03 ep08.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "9861c09f21608d008c23c4044b72be4d4cbe32e724f46d5923ad11cd5e60b388",
+        "editorialSourceHash": "381f5b70943ef5573401b31fba97c935b73fcee4dd792162e74384f2b411e79c",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -1793,50 +1793,6 @@
       "validationError": "NEWS_NOT_ALLOWED [Oncologia. Porto acolhe Encontro de Jovens Investigadores]: Notícias correntes não são elegíveis para Destaque."
     },
     {
-      "id": "rss_podcast_3c57fca2aba049dc",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "“Eu já vi este debate [no Parlamento sobre o aumento do custo de vida]",
-      "editorialTitle": "“Eu já vi este debate [no Parlamento sobre o aumento do custo de vida]",
-      "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre falam ainda dos resultados de três novas sondagens, nas quais o PS surge em primeiro lugar nas intenções de voto.",
-      "imageUrl": "/covers/podcast_cec_lia_meireles___eu_j__vi_este_debate__no_parlamen_2644d195_3c57fca2aba0.jpg",
-      "link": "https://omny.fm/shows/linhas-vermelhas/eu-j-vi-este-debate-no-parlamento-sobre-o-aumento-do-custo-de-vida-s-que-ao-contr-rio",
-      "externalId": "79ed1e83-3692-45c9-9039-b4c90148c0c6",
-      "sourceSeriesId": "1596904063",
-      "sourceSeriesTitle": "Linhas Vermelhas",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-22T12:55:37Z",
-      "expiryDate": "2026-10-02T12:55:37Z",
-      "createdAt": "2026-09-22T17:05:18.405356Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
-        "guid": "79ed1e83-3692-45c9-9039-b4c90148c0c6",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
-        "show": "Linhas Vermelhas"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "79ed1e83-3692-45c9-9039-b4c90148c0c6",
-        "score": 1.0,
-        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
-        "verifiedAt": "2026-09-23T17:16:02.220059Z",
-        "resolvedTitle": "Cecília Meireles: “Eu já vi este debate [no Parlamento sobre o aumento do custo de vida], só que ao contrário”",
-        "resolvedAuthor": "Linhas Vermelhas",
-        "sourcePublishedAt": "2026-09-22T12:55:37Z",
-        "sourceDescription": "Cecília Meireles e, esta semana, Pedro Delgado Alves discutem o debate no Parlamento sobre o aumento do custo de vida e analisam as medidas do Governo para mitigar a crise inflacionista. Falam ainda dos resultados de três novas sondagens, nas quais o PS surge em primeiro lugar nas intenções de voto.",
-        "editorialDescription": "Análise sobre falam ainda dos resultados de três novas sondagens, nas quais o PS surge em primeiro lugar nas intenções de voto.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "421037cd1ee6122ab74b14cbd2f0227323743a30eb98b3d1344c403755be5bf0",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_4b790084d47a04bc",
       "type": "highlight",
       "category": "Destaque",
@@ -1886,6 +1842,89 @@
         "sourceDescription": "Eurodeputados queixam-se do trabalho duro entre Bruxelas e Estrasburgo. O telemóvel de Paulo Rangel faz interferência na entrevista e Miguel Sousa Tavares rejeita a política."
       },
       "validationError": "NEWS_NOT_ALLOWED [Será a vida de eurodeputado assim tão cansativa e chata?]: Notícias correntes não são elegíveis para Destaque."
+    },
+    {
+      "id": "rss_podcast_7e35c7ae7d3ac36a",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Depois de Passos, surge a sombra de Centeno?",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre os temas e questões de depois de passos, surge a sombra de centeno.",
+      "imageUrl": "/covers/podcast_depois_de_passos__surge_a_sombra_de_centeno__1ee58def_7e35c7ae7d3a.jpg",
+      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/depois-de-passos-surge-a-sombra-de-centeno",
+      "externalId": "ce5ad121-db57-47a6-84db-b4d00179ed55",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-25T23:19:54Z",
+      "expiryDate": "2026-09-28T23:19:54Z",
+      "createdAt": "2026-09-26T09:26:23.541510Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "ce5ad121-db57-47a6-84db-b4d00179ed55",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "ce5ad121-db57-47a6-84db-b4d00179ed55",
+        "score": 1.0,
+        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
+        "verifiedAt": "2026-09-26T09:26:27.409493Z",
+        "resolvedTitle": "Depois de Passos, surge a sombra de Centeno?",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-09-25T23:19:54Z",
+        "sourceDescription": "Enquanto o debate político português se anima com o regresso de figuras do passado, Mário Centeno lança o livro \"Contas Certas\" e afirma que \"os portugueses não têm em quem votar\", frase que domina o dia e a entrevista dada ao Expresso.",
+        "editorialDescription": "Análise sobre os temas e questões de depois de passos, surge a sombra de centeno.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "0395add4075bb5c0f143ad1a43180dde1b6fbc52213ce4ea1e805ec95afbd239",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_bdf23406cc68fa2c",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "O governo anda a brincar com “os pobrezinhos”",
+      "authorOrMeta": "observador.pt",
+      "description": "O fracasso do Volta só foi evitado por causa dos mais pobres, dos mais desprotegidos e dos mais necessitados. Para o governo, o que interessa é que somos \"um caso de sucesso\". Não estão orgulhosos?",
+      "imageUrl": "/covers/highlight_o_governo_anda_a_brincar_com__os_pobrezinhos__6ffcd90b_dfd5bb648735.jpg",
+      "link": "https://observador.pt/opiniao/o-governo-anda-a-brincar-com-os-pobrezinhos/",
+      "externalId": "article:url:bdf23406cc68fa2c08e4160b",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-25T23:25:22Z",
+      "expiryDate": "2026-10-25T23:25:22Z",
+      "createdAt": "2026-09-26T09:26:29.894027Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/o-governo-anda-a-brincar-com-os-pobrezinhos/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2124%3A2124%3Anowe%3A955%3A75%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F04%2F23151538%2Fjporfirio-retratos-redacao-2026-01-81-scaled.jpg",
+        "categories": [
+          "Governo",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:bdf23406cc68fa2c08e4160b",
+        "score": 1.0,
+        "coverHash": "3d77a998923e5c6952a2bcd07bfd95500ed139f8ac0766a002a92847957dc386",
+        "verifiedAt": "2026-09-26T09:26:30.033547Z",
+        "resolvedTitle": "O governo anda a brincar com “os pobrezinhos”",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-25T23:25:22Z",
+        "sourceDescription": "O fracasso do Volta só foi evitado por causa dos mais pobres, dos mais desprotegidos e dos mais necessitados. Para o governo, o que interessa é que somos \"um caso de sucesso\". Não estão orgulhosos?"
+      }
     }
   ],
   "history": [
@@ -3492,7 +3531,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
