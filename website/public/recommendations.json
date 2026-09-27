@@ -1784,6 +1784,118 @@
         "editorialSourceHash": "0395add4075bb5c0f143ad1a43180dde1b6fbc52213ce4ea1e805ec95afbd239",
         "editorialDescriptionProvider": "extractive"
       }
+    },
+    {
+      "id": "rss_podcast_f416f11f9ccc66b1",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Comentadores de TV deviam ter carreiras? — Ouvintes",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “Comentadores de TV deviam ter carreiras? — Ouvintes” do podcast Fora do Baralho, publicado em 27/09/2026.",
+      "imageUrl": "/covers/podcast_comentadores_de_tv_deviam_ter_carreiras____ouvintes_201f9fe0_f416f11f9ccc.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/comentadores-de-tv-deviam-ter-carreiras-ouvintes",
+      "externalId": "dee48044-f986-45f0-b750-b4d000cc5d09",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-27T07:45:00Z",
+      "expiryDate": "2026-09-30T07:45:00Z",
+      "createdAt": "2026-09-27T10:05:50.301427Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "dee48044-f986-45f0-b750-b4d000cc5d09",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "dee48044-f986-45f0-b750-b4d000cc5d09",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-09-27T10:05:51.404125Z",
+        "resolvedTitle": "Comentadores de TV deviam ter carreiras? — Ouvintes",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-09-27T07:45:00Z",
+        "sourceDescription": "Episódio “Comentadores de TV deviam ter carreiras? — Ouvintes” do podcast Fora do Baralho, publicado em 27/09/2026.",
+        "editorialDescription": "Análise sobre episódio “Comentadores de TV deviam ter carreiras? — Ouvintes” do podcast Fora do Baralho, publicado em 27/09/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "33ffe178d56e3dea505d909ab4affd9eeccdf503fb61296eed6198e5c28e161f",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_9ad4848881cedf17",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Os falsos pretextos de Francisco Assis",
+      "authorOrMeta": "observador.pt",
+      "description": "A triste exibição de Costa acabou por confirmar linha a linha a crítica que fiz, e faço, a Francisco Assis, ao sentido do seu voto e ao partido a que ambos pertencem",
+      "imageUrl": "/covers/highlight_os_falsos_pretextos_de_francisco_assis_cfcf807f_48c049847772.jpg",
+      "link": "https://observador.pt/opiniao/os-falsos-pretextos-de-francisco-assis/",
+      "externalId": "article:url:9ad4848881cedf17716dd3e6",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-26T23:25:07Z",
+      "expiryDate": "2026-10-26T23:25:07Z",
+      "createdAt": "2026-09-27T10:05:52.444619Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/os-falsos-pretextos-de-francisco-assis/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1843%3A1838%3Anowe%3A1084%3A166%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F06%2F23181612%2Fdventura-miguel-morgado-4-scaled.jpg",
+        "categories": [
+          "Francisco Assis",
+          "País",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:9ad4848881cedf17716dd3e6",
+        "score": 1.0,
+        "coverHash": "3cd9b3ba1b6dc141e63d27987d934b77cc9a7f8efdb5309346a8664466927b2f",
+        "verifiedAt": "2026-09-27T10:05:54.965214Z",
+        "resolvedTitle": "Os falsos pretextos de Francisco Assis",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-09-26T23:25:07Z",
+        "sourceDescription": "A triste exibição de Costa acabou por confirmar linha a linha a crítica que fiz, e faço, a Francisco Assis, ao sentido do seu voto e ao partido a que ambos pertencem"
+      }
+    },
+    {
+      "id": "ai_movie_fba00b3673fa4d3e",
+      "type": "movie",
+      "category": "Filme",
+      "title": "Selma",
+      "authorOrMeta": "Ava DuVernay",
+      "description": "Retrato da campanha pelo direito de voto e da luta pelos direitos civis nos EUA.",
+      "imageUrl": "/covers/movie_selma_8aec1568_240c803abbbf.jpg",
+      "link": "https://www.imdb.com/title/tt1020072/",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-09-27T10:05:56.398966Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "imdb:tt1020072",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "wikidata+imdb",
+        "entityId": "imdb:tt1020072",
+        "score": 1.0,
+        "coverHash": "7a4674625214906a6fee705a3eedc80625b0054255d842a9906b79f6af4df3b8",
+        "verifiedAt": "2026-09-27T10:05:57.827937Z",
+        "resolvedTitle": "Selma",
+        "resolvedAuthor": "Ava DuVernay",
+        "sourceDescription": "Retrato da campanha pelo direito de voto e da luta pelos direitos civis nos EUA."
+      }
     }
   ],
   "history": [
@@ -3534,8 +3646,8 @@
   "readiness": {
     "postType": "sunday_standard",
     "strictCounts": {
-      "book": 4,
-      "podcast": 3,
+      "book": 3,
+      "podcast": 2,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
