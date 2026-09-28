@@ -546,10 +546,10 @@
       "imageUrl": "/covers/nostalgia_contra_informa__o_e5a6103b_c901ba9b7d81.jpg",
       "expiryDate": null,
       "createdAt": "2026-08-13T05:53:26.798645Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "curated-episode-watchlist",
       "externalId": "article:url:1010c4fa17764b5b8177e456",
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news:arquivos.rtp.pt",
@@ -1050,46 +1050,6 @@
         "sourceDescription": "Os dois concursos selecionados permitirão atribuir quatro bolsas em ambiente não académico e uma bolsa em contexto académico, adianta esta segunda-feira o executivo açoriano."
       },
       "validationError": "NEWS_NOT_ALLOWED [Açores abrem concurso para cinco bolsas de doutoramento]: Notícias correntes não são elegíveis para Destaque."
-    },
-    {
-      "id": "rss_highlight_36c5706aca046a40",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Afinal, a democracia está segura?",
-      "authorOrMeta": "Mafalda Pratas",
-      "description": "Não é o colapso da democracia que devíamos temer, mas sim a possibilidade de que \"isto\" seja o que a democracia vai ser durante muito tempo",
-      "imageUrl": "/covers/highlight_afinal__a_democracia_est__segura__925af175_6251f91396fb.jpg",
-      "link": "https://observador.pt/opiniao/afinal-a-democracia-esta-segura/",
-      "externalId": "article:url:36c5706aca046a4024bb9a39",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-11T23:23:50Z",
-      "expiryDate": "2026-10-11T23:23:50Z",
-      "createdAt": "2026-09-12T08:42:59.344920Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/afinal-a-democracia-esta-segura/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A600%3A600%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2022%2F10%2F27190624%2Fmafalda-pratas-fernandes-467x467-acf-cropped.jpeg",
-        "categories": [
-          "Democracia",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:36c5706aca046a4024bb9a39",
-        "score": 1.0,
-        "coverHash": "9c07f6712669c58e279da81f21e5e8bc9bf0f99b785dcc33fb482cddd471422b",
-        "verifiedAt": "2026-09-12T08:42:59.684126Z",
-        "resolvedTitle": "Afinal, a democracia está segura?",
-        "resolvedAuthor": "Mafalda Pratas",
-        "sourcePublishedAt": "2026-09-11T23:23:50Z",
-        "sourceDescription": "Não é o colapso da democracia que devíamos temer, mas sim a possibilidade de que \"isto\" seja o que a democracia vai ser durante muito tempo"
-      }
     },
     {
       "id": "rss_podcast_e54a2e3c02218e59",
@@ -1604,50 +1564,6 @@
       }
     },
     {
-      "id": "rss_podcast_2b53f7be73ffcf69",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "“A inteligência artificial pode matar-nos a todos”, diz Bernardo Caldas — mas em Portugal há um carimbo do ICNF que ainda não chegou",
-      "editorialTitle": "“A inteligência artificial pode matar-nos a todos”, diz Bernardo Caldas",
-      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Análise sobre os temas e questões de a inteligência artificial pode matar-nos a todos”, diz bernardo caldas — mas em portugal há um.",
-      "imageUrl": "/covers/podcast__a_intelig_ncia_artificial_pode_matar_nos_a_todos____2aafded3_2b53f7be73ff.jpg",
-      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/a-intelig-ncia-artificial-pode-matar-nos-a-todos-diz-bernardo-caldas-mas-em-portugal-h-um-carimbo-do-icnf-que-ainda-n-o-chegou",
-      "externalId": "652e0cdd-4d99-4228-84af-b4cb01852e41",
-      "sourceSeriesId": "1585178009",
-      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-20T23:42:07Z",
-      "expiryDate": "2026-09-30T23:42:07Z",
-      "createdAt": "2026-09-21T10:05:13.880471Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
-        "guid": "652e0cdd-4d99-4228-84af-b4cb01852e41",
-        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/652e0cdd-4d99-4228-84af-b4cb01852e41/image.jpg?t=1789947751&size=Large",
-        "show": "Isto É Gozar Com Quem Trabalha"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "652e0cdd-4d99-4228-84af-b4cb01852e41",
-        "score": 1.0,
-        "coverHash": "1b0db058bf02982964884fcbfe3c94730e8ea631420cd5abbb13899f30e4a559",
-        "verifiedAt": "2026-09-21T10:05:16.717800Z",
-        "resolvedTitle": "“A inteligência artificial pode matar-nos a todos”, diz Bernardo Caldas — mas em Portugal há um carimbo do ICNF que ainda não chegou",
-        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
-        "sourcePublishedAt": "2026-09-20T23:42:07Z",
-        "sourceDescription": "A inteligência artificial vai matar-nos a todos — mas provavelmente vai ficar bloqueada num pedido de licenciamento ambiental em Sines antes de chegar a Portugal. Esta é, em resumo, a grande conclusão do mais recente episódio do Isto é Gozar Com Quem Trabalha, com a precisão de quem usa uma Bimby para fazer bechamel há dez anos. O Dr.",
-        "editorialDescription": "Análise sobre os temas e questões de a inteligência artificial pode matar-nos a todos”, diz bernardo caldas — mas em portugal há um.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "c465f97c321592012977c9017a42925fc4a98f3c469950336509469cfa00c852",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_b6c90989ea7261bd",
       "type": "highlight",
       "category": "Destaque",
@@ -1778,11 +1694,11 @@
         "resolvedTitle": "Comentadores de TV deviam ter carreiras? — Ouvintes",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-09-27T07:45:00Z",
-        "sourceDescription": "Episódio “Comentadores de TV deviam ter carreiras? — Ouvintes” do podcast Fora do Baralho, publicado em 27/09/2026.",
+        "sourceDescription": "Análise sobre episódio “Comentadores de TV deviam ter carreiras? — Ouvintes” do podcast Fora do Baralho, publicado em 27/09/2026.",
         "editorialDescription": "Análise sobre episódio “Comentadores de TV deviam ter carreiras? — Ouvintes” do podcast Fora do Baralho, publicado em 27/09/2026.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "33ffe178d56e3dea505d909ab4affd9eeccdf503fb61296eed6198e5c28e161f",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "2b1ea67e9e36c5fb1e01403a2b39dcf4837828548b63aac120f3ca9af2a20237",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -1790,7 +1706,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Os falsos pretextos de Francisco Assis",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Miguel Morgado",
       "description": "A triste exibição de Costa acabou por confirmar linha a linha a crítica que fiz, e faço, a Francisco Assis, ao sentido do seu voto e ao partido a que ambos pertencem",
       "imageUrl": "/covers/highlight_os_falsos_pretextos_de_francisco_assis_cfcf807f_48c049847772.jpg",
       "link": "https://observador.pt/opiniao/os-falsos-pretextos-de-francisco-assis/",
@@ -1815,13 +1731,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:9ad4848881cedf17716dd3e6",
         "score": 1.0,
         "coverHash": "3cd9b3ba1b6dc141e63d27987d934b77cc9a7f8efdb5309346a8664466927b2f",
         "verifiedAt": "2026-09-27T10:05:54.965214Z",
         "resolvedTitle": "Os falsos pretextos de Francisco Assis",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Miguel Morgado",
         "sourcePublishedAt": "2026-09-26T23:25:07Z",
         "sourceDescription": "A triste exibição de Costa acabou por confirmar linha a linha a crítica que fiz, e faço, a Francisco Assis, ao sentido do seu voto e ao partido a que ambos pertencem"
       }
@@ -1861,7 +1777,7 @@
       "title": "Há quem faça perguntas, Maria João Avillez faz história. Em breve, na SIC Notícias e podcast",
       "editorialTitle": "Há quem faça perguntas, Maria João Avillez faz história. Em breve, na SIC",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre os temas e questões de há quem faça perguntas, maria joão avillez faz história. em breve, na sic.",
+      "description": "Análise sobre os temas e questões de há quem faça perguntas, maria joão avillez faz história. em breve, na sic notícias e podcast.",
       "imageUrl": "/covers/podcast_h__quem_fa_a_perguntas__maria_jo_o_avillez_faz_hist__a9c7b658_bf983ea47c4e.jpg",
       "link": "https://omny.fm/shows/maria-joao-avillez-entrevista-sic-noticias/h-quem-fa-a-perguntas-maria-jo-o-avillez-faz-hist-ria",
       "externalId": "c71e58f6-92fc-4272-8dd6-b4d200ff6e94",
@@ -1892,10 +1808,93 @@
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-09-27T15:31:57Z",
         "sourceDescription": "Há quem faça perguntas. Maria João Avillez faz história. Uma das maiores comunicadoras portuguesas regressa à antena da SIC Notícias para conversar com os protagonistas do nosso tempo em entrevistas onde a sua experiência, curiosidade e capacidade de escuta vão permitir momentos raros e irrepetíveis.",
-        "editorialDescription": "Análise sobre os temas e questões de há quem faça perguntas, maria joão avillez faz história. em breve, na sic.",
+        "editorialDescription": "Análise sobre os temas e questões de há quem faça perguntas, maria joão avillez faz história. em breve, na sic notícias e podcast.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "78c402b68cee74f79ba5cc9f5824332ef9e2e233228928fe81489e832ae9e2fc",
+        "editorialSourceHash": "55326d52f0f519c5017e855fa186a2867ec7a7cd0df48db503cc85a9181e00db",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_119742682f8cfbaf",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Entrevista a Nuno Markl: “O AVC fez-me repensar tudo filosoficamente. Eu ia falecer a cagar”",
+      "editorialTitle": "Entrevista a Nuno Markl: “O AVC fez-me repensar tudo filosoficamente. Eu ia",
+      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
+      "description": "Análise sobre os temas e questões de entrevista a nuno markl: “o avc fez-me repensar tudo filosoficamente. eu ia.",
+      "imageUrl": "/covers/podcast_entrevista_a_nuno_markl___o_avc_fez_me_repensar_tudo_afc117cc_119742682f8c.jpg",
+      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/entrevista-a-nuno-markl-o-avc-fez-me-repensar-tudo-filosoficamente-eu-ia-falecer-a-cagar",
+      "externalId": "94f9e1fe-9c0a-49db-8e47-b4d201686823",
+      "sourceSeriesId": "1585178009",
+      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-27T22:04:21Z",
+      "expiryDate": "2026-10-07T22:04:21Z",
+      "createdAt": "2026-09-28T11:06:10.989035Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
+        "guid": "94f9e1fe-9c0a-49db-8e47-b4d201686823",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/94f9e1fe-9c0a-49db-8e47-b4d201686823/image.jpg?t=1790546516&size=Large",
+        "show": "Isto É Gozar Com Quem Trabalha"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "94f9e1fe-9c0a-49db-8e47-b4d201686823",
+        "score": 1.0,
+        "coverHash": "c99fbc6eabbf0aec8e0c774eb3fec96a65c6114c66f8d460149fca01f096dc78",
+        "verifiedAt": "2026-09-28T11:06:14.406958Z",
+        "resolvedTitle": "Entrevista a Nuno Markl: “O AVC fez-me repensar tudo filosoficamente. Eu ia falecer a cagar”",
+        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
+        "sourcePublishedAt": "2026-09-27T22:04:21Z",
+        "sourceDescription": "No Isto é Gozar com Quem Trabalha, Ricardo Araújo Pereira recebe Nuno Markl, um amigo que venceu o Globo de Ouro de Personalidade do Ano na categoria de Entretenimento. Nesta conversa, o humorista recorda um ano difícil, marcado por dois AVC, e fala sobre algumas experiências com os profissionais de saúde que acompanharam a sua recuperação nos hospitais.",
+        "editorialDescription": "Análise sobre os temas e questões de entrevista a nuno markl: “o avc fez-me repensar tudo filosoficamente. eu ia.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "17c37fc6e620965657b194f1a8f517760e969b669ed15e0a000c24e9b8bbb5b7",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_6975a2c8bda5fbb4",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Brasil e a batalha pela circulação de conteúdos",
+      "authorOrMeta": "www.rtp.pt",
+      "description": "Diferentes sondagens indicam um empate técnico entre Lula da Silva, 80 anos, e Flávio Bolsonaro, 45 anos, que disputam, no próximo domingo, a primeira volta das eleições presidenciais no Brasil. Estes retratos intensificam a polarização da campanha eleitoral, mas podem valer pouco nas urnas.",
+      "imageUrl": "/covers/highlight_brasil_e_a_batalha_pela_circula__o_de_conte_dos_85a79247_2422bc471039.jpg",
+      "link": "https://www.rtp.pt/noticias/opiniao/felisbela-lopes/brasil-e-a-batalha-pela-circulacao-de-conteudos_1768151",
+      "externalId": "article:url:6975a2c8bda5fbb4bf0b2908",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-28T09:01:39Z",
+      "expiryDate": "2026-10-28T09:01:39Z",
+      "createdAt": "2026-09-28T11:06:16.595379Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://www.rtp.pt/noticias/rss",
+        "guid": "https://www.rtp.pt/noticias/opiniao/felisbela-lopes/brasil-e-a-batalha-pela-circulacao-de-conteudos_1768151",
+        "imageUrl": "https://cdn-images.rtp.pt/noticias/images/default_rtpnoticias.png?w=350&q=50&auto=format",
+        "categories": [
+          "Felisbela Lopes"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:www.rtp.pt",
+        "entityId": "article:url:6975a2c8bda5fbb4bf0b2908",
+        "score": 1.0,
+        "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
+        "verifiedAt": "2026-09-28T11:06:17.462527Z",
+        "resolvedTitle": "Brasil e a batalha pela circulação de conteúdos",
+        "resolvedAuthor": "www.rtp.pt",
+        "sourcePublishedAt": "2026-09-28T09:01:39Z",
+        "sourceDescription": "Diferentes sondagens indicam um empate técnico entre Lula da Silva, 80 anos, e Flávio Bolsonaro, 45 anos, que disputam, no próximo domingo, a primeira volta das eleições presidenciais no Brasil. Estes retratos intensificam a polarização da campanha eleitoral, mas podem valer pouco nas urnas."
       }
     }
   ],
@@ -3650,7 +3649,7 @@
       "book": 3,
       "podcast": 3,
       "movie": 4,
-      "nostalgia": 4,
+      "nostalgia": 3,
       "investigation": 0,
       "highlight": 4
     },
