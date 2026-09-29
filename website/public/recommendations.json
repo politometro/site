@@ -1777,7 +1777,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Brasil e a batalha pela circulação de conteúdos",
-      "authorOrMeta": "www.rtp.pt",
+      "authorOrMeta": "Rádio e Televisão de Portugal",
       "description": "Diferentes sondagens indicam um empate técnico entre Lula da Silva, 80 anos, e Flávio Bolsonaro, 45 anos, que disputam, no próximo domingo, a primeira volta das eleições presidenciais no Brasil. Estes retratos intensificam a polarização da campanha eleitoral, mas podem valer pouco nas urnas.",
       "imageUrl": "/covers/highlight_brasil_e_a_batalha_pela_circula__o_de_conte_dos_85a79247_2422bc471039.jpg",
       "link": "https://www.rtp.pt/noticias/opiniao/felisbela-lopes/brasil-e-a-batalha-pela-circulacao-de-conteudos_1768151",
@@ -1800,13 +1800,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:www.rtp.pt",
+        "source": "news:www.rtp.pt",
         "entityId": "article:url:6975a2c8bda5fbb4bf0b2908",
         "score": 1.0,
         "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
         "verifiedAt": "2026-09-28T11:06:17.462527Z",
         "resolvedTitle": "Brasil e a batalha pela circulação de conteúdos",
-        "resolvedAuthor": "www.rtp.pt",
+        "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-09-28T09:01:39Z",
         "sourceDescription": "Diferentes sondagens indicam um empate técnico entre Lula da Silva, 80 anos, e Flávio Bolsonaro, 45 anos, que disputam, no próximo domingo, a primeira volta das eleições presidenciais no Brasil. Estes retratos intensificam a polarização da campanha eleitoral, mas podem valer pouco nas urnas."
       }
@@ -1914,7 +1914,7 @@
       "sourcePublishedAt": "2026-09-27T15:31:57Z",
       "expiryDate": "2026-09-30T15:31:57Z",
       "createdAt": "2026-09-29T10:47:35.539441Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1923,7 +1923,7 @@
         "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/59a75c09-8d9b-4943-b1bb-b4ce00fd0372/c71e58f6-92fc-4272-8dd6-b4d200ff6e94/image.jpg?t=1790523328&size=Large",
         "show": "Expresso da Meia-Noite"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1938,6 +1938,51 @@
         "editorialDescription": "Análise sobre os temas e questões de há quem faça perguntas, maria joão avillez faz história. em breve, na sic.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "78c402b68cee74f79ba5cc9f5824332ef9e2e233228928fe81489e832ae9e2fc",
+        "editorialDescriptionProvider": "extractive"
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Há quem faça perguntas, Maria João Avillez faz história. Em breve, na SIC Notícias e podcast]: Conteúdo expira em 2026-09-30T15:31:57Z; são necessárias pelo menos 24 horas para revisão e publicação."
+    },
+    {
+      "id": "rss_podcast_803267f2aabf200b",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "A crise inflacionista em Portugal, entre o equilíbrio das finanças públicas, o apoio às famílias e Mário Centeno",
+      "editorialTitle": "A crise inflacionista em Portugal, entre o equilíbrio das finanças públicas",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre os temas e questões de a crise inflacionista em portugal, entre o equilíbrio das finanças públicas.",
+      "imageUrl": "/covers/podcast_a_crise_inflacionista_em_portugal__entre_o_equil_bri_31ae6e01_803267f2aabf.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/a-crise-inflacionista-em-portugal-entre-o-equil-brio-das-finan-as-p-blicas-o-apoio-s-fam-lias-e-m-rio-centeno",
+      "externalId": "87ec6d8d-de2b-4699-b52a-b4d001528e7c",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-25T21:06:40Z",
+      "expiryDate": "2026-10-05T21:06:40Z",
+      "createdAt": "2026-09-29T18:09:26.735169Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "87ec6d8d-de2b-4699-b52a-b4d001528e7c",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/87ec6d8d-de2b-4699-b52a-b4d001528e7c/image.jpg?t=1790371326&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "87ec6d8d-de2b-4699-b52a-b4d001528e7c",
+        "score": 1.0,
+        "coverHash": "91bc00c17cd0f63de4b67c1283da20db074a0a12fdc823a1175fbca5675d499c",
+        "verifiedAt": "2026-09-26T09:26:24.852143Z",
+        "resolvedTitle": "A crise inflacionista em Portugal, entre o equilíbrio das finanças públicas, o apoio às famílias e Mário Centeno",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-09-25T21:06:40Z",
+        "sourceDescription": "A crise inflacionista agrava-se e o Presidente da República admite novas medidas de apoio às famílias, contrariando a ideia de que não há margem orçamental. Cecília Meireles considera inevitável uma intervenção se a situação persistir, sobretudo nos alimentos, enquanto João Torres aponta para os milhões de euros disponíveis até ao fim do ano e critica a…",
+        "editorialDescription": "Análise sobre os temas e questões de a crise inflacionista em portugal, entre o equilíbrio das finanças públicas.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "a52d8c1e3d79fe315fd90ccbe266a84cde2037f436352397d9a75126989d5414",
         "editorialDescriptionProvider": "extractive"
       }
     }
