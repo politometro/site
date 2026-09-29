@@ -1631,7 +1631,7 @@
       "sourcePublishedAt": "2026-09-27T07:45:00Z",
       "expiryDate": "2026-09-30T07:45:00Z",
       "createdAt": "2026-09-27T10:05:50.301427Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1640,7 +1640,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1656,7 +1656,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "2b1ea67e9e36c5fb1e01403a2b39dcf4837828548b63aac120f3ca9af2a20237",
         "editorialDescriptionProvider": "kept"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Comentadores de TV deviam ter carreiras? — Ouvintes]: Conteúdo expira em 2026-09-30T07:45:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_9ad4848881cedf17",
@@ -1893,6 +1894,50 @@
         "editorialDescription": "Análise sobre os temas e questões de globos + mulheres conservadoras + pingo doci - conteúdo do batáguas t03 ep09.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "5563cc7646487d12957b857270bf846609a3e74c182cdce452da156110e67ced",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_bf983ea47c4e7178",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Há quem faça perguntas, Maria João Avillez faz história. Em breve, na SIC Notícias e podcast",
+      "editorialTitle": "Há quem faça perguntas, Maria João Avillez faz história. Em breve, na SIC",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre os temas e questões de há quem faça perguntas, maria joão avillez faz história. em breve, na sic.",
+      "imageUrl": "/covers/podcast_h__quem_fa_a_perguntas__maria_jo_o_avillez_faz_hist__a9c7b658_bf983ea47c4e.jpg",
+      "link": "https://omny.fm/shows/maria-joao-avillez-entrevista-sic-noticias/h-quem-fa-a-perguntas-maria-jo-o-avillez-faz-hist-ria",
+      "externalId": "c71e58f6-92fc-4272-8dd6-b4d200ff6e94",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-09-27T15:31:57Z",
+      "expiryDate": "2026-09-30T15:31:57Z",
+      "createdAt": "2026-09-29T10:47:35.539441Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "c71e58f6-92fc-4272-8dd6-b4d200ff6e94",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/59a75c09-8d9b-4943-b1bb-b4ce00fd0372/c71e58f6-92fc-4272-8dd6-b4d200ff6e94/image.jpg?t=1790523328&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "c71e58f6-92fc-4272-8dd6-b4d200ff6e94",
+        "score": 1.0,
+        "coverHash": "8cf5b7b2564f857c418565d08fa57480e6634f3a172df9f2a9b7d460e9fb0034",
+        "verifiedAt": "2026-09-27T17:05:19.238451Z",
+        "resolvedTitle": "Há quem faça perguntas, Maria João Avillez faz história. Em breve, na SIC Notícias e podcast",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-09-27T15:31:57Z",
+        "sourceDescription": "Há quem faça perguntas. Maria João Avillez faz história. Uma das maiores comunicadoras portuguesas regressa à antena da SIC Notícias para conversar com os protagonistas do nosso tempo em entrevistas onde a sua experiência, curiosidade e capacidade de escuta vão permitir momentos raros e irrepetíveis.",
+        "editorialDescription": "Análise sobre os temas e questões de há quem faça perguntas, maria joão avillez faz história. em breve, na sic.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "78c402b68cee74f79ba5cc9f5824332ef9e2e233228928fe81489e832ae9e2fc",
         "editorialDescriptionProvider": "extractive"
       }
     }
@@ -3646,7 +3691,7 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 3,
-      "podcast": 3,
+      "podcast": 2,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
