@@ -1786,7 +1786,7 @@
       "sourcePublishedAt": "2026-09-28T09:01:39Z",
       "expiryDate": "2026-10-28T09:01:39Z",
       "createdAt": "2026-09-28T11:06:16.595379Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1797,7 +1797,7 @@
           "Felisbela Lopes"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news:www.rtp.pt",
@@ -1809,7 +1809,8 @@
         "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-09-28T09:01:39Z",
         "sourceDescription": "Diferentes sondagens indicam um empate técnico entre Lula da Silva, 80 anos, e Flávio Bolsonaro, 45 anos, que disputam, no próximo domingo, a primeira volta das eleições presidenciais no Brasil. Estes retratos intensificam a polarização da campanha eleitoral, mas podem valer pouco nas urnas."
-      }
+      },
+      "validationError": "SOURCE_MISMATCH [Brasil e a batalha pela circulação de conteúdos]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
       "id": "rss_podcast_04e9f47e9b619c64",
@@ -1847,11 +1848,11 @@
         "resolvedTitle": "O Chega, a PJ e \"quem beneficia\" com o \"descrédito das instituições\"",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-09-28T17:55:07Z",
-        "sourceDescription": "Episódio “O Chega, a PJ e \"quem beneficia\" com o \"descrédito das instituições\"” do podcast O Princípio da Incerteza, publicado em 28/09/2026.",
+        "sourceDescription": "Análise sobre os temas e questões de o chega, a pj e \"quem beneficia\" com o \"descrédito das instituições.",
         "editorialDescription": "Análise sobre os temas e questões de o chega, a pj e \"quem beneficia\" com o \"descrédito das instituições.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "59ff6de710175d13595c0c424dc5e6354850db53fb8a9190b70ae20e31b2cf33",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "f95a604524616c023305f7a26f2a16bd4b89795738fad9998d0802bee6ce0975",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -1890,11 +1891,11 @@
         "resolvedTitle": "Globos + Mulheres Conservadoras + Pingo Doci - Conteúdo do Batáguas T03 Ep09",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-28T18:00:38Z",
-        "sourceDescription": "Episódio “Globos + Mulheres Conservadoras + Pingo Doci - Conteúdo do Batáguas T03 Ep09” do podcast Conteúdo do Batáguas, publicado em 28/09/2026.",
+        "sourceDescription": "Análise sobre os temas e questões de globos + mulheres conservadoras + pingo doci - conteúdo do batáguas t03 ep09.",
         "editorialDescription": "Análise sobre os temas e questões de globos + mulheres conservadoras + pingo doci - conteúdo do batáguas t03 ep09.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "5563cc7646487d12957b857270bf846609a3e74c182cdce452da156110e67ced",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "4e6ec4aa9f212840c3e3d24ceb1ff2e4cc7f4adf8e669fa6b549d001d6bd378b",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -1949,7 +1950,7 @@
       "title": "A crise inflacionista em Portugal, entre o equilíbrio das finanças públicas, o apoio às famílias e Mário Centeno",
       "editorialTitle": "A crise inflacionista em Portugal, entre o equilíbrio das finanças públicas",
       "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre os temas e questões de a crise inflacionista em portugal, entre o equilíbrio das finanças públicas.",
+      "description": "Análise sobre os temas e questões de a crise inflacionista em portugal, entre o equilíbrio das finanças públicas, o apoio às famílias e.",
       "imageUrl": "/covers/podcast_a_crise_inflacionista_em_portugal__entre_o_equil_bri_31ae6e01_803267f2aabf.jpg",
       "link": "https://omny.fm/shows/linhas-vermelhas/a-crise-inflacionista-em-portugal-entre-o-equil-brio-das-finan-as-p-blicas-o-apoio-s-fam-lias-e-m-rio-centeno",
       "externalId": "87ec6d8d-de2b-4699-b52a-b4d001528e7c",
@@ -1980,9 +1981,9 @@
         "resolvedAuthor": "Linhas Vermelhas",
         "sourcePublishedAt": "2026-09-25T21:06:40Z",
         "sourceDescription": "A crise inflacionista agrava-se e o Presidente da República admite novas medidas de apoio às famílias, contrariando a ideia de que não há margem orçamental. Cecília Meireles considera inevitável uma intervenção se a situação persistir, sobretudo nos alimentos, enquanto João Torres aponta para os milhões de euros disponíveis até ao fim do ano e critica a…",
-        "editorialDescription": "Análise sobre os temas e questões de a crise inflacionista em portugal, entre o equilíbrio das finanças públicas.",
+        "editorialDescription": "Análise sobre os temas e questões de a crise inflacionista em portugal, entre o equilíbrio das finanças públicas, o apoio às famílias e.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "a52d8c1e3d79fe315fd90ccbe266a84cde2037f436352397d9a75126989d5414",
+        "editorialSourceHash": "f22d421bab75faeaad2438c51c9cd1ee9a13fdb2df7b899b79962e55e42ee1d4",
         "editorialDescriptionProvider": "extractive"
       }
     }
@@ -3740,7 +3741,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 4
+      "highlight": 3
     },
     "missingSlots": [],
     "fallbackRequired": false
