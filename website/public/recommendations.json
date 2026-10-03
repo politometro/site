@@ -1874,7 +1874,7 @@
       "sourcePublishedAt": "2026-10-02T15:30:49Z",
       "expiryDate": "2026-11-01T15:30:49Z",
       "createdAt": "2026-10-02T17:56:42.551274Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1892,7 +1892,7 @@
           "Sociedade"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -1904,7 +1904,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-02T15:30:49Z",
         "sourceDescription": "Paulo Raimundo anunciou a iniciativa no encerramento das jornadas parlamentares do partido. Habitação, saúde e educação na mira dos comunistas."
-      }
+      },
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [PCP leva custo de vida ao Parlamento a 16 de outubro]: Artigo 'PCP agenda debate com o Governo sobre \"agravamento das condições de vida\" para dia 16 de outubro' não corresponde ao título candidato."
     },
     {
       "id": "rss_podcast_257b0b632babca14",
@@ -3791,7 +3792,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 4
+      "highlight": 3
     },
     "missingSlots": [],
     "fallbackRequired": false
