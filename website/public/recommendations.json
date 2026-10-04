@@ -1893,6 +1893,77 @@
         "editorialSourceHash": "025b185a6c4b8d77aeae478ed7ddf2d92307d4eb69bab05548e054f1e2301cbe",
         "editorialDescriptionProvider": "extractive"
       }
+    },
+    {
+      "id": "rss_podcast_c3e84cf62aae0f31",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "O Estado devia pagar renda pelas casas vazias? — Ouvintes",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “O Estado devia pagar renda pelas casas vazias? — Ouvintes” do podcast Fora do Baralho, publicado em 04/10/2026.",
+      "imageUrl": "/covers/podcast_o_estado_devia_pagar_renda_pelas_casas_vazias____ouv_692384d2_c3e84cf62aae.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/o-estado-devia-pagar-renda-pelas-casas-vazias-ouvintes",
+      "externalId": "3cc4a680-58d1-4551-9e71-b4d7008f004a",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-04T07:00:00Z",
+      "expiryDate": "2026-10-07T07:00:00Z",
+      "createdAt": "2026-10-04T10:40:27.381362Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "3cc4a680-58d1-4551-9e71-b4d7008f004a",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "3cc4a680-58d1-4551-9e71-b4d7008f004a",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-10-04T10:40:31.630402Z",
+        "resolvedTitle": "O Estado devia pagar renda pelas casas vazias? — Ouvintes",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-10-04T07:00:00Z",
+        "sourceDescription": "Episódio “O Estado devia pagar renda pelas casas vazias? — Ouvintes” do podcast Fora do Baralho, publicado em 04/10/2026.",
+        "editorialDescription": "Análise sobre episódio “O Estado devia pagar renda pelas casas vazias? — Ouvintes” do podcast Fora do Baralho, publicado em 04/10/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "da50139e20637af9486ac1e69c22bafa2dea644d1b6bf3d920a6640029fc4542",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "ai_movie_a1c00bc2cf904d88",
+      "type": "movie",
+      "category": "Filme",
+      "title": "Nixon",
+      "authorOrMeta": "Oliver Stone",
+      "description": "Drama político sobre poder presidencial, ambição, paranoia e queda institucional.",
+      "imageUrl": "/covers/movie_nixon_0e0955a8_45c4543f6eb6.jpg",
+      "link": "https://www.imdb.com/title/tt0113987/",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-10-04T10:40:35.812219Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "imdb:tt0113987",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "wikidata+imdb",
+        "entityId": "imdb:tt0113987",
+        "score": 1.0,
+        "coverHash": "3a8cfab6cfc0c5bfe762b63184ca27117270c6d523cfd35dc6003148e8a8cf3a",
+        "verifiedAt": "2026-10-04T10:40:37.405241Z",
+        "resolvedTitle": "Nixon",
+        "resolvedAuthor": "Oliver Stone",
+        "sourceDescription": "Drama político sobre poder presidencial, ambição, paranoia e queda institucional."
+      }
     }
   ],
   "history": [
@@ -3799,12 +3870,12 @@
   "readiness": {
     "postType": "sunday_standard",
     "strictCounts": {
-      "book": 3,
-      "podcast": 3,
+      "book": 2,
+      "podcast": 2,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 2
     },
     "missingSlots": [],
     "fallbackRequired": false
