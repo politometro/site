@@ -1851,50 +1851,6 @@
       "validationError": "HIGHLIGHT_TITLE_MISMATCH [PCP leva custo de vida ao Parlamento a 16 de outubro]: Artigo 'PCP agenda debate com o Governo sobre \"agravamento das condições de vida\" para dia 16 de outubro' não corresponde ao título candidato."
     },
     {
-      "id": "rss_podcast_257b0b632babca14",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Cecília Meireles: “Tratar os senhorios como inimigo público número um não aumenta o arrendamento”",
-      "editorialTitle": "Cecília Meireles: “Tratar os senhorios como inimigo público número um não",
-      "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre os temas e questões de cecília meireles: “tratar os senhorios como inimigo público número um não aumenta o arrendamento.",
-      "imageUrl": "/covers/podcast_cec_lia_meireles___tratar_os_senhorios_como_inimigo__46083b63_257b0b632bab.jpg",
-      "link": "https://omny.fm/shows/linhas-vermelhas/cec-lia-meireles-tratar-os-senhorios-como-inimigo-p-blico-n-mero-um-n-o-aumenta-o-arrendamento",
-      "externalId": "b353aadb-7722-4279-bdc5-b4d7014ca3e0",
-      "sourceSeriesId": "1596904063",
-      "sourceSeriesTitle": "Linhas Vermelhas",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-03T06:30:00Z",
-      "expiryDate": "2026-10-13T06:30:00Z",
-      "createdAt": "2026-10-03T09:57:10.550097Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
-        "guid": "b353aadb-7722-4279-bdc5-b4d7014ca3e0",
-        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/b353aadb-7722-4279-bdc5-b4d7014ca3e0/image.jpg?t=1790988739&size=Large",
-        "show": "Linhas Vermelhas"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "b353aadb-7722-4279-bdc5-b4d7014ca3e0",
-        "score": 1.0,
-        "coverHash": "526db24bf57d3e92d9c69ac71a0b465190b6de199a88d47d1324837b0627f1e0",
-        "verifiedAt": "2026-10-03T09:57:13.483385Z",
-        "resolvedTitle": "Cecília Meireles: “Tratar os senhorios como inimigo público número um não aumenta o arrendamento”",
-        "resolvedAuthor": "Linhas Vermelhas",
-        "sourcePublishedAt": "2026-10-03T06:30:00Z",
-        "sourceDescription": "Com o Orçamento do Estado para 2026 encaminhado para a aprovação, depois do acordo entre o Governo e o PS, o debate centra-se nas cedências socialistas e no que o documento muda, ou não, no país. Miguel Prata Roque defende que o PS agiu de forma responsável e diz que o país continua “empatado”, com o preço das casas a subir de forma acentuada.",
-        "editorialDescription": "Análise sobre os temas e questões de cecília meireles: “tratar os senhorios como inimigo público número um não aumenta o arrendamento.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "025b185a6c4b8d77aeae478ed7ddf2d92307d4eb69bab05548e054f1e2301cbe",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_podcast_c3e84cf62aae0f31",
       "type": "podcast",
       "category": "Podcast",
@@ -1963,6 +1919,92 @@
         "resolvedTitle": "Nixon",
         "resolvedAuthor": "Oliver Stone",
         "sourceDescription": "Drama político sobre poder presidencial, ambição, paranoia e queda institucional."
+      }
+    },
+    {
+      "id": "rss_podcast_2a304206fca40714",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Conseguirá a Seleção substituir um símbolo nacional como Cristiano Ronaldo?",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre os temas e questões de conseguirá a seleção substituir um símbolo nacional como cristiano ronaldo.",
+      "imageUrl": "/covers/podcast_conseguir__a_sele__o_substituir_um_s_mbolo_nacional__3ec4c90b_2a304206fca4.jpg",
+      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/conseguir-a-sele-o-substituir-um-s-mbolo-nacional-como-cristiano-ronaldo",
+      "externalId": "aa35f90b-149b-4ddb-8987-b4d7016e8567",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-03T06:00:00Z",
+      "expiryDate": "2026-10-06T06:00:00Z",
+      "createdAt": "2026-10-04T16:55:01.994391Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "aa35f90b-149b-4ddb-8987-b4d7016e8567",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "aa35f90b-149b-4ddb-8987-b4d7016e8567",
+        "score": 1.0,
+        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
+        "verifiedAt": "2026-10-03T09:57:17.052433Z",
+        "resolvedTitle": "Conseguirá a Seleção substituir um símbolo nacional como Cristiano Ronaldo?",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-10-03T06:00:00Z",
+        "sourceDescription": "Cristiano Ronaldo deixou o país boquiaberto depois de ter abandonado o treino da Seleção em vésperas do jogo com a Dinamarca. As reações foram em catadupa e o país pareceu dividir-se entre os que aplaudiram Jorge Jesus e os que choraram a ingratidão com CR7.",
+        "editorialDescription": "Análise sobre os temas e questões de conseguirá a seleção substituir um símbolo nacional como cristiano ronaldo.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "2e41761f2c0b4580ff25077fdca2f5e50df1f93d17ed938ba53aa792cf205183",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_874da1ca46c6c97e",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "O português nos bastidores do Nobel da Medicina",
+      "authorOrMeta": "observador.pt",
+      "description": "É o primeiro português a integrar o Comité Nobel da Fisiologia ou Medicina. Em entrevista ao Observador, explica todos os detalhes do processo que termina com a atribuição do novo Prémio Nobel.",
+      "imageUrl": "/covers/highlight_o_portugu_s_nos_bastidores_do_nobel_da_medicina_fa909264_2103461a800d.jpg",
+      "link": "https://observador.pt/especiais/centenas-de-nomeacoes-meses-de-investigacao-e-uma-votacao-secreta-goncalo-castelo-branco-o-portugues-nos-bastidores-do-nobel-da-medicina/",
+      "externalId": "article:url:874da1ca46c6c97ed5c13e4c",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-04T13:04:33Z",
+      "expiryDate": "2026-11-03T13:04:33Z",
+      "createdAt": "2026-10-04T16:55:08.063165Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/especiais/centenas-de-nomeacoes-meses-de-investigacao-e-uma-votacao-secreta-goncalo-castelo-branco-o-portugues-nos-bastidores-do-nobel-da-medicina/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:4096:2299:nowe:0:212/q:70/plain/https://s3.observador.pt/wp-content/uploads/2026/10/02163829/castelo-branco-goncalo-007-sir-scaled.jpg",
+        "categories": [
+          "Prémio Nobel",
+          "Cultura",
+          "Entrevista",
+          "Observador",
+          "Ciência"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:874da1ca46c6c97ed5c13e4c",
+        "score": 1.0,
+        "coverHash": "c3300bdc931b5ae4d33a4d9304ec681b9172dc413bea5aa97e363f4c8f097d11",
+        "verifiedAt": "2026-10-04T16:55:08.290583Z",
+        "resolvedTitle": "O português nos bastidores do Nobel da Medicina",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-04T13:04:33Z",
+        "sourceDescription": "É o primeiro português a integrar o Comité Nobel da Fisiologia ou Medicina. Em entrevista ao Observador, explica todos os detalhes do processo que termina com a atribuição do novo Prémio Nobel."
       }
     }
   ],
@@ -3871,11 +3913,11 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 2,
-      "podcast": 2,
+      "podcast": 3,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 2
+      "highlight": 3
     },
     "missingSlots": [],
     "fallbackRequired": false
