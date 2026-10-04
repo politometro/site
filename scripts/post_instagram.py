@@ -674,6 +674,26 @@ def publish_or_reconcile(session=None):
     return confirmed
 
 
+def delete_media(media_id, session=None):
+    """Delete a published Instagram media object (manual one-off)."""
+    media_id = str(media_id or "").strip()
+    if not media_id:
+        raise RuntimeError("É necessário indicar o ID do media a apagar.")
+    environment = _environment()
+    client = session or requests.Session()
+    response = client.delete(
+        f"{environment['base_url']}/{media_id}",
+        params={"access_token": environment["access_token"]},
+        timeout=25,
+    )
+    payload = _response_json(response)
+    if not response.ok or payload.get("success") is not True:
+        raise RuntimeError(
+            _meta_failure_message(payload, f"apagar o media {media_id}")
+        )
+    print(f"[OK] Media {media_id} apagado no Instagram.")
+
+
 def post_to_instagram():
     """Backward-compatible local entry point; the workflow uses split phases."""
     prepare_publication()
@@ -688,6 +708,7 @@ def _main():
     phase.add_argument("--prepare", action="store_true")
     phase.add_argument("--mark-publishing", action="store_true")
     phase.add_argument("--publish", action="store_true")
+    phase.add_argument("--delete-media", metavar="MEDIA_ID")
     arguments = parser.parse_args()
     if arguments.check_access:
         validate_meta_access()
@@ -699,6 +720,8 @@ def _main():
         result = publish_or_reconcile()
         if _stories_enabled():
             publish_story()
+    elif arguments.delete_media:
+        delete_media(arguments.delete_media)
     else:
         post_to_instagram()
 
