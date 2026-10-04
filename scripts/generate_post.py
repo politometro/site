@@ -58,6 +58,7 @@ OUTPUT_CAPTION_PATH = os.path.join(ROOT_DIR, "website", "public", "current_capti
 PUBLICATION_RECEIPT_PATH = os.path.join(
     SCRIPT_DIR, "instagram_publication.json"
 )
+DRAFT_FILE = os.path.join(SCRIPT_DIR, "review_draft.json")
 MAX_DRAFT_AGE_HOURS = 72
 MIN_REVIEW_VALIDITY_HOURS = 24
 MIN_PUBLICATION_VALIDITY_HOURS = 6
@@ -132,7 +133,9 @@ DESCRIPTION_LINE_LIMITS = {
     "q1": 11,
     "q2": 8,
     "q3": 11,
-    "q4": 8,
+    # q4 covers are 192px tall: 10 lines x 15px spacing fit inside the cover
+    # height, so a complete description is never cut to 8 lines.
+    "q4": 10,
     "w1": 9,
     "w2": 9,
 }
@@ -1663,12 +1666,396 @@ def commit_approved_draft(
 
 
 # --- MAIN ---
+
+
+def render_post_image(post_type, selected, covers, output_path=None):
+    """Compose the production post image (feed + story assets).
+
+    Runs the exact production compositing pipeline for the given quadrant
+    items, so a re-render stays pixel-consistent with normal generation.
+    """
+    slot_keys = list(selected.keys())
+    missing = [
+        qkey
+        for qkey in REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type, {})
+        if qkey not in selected
+    ]
+    if missing:
+        print(f"ERROR: Missing slots: {missing}")
+        sys.exit(1)
+
+    # Normalise full-resolution template assets to the coordinate canvas used
+    # below. This keeps the supplied 4:5 artwork intact and the layout stable.
+    template_path = (
+        WEDNESDAY_TEMPLATE_PATH
+        if post_type == "wednesday_nostalgia"
+        else TEMPLATE_PATH
+    )
+    with Image.open(template_path) as template_source:
+        template = ImageOps.fit(
+            template_source.convert("RGBA"),
+            TEMPLATE_CANVAS_SIZE,
+            method=Image.Resampling.LANCZOS,
+            centering=(0.5, 0.5),
+        )
+    draw = ImageDraw.Draw(template)
+
+    # Load fonts
+    try:
+        title_font = _load_font(FONT_BOLD, 32)
+        label_font = _load_font(FONT_REG, 18)
+        desc_font = _load_font(FONT_DESC_BOLD, 15)
+    except Exception as e:
+        print(f"Font error: {e}")
+        title_font = label_font = desc_font = ImageFont.load_default()
+
+    print("\nCompositing post...")
+
+    if len(slot_keys) == 1:
+        qkey = slot_keys[0]
+        item = selected[qkey]
+    
+        category = item.get("category") or {
+            "nostalgia": "Nostalgia",
+            "podcast": "Podcast",
+            "book": "Livro",
+            "movie": "Filme",
+            "investigation": "Investigação",
+            "highlight": "Destaque",
+        }.get(item.get("type"), "Recomendação")
+        item["category"] = category
+    
+        center_x = 410  # 819 // 2
+
+        # Keep all editorial text readable independently of where the supplied
+        # navy/cream wave crosses the canvas.
+        draw.rounded_rectangle(
+            (40, 270, 779, 430),
+            radius=22,
+            fill=(23, 52, 78),
+        )
+    
+        # 1. Draw Category Label centered at top (24px)
+        solo_label_font = _load_font(FONT_REG, 24)
+        cat_text = category.upper()
+        cat_bbox = solo_label_font.getbbox(cat_text)
+        cat_w = cat_bbox[2] - cat_bbox[0]
+        draw.text(
+            (center_x - cat_w // 2, 285),
+            cat_text,
+            fill=(255, 249, 238),
+            font=solo_label_font,
+        )
+    
+        # 2. Draw Title centered across full width (700px) with larger font (40px -> 26px)
+        fitted_title_font, lines, title_spacing = _fit_title_for_item(
+            draw,
+            item,
+            qkey,
+            40,
+            26,
+            700,
+            3,
+        )
+        curr_y = 320
+        for line in lines:
+            bbox = fitted_title_font.getbbox(line)
+            line_w = bbox[2] - bbox[0]
+            draw.text(
+                (center_x - line_w // 2, curr_y),
+                line,
+                fill=(255, 249, 238),
+                font=fitted_title_font,
+            )
+            curr_y += title_spacing
+        
+        # 3. Draw Centered Hero Cover Banner (660x360px)
+        cover = remove_black_bars(covers[qkey])
+        cover_w, cover_h = 660, 300
+        cover_x = (819 - cover_w) // 2
+        cover_y = max(curr_y + 15, 450)
+    
+        cover_resized = ImageOps.fit(
+            cover.convert("RGB"),
+            (cover_w, cover_h),
+            method=Image.Resampling.LANCZOS,
+            centering=(0.5, 0.5),
+        )
+        cover_rounded = apply_rounded_corners(cover_resized, radius=24)
+        template.alpha_composite(cover_rounded, (cover_x, cover_y))
+    
+        # 4. Draw Centered Description below Hero Cover with larger font (20px -> 15px)
+        clean_desc = _best_description(item)
+        item["description"] = clean_desc
+        description = _compact_text(clean_desc, 320)
+    
+        desc_y = cover_y + cover_h + 20
+        fitted_desc_font, desc_lines, desc_spacing = _fit_text_lines(
+            draw,
+            description,
+            FONT_DESC_BOLD,
+            20,
+            15,
+            700,
+            6,
+        )
+        for line in desc_lines[:6]:
+            bbox = fitted_desc_font.getbbox(line)
+            line_w = bbox[2] - bbox[0]
+            draw.text((center_x - line_w // 2, desc_y), line, fill=TEXT_COLOR, font=fitted_desc_font)
+            desc_y += desc_spacing
+    else:
+        # Pre-render text lines and compute title heights
+        title_lines_map = {}
+        title_bottoms = {}
+    
+        for qkey in slot_keys:
+            item = selected[qkey]
+            config = QUADRANTS_CONFIG[qkey]
+        
+            # Draw category label (older site submissions did not include it).
+            category = item.get("category") or {
+                "book": "Livro",
+                "podcast": "Podcast",
+                "movie": "Filme",
+                "nostalgia": "Nostalgia",
+                "investigation": "Investigação",
+                "highlight": "Destaque",
+            }.get(item.get("type"), "Recomendação")
+            item["category"] = category
+            draw.text(config["label_pos"], category, fill=TEXT_COLOR, font=label_font)
+        
+            # Wrap title
+            tx, ty = config["title_pos"]
+            raw_title = _display_title(item)
+            title_max_lines = 3 if (qkey in ["q2", "q3", "q4", "w1", "w2"] or len(raw_title) > 55) else 2
+
+            max_title_width = 700 if qkey in ["w1", "w2"] else 350
+            fitted_title_font, lines, title_spacing = _fit_title_for_item(
+                draw,
+                item,
+                qkey,
+                30,
+                18,
+                max_title_width,
+                title_max_lines,
+            )
+            title_lines_map[qkey] = lines
+        
+            # Draw title
+            curr_y = ty
+            for line in lines:
+                draw.text((tx, curr_y), line, fill=TEXT_COLOR, font=fitted_title_font)
+                curr_y += title_spacing
+        
+            title_bottoms[qkey] = curr_y
+
+        # Determine Cover Dimensions based on item TYPE dynamically
+        cover_dims = {}
+        for qkey in slot_keys:
+            item = selected[qkey]
+            if qkey in ["w1", "w2"]:
+                cover_dims[qkey] = (200, 200) if item["type"] in ["podcast", "highlight", "nostalgia"] else (160, 220)
+            elif item["type"] in ["podcast", "highlight"]:
+                cover_dims[qkey] = (192, 192)
+            else:
+                cover_dims[qkey] = (160, 220)
+
+        cover_y_map = {}
+        if "q1" in slot_keys and "q2" in slot_keys:
+            gap_q1 = 18 if len(title_lines_map["q1"]) >= 2 else 12
+            gap_q2 = 18 if len(title_lines_map["q2"]) >= 2 else 12
+            h_q1 = cover_dims["q1"][1]
+            h_q2 = cover_dims["q2"][1]
+            q1_min_bottom = title_bottoms["q1"] + gap_q1 + h_q1
+            q2_min_bottom = title_bottoms["q2"] + gap_q2 + h_q2
+            common_bottom_y = max(q1_min_bottom, q2_min_bottom)
+            cover_y_map["q1"] = common_bottom_y - h_q1
+            cover_y_map["q2"] = common_bottom_y - h_q2
+        
+            gap_q3 = 18 if len(title_lines_map["q3"]) >= 2 else 12
+            gap_q4 = 18 if len(title_lines_map["q4"]) >= 2 else 12
+            q3_top_y = title_bottoms["q3"] + gap_q3
+            q4_top_y = title_bottoms["q4"] + gap_q4
+            common_top_y = max(q3_top_y, q4_top_y)
+            cover_y_map["q3"] = common_top_y
+            cover_y_map["q4"] = common_top_y
+        else:
+            cover_y_map["w1"] = max(title_bottoms.get("w1", 195) + 15, 230)
+            cover_y_map["w2"] = max(title_bottoms.get("w2", 570) + 15, 600)
+
+        description_plans = []
+
+        # --- PASTE COVERS AND PREPARE DESCRIPTIONS ---
+        for qkey in slot_keys:
+            config = QUADRANTS_CONFIG[qkey]
+            item = selected[qkey]
+            cover = remove_black_bars(covers[qkey])
+        
+            cover_w, cover_h = cover_dims[qkey]
+            cover_y = cover_y_map[qkey]
+            cx = config["cover_x"]
+        
+            # Crop to the target aspect ratio without stretching the source image.
+            cover_resized = ImageOps.fit(
+                cover.convert("RGB"),
+                (cover_w, cover_h),
+                method=Image.Resampling.LANCZOS,
+                centering=(0.5, 0.5),
+            )
+            cover_rounded = apply_rounded_corners(cover_resized, radius=18)
+        
+            template.alpha_composite(cover_rounded, (cx, cover_y))
+        
+            # Wrap description
+            dx = cx + cover_w + 20
+            if qkey in ["w1", "w2"]:
+                desc_w = 760 - dx
+            elif qkey in ["q1", "q3"]:
+                desc_w = 400 - dx
+            else:
+                desc_w = 780 - dx
+            
+            clean_desc = _best_description(item)
+            item["description"] = clean_desc
+            description = _compact_text(
+                clean_desc,
+                DESCRIPTION_CHAR_LIMITS.get(qkey, 240),
+            )
+            max_lines = min(
+                DESCRIPTION_LINE_LIMITS.get(qkey, 8),
+                max(1, cover_h // 18),
+            )
+            description_plans.append(
+                {
+                    "qkey": qkey,
+                    "dx": dx,
+                    "cover_y": cover_y,
+                    "cover_h": cover_h,
+                    "desc_w": desc_w,
+                    "max_lines": max_lines,
+                    "full_description": clean_desc,
+                    "description": description,
+                    "fallback_description": (
+                        _fallback_description_from_title(item)
+                        or "Recomendação verificada."
+                    ),
+                }
+            )
+
+        for plan in description_plans:
+            # Prefer the complete description: only fall back to the
+            # compacted version when the full text cannot fit, so a
+            # description is never rendered cut off mid-thought.
+            fitted_font, desc_lines, spacing = _fit_fixed_description_lines(
+                draw,
+                plan["full_description"],
+                plan["desc_w"],
+                plan["max_lines"],
+            )
+            if _normalise_rendered_text(
+                " ".join(desc_lines)
+            ) != _normalise_rendered_text(plan["full_description"]):
+                print(
+                    f'  [AUTO-RECOVERY/{plan["qkey"].upper()}] '
+                    "descrição completa não cabe; a usar versão compactada."
+                )
+                fitted_font, desc_lines, spacing = _fit_fixed_description_lines(
+                    draw,
+                    plan["description"],
+                    plan["desc_w"],
+                    plan["max_lines"],
+                )
+            if not desc_lines:
+                print(
+                    f'  [AUTO-RECOVERY/{plan["qkey"].upper()}] '
+                    "descrição substituída por texto fundamentado curto."
+                )
+                fitted_font, desc_lines, spacing = _fit_fixed_description_lines(
+                    draw,
+                    plan["fallback_description"],
+                    plan["desc_w"],
+                    plan["max_lines"],
+                )
+            if not desc_lines:
+                fitted_font = _load_font(
+                    FONT_DESC_BOLD,
+                    DESCRIPTION_FONT_MIN_SIZE,
+                )
+                desc_lines = ["Recomendação verificada."]
+                spacing = max(15, DESCRIPTION_FONT_MIN_SIZE + 3)
+            text_block_h = len(desc_lines[: plan["max_lines"]]) * spacing
+            dy = plan["cover_y"] + max(0, (plan["cover_h"] - text_block_h) // 2)
+
+            for line in desc_lines[: plan["max_lines"]]:
+                draw.text((plan["dx"], dy), line, fill=TEXT_COLOR, font=fitted_font)
+                dy += spacing
+        
+    # Save image
+    output = ImageOps.fit(
+        template.convert("RGB"),
+        (1080, 1350),
+        method=Image.Resampling.LANCZOS,
+        centering=(0.5, 0.5),
+    )
+    target = output_path or OUTPUT_PATH
+    output.save(
+        target,
+        "JPEG",
+        quality=95,
+        optimize=True,
+        progressive=True,
+    )
+    story_path = _save_story_asset(
+        output,
+        os.path.join(os.path.dirname(target), "current_story.jpg"),
+    )
+    print(f"\n[OK] Production post image saved to: {target}")
+    print(f"[OK] Native Story image saved to: {story_path}")
+    return output
+
+
+def render_review_draft_image():
+    """Re-render the image for the current review draft.
+
+    Loads scripts/review_draft.json, renders the exact same quadrant items
+    with the current compositing code, and overwrites
+    website/public/current_post.jpg (+ current_story.jpg). Draft metadata
+    (hashes, approval) is left untouched: recompute it afterwards with
+    _draft_content_hash if the re-rendered image is meant to be published.
+    """
+    ensure_fonts()
+    if not os.path.exists(DRAFT_FILE):
+        print("ERROR: scripts/review_draft.json não existe.")
+        sys.exit(1)
+    with open(DRAFT_FILE, "r", encoding="utf-8") as handle:
+        draft = json.load(handle)
+    post_type = draft.get("post_type") or "sunday_standard"
+    required_slots = REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type, {})
+    selected = {}
+    covers = {}
+    for qkey in required_slots:
+        item = draft.get(qkey)
+        if not isinstance(item, dict):
+            print(f"ERROR: rascunho sem item válido em {qkey}.")
+            sys.exit(1)
+        cover = load_cover_for_item(item)
+        if cover is None:
+            print(f"ERROR: capa em falta para {qkey}.")
+            sys.exit(1)
+        selected[qkey] = item
+        covers[qkey] = cover
+    render_post_image(post_type, selected, covers)
+    print("[OK] Draft image re-rendered with current code.")
+
+
 def generate_production_post():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--review", action="store_true", help="Generate draft post for review without modifying database")
     parser.add_argument("--commit", action="store_true", help="Commit the currently approved review draft to database")
     parser.add_argument("--verify-approved", action="store_true", help="Validate an approved draft without changing state")
+    parser.add_argument("--re-render", action="store_true", help="Re-render the current review draft image with the current code, without changing draft metadata")
     parser.add_argument("--test", action="store_true", help="Mark the generated draft as a test run")
     parser.add_argument(
         "--post-type",
@@ -1711,14 +2098,16 @@ def generate_production_post():
     if post_type == "auto":
         post_type = "sunday_standard"
 
-    DRAFT_FILE = os.path.join(SCRIPT_DIR, "review_draft.json")
-
     if args.commit:
         try:
             commit_approved_draft(DRAFT_FILE)
         except (OSError, ValueError, RuntimeError) as exc:
             print(f"ERROR: {exc}")
             sys.exit(1)
+        return
+
+    if args.re_render:
+        render_review_draft_image()
         return
 
     if args.verify_approved:
@@ -1767,323 +2156,7 @@ def generate_production_post():
         post_type=post_type,
     )
     
-    slot_keys = list(selected.keys())
-    missing = [
-        qkey
-        for qkey in REQUIRED_SLOTS_FOR_POST_TYPE.get(post_type, {})
-        if qkey not in selected
-    ]
-    if missing:
-        print(f"ERROR: Missing slots: {missing}")
-        sys.exit(1)
-    
-    # Normalise full-resolution template assets to the coordinate canvas used
-    # below. This keeps the supplied 4:5 artwork intact and the layout stable.
-    template_path = (
-        WEDNESDAY_TEMPLATE_PATH
-        if post_type == "wednesday_nostalgia"
-        else TEMPLATE_PATH
-    )
-    with Image.open(template_path) as template_source:
-        template = ImageOps.fit(
-            template_source.convert("RGBA"),
-            TEMPLATE_CANVAS_SIZE,
-            method=Image.Resampling.LANCZOS,
-            centering=(0.5, 0.5),
-        )
-    draw = ImageDraw.Draw(template)
-    
-    # Load fonts
-    try:
-        title_font = _load_font(FONT_BOLD, 32)
-        label_font = _load_font(FONT_REG, 18)
-        desc_font = _load_font(FONT_DESC_BOLD, 15)
-    except Exception as e:
-        print(f"Font error: {e}")
-        title_font = label_font = desc_font = ImageFont.load_default()
-    
-    print("\nCompositing post...")
-    
-    if len(slot_keys) == 1:
-        qkey = slot_keys[0]
-        item = selected[qkey]
-        
-        category = item.get("category") or {
-            "nostalgia": "Nostalgia",
-            "podcast": "Podcast",
-            "book": "Livro",
-            "movie": "Filme",
-            "investigation": "Investigação",
-            "highlight": "Destaque",
-        }.get(item.get("type"), "Recomendação")
-        item["category"] = category
-        
-        center_x = 410  # 819 // 2
-
-        # Keep all editorial text readable independently of where the supplied
-        # navy/cream wave crosses the canvas.
-        draw.rounded_rectangle(
-            (40, 270, 779, 430),
-            radius=22,
-            fill=(23, 52, 78),
-        )
-        
-        # 1. Draw Category Label centered at top (24px)
-        solo_label_font = _load_font(FONT_REG, 24)
-        cat_text = category.upper()
-        cat_bbox = solo_label_font.getbbox(cat_text)
-        cat_w = cat_bbox[2] - cat_bbox[0]
-        draw.text(
-            (center_x - cat_w // 2, 285),
-            cat_text,
-            fill=(255, 249, 238),
-            font=solo_label_font,
-        )
-        
-        # 2. Draw Title centered across full width (700px) with larger font (40px -> 26px)
-        fitted_title_font, lines, title_spacing = _fit_title_for_item(
-            draw,
-            item,
-            qkey,
-            40,
-            26,
-            700,
-            3,
-        )
-        curr_y = 320
-        for line in lines:
-            bbox = fitted_title_font.getbbox(line)
-            line_w = bbox[2] - bbox[0]
-            draw.text(
-                (center_x - line_w // 2, curr_y),
-                line,
-                fill=(255, 249, 238),
-                font=fitted_title_font,
-            )
-            curr_y += title_spacing
-            
-        # 3. Draw Centered Hero Cover Banner (660x360px)
-        cover = remove_black_bars(covers[qkey])
-        cover_w, cover_h = 660, 300
-        cover_x = (819 - cover_w) // 2
-        cover_y = max(curr_y + 15, 450)
-        
-        cover_resized = ImageOps.fit(
-            cover.convert("RGB"),
-            (cover_w, cover_h),
-            method=Image.Resampling.LANCZOS,
-            centering=(0.5, 0.5),
-        )
-        cover_rounded = apply_rounded_corners(cover_resized, radius=24)
-        template.alpha_composite(cover_rounded, (cover_x, cover_y))
-        
-        # 4. Draw Centered Description below Hero Cover with larger font (20px -> 15px)
-        clean_desc = _best_description(item)
-        item["description"] = clean_desc
-        description = _compact_text(clean_desc, 320)
-        
-        desc_y = cover_y + cover_h + 20
-        fitted_desc_font, desc_lines, desc_spacing = _fit_text_lines(
-            draw,
-            description,
-            FONT_DESC_BOLD,
-            20,
-            15,
-            700,
-            6,
-        )
-        for line in desc_lines[:6]:
-            bbox = fitted_desc_font.getbbox(line)
-            line_w = bbox[2] - bbox[0]
-            draw.text((center_x - line_w // 2, desc_y), line, fill=TEXT_COLOR, font=fitted_desc_font)
-            desc_y += desc_spacing
-    else:
-        # Pre-render text lines and compute title heights
-        title_lines_map = {}
-        title_bottoms = {}
-        
-        for qkey in slot_keys:
-            item = selected[qkey]
-            config = QUADRANTS_CONFIG[qkey]
-            
-            # Draw category label (older site submissions did not include it).
-            category = item.get("category") or {
-                "book": "Livro",
-                "podcast": "Podcast",
-                "movie": "Filme",
-                "nostalgia": "Nostalgia",
-                "investigation": "Investigação",
-                "highlight": "Destaque",
-            }.get(item.get("type"), "Recomendação")
-            item["category"] = category
-            draw.text(config["label_pos"], category, fill=TEXT_COLOR, font=label_font)
-            
-            # Wrap title
-            tx, ty = config["title_pos"]
-            raw_title = _display_title(item)
-            title_max_lines = 3 if (qkey in ["q2", "q3", "q4", "w1", "w2"] or len(raw_title) > 55) else 2
-
-            max_title_width = 700 if qkey in ["w1", "w2"] else 350
-            fitted_title_font, lines, title_spacing = _fit_title_for_item(
-                draw,
-                item,
-                qkey,
-                30,
-                18,
-                max_title_width,
-                title_max_lines,
-            )
-            title_lines_map[qkey] = lines
-            
-            # Draw title
-            curr_y = ty
-            for line in lines:
-                draw.text((tx, curr_y), line, fill=TEXT_COLOR, font=fitted_title_font)
-                curr_y += title_spacing
-            
-            title_bottoms[qkey] = curr_y
-
-        # Determine Cover Dimensions based on item TYPE dynamically
-        cover_dims = {}
-        for qkey in slot_keys:
-            item = selected[qkey]
-            if qkey in ["w1", "w2"]:
-                cover_dims[qkey] = (200, 200) if item["type"] in ["podcast", "highlight", "nostalgia"] else (160, 220)
-            elif item["type"] in ["podcast", "highlight"]:
-                cover_dims[qkey] = (192, 192)
-            else:
-                cover_dims[qkey] = (160, 220)
-
-        cover_y_map = {}
-        if "q1" in slot_keys and "q2" in slot_keys:
-            gap_q1 = 18 if len(title_lines_map["q1"]) >= 2 else 12
-            gap_q2 = 18 if len(title_lines_map["q2"]) >= 2 else 12
-            h_q1 = cover_dims["q1"][1]
-            h_q2 = cover_dims["q2"][1]
-            q1_min_bottom = title_bottoms["q1"] + gap_q1 + h_q1
-            q2_min_bottom = title_bottoms["q2"] + gap_q2 + h_q2
-            common_bottom_y = max(q1_min_bottom, q2_min_bottom)
-            cover_y_map["q1"] = common_bottom_y - h_q1
-            cover_y_map["q2"] = common_bottom_y - h_q2
-            
-            gap_q3 = 18 if len(title_lines_map["q3"]) >= 2 else 12
-            gap_q4 = 18 if len(title_lines_map["q4"]) >= 2 else 12
-            q3_top_y = title_bottoms["q3"] + gap_q3
-            q4_top_y = title_bottoms["q4"] + gap_q4
-            common_top_y = max(q3_top_y, q4_top_y)
-            cover_y_map["q3"] = common_top_y
-            cover_y_map["q4"] = common_top_y
-        else:
-            cover_y_map["w1"] = max(title_bottoms.get("w1", 195) + 15, 230)
-            cover_y_map["w2"] = max(title_bottoms.get("w2", 570) + 15, 600)
-
-        description_plans = []
-
-        # --- PASTE COVERS AND PREPARE DESCRIPTIONS ---
-        for qkey in slot_keys:
-            config = QUADRANTS_CONFIG[qkey]
-            item = selected[qkey]
-            cover = remove_black_bars(covers[qkey])
-            
-            cover_w, cover_h = cover_dims[qkey]
-            cover_y = cover_y_map[qkey]
-            cx = config["cover_x"]
-            
-            # Crop to the target aspect ratio without stretching the source image.
-            cover_resized = ImageOps.fit(
-                cover.convert("RGB"),
-                (cover_w, cover_h),
-                method=Image.Resampling.LANCZOS,
-                centering=(0.5, 0.5),
-            )
-            cover_rounded = apply_rounded_corners(cover_resized, radius=18)
-            
-            template.alpha_composite(cover_rounded, (cx, cover_y))
-            
-            # Wrap description
-            dx = cx + cover_w + 20
-            if qkey in ["w1", "w2"]:
-                desc_w = 760 - dx
-            elif qkey in ["q1", "q3"]:
-                desc_w = 400 - dx
-            else:
-                desc_w = 780 - dx
-                
-            clean_desc = _best_description(item)
-            item["description"] = clean_desc
-            description = _compact_text(
-                clean_desc,
-                DESCRIPTION_CHAR_LIMITS.get(qkey, 240),
-            )
-            max_lines = min(
-                DESCRIPTION_LINE_LIMITS.get(qkey, 8),
-                max(1, cover_h // 18),
-            )
-            description_plans.append(
-                {
-                    "qkey": qkey,
-                    "dx": dx,
-                    "cover_y": cover_y,
-                    "cover_h": cover_h,
-                    "desc_w": desc_w,
-                    "max_lines": max_lines,
-                    "description": description,
-                    "fallback_description": (
-                        _fallback_description_from_title(item)
-                        or "Recomendação verificada."
-                    ),
-                }
-            )
-
-        for plan in description_plans:
-            fitted_font, desc_lines, spacing = _fit_fixed_description_lines(
-                draw,
-                plan["description"],
-                plan["desc_w"],
-                plan["max_lines"],
-            )
-            if not desc_lines:
-                print(
-                    f'  [AUTO-RECOVERY/{plan["qkey"].upper()}] '
-                    "descrição substituída por texto fundamentado curto."
-                )
-                fitted_font, desc_lines, spacing = _fit_fixed_description_lines(
-                    draw,
-                    plan["fallback_description"],
-                    plan["desc_w"],
-                    plan["max_lines"],
-                )
-            if not desc_lines:
-                fitted_font = _load_font(
-                    FONT_DESC_BOLD,
-                    DESCRIPTION_FONT_MIN_SIZE,
-                )
-                desc_lines = ["Recomendação verificada."]
-                spacing = max(15, DESCRIPTION_FONT_MIN_SIZE + 3)
-            text_block_h = len(desc_lines[: plan["max_lines"]]) * spacing
-            dy = plan["cover_y"] + max(0, (plan["cover_h"] - text_block_h) // 2)
-
-            for line in desc_lines[: plan["max_lines"]]:
-                draw.text((plan["dx"], dy), line, fill=TEXT_COLOR, font=fitted_font)
-                dy += spacing
-            
-    # Save image
-    output = ImageOps.fit(
-        template.convert("RGB"),
-        (1080, 1350),
-        method=Image.Resampling.LANCZOS,
-        centering=(0.5, 0.5),
-    )
-    output.save(
-        OUTPUT_PATH,
-        "JPEG",
-        quality=95,
-        optimize=True,
-        progressive=True,
-    )
-    story_path = _save_story_asset(output)
-    print(f"\n[OK] Production post image saved to: {OUTPUT_PATH}")
-    print(f"[OK] Native Story image saved to: {story_path}")
+    render_post_image(post_type, selected, covers)
     
     # 5. Generate the caption from the exact recommendations in this draft.
     caption = build_caption_within_limit(
