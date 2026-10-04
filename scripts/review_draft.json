@@ -1,14 +1,22 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_82692f53f86c7c60b76e",
-  "content_hash": "82692f53f86c7c60b76efa036e5a403296fe4d88b7e5f49114df15eba77003b0",
+  "draft_id": "draft_3a6577de3e8350a95bbb",
+  "content_hash": "3a6577de3e8350a95bbb7d7f5187d9e2df63e7927cb7beec8f73eb47956c1109",
   "post_type": "sunday_standard",
   "created_at": "2026-10-03T18:55:24.341849+00:00",
   "is_test": false,
-  "post_sha256": "830dcd832cb8233ab002116f69410c76dc32323690fa013cafc19a72e194e82a",
+  "post_sha256": "18daee3910cb962b66e895f3e9423d4dad07b4478232587cc6b280681ae99505",
   "caption_sha256": "cdf252c338d25e3381b36a96013b60df568b6e52d98fad03e6b460dd94ae4bcb",
   "approval": {
-    "approved": false
+    "approved": true,
+    "draft_id": "draft_3a6577de3e8350a95bbb",
+    "content_hash": "3a6577de3e8350a95bbb7d7f5187d9e2df63e7927cb7beec8f73eb47956c1109",
+    "approved_at": "2026-10-04T09:13:59.739130+00:00",
+    "approved_by": "luisflmaximo",
+    "method": "manual_override",
+    "note": "Publicação sem aprovação no Discord por instrução direta do Luís em 2026-10-04.",
+    "scheduled_for": "2026-10-04T09:00:00+00:00",
+    "scheduled_timezone": "Europe/Lisbon"
   },
   "q1": {
     "id": "ai_book_6df0482ccb804fe9",
