@@ -1632,50 +1632,6 @@
       }
     },
     {
-      "id": "rss_podcast_119742682f8cfbaf",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Entrevista a Nuno Markl: “O AVC fez-me repensar tudo filosoficamente. Eu ia falecer a cagar”",
-      "editorialTitle": "Entrevista a Nuno Markl: “O AVC fez-me repensar tudo filosoficamente. Eu ia",
-      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Análise sobre os temas e questões de entrevista a nuno markl: “o avc fez-me repensar tudo filosoficamente. eu ia falecer a cagar.",
-      "imageUrl": "/covers/podcast_entrevista_a_nuno_markl___o_avc_fez_me_repensar_tudo_afc117cc_119742682f8c.jpg",
-      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/entrevista-a-nuno-markl-o-avc-fez-me-repensar-tudo-filosoficamente-eu-ia-falecer-a-cagar",
-      "externalId": "94f9e1fe-9c0a-49db-8e47-b4d201686823",
-      "sourceSeriesId": "1585178009",
-      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-27T22:04:21Z",
-      "expiryDate": "2026-10-07T22:04:21Z",
-      "createdAt": "2026-09-28T11:06:10.989035Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
-        "guid": "94f9e1fe-9c0a-49db-8e47-b4d201686823",
-        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/94f9e1fe-9c0a-49db-8e47-b4d201686823/image.jpg?t=1790546516&size=Large",
-        "show": "Isto É Gozar Com Quem Trabalha"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "94f9e1fe-9c0a-49db-8e47-b4d201686823",
-        "score": 1.0,
-        "coverHash": "c99fbc6eabbf0aec8e0c774eb3fec96a65c6114c66f8d460149fca01f096dc78",
-        "verifiedAt": "2026-09-28T11:06:14.406958Z",
-        "resolvedTitle": "Entrevista a Nuno Markl: “O AVC fez-me repensar tudo filosoficamente. Eu ia falecer a cagar”",
-        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
-        "sourcePublishedAt": "2026-09-27T22:04:21Z",
-        "sourceDescription": "No Isto é Gozar com Quem Trabalha, Ricardo Araújo Pereira recebe Nuno Markl, um amigo que venceu o Globo de Ouro de Personalidade do Ano na categoria de Entretenimento. Nesta conversa, o humorista recorda um ano difícil, marcado por dois AVC, e fala sobre algumas experiências com os profissionais de saúde que acompanharam a sua recuperação nos hospitais.",
-        "editorialDescription": "Análise sobre os temas e questões de entrevista a nuno markl: “o avc fez-me repensar tudo filosoficamente. eu ia falecer a cagar.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "cb8c8cacbfcab22987a103237f509f846e863f543c68d3c8116372ad498ba6cd",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_6975a2c8bda5fbb4",
       "type": "highlight",
       "category": "Destaque",
@@ -1886,11 +1842,11 @@
         "resolvedTitle": "O Estado devia pagar renda pelas casas vazias? — Ouvintes",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-10-04T07:00:00Z",
-        "sourceDescription": "Episódio “O Estado devia pagar renda pelas casas vazias? — Ouvintes” do podcast Fora do Baralho, publicado em 04/10/2026.",
+        "sourceDescription": "Análise sobre episódio “O Estado devia pagar renda pelas casas vazias? — Ouvintes” do podcast Fora do Baralho, publicado em 04/10/2026.",
         "editorialDescription": "Análise sobre episódio “O Estado devia pagar renda pelas casas vazias? — Ouvintes” do podcast Fora do Baralho, publicado em 04/10/2026.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "da50139e20637af9486ac1e69c22bafa2dea644d1b6bf3d920a6640029fc4542",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "af417965922d6219911c77b9ee9dcdc86f9171cd17d85143843bb40bb7cd2f4f",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -1937,7 +1893,7 @@
       "sourcePublishedAt": "2026-10-03T06:00:00Z",
       "expiryDate": "2026-10-06T06:00:00Z",
       "createdAt": "2026-10-04T16:55:01.994391Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1946,7 +1902,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
         "show": "Expresso da Meia-Noite"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1962,7 +1918,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "2e41761f2c0b4580ff25077fdca2f5e50df1f93d17ed938ba53aa792cf205183",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Conseguirá a Seleção substituir um símbolo nacional como Cristiano Ronaldo?]: Conteúdo expira em 2026-10-06T06:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_874da1ca46c6c97e",
@@ -2005,6 +1962,144 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-04T13:04:33Z",
         "sourceDescription": "É o primeiro português a integrar o Comité Nobel da Fisiologia ou Medicina. Em entrevista ao Observador, explica todos os detalhes do processo que termina com a atribuição do novo Prémio Nobel."
+      }
+    },
+    {
+      "id": "rss_podcast_99b4053dbdba639f",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Vasco Vilaça: “O pior no triatlo são os sapatos, porque corremos sem meias. Os meus sapatos são brancos, muitas vezes acabam vermelhos”",
+      "editorialTitle": "Vasco Vilaça: “O pior no triatlo são os sapatos, porque corremos sem meias.",
+      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
+      "description": "Análise sobre no Isto é Gozar com Quem Trabalha, Ricardo Araújo Pereira recebe Vasco Vilaça, campeão do mundo de triatlo.",
+      "imageUrl": "/covers/podcast_vasco_vila_a___o_pior_no_triatlo_s_o_os_sapatos__por_576f1486_99b4053dbdba.jpg",
+      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/vasco-vila-a-o-pior-no-triatlo-s-o-os-sapatos-porque-corremos-sem-meias-os-meus-sapatos-s-o-brancos-muitas-vezes-acabam-vermelhos",
+      "externalId": "66692a07-327c-4d83-9c8c-b4d9016744f3",
+      "sourceSeriesId": "1585178009",
+      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-04T22:07:18Z",
+      "expiryDate": "2026-10-14T22:07:18Z",
+      "createdAt": "2026-10-05T11:39:56.678361Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
+        "guid": "66692a07-327c-4d83-9c8c-b4d9016744f3",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/66692a07-327c-4d83-9c8c-b4d9016744f3/image.jpg?t=1791151232&size=Large",
+        "show": "Isto É Gozar Com Quem Trabalha"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "66692a07-327c-4d83-9c8c-b4d9016744f3",
+        "score": 1.0,
+        "coverHash": "79a6911ff3f48bfa7e3e262408a842dc713a6473e881ca79199ffb7e90f73d6d",
+        "verifiedAt": "2026-10-05T11:39:59.989062Z",
+        "resolvedTitle": "Vasco Vilaça: “O pior no triatlo são os sapatos, porque corremos sem meias. Os meus sapatos são brancos, muitas vezes acabam vermelhos”",
+        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
+        "sourcePublishedAt": "2026-10-04T22:07:18Z",
+        "sourceDescription": "No Isto é Gozar com Quem Trabalha, Ricardo Araújo Pereira recebe Vasco Vilaça, campeão do mundo de triatlo. O atleta recorda situações em que teve de enfrentar o reino animal durante provas e revela que besunta corpo com vaselina antes de nadar: até em sítios do corpo que normalmante não se nomeiam em televisão. No final, fica um desafio.",
+        "editorialDescription": "Análise sobre no Isto é Gozar com Quem Trabalha, Ricardo Araújo Pereira recebe Vasco Vilaça, campeão do mundo de triatlo.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "c250c07cc5601b85041b38de7df8460fa0cd62fbd0742265bb0fffec58a2a5c5",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_257b0b632babca14",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Cecília Meireles: “Tratar os senhorios como inimigo público número um não aumenta o arrendamento”",
+      "editorialTitle": "Cecília Meireles: “Tratar os senhorios como inimigo público número um não",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre os temas e questões de cecília meireles: “tratar os senhorios como inimigo público número um não.",
+      "imageUrl": "/covers/podcast_cec_lia_meireles___tratar_os_senhorios_como_inimigo__46083b63_257b0b632bab.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/cec-lia-meireles-tratar-os-senhorios-como-inimigo-p-blico-n-mero-um-n-o-aumenta-o-arrendamento",
+      "externalId": "b353aadb-7722-4279-bdc5-b4d7014ca3e0",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-03T06:30:00Z",
+      "expiryDate": "2026-10-13T06:30:00Z",
+      "createdAt": "2026-10-05T11:39:57.031555Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "b353aadb-7722-4279-bdc5-b4d7014ca3e0",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/b353aadb-7722-4279-bdc5-b4d7014ca3e0/image.jpg?t=1790988739&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "b353aadb-7722-4279-bdc5-b4d7014ca3e0",
+        "score": 1.0,
+        "coverHash": "526db24bf57d3e92d9c69ac71a0b465190b6de199a88d47d1324837b0627f1e0",
+        "verifiedAt": "2026-10-03T09:57:13.483385Z",
+        "resolvedTitle": "Cecília Meireles: “Tratar os senhorios como inimigo público número um não aumenta o arrendamento”",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-10-03T06:30:00Z",
+        "sourceDescription": "Com o Orçamento do Estado para 2026 encaminhado para a aprovação, depois do acordo entre o Governo e o PS, o debate centra-se nas cedências socialistas e no que o documento muda, ou não, no país. Miguel Prata Roque defende que o PS agiu de forma responsável e diz que o país continua “empatado”, com o preço das casas a subir de forma acentuada.",
+        "editorialDescription": "Análise sobre os temas e questões de cecília meireles: “tratar os senhorios como inimigo público número um não.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "361f06878f853f335aaaddb7cdc87f426650b585fe63b2e51de5b9474c0bfca9",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_19ebec5b2103e25d",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Como reagem os partidos portugueses às eleições do Brasil?",
+      "authorOrMeta": "observador.pt",
+      "description": "Catarina Martins (BE) e João Torres (PS) temem que vitória de Bolsonaro ameaça a democracia. Hélder Sousa e Silva (PSD) prevê um presidente mais moderado. Marcus Santos (CH) aplaude viragem à direita.",
+      "imageUrl": "/covers/highlight_como_reagem_os_partidos_portugueses__s_elei__es_do_6d5f785c_75cc42ab17a6.jpg",
+      "link": "https://observador.pt/programas/explicador/como-reagem-os-partidos-portugues-as-eleicoes-do-brasil/",
+      "externalId": "article:url:19ebec5b2103e25d4c92ddb3",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-05T10:04:08Z",
+      "expiryDate": "2026-11-04T10:04:08Z",
+      "createdAt": "2026-10-05T11:40:03.000725Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/como-reagem-os-partidos-portugues-as-eleicoes-do-brasil/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "Brasil",
+          "Mundo",
+          "Eleições no Brasil",
+          "Espanha",
+          "Europa",
+          "Bloco de Esquerda",
+          "Política",
+          "PSD",
+          "PS",
+          "Partido Chega"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:19ebec5b2103e25d4c92ddb3",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-10-05T11:40:04.251831Z",
+        "resolvedTitle": "Como reagem os partidos portugueses às eleições do Brasil?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-05T10:04:08Z",
+        "sourceDescription": "Catarina Martins (BE) e João Torres (PS) temem que vitória de Bolsonaro ameaça a democracia. Hélder Sousa e Silva (PSD) prevê um presidente mais moderado. Marcus Santos (CH) aplaude viragem à direita."
       }
     }
   ],
@@ -3913,11 +4008,11 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 2,
-      "podcast": 3,
+      "podcast": 2,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
