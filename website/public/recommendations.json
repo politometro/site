@@ -1968,7 +1968,7 @@
         "editorialDescription": "Análise sobre no Isto é Gozar com Quem Trabalha, Ricardo Araújo Pereira recebe Vasco Vilaça, campeão do mundo de triatlo.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "e5233b7932cb4e7221a23f9f76cccd7bc6ad4f88ed15409b277f9073221ce201",
-        "editorialDescriptionProvider": "kept"
+        "editorialDescriptionProvider": "extractive"
       }
     },
     {
@@ -2020,7 +2020,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Como reagem os partidos portugueses às eleições do Brasil?",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Miguel Cordeiro",
       "description": "Catarina Martins (BE) e João Torres (PS) temem que vitória de Bolsonaro ameaça a democracia. Hélder Sousa e Silva (PSD) prevê um presidente mais moderado. Marcus Santos (CH) aplaude viragem à direita.",
       "imageUrl": "/covers/highlight_como_reagem_os_partidos_portugueses__s_elei__es_do_6d5f785c_75cc42ab17a6.jpg",
       "link": "https://observador.pt/programas/explicador/como-reagem-os-partidos-portugues-as-eleicoes-do-brasil/",
@@ -2054,13 +2054,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:19ebec5b2103e25d4c92ddb3",
         "score": 1.0,
         "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
         "verifiedAt": "2026-10-05T11:40:04.251831Z",
         "resolvedTitle": "Como reagem os partidos portugueses às eleições do Brasil?",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Miguel Cordeiro",
         "sourcePublishedAt": "2026-10-05T10:04:08Z",
         "sourceDescription": "Catarina Martins (BE) e João Torres (PS) temem que vitória de Bolsonaro ameaça a democracia. Hélder Sousa e Silva (PSD) prevê um presidente mais moderado. Marcus Santos (CH) aplaude viragem à direita."
       }
