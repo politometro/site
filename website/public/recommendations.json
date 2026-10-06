@@ -1240,46 +1240,6 @@
       "validationError": "NEWS_NOT_ALLOWED [Papa Leão sentiu-se mal na Praça de São Pedro?]: Notícias correntes não são elegíveis para Destaque."
     },
     {
-      "id": "rss_highlight_1c5ac33bfa964ca9",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "A morte da democracia em seu nome",
-      "authorOrMeta": "Miguel Morgado",
-      "description": "a etnicização da política, a sexualização da política, ou a afirmação da vontade religiosa como subordinando a autonomia do Estado constituem a tribalização definitiva da política",
-      "imageUrl": "/covers/highlight_a_morte_da_democracia_em_seu_nome_a6ea00fa_887468b197cb.jpg",
-      "link": "https://observador.pt/opiniao/a-morte-da-democracia-em-seu-nome/",
-      "externalId": "article:url:1c5ac33bfa964ca905a711f1",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-19T23:24:52Z",
-      "expiryDate": "2026-10-19T23:24:52Z",
-      "createdAt": "2026-09-20T09:22:23.270667Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/a-morte-da-democracia-em-seu-nome/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1843%3A1838%3Anowe%3A1084%3A166%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F06%2F23181612%2Fdventura-miguel-morgado-4-scaled.jpg",
-        "categories": [
-          "Democracia",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:1c5ac33bfa964ca905a711f1",
-        "score": 1.0,
-        "coverHash": "17f13a54279d1518f4502901ede19f0f52a4bf8d66196873a1437273fdb15438",
-        "verifiedAt": "2026-09-20T09:22:23.484890Z",
-        "resolvedTitle": "A morte da democracia em seu nome",
-        "resolvedAuthor": "Miguel Morgado",
-        "sourcePublishedAt": "2026-09-19T23:24:52Z",
-        "sourceDescription": "a etnicização da política, a sexualização da política, ou a afirmação da vontade religiosa como subordinando a autonomia do Estado constituem a tribalização definitiva da política"
-      }
-    },
-    {
       "id": "rss_podcast_daa46cb1bd5e0de6",
       "type": "podcast",
       "category": "Podcast",
@@ -1687,7 +1647,7 @@
       "sourcePublishedAt": "2026-09-28T18:00:38Z",
       "expiryDate": "2026-10-19T18:00:38Z",
       "createdAt": "2026-09-28T19:44:22.007939Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1696,7 +1656,7 @@
         "imageUrl": "https://www.youtube.com/v/12GmtoLA18U?version=3",
         "show": "Conteúdo do Batáguas"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1712,7 +1672,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "4e6ec4aa9f212840c3e3d24ceb1ff2e4cc7f4adf8e669fa6b549d001d6bd378b",
         "editorialDescriptionProvider": "kept"
-      }
+      },
+      "validationError": "HTTP_ERROR: HTTP 404 ao obter https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ."
     },
     {
       "id": "rss_podcast_bf983ea47c4e7178",
@@ -1935,7 +1896,7 @@
       "sourcePublishedAt": "2026-10-04T13:04:33Z",
       "expiryDate": "2026-11-03T13:04:33Z",
       "createdAt": "2026-10-04T16:55:08.063165Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1950,7 +1911,7 @@
           "Ciência"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -1962,7 +1923,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-04T13:04:33Z",
         "sourceDescription": "É o primeiro português a integrar o Comité Nobel da Fisiologia ou Medicina. Em entrevista ao Observador, explica todos os detalhes do processo que termina com a atribuição do novo Prémio Nobel."
-      }
+      },
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [O português nos bastidores do Nobel da Medicina]: Artigo 'Centenas de nomeações, meses de investigação e uma votação secreta. Gonçalo Castelo-Branco, o português nos bastidores do Nobel da Medicina' não corresponde ao título candidato."
     },
     {
       "id": "rss_podcast_99b4053dbdba639f",
@@ -2004,8 +1966,8 @@
         "sourceDescription": "No Isto é Gozar com Quem Trabalha, Ricardo Araújo Pereira recebe Vasco Vilaça, campeão do mundo de triatlo. O atleta recorda situações em que teve de enfrentar o reino animal durante provas e revela que besunta corpo com vaselina antes de nadar: até em sítios do corpo que normalmante não se nomeiam em televisão. No final, fica um desafio.",
         "editorialDescription": "Análise sobre no Isto é Gozar com Quem Trabalha, Ricardo Araújo Pereira recebe Vasco Vilaça, campeão do mundo de triatlo.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "c250c07cc5601b85041b38de7df8460fa0cd62fbd0742265bb0fffec58a2a5c5",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "e5233b7932cb4e7221a23f9f76cccd7bc6ad4f88ed15409b277f9073221ce201",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -2015,7 +1977,7 @@
       "title": "Cecília Meireles: “Tratar os senhorios como inimigo público número um não aumenta o arrendamento”",
       "editorialTitle": "Cecília Meireles: “Tratar os senhorios como inimigo público número um não",
       "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre os temas e questões de cecília meireles: “tratar os senhorios como inimigo público número um não.",
+      "description": "Análise sobre os temas e questões de cecília meireles: “tratar os senhorios como inimigo público número um não aumenta o arrendamento.",
       "imageUrl": "/covers/podcast_cec_lia_meireles___tratar_os_senhorios_como_inimigo__46083b63_257b0b632bab.jpg",
       "link": "https://omny.fm/shows/linhas-vermelhas/cec-lia-meireles-tratar-os-senhorios-como-inimigo-p-blico-n-mero-um-n-o-aumenta-o-arrendamento",
       "externalId": "b353aadb-7722-4279-bdc5-b4d7014ca3e0",
@@ -2046,9 +2008,9 @@
         "resolvedAuthor": "Linhas Vermelhas",
         "sourcePublishedAt": "2026-10-03T06:30:00Z",
         "sourceDescription": "Com o Orçamento do Estado para 2026 encaminhado para a aprovação, depois do acordo entre o Governo e o PS, o debate centra-se nas cedências socialistas e no que o documento muda, ou não, no país. Miguel Prata Roque defende que o PS agiu de forma responsável e diz que o país continua “empatado”, com o preço das casas a subir de forma acentuada.",
-        "editorialDescription": "Análise sobre os temas e questões de cecília meireles: “tratar os senhorios como inimigo público número um não.",
+        "editorialDescription": "Análise sobre os temas e questões de cecília meireles: “tratar os senhorios como inimigo público número um não aumenta o arrendamento.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "361f06878f853f335aaaddb7cdc87f426650b585fe63b2e51de5b9474c0bfca9",
+        "editorialSourceHash": "025b185a6c4b8d77aeae478ed7ddf2d92307d4eb69bab05548e054f1e2301cbe",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -2100,6 +2062,137 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-05T10:04:08Z",
         "sourceDescription": "Catarina Martins (BE) e João Torres (PS) temem que vitória de Bolsonaro ameaça a democracia. Hélder Sousa e Silva (PSD) prevê um presidente mais moderado. Marcus Santos (CH) aplaude viragem à direita."
+      }
+    },
+    {
+      "id": "rss_podcast_5e82e86ebd44405d",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Adolfo Mesquita Nunes: seremos governados pelo algoritmo?",
+      "authorOrMeta": "Perguntar Não Ofende",
+      "description": "Análise sobre os temas e questões de adolfo mesquita nunes: seremos governados pelo algoritmo.",
+      "imageUrl": "/covers/podcast_adolfo_mesquita_nunes__seremos_governados_pelo_algor_ff3c1aae_5e82e86ebd44.jpg",
+      "link": "https://omny.fm/shows/perguntar-n-o-ofende/adolfo-mesquita-nunes-seremos-governados-pelo-algoritmo",
+      "externalId": "4b8af576-2509-4de3-8197-b4da01322bb0",
+      "sourceSeriesId": "1374367269",
+      "sourceSeriesTitle": "Perguntar Não Ofende",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-06T04:15:00Z",
+      "expiryDate": "2026-10-27T04:15:00Z",
+      "createdAt": "2026-10-06T05:15:50.375187Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/b9ad4462-e46a-4162-9cc4-adcf0103ac7c/podcast.rss",
+        "guid": "4b8af576-2509-4de3-8197-b4da01322bb0",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/4b8af576-2509-4de3-8197-b4da01322bb0/image.jpg?t=1791229417&size=Large",
+        "show": "Perguntar Não Ofende"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "4b8af576-2509-4de3-8197-b4da01322bb0",
+        "score": 1.0,
+        "coverHash": "9c476e992d2e586c4ad16a694dbbf643a7d74c9b2018acf52de115a0bf3e0dea",
+        "verifiedAt": "2026-10-06T05:15:53.745299Z",
+        "resolvedTitle": "Adolfo Mesquita Nunes: seremos governados pelo algoritmo?",
+        "resolvedAuthor": "Perguntar Não Ofende",
+        "sourcePublishedAt": "2026-10-06T04:15:00Z",
+        "sourceDescription": "As redes sociais deixaram de ser apenas ferramentas de comunicação e passaram a determinar, em grande medida, a informação que chega a cada cidadão. Adolfo Mesquita Nunes regressa ao Perguntar Não Ofende para analisar a forma como os algoritmos privilegiam o conflito, o medo, o ressentimento e o escândalo, contribuindo para uma política mais radicalizada e…",
+        "editorialDescription": "Análise sobre os temas e questões de adolfo mesquita nunes: seremos governados pelo algoritmo.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "54baaedf5c089c70ed3dfee39f455b966d2f4ad052d5d71bf05519868032978e",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_982d89d88ff33a4b",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "O Presidente e os entendimentos",
+      "authorOrMeta": "observador.pt",
+      "description": "O Presidente pede entendimentos que garantam estabilidade governativa na resolução dos problemas. Um apelo que parece o mesmo que manifestar desejos de paz para o mundo.",
+      "imageUrl": "/covers/highlight_o_presidente_e_os_entendimentos_13d006db_2c9496bfd582.jpg",
+      "link": "https://observador.pt/opiniao/o-presidente-e-os-entendimentos/",
+      "externalId": "article:url:982d89d88ff33a4b433ea778",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-05T23:25:55Z",
+      "expiryDate": "2026-11-04T23:25:55Z",
+      "createdAt": "2026-10-06T05:15:58.629439Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/o-presidente-e-os-entendimentos/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2385%3A2384%3Anowe%3A266%3A399%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170544%2Fhelena-garrido.jpg",
+        "categories": [
+          "António José Seguro",
+          "Presidente da República",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:982d89d88ff33a4b433ea778",
+        "score": 1.0,
+        "coverHash": "a090134ccd62b09e683bdf70654b933d33687d3bfc34db393dc0122892d36047",
+        "verifiedAt": "2026-10-06T05:15:58.804171Z",
+        "resolvedTitle": "O Presidente e os entendimentos",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-05T23:25:55Z",
+        "sourceDescription": "O Presidente pede entendimentos que garantam estabilidade governativa na resolução dos problemas. Um apelo que parece o mesmo que manifestar desejos de paz para o mundo."
+      }
+    },
+    {
+      "id": "rss_highlight_1b4992c0d7fb89a5",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "À política o que é do futebol? Síiiiiiiii",
+      "authorOrMeta": "observador.pt",
+      "description": "Seguro ficou em silêncio e deixou o palco para Marcelo. Montenegro teve chamadas, mas nem uma palavra sobre o assunto. Castro Almeida e Albuquerque tiveram coragem para ignorar as convenções. E bem.",
+      "imageUrl": "/covers/highlight___pol_tica_o_que___do_futebol__s_iiiiiiii_d0929e0e_0b9a2236a680.jpg",
+      "link": "https://observador.pt/opiniao/a-politica-o-que-e-do-futebol-siiiiiiiii/",
+      "externalId": "article:url:1b4992c0d7fb89a5283bbbe8",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-05T23:22:34Z",
+      "expiryDate": "2026-11-04T23:22:34Z",
+      "createdAt": "2026-10-06T05:15:58.630288Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-politica-o-que-e-do-futebol-siiiiiiiii/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2414%3A2414%3Anowe%3A74%3A952%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170559%2Frui-pedro-antunes.jpg",
+        "categories": [
+          "Cristiano Ronaldo",
+          "Futebol",
+          "Desporto",
+          "Jorge Jesus",
+          "Presidente Marcelo",
+          "Política",
+          "António José Seguro",
+          "Presidente da República",
+          "Luís Montenegro"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:1b4992c0d7fb89a5283bbbe8",
+        "score": 1.0,
+        "coverHash": "091614f66c8e38f4d50dce0197adfe04107fef54e87ab6ea019930c916fd002c",
+        "verifiedAt": "2026-10-06T05:15:58.951876Z",
+        "resolvedTitle": "À política o que é do futebol? Síiiiiiiii",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-05T23:22:34Z",
+        "sourceDescription": "Seguro ficou em silêncio e deixou o palco para Marcelo. Montenegro teve chamadas, mas nem uma palavra sobre o assunto. Castro Almeida e Albuquerque tiveram coragem para ignorar as convenções. E bem."
       }
     }
   ],
@@ -4008,7 +4101,7 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 2,
-      "podcast": 2,
+      "podcast": 1,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
