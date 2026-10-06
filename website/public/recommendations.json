@@ -1647,7 +1647,7 @@
       "sourcePublishedAt": "2026-09-28T18:00:38Z",
       "expiryDate": "2026-10-19T18:00:38Z",
       "createdAt": "2026-09-28T19:44:22.007939Z",
-      "status": "invalid",
+      "status": "queue",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1656,14 +1656,14 @@
         "imageUrl": "https://www.youtube.com/v/12GmtoLA18U?version=3",
         "show": "Conteúdo do Batáguas"
       },
-      "resolutionStatus": "rejected",
+      "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
         "entityId": "https://www.youtube.com/watch?v=12GmtoLA18U",
         "score": 1.0,
         "coverHash": "b5b067b02028e1398ff25cf9a5e5c0cc2621c5fcadf360b5c79d6df41e4eabb5",
-        "verifiedAt": "2026-09-28T19:44:23.804968Z",
+        "verifiedAt": "2026-10-06T11:22:52.205870Z",
         "resolvedTitle": "Globos + Mulheres Conservadoras + Pingo Doci - Conteúdo do Batáguas T03 Ep09",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-09-28T18:00:38Z",
@@ -1783,7 +1783,7 @@
       "sourcePublishedAt": "2026-10-04T07:00:00Z",
       "expiryDate": "2026-10-07T07:00:00Z",
       "createdAt": "2026-10-04T10:40:27.381362Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1792,7 +1792,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1808,7 +1808,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "af417965922d6219911c77b9ee9dcdc86f9171cd17d85143843bb40bb7cd2f4f",
         "editorialDescriptionProvider": "kept"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [O Estado devia pagar renda pelas casas vazias? — Ouvintes]: Conteúdo expira em 2026-10-07T07:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "ai_movie_a1c00bc2cf904d88",
@@ -4101,7 +4102,7 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 2,
-      "podcast": 1,
+      "podcast": 2,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
