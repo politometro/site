@@ -2113,7 +2113,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "O Presidente e os entendimentos",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Helena Garrido",
       "description": "O Presidente pede entendimentos que garantam estabilidade governativa na resolução dos problemas. Um apelo que parece o mesmo que manifestar desejos de paz para o mundo.",
       "imageUrl": "/covers/highlight_o_presidente_e_os_entendimentos_13d006db_2c9496bfd582.jpg",
       "link": "https://observador.pt/opiniao/o-presidente-e-os-entendimentos/",
@@ -2138,13 +2138,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:982d89d88ff33a4b433ea778",
         "score": 1.0,
         "coverHash": "a090134ccd62b09e683bdf70654b933d33687d3bfc34db393dc0122892d36047",
         "verifiedAt": "2026-10-06T05:15:58.804171Z",
         "resolvedTitle": "O Presidente e os entendimentos",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Helena Garrido",
         "sourcePublishedAt": "2026-10-05T23:25:55Z",
         "sourceDescription": "O Presidente pede entendimentos que garantam estabilidade governativa na resolução dos problemas. Um apelo que parece o mesmo que manifestar desejos de paz para o mundo."
       }
@@ -2154,7 +2154,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "À política o que é do futebol? Síiiiiiiii",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Rui Pedro Antunes",
       "description": "Seguro ficou em silêncio e deixou o palco para Marcelo. Montenegro teve chamadas, mas nem uma palavra sobre o assunto. Castro Almeida e Albuquerque tiveram coragem para ignorar as convenções. E bem.",
       "imageUrl": "/covers/highlight___pol_tica_o_que___do_futebol__s_iiiiiiii_d0929e0e_0b9a2236a680.jpg",
       "link": "https://observador.pt/opiniao/a-politica-o-que-e-do-futebol-siiiiiiiii/",
@@ -2185,13 +2185,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:1b4992c0d7fb89a5283bbbe8",
         "score": 1.0,
         "coverHash": "091614f66c8e38f4d50dce0197adfe04107fef54e87ab6ea019930c916fd002c",
         "verifiedAt": "2026-10-06T05:15:58.951876Z",
         "resolvedTitle": "À política o que é do futebol? Síiiiiiiii",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Rui Pedro Antunes",
         "sourcePublishedAt": "2026-10-05T23:22:34Z",
         "sourceDescription": "Seguro ficou em silêncio e deixou o palco para Marcelo. Montenegro teve chamadas, mas nem uma palavra sobre o assunto. Castro Almeida e Albuquerque tiveram coragem para ignorar as convenções. E bem."
       }
