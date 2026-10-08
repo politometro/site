@@ -1523,47 +1523,6 @@
       "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Comentadores de TV deviam ter carreiras? — Ouvintes]: Conteúdo expira em 2026-09-30T07:45:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
-      "id": "rss_highlight_9ad4848881cedf17",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Os falsos pretextos de Francisco Assis",
-      "authorOrMeta": "Miguel Morgado",
-      "description": "A triste exibição de Costa acabou por confirmar linha a linha a crítica que fiz, e faço, a Francisco Assis, ao sentido do seu voto e ao partido a que ambos pertencem",
-      "imageUrl": "/covers/highlight_os_falsos_pretextos_de_francisco_assis_cfcf807f_48c049847772.jpg",
-      "link": "https://observador.pt/opiniao/os-falsos-pretextos-de-francisco-assis/",
-      "externalId": "article:url:9ad4848881cedf17716dd3e6",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-26T23:25:07Z",
-      "expiryDate": "2026-10-26T23:25:07Z",
-      "createdAt": "2026-09-27T10:05:52.444619Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/os-falsos-pretextos-de-francisco-assis/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A1843%3A1838%3Anowe%3A1084%3A166%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F06%2F23181612%2Fdventura-miguel-morgado-4-scaled.jpg",
-        "categories": [
-          "Francisco Assis",
-          "País",
-          "Sociedade"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:9ad4848881cedf17716dd3e6",
-        "score": 1.0,
-        "coverHash": "3cd9b3ba1b6dc141e63d27987d934b77cc9a7f8efdb5309346a8664466927b2f",
-        "verifiedAt": "2026-09-27T10:05:54.965214Z",
-        "resolvedTitle": "Os falsos pretextos de Francisco Assis",
-        "resolvedAuthor": "Miguel Morgado",
-        "sourcePublishedAt": "2026-09-26T23:25:07Z",
-        "sourceDescription": "A triste exibição de Costa acabou por confirmar linha a linha a crítica que fiz, e faço, a Francisco Assis, ao sentido do seu voto e ao partido a que ambos pertencem"
-      }
-    },
-    {
       "id": "ai_movie_fba00b3673fa4d3e",
       "type": "movie",
       "category": "Filme",
@@ -2194,6 +2153,45 @@
         "resolvedAuthor": "Rui Pedro Antunes",
         "sourcePublishedAt": "2026-10-05T23:22:34Z",
         "sourceDescription": "Seguro ficou em silêncio e deixou o palco para Marcelo. Montenegro teve chamadas, mas nem uma palavra sobre o assunto. Castro Almeida e Albuquerque tiveram coragem para ignorar as convenções. E bem."
+      }
+    },
+    {
+      "id": "rss_highlight_a36a6a494ea8bdfd",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Queda da Ponte Entre-Os-Rios foi há 25 anos",
+      "authorOrMeta": "www.rtp.pt",
+      "description": "'Margens da Memória' é uma grande reportagem transmitida esta quinta-feira, após o Telejornal, na RTP1.",
+      "imageUrl": "/covers/highlight_queda_da_ponte_entre_os_rios_foi_h__25_anos_fa8ffc73_49fd8883895e.jpg",
+      "link": "https://www.rtp.pt/noticias/pais/queda-da-ponte-entre-os-rios-foi-ha-25-anos_v1770349",
+      "externalId": "article:url:a36a6a494ea8bdfdc97bd147",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-08T14:23:47Z",
+      "expiryDate": "2026-11-07T14:23:47Z",
+      "createdAt": "2026-10-08T18:55:42.113624Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://www.rtp.pt/noticias/rss/pais",
+        "guid": "https://www.rtp.pt/noticias/pais/queda-da-ponte-entre-os-rios-foi-ha-25-anos_v1770349",
+        "imageUrl": "https://cdn-images.rtp.pt/icm/images/9f/9fbb3bb8da99358fe93417fd4d4f29e9_N.jpg?",
+        "categories": [
+          "País"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:www.rtp.pt",
+        "entityId": "article:url:a36a6a494ea8bdfdc97bd147",
+        "score": 1.0,
+        "coverHash": "03c2284fedfe59b2efbe37f43f1da59299b5eb86b2e4b61e93f32e5d97c5b4fd",
+        "verifiedAt": "2026-10-08T18:55:42.722293Z",
+        "resolvedTitle": "Queda da Ponte Entre-Os-Rios foi há 25 anos",
+        "resolvedAuthor": "www.rtp.pt",
+        "sourcePublishedAt": "2026-10-08T14:23:47Z",
+        "sourceDescription": "'Margens da Memória' é uma grande reportagem transmitida esta quinta-feira, após o Telejornal, na RTP1."
       }
     }
   ],
