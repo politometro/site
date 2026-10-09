@@ -1975,56 +1975,6 @@
       }
     },
     {
-      "id": "rss_highlight_19ebec5b2103e25d",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Como reagem os partidos portugueses às eleições do Brasil?",
-      "authorOrMeta": "Miguel Cordeiro",
-      "description": "Catarina Martins (BE) e João Torres (PS) temem que vitória de Bolsonaro ameaça a democracia. Hélder Sousa e Silva (PSD) prevê um presidente mais moderado. Marcus Santos (CH) aplaude viragem à direita.",
-      "imageUrl": "/covers/highlight_como_reagem_os_partidos_portugueses__s_elei__es_do_6d5f785c_75cc42ab17a6.jpg",
-      "link": "https://observador.pt/programas/explicador/como-reagem-os-partidos-portugues-as-eleicoes-do-brasil/",
-      "externalId": "article:url:19ebec5b2103e25d4c92ddb3",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-05T10:04:08Z",
-      "expiryDate": "2026-11-04T10:04:08Z",
-      "createdAt": "2026-10-05T11:40:03.000725Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/programas/explicador/como-reagem-os-partidos-portugues-as-eleicoes-do-brasil/",
-        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
-        "categories": [
-          "Rádio Observador",
-          "Observador",
-          "Brasil",
-          "Mundo",
-          "Eleições no Brasil",
-          "Espanha",
-          "Europa",
-          "Bloco de Esquerda",
-          "Política",
-          "PSD",
-          "PS",
-          "Partido Chega"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:19ebec5b2103e25d4c92ddb3",
-        "score": 1.0,
-        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
-        "verifiedAt": "2026-10-05T11:40:04.251831Z",
-        "resolvedTitle": "Como reagem os partidos portugueses às eleições do Brasil?",
-        "resolvedAuthor": "Miguel Cordeiro",
-        "sourcePublishedAt": "2026-10-05T10:04:08Z",
-        "sourceDescription": "Catarina Martins (BE) e João Torres (PS) temem que vitória de Bolsonaro ameaça a democracia. Hélder Sousa e Silva (PSD) prevê um presidente mais moderado. Marcus Santos (CH) aplaude viragem à direita."
-      }
-    },
-    {
       "id": "rss_podcast_5e82e86ebd44405d",
       "type": "podcast",
       "category": "Podcast",
@@ -2192,6 +2142,45 @@
         "resolvedAuthor": "www.rtp.pt",
         "sourcePublishedAt": "2026-10-08T14:23:47Z",
         "sourceDescription": "'Margens da Memória' é uma grande reportagem transmitida esta quinta-feira, após o Telejornal, na RTP1."
+      }
+    },
+    {
+      "id": "rss_highlight_5f19d92f08243c38",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A dívida pública deve ser notícia",
+      "authorOrMeta": "www.rtp.pt",
+      "description": "Os média noticiosos tardam a despertar para o problema da dívida pública, sobretudo em França. Até agora, o tema tem dominado as secções de Economia, mas, nos últimos dias, tem saltado para espaços de destaque. Esta semana, o tema faz capa nas revistas “The Economist” e “L’Express”. O tom de alerta é bem evidente.",
+      "imageUrl": "/covers/highlight_a_d_vida_p_blica_deve_ser_not_cia_871b932e_61beb56e000e.jpg",
+      "link": "https://www.rtp.pt/noticias/opiniao/felisbela-lopes/a-divida-publica-deve-ser-noticia_1770587",
+      "externalId": "article:url:5f19d92f08243c38a64c308e",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-09T09:30:42Z",
+      "expiryDate": "2026-11-08T09:30:42Z",
+      "createdAt": "2026-10-09T11:24:51.453621Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://www.rtp.pt/noticias/rss",
+        "guid": "https://www.rtp.pt/noticias/opiniao/felisbela-lopes/a-divida-publica-deve-ser-noticia_1770587",
+        "imageUrl": "https://cdn-images.rtp.pt/noticias/images/default_rtpnoticias.png?w=350&q=50&auto=format",
+        "categories": [
+          "Felisbela Lopes"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:www.rtp.pt",
+        "entityId": "article:url:5f19d92f08243c38a64c308e",
+        "score": 1.0,
+        "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
+        "verifiedAt": "2026-10-09T11:24:52.258013Z",
+        "resolvedTitle": "A dívida pública deve ser notícia",
+        "resolvedAuthor": "www.rtp.pt",
+        "sourcePublishedAt": "2026-10-09T09:30:42Z",
+        "sourceDescription": "Os média noticiosos tardam a despertar para o problema da dívida pública, sobretudo em França. Até agora, o tema tem dominado as secções de Economia, mas, nos últimos dias, tem saltado para espaços de destaque. Esta semana, o tema faz capa nas revistas “The Economist” e “L’Express”. O tom de alerta é bem evidente."
       }
     }
   ],
