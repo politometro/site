@@ -2059,53 +2059,6 @@
       }
     },
     {
-      "id": "rss_highlight_1b4992c0d7fb89a5",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "À política o que é do futebol? Síiiiiiiii",
-      "authorOrMeta": "Rui Pedro Antunes",
-      "description": "Seguro ficou em silêncio e deixou o palco para Marcelo. Montenegro teve chamadas, mas nem uma palavra sobre o assunto. Castro Almeida e Albuquerque tiveram coragem para ignorar as convenções. E bem.",
-      "imageUrl": "/covers/highlight___pol_tica_o_que___do_futebol__s_iiiiiiii_d0929e0e_0b9a2236a680.jpg",
-      "link": "https://observador.pt/opiniao/a-politica-o-que-e-do-futebol-siiiiiiiii/",
-      "externalId": "article:url:1b4992c0d7fb89a5283bbbe8",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-05T23:22:34Z",
-      "expiryDate": "2026-11-04T23:22:34Z",
-      "createdAt": "2026-10-06T05:15:58.630288Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/a-politica-o-que-e-do-futebol-siiiiiiiii/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2414%3A2414%3Anowe%3A74%3A952%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170559%2Frui-pedro-antunes.jpg",
-        "categories": [
-          "Cristiano Ronaldo",
-          "Futebol",
-          "Desporto",
-          "Jorge Jesus",
-          "Presidente Marcelo",
-          "Política",
-          "António José Seguro",
-          "Presidente da República",
-          "Luís Montenegro"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:1b4992c0d7fb89a5283bbbe8",
-        "score": 1.0,
-        "coverHash": "091614f66c8e38f4d50dce0197adfe04107fef54e87ab6ea019930c916fd002c",
-        "verifiedAt": "2026-10-06T05:15:58.951876Z",
-        "resolvedTitle": "À política o que é do futebol? Síiiiiiiii",
-        "resolvedAuthor": "Rui Pedro Antunes",
-        "sourcePublishedAt": "2026-10-05T23:22:34Z",
-        "sourceDescription": "Seguro ficou em silêncio e deixou o palco para Marcelo. Montenegro teve chamadas, mas nem uma palavra sobre o assunto. Castro Almeida e Albuquerque tiveram coragem para ignorar as convenções. E bem."
-      }
-    },
-    {
       "id": "rss_highlight_a36a6a494ea8bdfd",
       "type": "highlight",
       "category": "Destaque",
@@ -2181,6 +2134,46 @@
         "resolvedAuthor": "www.rtp.pt",
         "sourcePublishedAt": "2026-10-09T09:30:42Z",
         "sourceDescription": "Os média noticiosos tardam a despertar para o problema da dívida pública, sobretudo em França. Até agora, o tema tem dominado as secções de Economia, mas, nos últimos dias, tem saltado para espaços de destaque. Esta semana, o tema faz capa nas revistas “The Economist” e “L’Express”. O tom de alerta é bem evidente."
+      }
+    },
+    {
+      "id": "rss_highlight_67471a19e518be82",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "SNS. Falta de recursos humanos sobrevive ao inverno?",
+      "authorOrMeta": "observador.pt",
+      "description": "O vice-presidente do Conselho Diretivo da Ordem dos Enfermeiros confirma denúncias dos profissionais de saúde e fala numa situação \"muito difícil\" no atendimento à linha do SNS24.",
+      "imageUrl": "/covers/highlight_sns__falta_de_recursos_humanos_sobrevive_ao_invern_34520f44_373166010403.jpg",
+      "link": "https://observador.pt/programas/explicador/sns-falta-de-recursos-humanos-sobrevive-ao-inverno/",
+      "externalId": "article:url:67471a19e518be82a12e26b9",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-09T17:34:09Z",
+      "expiryDate": "2026-11-08T17:34:09Z",
+      "createdAt": "2026-10-09T18:26:35.667359Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/sns-falta-de-recursos-humanos-sobrevive-ao-inverno/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:67471a19e518be82a12e26b9",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-10-09T18:26:35.879170Z",
+        "resolvedTitle": "SNS. Falta de recursos humanos sobrevive ao inverno?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-09T17:34:09Z",
+        "sourceDescription": "O vice-presidente do Conselho Diretivo da Ordem dos Enfermeiros confirma denúncias dos profissionais de saúde e fala numa situação \"muito difícil\" no atendimento à linha do SNS24."
       }
     }
   ],
