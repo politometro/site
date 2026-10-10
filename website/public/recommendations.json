@@ -1976,7 +1976,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Queda da Ponte Entre-Os-Rios foi há 25 anos",
-      "authorOrMeta": "www.rtp.pt",
+      "authorOrMeta": "Rádio e Televisão de Portugal",
       "description": "'Margens da Memória' é uma grande reportagem transmitida esta quinta-feira, após o Telejornal, na RTP1.",
       "imageUrl": "/covers/highlight_queda_da_ponte_entre_os_rios_foi_h__25_anos_fa8ffc73_49fd8883895e.jpg",
       "link": "https://www.rtp.pt/noticias/pais/queda-da-ponte-entre-os-rios-foi-ha-25-anos_v1770349",
@@ -1999,13 +1999,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:www.rtp.pt",
+        "source": "news:www.rtp.pt",
         "entityId": "article:url:a36a6a494ea8bdfdc97bd147",
         "score": 1.0,
         "coverHash": "03c2284fedfe59b2efbe37f43f1da59299b5eb86b2e4b61e93f32e5d97c5b4fd",
         "verifiedAt": "2026-10-08T18:55:42.722293Z",
         "resolvedTitle": "Queda da Ponte Entre-Os-Rios foi há 25 anos",
-        "resolvedAuthor": "www.rtp.pt",
+        "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-10-08T14:23:47Z",
         "sourceDescription": "'Margens da Memória' é uma grande reportagem transmitida esta quinta-feira, após o Telejornal, na RTP1."
       }
@@ -2015,7 +2015,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "A dívida pública deve ser notícia",
-      "authorOrMeta": "www.rtp.pt",
+      "authorOrMeta": "Rádio e Televisão de Portugal",
       "description": "Os média noticiosos tardam a despertar para o problema da dívida pública, sobretudo em França. Até agora, o tema tem dominado as secções de Economia, mas, nos últimos dias, tem saltado para espaços de destaque. Esta semana, o tema faz capa nas revistas “The Economist” e “L’Express”. O tom de alerta é bem evidente.",
       "imageUrl": "/covers/highlight_a_d_vida_p_blica_deve_ser_not_cia_871b932e_61beb56e000e.jpg",
       "link": "https://www.rtp.pt/noticias/opiniao/felisbela-lopes/a-divida-publica-deve-ser-noticia_1770587",
@@ -2038,13 +2038,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:www.rtp.pt",
+        "source": "news:www.rtp.pt",
         "entityId": "article:url:5f19d92f08243c38a64c308e",
         "score": 1.0,
         "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
         "verifiedAt": "2026-10-09T11:24:52.258013Z",
         "resolvedTitle": "A dívida pública deve ser notícia",
-        "resolvedAuthor": "www.rtp.pt",
+        "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-10-09T09:30:42Z",
         "sourceDescription": "Os média noticiosos tardam a despertar para o problema da dívida pública, sobretudo em França. Até agora, o tema tem dominado as secções de Economia, mas, nos últimos dias, tem saltado para espaços de destaque. Esta semana, o tema faz capa nas revistas “The Economist” e “L’Express”. O tom de alerta é bem evidente."
       }
