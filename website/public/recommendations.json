@@ -1985,7 +1985,7 @@
       "sourcePublishedAt": "2026-10-08T14:23:47Z",
       "expiryDate": "2026-11-07T14:23:47Z",
       "createdAt": "2026-10-08T18:55:42.113624Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -1996,7 +1996,7 @@
           "País"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news:www.rtp.pt",
@@ -2008,7 +2008,8 @@
         "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-10-08T14:23:47Z",
         "sourceDescription": "'Margens da Memória' é uma grande reportagem transmitida esta quinta-feira, após o Telejornal, na RTP1."
-      }
+      },
+      "validationError": "SOURCE_MISMATCH [Queda da Ponte Entre-Os-Rios foi há 25 anos]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
       "id": "rss_highlight_5f19d92f08243c38",
@@ -2024,7 +2025,7 @@
       "sourcePublishedAt": "2026-10-09T09:30:42Z",
       "expiryDate": "2026-11-08T09:30:42Z",
       "createdAt": "2026-10-09T11:24:51.453621Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2035,7 +2036,7 @@
           "Felisbela Lopes"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news:www.rtp.pt",
@@ -2047,14 +2048,15 @@
         "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-10-09T09:30:42Z",
         "sourceDescription": "Os média noticiosos tardam a despertar para o problema da dívida pública, sobretudo em França. Até agora, o tema tem dominado as secções de Economia, mas, nos últimos dias, tem saltado para espaços de destaque. Esta semana, o tema faz capa nas revistas “The Economist” e “L’Express”. O tom de alerta é bem evidente."
-      }
+      },
+      "validationError": "SOURCE_MISMATCH [A dívida pública deve ser notícia]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
       "id": "rss_highlight_67471a19e518be82",
       "type": "highlight",
       "category": "Destaque",
       "title": "SNS. Falta de recursos humanos sobrevive ao inverno?",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Bruno Vieira Amaral, Paulo Ferreira, Vanessa Cruz, Miguel Videira, Vanessa Cruz, Miguel Videira",
       "description": "O vice-presidente do Conselho Diretivo da Ordem dos Enfermeiros confirma denúncias dos profissionais de saúde e fala numa situação \"muito difícil\" no atendimento à linha do SNS24.",
       "imageUrl": "/covers/highlight_sns__falta_de_recursos_humanos_sobrevive_ao_invern_34520f44_373166010403.jpg",
       "link": "https://observador.pt/programas/explicador/sns-falta-de-recursos-humanos-sobrevive-ao-inverno/",
@@ -2078,13 +2080,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:67471a19e518be82a12e26b9",
         "score": 1.0,
         "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
         "verifiedAt": "2026-10-09T18:26:35.879170Z",
         "resolvedTitle": "SNS. Falta de recursos humanos sobrevive ao inverno?",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Bruno Vieira Amaral, Paulo Ferreira, Vanessa Cruz, Miguel Videira, Vanessa Cruz, Miguel Videira",
         "sourcePublishedAt": "2026-10-09T17:34:09Z",
         "sourceDescription": "O vice-presidente do Conselho Diretivo da Ordem dos Enfermeiros confirma denúncias dos profissionais de saúde e fala numa situação \"muito difícil\" no atendimento à linha do SNS24."
       }
@@ -4085,7 +4087,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 4
+      "highlight": 2
     },
     "missingSlots": [],
     "fallbackRequired": false
