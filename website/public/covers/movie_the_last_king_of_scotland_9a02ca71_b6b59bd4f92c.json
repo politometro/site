@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0455590/",
+  "coverHash": "f72b1a9d8ac26197a38cd0a41a23632c4b6c21c275df654a2dc4dd26e951cb58",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Idi_Amin_-Archives_New_Zealand_AAWV_23583%2C_KIRK1%2C_5%28B%29%2C_R23930288.jpg",
+  "entityId": "imdb:tt0455590",
+  "expiryDate": null,
+  "height": 1616,
+  "isbn": "",
+  "resolvedAuthor": "Kevin Macdonald",
+  "resolvedTitle": "The Last King of Scotland",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "The Last King of Scotland",
+  "titleNormalized": "the last king of scotland",
+  "type": "movie",
+  "verifiedAt": "2026-10-11T10:55:10.515511Z",
+  "width": 1110
+}
