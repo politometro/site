@@ -1535,50 +1535,6 @@
       "validationError": "SOURCE_MISMATCH [Brasil e a batalha pela circulação de conteúdos]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
-      "id": "rss_podcast_1f59d1ae4e68a2c0",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Globos + Mulheres Conservadoras + Pingo Doci - Conteúdo do Batáguas T03 Ep09",
-      "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre os temas e questões de globos + mulheres conservadoras + pingo doci - conteúdo do batáguas t03 ep09.",
-      "imageUrl": "/covers/podcast_globos___mulheres_conservadoras___pingo_doci___conte_459ace35_1f59d1ae4e68.jpg",
-      "link": "https://www.youtube.com/watch?v=12GmtoLA18U",
-      "externalId": "https://www.youtube.com/watch?v=12GmtoLA18U",
-      "sourceSeriesId": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
-      "sourceSeriesTitle": "Conteúdo do Batáguas",
-      "priority": 4,
-      "sourcePublishedAt": "2026-09-28T18:00:38Z",
-      "expiryDate": "2026-10-19T18:00:38Z",
-      "createdAt": "2026-09-28T19:44:22.007939Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
-        "guid": "https://www.youtube.com/watch?v=12GmtoLA18U",
-        "imageUrl": "https://www.youtube.com/v/12GmtoLA18U?version=3",
-        "show": "Conteúdo do Batáguas"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "https://www.youtube.com/watch?v=12GmtoLA18U",
-        "score": 1.0,
-        "coverHash": "b5b067b02028e1398ff25cf9a5e5c0cc2621c5fcadf360b5c79d6df41e4eabb5",
-        "verifiedAt": "2026-10-06T11:22:52.205870Z",
-        "resolvedTitle": "Globos + Mulheres Conservadoras + Pingo Doci - Conteúdo do Batáguas T03 Ep09",
-        "resolvedAuthor": "Conteúdo do Batáguas",
-        "sourcePublishedAt": "2026-09-28T18:00:38Z",
-        "sourceDescription": "Análise sobre os temas e questões de globos + mulheres conservadoras + pingo doci - conteúdo do batáguas t03 ep09.",
-        "editorialDescription": "Análise sobre os temas e questões de globos + mulheres conservadoras + pingo doci - conteúdo do batáguas t03 ep09.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "4e6ec4aa9f212840c3e3d24ceb1ff2e4cc7f4adf8e669fa6b549d001d6bd378b",
-        "editorialDescriptionProvider": "kept"
-      },
-      "validationError": "HTTP_ERROR: HTTP 404 ao obter https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ."
-    },
-    {
       "id": "rss_podcast_bf983ea47c4e7178",
       "type": "podcast",
       "category": "Podcast",
@@ -1968,7 +1924,7 @@
       "sourcePublishedAt": "2026-10-03T20:59:25Z",
       "expiryDate": "2026-10-13T20:59:25Z",
       "createdAt": "2026-10-11T10:55:01.311600Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1977,7 +1933,7 @@
         "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/7ee02c16-24d7-4a04-bc1c-b4d300fb3032/73e8a0c9-c829-4493-a32a-b4d600fdc07f/image.jpg?t=1791066084&size=Large",
         "show": "A Noite da Má Língua"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -1993,7 +1949,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "56689659e3cde21be09604a208dd8930b3bc548ba367e85a8ffb8eab01edfd8a",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Andas a Dormir com Quem? O podcast que os portugueses precisavam (mas não sabiam)]: Conteúdo expira em 2026-10-13T20:59:25Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "ai_movie_ad2beb1a02a34e02",
@@ -2030,7 +1987,7 @@
       "title": "“Em 2022, Cristiano era um jogador acabado. Agora tem 41 e está no pico da forma. Quatro anos fazem muita diferença. Eu aos 6 também me mexia melhor do que aos 2”",
       "editorialTitle": "“Em 2022, Cristiano era um jogador acabado. Agora tem 41 e está no pico",
       "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Análise sobre os temas e questões de em 2022, cristiano era um jogador acabado. agora tem 41 e está no pico.",
+      "description": "Análise sobre os temas e questões de em 2022, cristiano era um jogador acabado. agora tem 41 e está no pico da forma. quatro anos fazem.",
       "imageUrl": "/covers/podcast__em_2022__cristiano_era_um_jogador_acabado__agora_te_1d8eed1a_51f736b9e774.jpg",
       "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/em-2022-cristiano-era-um-jogador-acabado-agora-tem-41-e-est-no-pico-da-forma-quatro-anos-fazem-muita-diferen-a-eu-aos-6-tamb-m-me-mexia-melhor-do-que-aos-2",
       "externalId": "913bea1d-4008-4149-b7f8-b4e0015deab5",
@@ -2061,9 +2018,9 @@
         "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
         "sourcePublishedAt": "2026-10-11T21:50:00Z",
         "sourceDescription": "Os protestos contra o aumento do custo de vida, as dúvidas em torno do alegado assalto ao gabinete do Chega e a polémica entre Cristiano Ronaldo e Jorge Jesus marcam esta emissão de Isto é Gozar Com Quem Trabalha.",
-        "editorialDescription": "Análise sobre os temas e questões de em 2022, cristiano era um jogador acabado. agora tem 41 e está no pico.",
+        "editorialDescription": "Análise sobre os temas e questões de em 2022, cristiano era um jogador acabado. agora tem 41 e está no pico da forma. quatro anos fazem.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "3c47db5a2ca8c030c47228a00c318174ea5fd8a02f48fcf0e7fdd48464b31091",
+        "editorialSourceHash": "61196b0cbd434adfd6d68a637243ce9d566bf6db76842a1aa1bc9570450aaa7c",
         "editorialDescriptionProvider": "extractive"
       }
     },
@@ -2154,6 +2111,92 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-12T09:15:45Z",
         "sourceDescription": "O socialista Vitalino Canas, Pedro Lomba do PSD, e Miguel Corte-Real do Chega debatem a entrevista que Pedro Passos Coelho deu ontem à noite."
+      }
+    },
+    {
+      "id": "rss_podcast_e485b234df872761",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "\"O PSD não pode vender a alma ao diabo\"",
+      "authorOrMeta": "O Princípio da Incerteza",
+      "description": "Análise sobre episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
+      "imageUrl": "/covers/podcast__o_psd_n_o_pode_vender_a_alma_ao_diabo__f5ee602f_e485b234df87.jpg",
+      "link": "https://omny.fm/shows/tsf-o-princ-pio-da-incerteza-podcast/o-psd-n-o-pode-vender-a-alma-ao-diabo",
+      "externalId": "23ef702c-26f1-462a-8f27-b4e10074de8c",
+      "sourceSeriesId": "1747493813",
+      "sourceSeriesTitle": "O Princípio da Incerteza",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-12T07:09:48Z",
+      "expiryDate": "2026-10-22T07:09:48Z",
+      "createdAt": "2026-10-12T21:20:32.787731Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/podcast.rss",
+        "guid": "23ef702c-26f1-462a-8f27-b4e10074de8c",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/image.jpg?t=1716287262&size=Large",
+        "show": "O Princípio da Incerteza"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "23ef702c-26f1-462a-8f27-b4e10074de8c",
+        "score": 1.0,
+        "coverHash": "8355b2ba0c52b926884cf81e712cac7f615379c4df76a46d9872af10b1d05354",
+        "verifiedAt": "2026-10-12T12:13:02.909370Z",
+        "resolvedTitle": "\"O PSD não pode vender a alma ao diabo\"",
+        "resolvedAuthor": "O Princípio da Incerteza",
+        "sourcePublishedAt": "2026-10-12T07:09:48Z",
+        "sourceDescription": "Episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
+        "editorialDescription": "Análise sobre episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "903b20190397f828239f8b0f6b86c521aa0505e0e29220b7f774fa5eca55fbdc",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_ab10dadc90a6fe14",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Ronaldo vs Jesus + Eleições no Brasil - Conteúdo do Batáguas T03 Ep10",
+      "authorOrMeta": "Conteúdo do Batáguas",
+      "description": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10.",
+      "imageUrl": "/covers/podcast_ronaldo_vs_jesus___elei__es_no_brasil___conte_do_do__5441e00a_ab10dadc90a6.jpg",
+      "link": "https://www.youtube.com/watch?v=6uxmoPKcxjQ",
+      "externalId": "https://www.youtube.com/watch?v=6uxmoPKcxjQ",
+      "sourceSeriesId": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+      "sourceSeriesTitle": "Conteúdo do Batáguas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-12T18:25:11Z",
+      "expiryDate": "2026-11-02T18:25:11Z",
+      "createdAt": "2026-10-12T21:20:34.509723Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+        "guid": "https://www.youtube.com/watch?v=6uxmoPKcxjQ",
+        "imageUrl": "https://www.youtube.com/v/6uxmoPKcxjQ?version=3",
+        "show": "Conteúdo do Batáguas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "https://www.youtube.com/watch?v=6uxmoPKcxjQ",
+        "score": 1.0,
+        "coverHash": "2b05d4fb41a0ac7f340683197792f5a0619f484d5b641b55826dee77706d3583",
+        "verifiedAt": "2026-10-12T21:20:38.921688Z",
+        "resolvedTitle": "Ronaldo vs Jesus + Eleições no Brasil - Conteúdo do Batáguas T03 Ep10",
+        "resolvedAuthor": "Conteúdo do Batáguas",
+        "sourcePublishedAt": "2026-10-12T18:25:11Z",
+        "sourceDescription": "OPTIMISTA CÉPTICO https://kilt.pt/eventos/optimista-ceptico-diogo-bataguas/ RALLY DACARLOS https://rallydacarlos.pt NENA SACRA https://www.youtube.com/watch?v=pcpsTBKRpsM&t=2s SEGUIR https://www.instagram.com/diogobataguas https://www.twitter.com/diogobataguas https://www.tiktok.com/bataguas",
+        "editorialDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "0d680bd59ebe3dbc6145276a9f414acdc3886638f348d9ecf7e7a9a7fc42240e",
+        "editorialDescriptionProvider": "extractive"
       }
     }
   ],
@@ -4213,7 +4256,7 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 1,
-      "podcast": 4,
+      "podcast": 3,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
