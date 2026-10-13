@@ -2072,7 +2072,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Entrevista Passos Coelho. Que planos tem para o futuro?",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Bruno Vieira Amaral, Paulo Ferreira, Vanessa Cruz, Miguel Videira, Vanessa Cruz, Miguel Videira",
       "description": "O socialista Vitalino Canas, Pedro Lomba do PSD, e Miguel Corte-Real do Chega debatem a entrevista que Pedro Passos Coelho deu ontem à noite.",
       "imageUrl": "/covers/highlight_entrevista_passos_coelho__que_planos_tem_para_o_fu_e8bf5ce0_b0d4aa87c3e9.jpg",
       "link": "https://observador.pt/programas/explicador/entrevista-passos-coelho-que-planos-tem-para-o-futuro/",
@@ -2102,13 +2102,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:7b7b749b1c5c2c6bd7cc139c",
         "score": 1.0,
         "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
         "verifiedAt": "2026-10-12T12:13:09.612660Z",
         "resolvedTitle": "Entrevista Passos Coelho. Que planos tem para o futuro?",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Bruno Vieira Amaral, Paulo Ferreira, Vanessa Cruz, Miguel Videira, Vanessa Cruz, Miguel Videira",
         "sourcePublishedAt": "2026-10-12T09:15:45Z",
         "sourceDescription": "O socialista Vitalino Canas, Pedro Lomba do PSD, e Miguel Corte-Real do Chega debatem a entrevista que Pedro Passos Coelho deu ontem à noite."
       }
@@ -2149,11 +2149,11 @@
         "resolvedTitle": "\"O PSD não pode vender a alma ao diabo\"",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-10-12T07:09:48Z",
-        "sourceDescription": "Episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
+        "sourceDescription": "Análise sobre episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
         "editorialDescription": "Análise sobre episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "903b20190397f828239f8b0f6b86c521aa0505e0e29220b7f774fa5eca55fbdc",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "c42f70c3b776166a7a7765b0dbea8b95b7f0b8b27364c39e75f60dcaab68d1f1",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
