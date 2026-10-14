@@ -1997,7 +1997,7 @@
       "sourcePublishedAt": "2026-10-11T21:50:00Z",
       "expiryDate": "2026-10-14T21:50:00Z",
       "createdAt": "2026-10-12T12:12:55.740662Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2006,7 +2006,7 @@
         "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/913bea1d-4008-4149-b7f8-b4e0015deab5/image.jpg?t=1791753535&size=Large",
         "show": "Isto É Gozar Com Quem Trabalha"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2022,7 +2022,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "61196b0cbd434adfd6d68a637243ce9d566bf6db76842a1aa1bc9570450aaa7c",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [“Em 2022, Cristiano era um jogador acabado. Agora tem 41 e está no pico da forma. Quatro anos fazem muita diferença. Eu aos 6 também me mexia melhor do que aos 2”]: Conteúdo expira em 2026-10-14T21:50:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_podcast_7dacb0e4bed9fe3e",
@@ -2192,10 +2193,54 @@
         "resolvedTitle": "Ronaldo vs Jesus + Eleições no Brasil - Conteúdo do Batáguas T03 Ep10",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-10-12T18:25:11Z",
-        "sourceDescription": "OPTIMISTA CÉPTICO https://kilt.pt/eventos/optimista-ceptico-diogo-bataguas/ RALLY DACARLOS https://rallydacarlos.pt NENA SACRA https://www.youtube.com/watch?v=pcpsTBKRpsM&t=2s SEGUIR https://www.instagram.com/diogobataguas https://www.twitter.com/diogobataguas https://www.tiktok.com/bataguas",
+        "sourceDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10.",
         "editorialDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "0d680bd59ebe3dbc6145276a9f414acdc3886638f348d9ecf7e7a9a7fc42240e",
+        "editorialSourceHash": "bc1aca11be26d3b87d44e32329849eab30fda5f54f24759a9452aa0054b69b6b",
+        "editorialDescriptionProvider": "kept"
+      }
+    },
+    {
+      "id": "rss_podcast_908d478b629cc6de",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Novo Podcast SIC | Pedalar Sem Idade Portugal: como uma ideia dinamarquesa ajuda a combater o isolamento em 12 cidades portuguesas",
+      "editorialTitle": "Novo Podcast SIC | Pedalar Sem Idade Portugal: como uma ideia dinamarquesa",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre os temas e questões de novo podcast sic | pedalar sem idade portugal: como uma ideia dinamarquesa.",
+      "imageUrl": "/covers/podcast_novo_podcast_sic___pedalar_sem_idade_portugal__como__3510dd1e_908d478b629c.jpg",
+      "link": "https://omny.fm/shows/portugal-solidario-um-podcast-sic/pedalar-sem-idade-portugal",
+      "externalId": "47f341f3-11d9-4b49-81c8-b4d000b1cee1",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-12T06:00:00Z",
+      "expiryDate": "2026-10-22T06:00:00Z",
+      "createdAt": "2026-10-14T09:37:05.901874Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "47f341f3-11d9-4b49-81c8-b4d000b1cee1",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/802ff967-0a72-40c4-bafd-b4c50128bf7a/47f341f3-11d9-4b49-81c8-b4d000b1cee1/image.jpg?t=1791468154&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "47f341f3-11d9-4b49-81c8-b4d000b1cee1",
+        "score": 1.0,
+        "coverHash": "247fdc9d734669766093291bd8a607ea56cac87a3d10d580aa835ac4761c4ed2",
+        "verifiedAt": "2026-10-13T11:57:17.910307Z",
+        "resolvedTitle": "Novo Podcast SIC | Pedalar Sem Idade Portugal: como uma ideia dinamarquesa ajuda a combater o isolamento em 12 cidades portuguesas",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-10-12T06:00:00Z",
+        "sourceDescription": "Neste episódio, juntamo-nos à Pedalar Sem Idade Portugal, uma associação que promove encontros intergeracionais através de passeios gratuitos em trishaws conduzidos por voluntários.",
+        "editorialDescription": "Análise sobre os temas e questões de novo podcast sic | pedalar sem idade portugal: como uma ideia dinamarquesa.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "bd9da832ce010c3412e18bc8cdebe71b60338587cc829c11d2090819fe1fb0ff",
         "editorialDescriptionProvider": "extractive"
       }
     }
@@ -4256,7 +4301,7 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 1,
-      "podcast": 3,
+      "podcast": 2,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
