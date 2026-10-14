@@ -2122,7 +2122,7 @@
       "authorOrMeta": "O Princípio da Incerteza",
       "description": "Análise sobre episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
       "imageUrl": "/covers/podcast__o_psd_n_o_pode_vender_a_alma_ao_diabo__f5ee602f_e485b234df87.jpg",
-      "link": "https://omny.fm/shows/tsf-o-princ-pio-da-incerteza-podcast/o-psd-n-o-pode-vender-a-alma-ao-diabo",
+      "link": "https://omny.fm/shows/o-principio-da-incerteza/o-psd-n-o-pode-vender-a-alma-ao-diabo",
       "externalId": "23ef702c-26f1-462a-8f27-b4e10074de8c",
       "sourceSeriesId": "1747493813",
       "sourceSeriesTitle": "O Princípio da Incerteza",
@@ -2146,7 +2146,7 @@
         "entityId": "23ef702c-26f1-462a-8f27-b4e10074de8c",
         "score": 1.0,
         "coverHash": "8355b2ba0c52b926884cf81e712cac7f615379c4df76a46d9872af10b1d05354",
-        "verifiedAt": "2026-10-12T12:13:02.909370Z",
+        "verifiedAt": "2026-10-14T17:22:06.517593Z",
         "resolvedTitle": "\"O PSD não pode vender a alma ao diabo\"",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-10-12T07:09:48Z",
@@ -2207,7 +2207,7 @@
       "title": "Novo Podcast SIC | Pedalar Sem Idade Portugal: como uma ideia dinamarquesa ajuda a combater o isolamento em 12 cidades portuguesas",
       "editorialTitle": "Novo Podcast SIC | Pedalar Sem Idade Portugal: como uma ideia dinamarquesa",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre os temas e questões de novo podcast sic | pedalar sem idade portugal: como uma ideia dinamarquesa.",
+      "description": "Análise sobre os temas e questões de novo podcast sic | pedalar sem idade portugal: como uma ideia dinamarquesa ajuda a combater o.",
       "imageUrl": "/covers/podcast_novo_podcast_sic___pedalar_sem_idade_portugal__como__3510dd1e_908d478b629c.jpg",
       "link": "https://omny.fm/shows/portugal-solidario-um-podcast-sic/pedalar-sem-idade-portugal",
       "externalId": "47f341f3-11d9-4b49-81c8-b4d000b1cee1",
@@ -2238,9 +2238,9 @@
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-10-12T06:00:00Z",
         "sourceDescription": "Neste episódio, juntamo-nos à Pedalar Sem Idade Portugal, uma associação que promove encontros intergeracionais através de passeios gratuitos em trishaws conduzidos por voluntários.",
-        "editorialDescription": "Análise sobre os temas e questões de novo podcast sic | pedalar sem idade portugal: como uma ideia dinamarquesa.",
+        "editorialDescription": "Análise sobre os temas e questões de novo podcast sic | pedalar sem idade portugal: como uma ideia dinamarquesa ajuda a combater o.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "bd9da832ce010c3412e18bc8cdebe71b60338587cc829c11d2090819fe1fb0ff",
+        "editorialSourceHash": "2cc8203d0a265d5feeff20f635cf2271703a92ffd0e9c7c24f5b8c7366a19348",
         "editorialDescriptionProvider": "extractive"
       }
     }
