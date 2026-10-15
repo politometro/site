@@ -2243,6 +2243,50 @@
         "editorialSourceHash": "2cc8203d0a265d5feeff20f635cf2271703a92ffd0e9c7c24f5b8c7366a19348",
         "editorialDescriptionProvider": "extractive"
       }
+    },
+    {
+      "id": "rss_highlight_8185aff31933d8d1",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Lisboa. Centenas de juizes debatem independêcia judicial",
+      "authorOrMeta": "observador.pt",
+      "description": "Preocupação com a ameaça que a extrema-direita coloca ao Estado de Direito estará presente nas reuniões de trabalho, assim como os riscos associados ao uso da inteligência artificial.",
+      "imageUrl": "/covers/highlight_lisboa__centenas_de_juizes_debatem_independ_cia_ju_d25bb3a2_0faffe581fe5.jpg",
+      "link": "https://observador.pt/2026/10/15/centenas-de-juizes-debatem-independencia-judicial-a-partir-desta-quinta-feira-em-lisboa/",
+      "externalId": "article:url:8185aff31933d8d193b999db",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-15T07:37:34Z",
+      "expiryDate": "2026-11-14T07:37:34Z",
+      "createdAt": "2026-10-15T09:17:02.527750Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/2026/10/15/centenas-de-juizes-debatem-independencia-judicial-a-partir-desta-quinta-feira-em-lisboa/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:1440:809:nowe:0:75/q:70/plain/https://s3.observador.pt/wp-content/uploads/2024/03/20152346/25166882.jpeg",
+        "categories": [
+          "Debate",
+          "Sociedade",
+          "Juízes",
+          "Tribunal",
+          "Justiça",
+          "Direito"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:8185aff31933d8d193b999db",
+        "score": 1.0,
+        "coverHash": "d4848137675ef3fcc300bef4aca1d3dcfcaa0440dc1d8eb5a4afa07be92ef7d7",
+        "verifiedAt": "2026-10-15T09:17:02.771726Z",
+        "resolvedTitle": "Lisboa. Centenas de juizes debatem independêcia judicial",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-15T07:37:34Z",
+        "sourceDescription": "Preocupação com a ameaça que a extrema-direita coloca ao Estado de Direito estará presente nas reuniões de trabalho, assim como os riscos associados ao uso da inteligência artificial."
+      }
     }
   ],
   "history": [
@@ -4305,7 +4349,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 2
+      "highlight": 3
     },
     "missingSlots": [],
     "fallbackRequired": false
