@@ -2258,7 +2258,7 @@
       "sourcePublishedAt": "2026-10-15T07:37:34Z",
       "expiryDate": "2026-11-14T07:37:34Z",
       "createdAt": "2026-10-15T09:17:02.527750Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2274,7 +2274,7 @@
           "Direito"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -2286,7 +2286,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-15T07:37:34Z",
         "sourceDescription": "Preocupação com a ameaça que a extrema-direita coloca ao Estado de Direito estará presente nas reuniões de trabalho, assim como os riscos associados ao uso da inteligência artificial."
-      }
+      },
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [Lisboa. Centenas de juizes debatem independêcia judicial]: Artigo 'Centenas de juizes debatem independência judicial a partir desta quinta-feira em Lisboa' não corresponde ao título candidato."
     }
   ],
   "history": [
@@ -4349,7 +4350,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 2
     },
     "missingSlots": [],
     "fallbackRequired": false
