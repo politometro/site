@@ -2115,49 +2115,6 @@
       }
     },
     {
-      "id": "rss_podcast_e485b234df872761",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "\"O PSD não pode vender a alma ao diabo\"",
-      "authorOrMeta": "O Princípio da Incerteza",
-      "description": "Análise sobre episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
-      "imageUrl": "/covers/podcast__o_psd_n_o_pode_vender_a_alma_ao_diabo__f5ee602f_e485b234df87.jpg",
-      "link": "https://omny.fm/shows/o-principio-da-incerteza/o-psd-n-o-pode-vender-a-alma-ao-diabo",
-      "externalId": "23ef702c-26f1-462a-8f27-b4e10074de8c",
-      "sourceSeriesId": "1747493813",
-      "sourceSeriesTitle": "O Princípio da Incerteza",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-12T07:09:48Z",
-      "expiryDate": "2026-10-22T07:09:48Z",
-      "createdAt": "2026-10-12T21:20:32.787731Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/podcast.rss",
-        "guid": "23ef702c-26f1-462a-8f27-b4e10074de8c",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/image.jpg?t=1716287262&size=Large",
-        "show": "O Princípio da Incerteza"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "23ef702c-26f1-462a-8f27-b4e10074de8c",
-        "score": 1.0,
-        "coverHash": "8355b2ba0c52b926884cf81e712cac7f615379c4df76a46d9872af10b1d05354",
-        "verifiedAt": "2026-10-14T17:22:06.517593Z",
-        "resolvedTitle": "\"O PSD não pode vender a alma ao diabo\"",
-        "resolvedAuthor": "O Princípio da Incerteza",
-        "sourcePublishedAt": "2026-10-12T07:09:48Z",
-        "sourceDescription": "Análise sobre episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
-        "editorialDescription": "Análise sobre episódio “\"O PSD não pode vender a alma ao diabo\"” do podcast O Princípio da Incerteza, publicado em 12/10/2026.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "c42f70c3b776166a7a7765b0dbea8b95b7f0b8b27364c39e75f60dcaab68d1f1",
-        "editorialDescriptionProvider": "kept"
-      }
-    },
-    {
       "id": "rss_podcast_ab10dadc90a6fe14",
       "type": "podcast",
       "category": "Podcast",
@@ -2198,50 +2155,6 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "bc1aca11be26d3b87d44e32329849eab30fda5f54f24759a9452aa0054b69b6b",
         "editorialDescriptionProvider": "kept"
-      }
-    },
-    {
-      "id": "rss_podcast_908d478b629cc6de",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Novo Podcast SIC | Pedalar Sem Idade Portugal: como uma ideia dinamarquesa ajuda a combater o isolamento em 12 cidades portuguesas",
-      "editorialTitle": "Novo Podcast SIC | Pedalar Sem Idade Portugal: como uma ideia dinamarquesa",
-      "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre os temas e questões de novo podcast sic | pedalar sem idade portugal: como uma ideia dinamarquesa ajuda a combater o.",
-      "imageUrl": "/covers/podcast_novo_podcast_sic___pedalar_sem_idade_portugal__como__3510dd1e_908d478b629c.jpg",
-      "link": "https://omny.fm/shows/portugal-solidario-um-podcast-sic/pedalar-sem-idade-portugal",
-      "externalId": "47f341f3-11d9-4b49-81c8-b4d000b1cee1",
-      "sourceSeriesId": "1441662761",
-      "sourceSeriesTitle": "Expresso da Meia-Noite",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-12T06:00:00Z",
-      "expiryDate": "2026-10-22T06:00:00Z",
-      "createdAt": "2026-10-14T09:37:05.901874Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
-        "guid": "47f341f3-11d9-4b49-81c8-b4d000b1cee1",
-        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/802ff967-0a72-40c4-bafd-b4c50128bf7a/47f341f3-11d9-4b49-81c8-b4d000b1cee1/image.jpg?t=1791468154&size=Large",
-        "show": "Expresso da Meia-Noite"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "47f341f3-11d9-4b49-81c8-b4d000b1cee1",
-        "score": 1.0,
-        "coverHash": "247fdc9d734669766093291bd8a607ea56cac87a3d10d580aa835ac4761c4ed2",
-        "verifiedAt": "2026-10-13T11:57:17.910307Z",
-        "resolvedTitle": "Novo Podcast SIC | Pedalar Sem Idade Portugal: como uma ideia dinamarquesa ajuda a combater o isolamento em 12 cidades portuguesas",
-        "resolvedAuthor": "Expresso da Meia-Noite",
-        "sourcePublishedAt": "2026-10-12T06:00:00Z",
-        "sourceDescription": "Neste episódio, juntamo-nos à Pedalar Sem Idade Portugal, uma associação que promove encontros intergeracionais através de passeios gratuitos em trishaws conduzidos por voluntários.",
-        "editorialDescription": "Análise sobre os temas e questões de novo podcast sic | pedalar sem idade portugal: como uma ideia dinamarquesa ajuda a combater o.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "2cc8203d0a265d5feeff20f635cf2271703a92ffd0e9c7c24f5b8c7366a19348",
-        "editorialDescriptionProvider": "extractive"
       }
     },
     {
@@ -2288,6 +2201,133 @@
         "sourceDescription": "Preocupação com a ameaça que a extrema-direita coloca ao Estado de Direito estará presente nas reuniões de trabalho, assim como os riscos associados ao uso da inteligência artificial."
       },
       "validationError": "HIGHLIGHT_TITLE_MISMATCH [Lisboa. Centenas de juizes debatem independêcia judicial]: Artigo 'Centenas de juizes debatem independência judicial a partir desta quinta-feira em Lisboa' não corresponde ao título candidato."
+    },
+    {
+      "id": "rss_podcast_11d90d6bd2bfa4cb",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Protestos pela habitação no Porto e em Lisboa: o que está por detrás da revolta de uma geração",
+      "editorialTitle": "Protestos pela habitação no Porto e em Lisboa: o que está por detrás da revolta",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre os temas e questões de protestos pela habitação no porto e em lisboa: o que está por detrás da revolta.",
+      "imageUrl": "/covers/podcast_protestos_pela_habita__o_no_porto_e_em_lisboa__o_que_9eaa0efa_11d90d6bd2bf.jpg",
+      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/protestos-pela-habita-o-no-porto-e-em-lisboa-o-que-est-por-detr-s-da-revolta-de-uma-gera-o",
+      "externalId": "9f92df7b-309c-4362-97c8-b4e5017a94b1",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-17T07:32:55Z",
+      "expiryDate": "2026-10-27T07:32:55Z",
+      "createdAt": "2026-10-17T08:39:54.692016Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "9f92df7b-309c-4362-97c8-b4e5017a94b1",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "9f92df7b-309c-4362-97c8-b4e5017a94b1",
+        "score": 1.0,
+        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
+        "verifiedAt": "2026-10-17T08:39:59.253881Z",
+        "resolvedTitle": "Protestos pela habitação no Porto e em Lisboa: o que está por detrás da revolta de uma geração",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-10-17T07:32:55Z",
+        "sourceDescription": "Numa semana em que os protestos europeus parecem ter alastrado a Portugal, a acampada no Porto, terminada com uma carga policial que está a ser investigada pela Inspeção-Geral da Administração Interna, e a de Lisboa, marcada para amanhã, colocam a crise da habitação no centro do debate.",
+        "editorialDescription": "Análise sobre os temas e questões de protestos pela habitação no porto e em lisboa: o que está por detrás da revolta.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "e50037c6835c94a9c02a34c1dbd27f276963a5b98e84403da4020f70eef294c8",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_9d5fef1476ffc021",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "O plano sebastianista de Passos e as 3 oposições ao PSD",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “O plano sebastianista de Passos e as 3 oposições ao PSD” do podcast Fora do Baralho, publicado em 16/10/2026.",
+      "imageUrl": "/covers/podcast_o_plano_sebastianista_de_passos_e_as_3_oposi__es_ao__48ef3aef_9d5fef1476ff.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/o-plano-sebastianista-de-passos-e-as-3-oposi-es-ao-psd",
+      "externalId": "99a171e5-3e42-47c6-98eb-b4e501172676",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-16T19:45:00Z",
+      "expiryDate": "2026-10-19T19:45:00Z",
+      "createdAt": "2026-10-17T08:39:55.358316Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "99a171e5-3e42-47c6-98eb-b4e501172676",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "99a171e5-3e42-47c6-98eb-b4e501172676",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-10-17T08:40:00.146784Z",
+        "resolvedTitle": "O plano sebastianista de Passos e as 3 oposições ao PSD",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-10-16T19:45:00Z",
+        "sourceDescription": "Episódio “O plano sebastianista de Passos e as 3 oposições ao PSD” do podcast Fora do Baralho, publicado em 16/10/2026.",
+        "editorialDescription": "Análise sobre episódio “O plano sebastianista de Passos e as 3 oposições ao PSD” do podcast Fora do Baralho, publicado em 16/10/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "74a561561f1ca56ecac09acbf902b910d09c9cc49d2e554ea6f36f33813b0840",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_47e9b7b6afd68c27",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Passos a passo",
+      "authorOrMeta": "observador.pt",
+      "description": "Demasiado preso à tradição governativa e de alternativa, tenho sérias dúvidas de que o partido de Montenegro e de Rui Rio ainda possa servir como esperança e veículo para a transformação de Portugal.",
+      "imageUrl": "/covers/highlight_passos_a_passo_fdf39467_a98f296ba150.jpg",
+      "link": "https://observador.pt/opiniao/passos-a-passo/",
+      "externalId": "article:url:47e9b7b6afd68c270bc3b23b",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-16T23:12:47Z",
+      "expiryDate": "2026-11-15T23:12:47Z",
+      "createdAt": "2026-10-17T08:40:01.751372Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/passos-a-passo/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2024%2F05%2F08145002%2Fcaptura-de-ecra-2024-05-08-144606.jpg",
+        "categories": [
+          "Pedro Passos Coelho",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:47e9b7b6afd68c270bc3b23b",
+        "score": 1.0,
+        "coverHash": "66d6aeede9584dd0a65f49e73779f6090274ba65e6501640ffe6fdccdf04b030",
+        "verifiedAt": "2026-10-17T08:40:02.671881Z",
+        "resolvedTitle": "Passos a passo",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-16T23:12:47Z",
+        "sourceDescription": "Demasiado preso à tradição governativa e de alternativa, tenho sérias dúvidas de que o partido de Montenegro e de Rui Rio ainda possa servir como esperança e veículo para a transformação de Portugal."
+      }
     }
   ],
   "history": [
@@ -4350,7 +4390,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 2
+      "highlight": 3
     },
     "missingSlots": [],
     "fallbackRequired": false
