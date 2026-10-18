@@ -1787,47 +1787,6 @@
       "validationError": "HIGHLIGHT_TITLE_MISMATCH [O português nos bastidores do Nobel da Medicina]: Artigo 'Centenas de nomeações, meses de investigação e uma votação secreta. Gonçalo Castelo-Branco, o português nos bastidores do Nobel da Medicina' não corresponde ao título candidato."
     },
     {
-      "id": "rss_highlight_982d89d88ff33a4b",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "O Presidente e os entendimentos",
-      "authorOrMeta": "Helena Garrido",
-      "description": "O Presidente pede entendimentos que garantam estabilidade governativa na resolução dos problemas. Um apelo que parece o mesmo que manifestar desejos de paz para o mundo.",
-      "imageUrl": "/covers/highlight_o_presidente_e_os_entendimentos_13d006db_2c9496bfd582.jpg",
-      "link": "https://observador.pt/opiniao/o-presidente-e-os-entendimentos/",
-      "externalId": "article:url:982d89d88ff33a4b433ea778",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-05T23:25:55Z",
-      "expiryDate": "2026-11-04T23:25:55Z",
-      "createdAt": "2026-10-06T05:15:58.629439Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/o-presidente-e-os-entendimentos/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2385%3A2384%3Anowe%3A266%3A399%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170544%2Fhelena-garrido.jpg",
-        "categories": [
-          "António José Seguro",
-          "Presidente da República",
-          "Política"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:982d89d88ff33a4b433ea778",
-        "score": 1.0,
-        "coverHash": "a090134ccd62b09e683bdf70654b933d33687d3bfc34db393dc0122892d36047",
-        "verifiedAt": "2026-10-06T05:15:58.804171Z",
-        "resolvedTitle": "O Presidente e os entendimentos",
-        "resolvedAuthor": "Helena Garrido",
-        "sourcePublishedAt": "2026-10-05T23:25:55Z",
-        "sourceDescription": "O Presidente pede entendimentos que garantam estabilidade governativa na resolução dos problemas. Um apelo que parece o mesmo que manifestar desejos de paz para o mundo."
-      }
-    },
-    {
       "id": "rss_highlight_a36a6a494ea8bdfd",
       "type": "highlight",
       "category": "Destaque",
@@ -2204,54 +2163,11 @@
       }
     },
     {
-      "id": "rss_podcast_9d5fef1476ffc021",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "O plano sebastianista de Passos e as 3 oposições ao PSD",
-      "authorOrMeta": "Fora do Baralho",
-      "description": "Análise sobre episódio “O plano sebastianista de Passos e as 3 oposições ao PSD” do podcast Fora do Baralho, publicado em 16/10/2026.",
-      "imageUrl": "/covers/podcast_o_plano_sebastianista_de_passos_e_as_3_oposi__es_ao__48ef3aef_9d5fef1476ff.jpg",
-      "link": "https://omny.fm/shows/fora-do-baralho/o-plano-sebastianista-de-passos-e-as-3-oposi-es-ao-psd",
-      "externalId": "99a171e5-3e42-47c6-98eb-b4e501172676",
-      "sourceSeriesId": "1597496780",
-      "sourceSeriesTitle": "Fora do Baralho",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-16T19:45:00Z",
-      "expiryDate": "2026-10-19T19:45:00Z",
-      "createdAt": "2026-10-17T08:39:55.358316Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
-        "guid": "99a171e5-3e42-47c6-98eb-b4e501172676",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
-        "show": "Fora do Baralho"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "99a171e5-3e42-47c6-98eb-b4e501172676",
-        "score": 1.0,
-        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
-        "verifiedAt": "2026-10-17T08:40:00.146784Z",
-        "resolvedTitle": "O plano sebastianista de Passos e as 3 oposições ao PSD",
-        "resolvedAuthor": "Fora do Baralho",
-        "sourcePublishedAt": "2026-10-16T19:45:00Z",
-        "sourceDescription": "Episódio “O plano sebastianista de Passos e as 3 oposições ao PSD” do podcast Fora do Baralho, publicado em 16/10/2026.",
-        "editorialDescription": "Análise sobre episódio “O plano sebastianista de Passos e as 3 oposições ao PSD” do podcast Fora do Baralho, publicado em 16/10/2026.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "74a561561f1ca56ecac09acbf902b910d09c9cc49d2e554ea6f36f33813b0840",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_47e9b7b6afd68c27",
       "type": "highlight",
       "category": "Destaque",
       "title": "Passos a passo",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Paulo Pinto",
       "description": "Demasiado preso à tradição governativa e de alternativa, tenho sérias dúvidas de que o partido de Montenegro e de Rui Rio ainda possa servir como esperança e veículo para a transformação de Portugal.",
       "imageUrl": "/covers/highlight_passos_a_passo_fdf39467_a98f296ba150.jpg",
       "link": "https://observador.pt/opiniao/passos-a-passo/",
@@ -2275,13 +2191,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:47e9b7b6afd68c270bc3b23b",
         "score": 1.0,
         "coverHash": "66d6aeede9584dd0a65f49e73779f6090274ba65e6501640ffe6fdccdf04b030",
         "verifiedAt": "2026-10-17T08:40:02.671881Z",
         "resolvedTitle": "Passos a passo",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Paulo Pinto",
         "sourcePublishedAt": "2026-10-16T23:12:47Z",
         "sourceDescription": "Demasiado preso à tradição governativa e de alternativa, tenho sérias dúvidas de que o partido de Montenegro e de Rui Rio ainda possa servir como esperança e veículo para a transformação de Portugal."
       }
@@ -2327,6 +2243,131 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "327615c2c9ba5c8c4749d92341dd2866974bf260b1376b1e43e7733540eda16d",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_866c74a20e13ffaf",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Recuperámos os 3.200 milhões de euros da TAP? — Ouvintes",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “Recuperámos os 3.200 milhões de euros da TAP? — Ouvintes” do podcast Fora do Baralho, publicado em 18/10/2026.",
+      "imageUrl": "/covers/podcast_recuper_mos_os_3_200_milh_es_de_euros_da_tap____ouvi_1f4fc213_866c74a20e13.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/recuper-mos-os-3-200-milh-es-de-euros-da-tap-ouvintes",
+      "externalId": "33b76f03-660f-4b98-ac07-b4e50117a65b",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-18T05:00:00Z",
+      "expiryDate": "2026-10-21T05:00:00Z",
+      "createdAt": "2026-10-18T08:56:38.746393Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "33b76f03-660f-4b98-ac07-b4e50117a65b",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "33b76f03-660f-4b98-ac07-b4e50117a65b",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-10-18T08:56:41.498140Z",
+        "resolvedTitle": "Recuperámos os 3.200 milhões de euros da TAP? — Ouvintes",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-10-18T05:00:00Z",
+        "sourceDescription": "Episódio “Recuperámos os 3.200 milhões de euros da TAP? — Ouvintes” do podcast Fora do Baralho, publicado em 18/10/2026.",
+        "editorialDescription": "Análise sobre episódio “Recuperámos os 3.200 milhões de euros da TAP? — Ouvintes” do podcast Fora do Baralho, publicado em 18/10/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "01716cb5c5092cb308b81df181a7b2b433db04b6419e5de778b506a715ce2a20",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_fa994f913a35d7dc",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "A ditadura da emergência",
+      "authorOrMeta": "observador.pt",
+      "description": "Os nossos governos legislam a trouxe mouche para apaziguar uma rua estridente que anuncia o apocalipse. Quando a luta de classes como via para o socialismo falhou, a emergência afirmou-se como atalho",
+      "imageUrl": "/covers/highlight_a_ditadura_da_emerg_ncia_c75d723c_11674af4e91c.jpg",
+      "link": "https://observador.pt/opiniao/a-ditadura-da-emergencia/",
+      "externalId": "article:url:fa994f913a35d7dc007d5027",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-17T23:25:59Z",
+      "expiryDate": "2026-11-16T23:25:59Z",
+      "createdAt": "2026-10-18T08:56:43.579636Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-ditadura-da-emergencia/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2666%3A2665%3Anowe%3A0%3A814%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170545%2Fhelena-matos.jpg",
+        "categories": [
+          "Clima",
+          "Céu e Terra",
+          "Ciência"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:fa994f913a35d7dc007d5027",
+        "score": 1.0,
+        "coverHash": "5f96f0285c486e7a354ef875f381eace8e9d727810b02ceb2e594bc3cfe742cd",
+        "verifiedAt": "2026-10-18T08:56:43.783921Z",
+        "resolvedTitle": "A ditadura da emergência",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-17T23:25:59Z",
+        "sourceDescription": "Os nossos governos legislam a trouxe mouche para apaziguar uma rua estridente que anuncia o apocalipse. Quando a luta de classes como via para o socialismo falhou, a emergência afirmou-se como atalho"
+      }
+    },
+    {
+      "id": "rss_highlight_29e82903d672d367",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Lisboa, cinco anos depois",
+      "authorOrMeta": "observador.pt",
+      "description": "A minha forma de fazer política é diferente e contarão sempre comigo para estar ao vosso lado, todos os dias. Foram cinco anos de mudança. Cinco anos para ti, lisboeta.",
+      "imageUrl": "/covers/highlight_lisboa__cinco_anos_depois_7f8aba75_e4c0c8c08917.jpg",
+      "link": "https://observador.pt/opiniao/lisboa-cinco-anos-depois/",
+      "externalId": "article:url:29e82903d672d367a9ae78e2",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-17T23:23:17Z",
+      "expiryDate": "2026-11-16T23:23:17Z",
+      "createdAt": "2026-10-18T08:56:43.580005Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/lisboa-cinco-anos-depois/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A548%3A548%3Anowe%3A329%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2024%2F05%2F14174715%2F42848410.jpg",
+        "categories": [
+          "Lisboa",
+          "País",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:29e82903d672d367a9ae78e2",
+        "score": 1.0,
+        "coverHash": "ae5ddfdee1c2f14695615e0e1bbd5ee6db1de197038f81aeb553c8254f1e1676",
+        "verifiedAt": "2026-10-18T08:56:44.678940Z",
+        "resolvedTitle": "Lisboa, cinco anos depois",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-17T23:23:17Z",
+        "sourceDescription": "A minha forma de fazer política é diferente e contarão sempre comigo para estar ao vosso lado, todos os dias. Foram cinco anos de mudança. Cinco anos para ti, lisboeta."
       }
     }
   ],
@@ -4390,7 +4431,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [],
     "fallbackRequired": false
