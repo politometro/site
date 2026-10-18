@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt15301048/",
+  "coverHash": "2da280583d084d805b50335e57044e9478a92fdcec9fc8f7f89f683c1befed0c",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/25/Argentina_1985_%28nombre_de_la_pel%C3%ADcula%29.jpg",
+  "entityId": "imdb:tt15301048",
+  "expiryDate": null,
+  "height": 449,
+  "isbn": "",
+  "resolvedAuthor": "Santiago Mitre",
+  "resolvedTitle": "Argentina, 1985",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Argentina, 1985",
+  "titleNormalized": "argentina 1985",
+  "type": "movie",
+  "verifiedAt": "2026-10-18T16:00:35.110694Z",
+  "width": 692
+}
