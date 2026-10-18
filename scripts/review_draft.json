@@ -8,7 +8,11 @@
   "post_sha256": "aaff63eab57fd4c1f18800d4930387a5ecdd93ea2e4ed5ad2fc9d9b7225208d7",
   "caption_sha256": "b6c6a08b3216d6bf8486a22f601fa05c91c96c13d4821ba47a17b0da1fa4f1da",
   "approval": {
-    "approved": false
+    "approved": true,
+    "draft_id": "draft_6c799646f7ca46fec508",
+    "content_hash": "6c799646f7ca46fec508f776bf68e75a4d06c196f79df07a1a311838362fd4d9",
+    "approved_by": "override manual por decisão do Luís de 2026-10-04: publicar mesmo sem aprovação no Discord",
+    "approved_at": "2026-10-18T09:03:39.726720+00:00"
   },
   "q1": {
     "id": "ai_book_87ad65f3c30241ed",
