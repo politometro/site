@@ -2298,8 +2298,8 @@
         "sourceDescription": "Ligeiro problema de comunicação entre a polícia e os manifestantes pelo direito à habitação no Porto. As pessoas foram para a rua em protesto, a exigir um tecto em cima da cabeça. E levaram com um cassetete em cima da cabeça. A polícia é capaz de ter percebido mal. Tratou os manifestantes como se estivessem a cometer um crime.",
         "editorialDescription": "Análise sobre ligeiro problema de comunicação entre a polícia e os manifestantes pelo direito à habitação no Porto.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "e96cc3d2dbfa4bd13ede9ea6d1c0ad954cf70408d5233da14d1f55f5f03f7ad7",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "1a627e67063bf8c08b830aaab15ad33fd2eec9829ccf284eb4fc757d41751393",
+        "editorialDescriptionProvider": "kept"
       }
     }
   ],
