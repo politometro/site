@@ -2078,7 +2078,7 @@
       "sourcePublishedAt": "2026-10-18T05:00:00Z",
       "expiryDate": "2026-10-21T05:00:00Z",
       "createdAt": "2026-10-18T08:56:38.746393Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2087,7 +2087,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2103,7 +2103,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "314fd5c9277d907a93993b52b25636692fde3c7dce1bc1c1a97abe9e115eea7b",
         "editorialDescriptionProvider": "kept"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Recuperámos os 3.200 milhões de euros da TAP? — Ouvintes]: Conteúdo expira em 2026-10-21T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_fa994f913a35d7dc",
@@ -2300,6 +2301,50 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "1a627e67063bf8c08b830aaab15ad33fd2eec9829ccf284eb4fc757d41751393",
         "editorialDescriptionProvider": "kept"
+      }
+    },
+    {
+      "id": "rss_podcast_11d90d6bd2bfa4cb",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Protestos pela habitação no Porto e em Lisboa: o que está por detrás da revolta de uma geração",
+      "editorialTitle": "Protestos pela habitação no Porto e em Lisboa: o que está por detrás da revolta",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre os temas e questões de protestos pela habitação no porto e em lisboa: o que está por detrás da revolta.",
+      "imageUrl": "/covers/podcast_protestos_pela_habita__o_no_porto_e_em_lisboa__o_que_9eaa0efa_11d90d6bd2bf.jpg",
+      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/protestos-pela-habita-o-no-porto-e-em-lisboa-o-que-est-por-detr-s-da-revolta-de-uma-gera-o",
+      "externalId": "9f92df7b-309c-4362-97c8-b4e5017a94b1",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-17T07:32:55Z",
+      "expiryDate": "2026-10-27T07:32:55Z",
+      "createdAt": "2026-10-20T09:31:16.256456Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "9f92df7b-309c-4362-97c8-b4e5017a94b1",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "9f92df7b-309c-4362-97c8-b4e5017a94b1",
+        "score": 1.0,
+        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
+        "verifiedAt": "2026-10-17T08:39:59.253881Z",
+        "resolvedTitle": "Protestos pela habitação no Porto e em Lisboa: o que está por detrás da revolta de uma geração",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-10-17T07:32:55Z",
+        "sourceDescription": "Numa semana em que os protestos europeus parecem ter alastrado a Portugal, a acampada no Porto, terminada com uma carga policial que está a ser investigada pela Inspeção-Geral da Administração Interna, e a de Lisboa, marcada para amanhã, colocam a crise da habitação no centro do debate.",
+        "editorialDescription": "Análise sobre os temas e questões de protestos pela habitação no porto e em lisboa: o que está por detrás da revolta.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "e50037c6835c94a9c02a34c1dbd27f276963a5b98e84403da4020f70eef294c8",
+        "editorialDescriptionProvider": "extractive"
       }
     }
   ],
