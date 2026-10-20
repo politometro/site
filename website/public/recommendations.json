@@ -2300,7 +2300,7 @@
         "editorialDescription": "Análise sobre ligeiro problema de comunicação entre a polícia e os manifestantes pelo direito à habitação no Porto.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "1a627e67063bf8c08b830aaab15ad33fd2eec9829ccf284eb4fc757d41751393",
-        "editorialDescriptionProvider": "kept"
+        "editorialDescriptionProvider": "extractive"
       }
     },
     {
@@ -2310,7 +2310,7 @@
       "title": "Protestos pela habitação no Porto e em Lisboa: o que está por detrás da revolta de uma geração",
       "editorialTitle": "Protestos pela habitação no Porto e em Lisboa: o que está por detrás da revolta",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre os temas e questões de protestos pela habitação no porto e em lisboa: o que está por detrás da revolta.",
+      "description": "Análise sobre os temas e questões de protestos pela habitação no porto e em lisboa: o que está por detrás da revolta de uma geração.",
       "imageUrl": "/covers/podcast_protestos_pela_habita__o_no_porto_e_em_lisboa__o_que_9eaa0efa_11d90d6bd2bf.jpg",
       "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/protestos-pela-habita-o-no-porto-e-em-lisboa-o-que-est-por-detr-s-da-revolta-de-uma-gera-o",
       "externalId": "9f92df7b-309c-4362-97c8-b4e5017a94b1",
@@ -2341,9 +2341,9 @@
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-10-17T07:32:55Z",
         "sourceDescription": "Numa semana em que os protestos europeus parecem ter alastrado a Portugal, a acampada no Porto, terminada com uma carga policial que está a ser investigada pela Inspeção-Geral da Administração Interna, e a de Lisboa, marcada para amanhã, colocam a crise da habitação no centro do debate.",
-        "editorialDescription": "Análise sobre os temas e questões de protestos pela habitação no porto e em lisboa: o que está por detrás da revolta.",
+        "editorialDescription": "Análise sobre os temas e questões de protestos pela habitação no porto e em lisboa: o que está por detrás da revolta de uma geração.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "e50037c6835c94a9c02a34c1dbd27f276963a5b98e84403da4020f70eef294c8",
+        "editorialSourceHash": "02f13100133fab9374dfd1004811b61d9ad73a056d406a2e747656f9607cc147",
         "editorialDescriptionProvider": "extractive"
       }
     }
