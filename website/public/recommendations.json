@@ -2061,47 +2061,6 @@
       "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Recuperámos os 3.200 milhões de euros da TAP? — Ouvintes]: Conteúdo expira em 2026-10-21T05:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
-      "id": "rss_highlight_fa994f913a35d7dc",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "A ditadura da emergência",
-      "authorOrMeta": "Helena Matos",
-      "description": "Os nossos governos legislam a trouxe mouche para apaziguar uma rua estridente que anuncia o apocalipse. Quando a luta de classes como via para o socialismo falhou, a emergência afirmou-se como atalho",
-      "imageUrl": "/covers/highlight_a_ditadura_da_emerg_ncia_c75d723c_11674af4e91c.jpg",
-      "link": "https://observador.pt/opiniao/a-ditadura-da-emergencia/",
-      "externalId": "article:url:fa994f913a35d7dc007d5027",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-17T23:25:59Z",
-      "expiryDate": "2026-11-16T23:25:59Z",
-      "createdAt": "2026-10-18T08:56:43.579636Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/a-ditadura-da-emergencia/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2666%3A2665%3Anowe%3A0%3A814%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170545%2Fhelena-matos.jpg",
-        "categories": [
-          "Clima",
-          "Céu e Terra",
-          "Ciência"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:fa994f913a35d7dc007d5027",
-        "score": 1.0,
-        "coverHash": "5f96f0285c486e7a354ef875f381eace8e9d727810b02ceb2e594bc3cfe742cd",
-        "verifiedAt": "2026-10-18T08:56:43.783921Z",
-        "resolvedTitle": "A ditadura da emergência",
-        "resolvedAuthor": "Helena Matos",
-        "sourcePublishedAt": "2026-10-17T23:25:59Z",
-        "sourceDescription": "Os nossos governos legislam a trouxe mouche para apaziguar uma rua estridente que anuncia o apocalipse. Quando a luta de classes como via para o socialismo falhou, a emergência afirmou-se como atalho"
-      }
-    },
-    {
       "id": "rss_podcast_5e82e86ebd44405d",
       "type": "podcast",
       "category": "Podcast",
@@ -2393,6 +2352,90 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-22T17:05:42Z",
         "sourceDescription": "Luís Nunes, vice presidente de Santa Comba Dão, explica os motivos para a abertura de um Centro Interpretativo do Estado Novo. Afirma que iniciativa vai trazer objetividade ao período histórico."
+      }
+    },
+    {
+      "id": "rss_podcast_f61f149f98af6606",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Antestreia. \"As Sombras de Duarte Lima\". Episódio 1: Um corpo na berma da estrada",
+      "editorialTitle": "Antestreia. \"As Sombras de Duarte Lima\". Episódio 1: Um corpo na berma",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre os temas e questões de antestreia. \"as sombras de duarte lima\". episódio 1: um corpo na berma.",
+      "imageUrl": "/covers/podcast_antestreia___as_sombras_de_duarte_lima___epis_dio_1__0f84bfd3_f61f149f98af.jpg",
+      "link": "https://omny.fm/shows/as-sombras-de-duarte-lima/epis-dio-1-um-corpo-na-berma-da-estrada",
+      "externalId": "bd327790-1379-4ed4-b529-b4eb0182c1ea",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-22T23:28:00Z",
+      "expiryDate": "2026-11-01T23:28:00Z",
+      "createdAt": "2026-10-23T09:26:29.838584Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "bd327790-1379-4ed4-b529-b4eb0182c1ea",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "bd327790-1379-4ed4-b529-b4eb0182c1ea",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-10-23T09:26:30.742744Z",
+        "resolvedTitle": "Antestreia. \"As Sombras de Duarte Lima\". Episódio 1: Um corpo na berma da estrada",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-10-22T23:28:00Z",
+        "sourceDescription": "Na noite de 7 dezembro de 2009, Rosalina Ribeiro, uma das herdeiras do milionário português Lúcio Tomé Feteira, saiu de casa, na zona sul do Rio de Janeiro, para se encontrar com o seu advogado português, o ex-deputado e antigo líder parlamentar do PSD Domingos Duarte Lima — e nunca mais seria vista com vida.",
+        "editorialDescription": "Análise sobre os temas e questões de antestreia. \"as sombras de duarte lima\". episódio 1: um corpo na berma.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "a1e0b13d6789aa65209d7b1a15dcc5cc49b2481baad79cb475e7af9cc49c0983",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_442312c35c6ba3d4",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Esperança, soberba, decadência e ignorância",
+      "authorOrMeta": "observador.pt",
+      "description": "A coisa é azarada para o governo que se diz reformista e ao qual se aponta, fundamentalmente, o defeito de não ser reformista",
+      "imageUrl": "/covers/highlight_esperan_a__soberba__decad_ncia_e_ignor_ncia_05691d66_334f36617d0b.jpg",
+      "link": "https://observador.pt/opiniao/quatro-apontamentos-sobre-esperanca-soberba-decadencia-e-ignorancia/",
+      "externalId": "article:url:442312c35c6ba3d4d17a4b75",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-23T07:36:22Z",
+      "expiryDate": "2026-11-22T07:36:22Z",
+      "createdAt": "2026-10-23T09:26:31.967205Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/quatro-apontamentos-sobre-esperanca-soberba-decadencia-e-ignorancia/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A635%3A635%3Anowe%3A212%3A65%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F02%2F06000207%2F2696bedd-5924-43c3-9525-6b39c4c58d0a.jpeg",
+        "categories": [
+          "Governo",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:442312c35c6ba3d4d17a4b75",
+        "score": 1.0,
+        "coverHash": "ca785f3545249c3df4688c25d07a877fd86cdba242c4a07b99597b0629541c40",
+        "verifiedAt": "2026-10-23T09:26:32.210708Z",
+        "resolvedTitle": "Esperança, soberba, decadência e ignorância",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-23T07:36:22Z",
+        "sourceDescription": "A coisa é azarada para o governo que se diz reformista e ao qual se aponta, fundamentalmente, o defeito de não ser reformista"
       }
     }
   ],
