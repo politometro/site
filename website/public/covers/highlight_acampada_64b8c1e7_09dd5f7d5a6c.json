@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://observador.pt/opiniao/acampada-em-entrecampos/",
+  "coverHash": "445c13b927cd7b33d4a05bfdc2c81a52ebf733e6b799fa762d79d8da2477ff82",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A530%3A530%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F10%2F23215225%2FCamacho.jpg",
+  "entityId": "article:url:46188d65441593b9ec57e086",
+  "expiryDate": "2026-11-22T23:15:07Z",
+  "height": 630,
+  "isbn": "",
+  "resolvedAuthor": "observador.pt",
+  "resolvedTitle": "Acampada",
+  "score": 1.0,
+  "source": "news-rss:observador.pt",
+  "sourcePublishedAt": "2026-10-23T23:15:07Z",
+  "title": "Acampada",
+  "titleNormalized": "acampada",
+  "type": "highlight",
+  "verifiedAt": "2026-10-24T08:58:17.317855Z",
+  "width": 1200
+}
