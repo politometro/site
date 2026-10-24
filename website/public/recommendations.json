@@ -2229,10 +2229,10 @@
       "id": "rss_highlight_442312c35c6ba3d4",
       "type": "highlight",
       "category": "Destaque",
-      "title": "Esperança, soberba, decadência e ignorância",
-      "authorOrMeta": "observador.pt",
+      "title": "Quatro apontamentos sobre esperança, soberba, decadência e ignorância",
+      "authorOrMeta": "Nuno Lebreiro",
       "description": "A coisa é azarada para o governo que se diz reformista e ao qual se aponta, fundamentalmente, o defeito de não ser reformista",
-      "imageUrl": "/covers/highlight_esperan_a__soberba__decad_ncia_e_ignor_ncia_05691d66_334f36617d0b.jpg",
+      "imageUrl": "/covers/highlight_quatro_apontamentos_sobre_esperan_a__soberba__deca_49fad356_334f36617d0b.jpg",
       "link": "https://observador.pt/opiniao/quatro-apontamentos-sobre-esperanca-soberba-decadencia-e-ignorancia/",
       "externalId": "article:url:442312c35c6ba3d4d17a4b75",
       "priority": 4,
@@ -2254,16 +2254,17 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:442312c35c6ba3d4d17a4b75",
-        "score": 1.0,
-        "coverHash": "ca785f3545249c3df4688c25d07a877fd86cdba242c4a07b99597b0629541c40",
-        "verifiedAt": "2026-10-23T09:26:32.210708Z",
-        "resolvedTitle": "Esperança, soberba, decadência e ignorância",
-        "resolvedAuthor": "observador.pt",
+        "score": 0.7503,
+        "coverHash": "9cf7c767734898c610f5fafbd45e661f9afcc366e0700d9a528f97cce254c58f",
+        "verifiedAt": "2026-10-24T16:05:35.972144Z",
+        "resolvedTitle": "Quatro apontamentos sobre esperança, soberba, decadência e ignorância",
+        "resolvedAuthor": "Nuno Lebreiro",
         "sourcePublishedAt": "2026-10-23T07:36:22Z",
         "sourceDescription": "A coisa é azarada para o governo que se diz reformista e ao qual se aponta, fundamentalmente, o defeito de não ser reformista"
-      }
+      },
+      "editorialTitle": "Quatro apontamentos sobre esperança, soberba, decadência"
     },
     {
       "id": "rss_podcast_5a37e3328d0fbb70",
