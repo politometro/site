@@ -1,0 +1,153 @@
+{
+  "schema_version": 2,
+  "draft_id": "draft_357ec74407df84f273eb",
+  "content_hash": "357ec74407df84f273ebb7c11c1bd0531938ae91ebeae6cab17187e51c076648",
+  "post_type": "sunday_standard",
+  "created_at": "2026-10-24T18:28:24.263196+00:00",
+  "is_test": false,
+  "post_sha256": "383db145fefd116580cf954de2dee36821b6ebe1dacee92a3cd753554087d3e2",
+  "caption_sha256": "ce366e86181b863be21ba54c01ae62cb2d4f6af7b2714a6362bc01243a0d4b4a",
+  "approval": {
+    "approved": false
+  },
+  "q1": {
+    "id": "ai_movie_fba00b3673fa4d3e",
+    "type": "movie",
+    "category": "Filme",
+    "title": "Selma",
+    "authorOrMeta": "Ava DuVernay",
+    "description": "Retrato da campanha pelo direito de voto e da luta pelos direitos civis nos EUA.",
+    "imageUrl": "/covers/movie_selma_8aec1568_240c803abbbf.jpg",
+    "link": "https://www.imdb.com/title/tt1020072/",
+    "priority": 3,
+    "expiryDate": null,
+    "createdAt": "2026-09-27T10:05:56.398966Z",
+    "status": "queue",
+    "sourceHint": "ai-catalogue-candidate",
+    "externalId": "imdb:tt1020072",
+    "resolutionStatus": "verified",
+    "verification": {
+      "status": "verified",
+      "source": "wikidata+imdb",
+      "entityId": "imdb:tt1020072",
+      "score": 1.0,
+      "coverHash": "7a4674625214906a6fee705a3eedc80625b0054255d842a9906b79f6af4df3b8",
+      "verifiedAt": "2026-09-27T10:05:57.827937Z",
+      "resolvedTitle": "Selma",
+      "resolvedAuthor": "Ava DuVernay",
+      "sourceDescription": "Retrato da campanha pelo direito de voto e da luta pelos direitos civis nos EUA."
+    },
+    "selectionRecovery": {
+      "slot": "q1",
+      "mode": "category_substitution"
+    }
+  },
+  "q2": {
+    "id": "rss_podcast_ab10dadc90a6fe14",
+    "type": "podcast",
+    "category": "Podcast",
+    "title": "Ronaldo vs Jesus + Eleições no Brasil - Conteúdo do Batáguas T03 Ep10",
+    "authorOrMeta": "Conteúdo do Batáguas",
+    "description": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10.",
+    "imageUrl": "/covers/podcast_ronaldo_vs_jesus___elei__es_no_brasil___conte_do_do__5441e00a_ab10dadc90a6.jpg",
+    "link": "https://www.youtube.com/watch?v=6uxmoPKcxjQ",
+    "externalId": "https://www.youtube.com/watch?v=6uxmoPKcxjQ",
+    "sourceSeriesId": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+    "sourceSeriesTitle": "Conteúdo do Batáguas",
+    "priority": 4,
+    "sourcePublishedAt": "2026-10-12T18:25:11Z",
+    "expiryDate": "2026-11-02T18:25:11Z",
+    "createdAt": "2026-10-12T21:20:34.509723Z",
+    "status": "queue",
+    "sourceHint": "podcast-rss",
+    "_discovery": {
+      "kind": "rss",
+      "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+      "guid": "https://www.youtube.com/watch?v=6uxmoPKcxjQ",
+      "imageUrl": "https://www.youtube.com/v/6uxmoPKcxjQ?version=3",
+      "show": "Conteúdo do Batáguas"
+    },
+    "resolutionStatus": "verified",
+    "verification": {
+      "status": "verified",
+      "source": "podcast-rss",
+      "entityId": "https://www.youtube.com/watch?v=6uxmoPKcxjQ",
+      "score": 1.0,
+      "coverHash": "2b05d4fb41a0ac7f340683197792f5a0619f484d5b641b55826dee77706d3583",
+      "verifiedAt": "2026-10-12T21:20:38.921688Z",
+      "resolvedTitle": "Ronaldo vs Jesus + Eleições no Brasil - Conteúdo do Batáguas T03 Ep10",
+      "resolvedAuthor": "Conteúdo do Batáguas",
+      "sourcePublishedAt": "2026-10-12T18:25:11Z",
+      "sourceDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10."
+    }
+  },
+  "q3": {
+    "id": "ai_movie_a1c00bc2cf904d88",
+    "type": "movie",
+    "category": "Filme",
+    "title": "Nixon",
+    "authorOrMeta": "Oliver Stone",
+    "description": "Drama político sobre poder presidencial, ambição, paranoia e queda institucional.",
+    "imageUrl": "/covers/movie_nixon_0e0955a8_45c4543f6eb6.jpg",
+    "link": "https://www.imdb.com/title/tt0113987/",
+    "priority": 3,
+    "expiryDate": null,
+    "createdAt": "2026-10-04T10:40:35.812219Z",
+    "status": "queue",
+    "sourceHint": "ai-catalogue-candidate",
+    "externalId": "imdb:tt0113987",
+    "resolutionStatus": "verified",
+    "verification": {
+      "status": "verified",
+      "source": "wikidata+imdb",
+      "entityId": "imdb:tt0113987",
+      "score": 1.0,
+      "coverHash": "3a8cfab6cfc0c5bfe762b63184ca27117270c6d523cfd35dc6003148e8a8cf3a",
+      "verifiedAt": "2026-10-04T10:40:37.405241Z",
+      "resolvedTitle": "Nixon",
+      "resolvedAuthor": "Oliver Stone",
+      "sourceDescription": "Drama político sobre poder presidencial, ambição, paranoia e queda institucional."
+    }
+  },
+  "q4": {
+    "id": "rss_highlight_46188d65441593b9",
+    "type": "highlight",
+    "category": "Destaque",
+    "title": "Acampada",
+    "authorOrMeta": "observador.pt",
+    "description": "Os partidos hoje mais empenhados em transformar a crise da habitação numa acusação contra o presente tiveram oportunidade de a travar no passado em vez disso baixaram os braços.",
+    "imageUrl": "/covers/highlight_acampada_64b8c1e7_09dd5f7d5a6c.jpg",
+    "link": "https://observador.pt/opiniao/acampada-em-entrecampos/",
+    "externalId": "article:url:46188d65441593b9ec57e086",
+    "priority": 4,
+    "sourcePublishedAt": "2026-10-23T23:15:07Z",
+    "expiryDate": "2026-11-22T23:15:07Z",
+    "createdAt": "2026-10-24T08:58:15.337556Z",
+    "status": "queue",
+    "sourceHint": "trusted-rss",
+    "_discovery": {
+      "kind": "rss-highlight",
+      "feedUrl": "https://observador.pt/feed/",
+      "guid": "https://observador.pt/opiniao/acampada-em-entrecampos/",
+      "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A530%3A530%3Anowe%3A0%3A0%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F10%2F23215225%2FCamacho.jpg",
+      "categories": [
+        "Manifestações",
+        "Protestos",
+        "Sociedade"
+      ]
+    },
+    "resolutionStatus": "verified",
+    "verification": {
+      "status": "verified",
+      "source": "news-rss:observador.pt",
+      "entityId": "article:url:46188d65441593b9ec57e086",
+      "score": 1.0,
+      "coverHash": "445c13b927cd7b33d4a05bfdc2c81a52ebf733e6b799fa762d79d8da2477ff82",
+      "verifiedAt": "2026-10-24T08:58:17.317855Z",
+      "resolvedTitle": "Acampada",
+      "resolvedAuthor": "observador.pt",
+      "sourcePublishedAt": "2026-10-23T23:15:07Z",
+      "sourceDescription": "Os partidos hoje mais empenhados em transformar a crise da habitação numa acusação contra o presente tiveram oportunidade de a travar no passado em vez disso baixaram os braços."
+    }
+  }
+}

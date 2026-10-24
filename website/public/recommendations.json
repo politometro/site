@@ -1436,6 +1436,10 @@
         "resolvedTitle": "Selma",
         "resolvedAuthor": "Ava DuVernay",
         "sourceDescription": "Retrato da campanha pelo direito de voto e da luta pelos direitos civis nos EUA."
+      },
+      "selectionRecovery": {
+        "slot": "q1",
+        "mode": "category_substitution"
       }
     },
     {
@@ -1964,11 +1968,7 @@
         "resolvedTitle": "Ronaldo vs Jesus + Eleições no Brasil - Conteúdo do Batáguas T03 Ep10",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-10-12T18:25:11Z",
-        "sourceDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10.",
-        "editorialDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "bc1aca11be26d3b87d44e32329849eab30fda5f54f24759a9452aa0054b69b6b",
-        "editorialDescriptionProvider": "kept"
+        "sourceDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10."
       }
     },
     {
