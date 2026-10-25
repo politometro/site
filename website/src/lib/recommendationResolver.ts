@@ -215,7 +215,7 @@ export function categoryForType(type: RecommendationType): string {
 export function sanitizeText(value: unknown, maxLength = 600): string {
   if (typeof value !== "string") return "";
   return value
-    .replace(/<[^>]*>/g, " ")
+    .replace(/<[^<>]*>/g, " ")
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
     .replace(/\s+/g, " ")
     .trim()
@@ -1052,7 +1052,7 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
   for (const match of html.matchAll(
     /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
   )) {
-    const raw = match[1].replace(/^\s*<!--|-->\s*$/g, "").trim();
+    const raw = match[1].replace(/^\s*<!--|--!?>\s*$/g, "").trim();
     if (!raw) continue;
     try {
       nodes.push(...jsonLdNodes(JSON.parse(raw)));
