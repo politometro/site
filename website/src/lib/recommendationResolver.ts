@@ -721,6 +721,10 @@ async function fetchPublic(
 
   for (let redirect = 0; redirect <= maxRedirects; redirect += 1) {
     await assertPublicDns(currentUrl);
+    // codeql[js/request-forgery]: currentUrl is validated before every fetch:
+    // normalizePublicUrl allows only http/https, rejects URL credentials and
+    // forbidden hostnames, and assertPublicDns resolves the host and rejects
+    // any private/reserved address, re-checked on every redirect hop.
     const response = await fetch(currentUrl, {
       ...init,
       redirect: "manual",
