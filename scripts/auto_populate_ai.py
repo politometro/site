@@ -1366,7 +1366,7 @@ def discover_highlight_candidates(api_key, engine_id, seen_links, limit):
                 not link.startswith("http")
                 or link in seen_links
                 or link in emitted_links
-                or "wikipedia.org" in hostname
+                or hostname == "wikipedia.org" or hostname.endswith(".wikipedia.org")
             ):
                 continue
             if not any(
