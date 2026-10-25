@@ -193,8 +193,7 @@
     {"id": "jacques-delors", "name": "Jacques Delors", "aliases": ["Jacques Delors", "Delors"]},
     {"id": "rui-moreira", "name": "Rui Moreira", "aliases": ["Rui Moreira", "Presidente da Câmara do Porto", "Presidente da Camara do Porto", "Câmara do Porto", "Camara do Porto"]},
     {"id": "isaltino-morais", "name": "Isaltino Morais", "aliases": ["Isaltino Morais", "Isaltino", "Presidente da Câmara de Oeiras", "Presidente da Camara de Oeiras", "Câmara de Oeiras", "Camara de Oeiras"]},
-    {"id": "mariana-leitao", "name": "Mariana Leitão", "aliases": ["Mariana Leitão", "Mariana Leitao"], "party": "IL"},
-    {"id": "fabian-figueiredo", "name": "Fabian Figueiredo", "aliases": ["Fabian Figueiredo"], "party": "BE"}
+    {"id": "mariana-leitao", "name": "Mariana Leitão", "aliases": ["Mariana Leitão", "Mariana Leitao"], "party": "IL"}
   ]
 }
 

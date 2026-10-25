@@ -343,20 +343,43 @@ for root, dirs, files in os.walk(data_dir):
             print(f"  Error processing {meta['rel_path']}: {e}")
 
 # Save database
-print(f"\nSaving {len(chunks_db)} chunks to {output_chunks_file}...")
-with open(output_chunks_file, "w", encoding="utf-8") as f:
-    json.dump(chunks_db, f, ensure_ascii=False)
-    f.flush()
-    os.fsync(f.fileno())
-
-# Verify the file was written correctly
-verify_size = os.path.getsize(output_chunks_file)
-print(f"File written: {verify_size:,} bytes")
-if verify_size < 10 and len(chunks_db) > 0:
-    print("ERROR: File appears to be empty or corrupt!")
-    sys.exit(1)
 if len(chunks_db) == 0:
-    print("Nota: nenhum chunk novo gerado (todos ja no Pinecone via tracker).")
+    print(f"\nNota: nenhum chunk novo gerado (todos ja no Pinecone via tracker). Ficheiro {output_chunks_file} mantido.")
+else:
+    # Merge with existing chunks if present
+    merged_db = []
+    seen_ids = set()
+    if os.path.exists(output_chunks_file) and os.path.getsize(output_chunks_file) > 10:
+        try:
+            with open(output_chunks_file, "r", encoding="utf-8") as f:
+                existing = json.load(f)
+                if isinstance(existing, list):
+                    for item in existing:
+                        cid = item.get("id")
+                        if cid and cid not in seen_ids:
+                            seen_ids.add(cid)
+                            merged_db.append(item)
+        except Exception as e:
+            print(f"Aviso ao ler ficheiro existente: {e}")
+    for item in chunks_db:
+        cid = item.get("id")
+        if not cid or cid not in seen_ids:
+            if cid:
+                seen_ids.add(cid)
+            merged_db.append(item)
+
+    print(f"\nSaving {len(merged_db)} chunks to {output_chunks_file}...")
+    with open(output_chunks_file, "w", encoding="utf-8") as f:
+        json.dump(merged_db, f, ensure_ascii=False)
+        f.flush()
+        os.fsync(f.fileno())
+
+    # Verify the file was written correctly
+    verify_size = os.path.getsize(output_chunks_file)
+    print(f"File written: {verify_size:,} bytes")
+    if verify_size < 10 and len(merged_db) > 0:
+        print("ERROR: File appears to be empty or corrupt!")
+        sys.exit(1)
 
 print("\n--- Extraction Summary ---")
 print(f"Successfully processed: {processed_count} files")

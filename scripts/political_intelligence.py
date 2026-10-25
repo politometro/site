@@ -91,8 +91,8 @@ BUDGET_CHUNK_FILES = (
 # GitHub rejeita blobs individuais acima de 100 MB. Os exports crescem com o
 # histórico de notícias, por isso são publicados como listas JSON particionadas
 # e acompanhadas por um manifesto pequeno. O limite fica deliberadamente abaixo
-# do limite do GitHub para deixar margem a variações de serialização.
-JSON_SHARD_MAX_BYTES = 45 * 1024 * 1024
+# Shards públicos de 6 MiB para carregamento rápido no browser e conformidade com limites.
+JSON_SHARD_MAX_BYTES = 6 * 1024 * 1024
 
 LOGGER = logging.getLogger("political_intelligence")
 
@@ -106,6 +106,17 @@ ALL_LEGISLATURES = (
     "VII", "VI", "V", "IV", "III", "II",
 )
 
+COALITION_PARTY_MEMBERS: dict[str, set[str]] = {
+    "CDU": {"CDU", "PCP", "PEV"},
+    "PCP": {"CDU", "PCP", "PEV"},
+    "PEV": {"CDU", "PCP", "PEV"},
+    "AD": {"AD", "PSD", "CDS-PP", "CDS", "PPM"},
+    "PSD": {"AD", "PSD", "CDS-PP", "CDS", "PPM"},
+    "CDS-PP": {"AD", "PSD", "CDS-PP", "CDS", "PPM"},
+    "CDS": {"AD", "PSD", "CDS-PP", "CDS", "PPM"},
+    "PPM": {"AD", "PSD", "CDS-PP", "CDS", "PPM"},
+}
+
 STOP_WORDS = {
     "a", "ao", "aos", "as", "com", "da", "das", "de", "do", "dos", "e",
     "em", "na", "nas", "no", "nos", "o", "os", "ou", "para", "por", "que",
@@ -117,6 +128,9 @@ STOP_WORDS = {
     "politicas", "pessoas", "novo", "nova", "novos", "novas", "promete",
     "prometem", "prometeu", "prometer", "compromete", "comprometem",
     "comprometeu", "propoe", "propoem", "propor", "pretende", "pretendem",
+    "estado", "republica", "assembleia", "lei", "leis", "artigo", "artigos",
+    "geral", "decreto", "altera", "alteracao", "alteracoes", "aprovacao",
+    "regime", "juridico", "disposicoes", "termos", "quadro", "dispoe",
 }
 
 TOPIC_TERMS = {
@@ -4071,18 +4085,31 @@ def labelled_vote_positions(value: Any, matcher: EntityMatcher) -> dict[str, str
     )
     matches = list(label_pattern.finditer(raw))
     positions: dict[str, str] = {}
-    conflicts: set[str] = set()
+    party_is_collective: dict[str, bool] = {}
     for index, match in enumerate(matches):
         label = canonical_vote_position(match.group(1))
         if not label:
             continue
         end = matches[index + 1].start() if index + 1 < len(matches) else len(raw)
-        for party in matcher.parties_in(raw[match.end():end]):
-            if party in positions and positions[party] != label:
-                conflicts.add(party)
-                positions.pop(party, None)
-            elif party not in conflicts:
+        section = raw[match.end():end]
+        for party in matcher.parties_in(section):
+            is_dissident = bool(re.search(
+                rf"\b\d+\s+(?:deputad[oa]s?\s+(?:d[oe]|da)?\s*)?{re.escape(party)}\b",
+                section,
+                re.IGNORECASE,
+            ))
+            is_collective = not is_dissident
+            if party in positions:
+                prev_collective = party_is_collective.get(party, True)
+                if positions[party] != label:
+                    if not prev_collective and is_collective:
+                        positions[party] = label
+                        party_is_collective[party] = True
+                    elif prev_collective and not is_collective:
+                        pass
+            else:
                 positions[party] = label
+                party_is_collective[party] = is_collective
     return positions
 
 
@@ -5134,8 +5161,9 @@ def initiative_author_relation(
     promise_party: str, initiative: Mapping[str, Any]
 ) -> tuple[str, str]:
     authors = {str(item) for item in initiative.get("authors", []) if item}
-    if promise_party and promise_party in authors:
-        if promise_party == "GOVERNO":
+    related = COALITION_PARTY_MEMBERS.get(promise_party, {promise_party}) if promise_party else set()
+    if related & authors:
+        if promise_party == "GOVERNO" or "GOVERNO" in (related & authors):
             return "governo", "Apresentada pelo Governo"
         return "mesmo_partido", "Apresentada pelo mesmo partido"
     if "GOVERNO" in authors:
@@ -5191,8 +5219,12 @@ def rebuild_promise_matches(state: dict[str, Any]) -> int:
         for initiative_id in sorted(candidate_ids):
             initiative = by_id[initiative_id]
             submitted_at = parse_datetime(initiative.get("submittedAt"))
-            if earliest_date and submitted_at and submitted_at.date() < earliest_date.date():
-                continue
+            if earliest_date and submitted_at:
+                if submitted_at.date() < earliest_date.date():
+                    continue
+                # Temporal cap: no matching proposals more than 5 years (~1850 days) after promise
+                if (submitted_at.date() - earliest_date.date()).days > 1850:
+                    continue
             score, shared = promise_similarity(promise, initiative)
             # Two terms only suffice when the overlap is unusually strong. Most
             # relations need at least three meaningful terms, which prevents
@@ -5233,7 +5265,7 @@ def rebuild_promise_matches(state: dict[str, Any]) -> int:
                 }
             )
         suggestions.sort(key=lambda item: (-item["score"], str(item.get("title") or "")))
-        promise["proposalMatches"] = suggestions
+        promise["proposalMatches"] = suggestions[:4]
         promise["updatedAt"] = iso_now()
         matched += len(promise["proposalMatches"])
     safe_print(f"   ↳ {matched} correspondências sugeridas entre promessas e iniciativas.")
@@ -5738,6 +5770,9 @@ def _ep_sittings_for_years(
                 break
             offset += page_size
     # Mais recentes primeiro: os runs limitados priorizam a atualidade.
+    # Exclui sessões agendadas no futuro (sem votações ainda)
+    now_iso = utc_now().isoformat()
+    sittings = [pair for pair in sittings if pair[1] and pair[1] <= now_iso]
     sittings.sort(key=lambda pair: pair[1], reverse=True)
     return sittings
 
@@ -5805,6 +5840,7 @@ def sync_european_votes(
         dec_ids: list[str] = []
         titles_by_parent: dict[str, str] = {}
         proc_refs_by_parent: dict[str, set[str]] = {}
+        child_to_parent: dict[str, str] = {}
         offset = 0
         while True:
             payload, note = _ep_fetch_json(
@@ -5840,12 +5876,14 @@ def sync_european_votes(
                         child_id = str(_ld_text(child)).rsplit("/")[-1]
                         if "-DEC-" in child_id:
                             dec_ids.append(child_id)
+                            child_to_parent[child_id] = item_id
                 elif activity_type == "PLENARY_OUTCOME":
                     dec_ids.append(item_id)
             if len(records) < page_size:
                 break
             offset += page_size
-        unique_dec_ids = list(dict.fromkeys(dec_ids))
+        pending_prior = list(sittings_seen.get(sid, {}).get("pendingDecisions") or [])
+        unique_dec_ids = pending_prior if pending_prior else list(dict.fromkeys(dec_ids))
         fetched_here: list[str] = []
         for dec_id in unique_dec_ids[:max_decisions]:
             detail_payload, _dec_note = _ep_fetch_json(
@@ -5858,11 +5896,13 @@ def sync_european_votes(
             data_items = detail_payload.get("data")
             for decision in [item for item in (data_items or []) if isinstance(item, Mapping)]:
                 enriched = dict(decision)
-                parent_tail = ""
-                for entry in as_list(enriched.get("was_motivated_by")):
-                    if isinstance(entry, Mapping):
-                        parent_tail = str(_ld_text(entry.get("activity_id"))).rsplit("-", 1)[0]
-                        break
+                parent_tail = child_to_parent.get(dec_id, "")
+                if not parent_tail:
+                    for entry in as_list(enriched.get("was_motivated_by")):
+                        entry_txt = _ld_text(entry)
+                        if entry_txt:
+                            parent_tail = entry_txt.rsplit("/", 1)[-1].rsplit("-", 1)[0]
+                            break
                 title_from_parent = titles_by_parent.get(parent_tail)
                 if title_from_parent and not _multilang(enriched, "activity_label"):
                     enriched["activity_label"] = {"pt": title_from_parent}
@@ -6260,6 +6300,39 @@ def sync_budget_evidence(
     return result
 
 
+BUDGET_CATEGORY_LABELS = {
+    "pt_estado": "OE (Estado)",
+    "ue_bce": "UE (BCE)",
+    "ue_mff": "UE (QFP/MFF)",
+    "ue_regulamento": "UE (Regulamento)",
+    "ue_recursos": "UE (Recursos Próprios)",
+    "ue_eurlex": "UE (EUR-Lex)",
+    "ue_metadados": "UE (Metadados)",
+}
+
+
+def extract_snippet(text: str, terms: Sequence[str], max_len: int = 240) -> str:
+    """Extract a window of text centred around the first matching term."""
+    if not text or not terms:
+        return compact_text(text, max_len)
+    lower = text.lower()
+    best_pos = -1
+    for term in terms:
+        pos = lower.find(term.lower())
+        if pos != -1 and (best_pos == -1 or pos < best_pos):
+            best_pos = pos
+    if best_pos == -1:
+        return compact_text(text, max_len)
+    start = max(0, best_pos - 60)
+    end = min(len(text), start + max_len)
+    snippet = text[start:end].strip()
+    if start > 0:
+        snippet = "…" + snippet
+    if end < len(text):
+        snippet = snippet + "…"
+    return compact_text(snippet, max_len)
+
+
 def rebuild_budget_matches(state: dict[str, Any], config: Mapping[str, Any]) -> int:
     """Suggest promise ↔ budget rubric relations from offline corpora.
 
@@ -6327,6 +6400,8 @@ def rebuild_budget_matches(state: dict[str, Any], config: Mapping[str, Any]) -> 
 
     matched_total = 0
     for promise in state["promises"].values():
+        earliest_date = promise_source_date(promise)
+        promise_year = earliest_date.year if earliest_date else None
         promise_tokens = tokenise(promise.get("statement"))
         suggestions: list[dict[str, Any]] = []
         if promise_tokens:
@@ -6336,9 +6411,16 @@ def rebuild_budget_matches(state: dict[str, Any], config: Mapping[str, Any]) -> 
             candidate_indices = [idx for idx, hits in overlap_counts.items() if hits >= min_shared_terms]
             for idx in candidate_indices:
                 item = cached_chunks[idx]
+                if promise_year and item["year"] and abs(item["year"] - promise_year) > 4:
+                    continue
                 tokens = item["tokens"]
                 shared = sorted(promise_tokens & tokens)
-                score, _unused = promise_similarity(promise, {"title": item["text"], "type": ""})
+                if not shared:
+                    continue
+                union = promise_tokens | tokens
+                jaccard = len(shared) / len(union) if union else 0.0
+                containment = len(shared) / min(len(promise_tokens), len(tokens))
+                score = round((jaccard * 0.45) + (containment * 0.55), 4)
                 if len(shared) == 2 and score < threshold_two:
                     continue
                 if len(shared) >= 3 and score < threshold_three:
@@ -6347,17 +6429,18 @@ def rebuild_budget_matches(state: dict[str, Any], config: Mapping[str, Any]) -> 
                     "budgetChunkId": item["chunk_id"],
                     "budgetDocId": item["doc_id"],
                     "category": item["category"],
+                    "categoryLabel": BUDGET_CATEGORY_LABELS.get(item["category"], item["category"]),
                     "year": item["year"],
                     "filename": item["filename"],
                     "page": item["page"],
-                    "rubricPreview": item["preview"],
+                    "rubricPreview": extract_snippet(item["text"], shared, 240),
                     "governmentLabel": item["governmentLabel"],
                     "score": score,
                     "sharedTerms": shared[:12],
                     "reviewRequired": True,
                 })
         suggestions.sort(key=lambda item: (-item["score"], str(item.get("filename") or "")))
-        top = suggestions[:max_per_promise]
+        top = suggestions[:min(max_per_promise, 4)]
         promise["budgetMatches"] = top
         matched_total += len(top)
     safe_print(f"   ↳ {matched_total} correspondências sugeridas entre promessas e rubricas orçamentais.")
@@ -6585,7 +6668,7 @@ def public_budget_match(match: Mapping[str, Any]) -> dict[str, Any]:
     return {
         key: match.get(key)
         for key in (
-            "budgetChunkId", "budgetDocId", "category", "year", "filename",
+            "budgetChunkId", "budgetDocId", "category", "categoryLabel", "year", "filename",
             "page", "rubricPreview", "governmentLabel", "score", "sharedTerms",
             "reviewRequired",
         )
@@ -7108,6 +7191,36 @@ def ensure_state(payload: Any) -> dict[str, Any]:
     return state
 
 
+def _programas_index_from_promises(promises: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+    index: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for promise in promises:
+        if promise.get("origin") != "programa_eleitoral":
+            continue
+        source = promise.get("source") or {}
+        key = (
+            str(promise.get("party") or ""),
+            str(source.get("year") or ""),
+            str(source.get("relPath") or source.get("filename") or ""),
+        )
+        entry = index.setdefault(
+            key,
+            {
+                "party": key[0],
+                "year": key[1],
+                "filename": str(source.get("filename") or ""),
+                "relPath": key[2],
+                "contest": str(source.get("contest") or ""),
+                "promiseCount": 0,
+            },
+        )
+        entry["promiseCount"] += 1
+    programmes = sorted(
+        index.values(),
+        key=lambda row: (row["party"], str(row["year"]), row["relPath"]),
+    )
+    return {"schemaVersion": 1, "programmes": programmes}
+
+
 def export_outputs(state: Mapping[str, Any], config: Mapping[str, Any], matcher: EntityMatcher, public_path: Path, memory_path: Path) -> dict[str, int]:
     dataset = build_public_dataset(state, config, matcher)
     chunks = build_memory_chunks(state)
@@ -7134,6 +7247,21 @@ def export_outputs(state: Mapping[str, Any], config: Mapping[str, Any], matcher:
             (public_path.parent / f".{public_path.stem}-{key}.tmp.json").unlink()
         except OSError:
             pass
+    matched_promises = [
+        p for p in dataset.get("promises", [])
+        if p.get("proposalMatches") or p.get("voteOutcomes") or p.get("europeanMatches") or p.get("budgetMatches")
+    ]
+    manifest_matched = write_json_list_shards(
+        matched_promises,
+        public_path.parent / f".{public_path.stem}-promises-matched.tmp.json",
+        public_shard_dir,
+        shard_prefix="promises-matched",
+    )
+    shard_paths["promises-matched"] = manifest_matched.get("shards", [])
+    try:
+        (public_path.parent / f".{public_path.stem}-promises-matched.tmp.json").unlink()
+    except OSError:
+        pass
     json_save(
         public_path,
         {
@@ -7142,6 +7270,10 @@ def export_outputs(state: Mapping[str, Any], config: Mapping[str, Any], matcher:
             "inline": public_inline,
             "shards": shard_paths,
         },
+    )
+    json_save(
+        public_path.parent / "programas-index.json",
+        _programas_index_from_promises(dataset.get("promises", [])),
     )
     memory_shard_dir = memory_path.parent / f"{memory_path.stem}-shards"
     write_json_list_shards(
