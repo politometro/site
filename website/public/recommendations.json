@@ -2278,7 +2278,7 @@
       "sourcePublishedAt": "2026-10-23T23:15:07Z",
       "expiryDate": "2026-11-22T23:15:07Z",
       "createdAt": "2026-10-24T08:58:15.337556Z",
-      "status": "invalid",
+      "status": "queue",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2291,7 +2291,7 @@
           "Sociedade"
         ]
       },
-      "resolutionStatus": "rejected",
+      "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -2304,7 +2304,7 @@
         "sourcePublishedAt": "2026-10-23T23:15:07Z",
         "sourceDescription": "Os partidos hoje mais empenhados em transformar a crise da habitação numa acusação contra o presente tiveram oportunidade de a travar no passado em vez disso baixaram os braços."
       },
-      "validationError": "HIGHLIGHT_TITLE_MISMATCH [Acampada]: Artigo 'Acampada em Entrecampos' não corresponde ao título candidato."
+      "validationError": null
     },
     {
       "id": "rss_highlight_4300b9a397100607",
