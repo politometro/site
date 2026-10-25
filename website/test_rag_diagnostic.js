@@ -31,9 +31,9 @@ async function testConnection() {
 
   console.log("\n=== DIAGNÓSTICO DE CONEXÃO NODE.JS ===");
   console.log("Pinecone Index Name:", pineconeIndex);
-  console.log("Pinecone Key (truncada):", pineconeKey ? pineconeKey.slice(0, 10) + "..." : "Não configurada");
-  console.log("Hugging Face Token (truncado):", hfToken ? hfToken.slice(0, 10) + "..." : "Não configurado");
-  console.log("Groq Key (truncada):", groqKey ? groqKey.slice(0, 10) + "..." : "Não configurada");
+  console.log("Pinecone Key:", pineconeKey ? "configurada" : "Não configurada");
+  console.log("Hugging Face Token:", hfToken ? "configurado" : "Não configurado");
+  console.log("Groq Key:", groqKey ? "configurada" : "Não configurada");
 
   if (!pineconeKey) {
     console.error("[ERRO] PINECONE_API_KEY em falta no .env.local!");
