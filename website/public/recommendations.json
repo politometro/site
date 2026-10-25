@@ -1968,7 +1968,11 @@
         "resolvedTitle": "Ronaldo vs Jesus + Eleições no Brasil - Conteúdo do Batáguas T03 Ep10",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-10-12T18:25:11Z",
-        "sourceDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10."
+        "sourceDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10.",
+        "editorialDescription": "Análise sobre os temas e questões de ronaldo vs jesus + eleições no brasil - conteúdo do batáguas t03 ep10.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "bc1aca11be26d3b87d44e32329849eab30fda5f54f24759a9452aa0054b69b6b",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -2177,55 +2181,6 @@
       "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [“Os deputados do Chega viram tendas e pensaram: são ciganos. Querem a polícia a bater nos portuenses desde que sabem da Livraria Lelo”]: Conteúdo expira em 2026-10-21T22:05:22Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
-      "id": "rss_highlight_55b12e358684e3c6",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "\"Centro Interpretativo não é homenagem nem altar a Salazar\"",
-      "authorOrMeta": "Ricardo Conceição, Judite França",
-      "description": "Luís Nunes, vice presidente de Santa Comba Dão, explica os motivos para a abertura de um Centro Interpretativo do Estado Novo. Afirma que iniciativa vai trazer objetividade ao período histórico.",
-      "imageUrl": "/covers/highlight__centro_interpretativo_n_o___homenagem_nem_altar_a_36a73589_078543f2fe26.jpg",
-      "link": "https://observador.pt/programas/explicador/centro-interpretativo-nao-e-homenagem-nem-altar-a-salazar/",
-      "externalId": "article:url:55b12e358684e3c6444f3e57",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-22T17:05:42Z",
-      "expiryDate": "2026-11-21T17:05:42Z",
-      "createdAt": "2026-10-22T17:21:22.395155Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/programas/explicador/centro-interpretativo-nao-e-homenagem-nem-altar-a-salazar/",
-        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
-        "categories": [
-          "Rádio Observador",
-          "Observador",
-          "Estado",
-          "Política",
-          "Estado Novo",
-          "Salazar",
-          "País",
-          "Sociedade",
-          "Ditadura",
-          "Cultura",
-          "História"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:55b12e358684e3c6444f3e57",
-        "score": 1.0,
-        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
-        "verifiedAt": "2026-10-22T17:21:23.448035Z",
-        "resolvedTitle": "\"Centro Interpretativo não é homenagem nem altar a Salazar\"",
-        "resolvedAuthor": "Ricardo Conceição, Judite França",
-        "sourcePublishedAt": "2026-10-22T17:05:42Z",
-        "sourceDescription": "Luís Nunes, vice presidente de Santa Comba Dão, explica os motivos para a abertura de um Centro Interpretativo do Estado Novo. Afirma que iniciativa vai trazer objetividade ao período histórico."
-      }
-    },
-    {
       "id": "rss_highlight_442312c35c6ba3d4",
       "type": "highlight",
       "category": "Destaque",
@@ -2310,49 +2265,6 @@
       }
     },
     {
-      "id": "rss_podcast_b5033628911638fd",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Quem deve construir as casas: o Estado, as câmaras ou os privados?",
-      "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre acima de tudo, abriu-se um intenso debate político, que se intensifica há várias semanas.",
-      "imageUrl": "/covers/podcast_quem_deve_construir_as_casas__o_estado__as_c_maras_o_c304a3cc_b50336289116.jpg",
-      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/quem-deve-construir-as-casas-o-estado-as-c-maras-ou-os-privados",
-      "externalId": "36c69900-5c0e-4e50-a7de-b4ec017a38fc",
-      "sourceSeriesId": "1441662761",
-      "sourceSeriesTitle": "Expresso da Meia-Noite",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-24T05:03:35Z",
-      "expiryDate": "2026-11-03T05:03:35Z",
-      "createdAt": "2026-10-24T08:58:10.578943Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
-        "guid": "36c69900-5c0e-4e50-a7de-b4ec017a38fc",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
-        "show": "Expresso da Meia-Noite"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "36c69900-5c0e-4e50-a7de-b4ec017a38fc",
-        "score": 1.0,
-        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
-        "verifiedAt": "2026-10-24T08:58:13.028061Z",
-        "resolvedTitle": "Quem deve construir as casas: o Estado, as câmaras ou os privados?",
-        "resolvedAuthor": "Expresso da Meia-Noite",
-        "sourcePublishedAt": "2026-10-24T05:03:35Z",
-        "sourceDescription": "Esta semana, o tema central é, naturalmente, a habitação. O que começou como o nome dado às acampadas ganhou, ao longo da semana, uma dimensão maior, gerando alguma tensão entre o Governo e os manifestantes que participaram nos protestos do Porto e de Lisboa. Mas, acima de tudo, abriu-se um intenso debate político, que se intensifica há várias semanas.",
-        "editorialDescription": "Análise sobre acima de tudo, abriu-se um intenso debate político, que se intensifica há várias semanas.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "0262bae31b7e3ef8b47d91c575575612a5afc7ec51b73a9ab976f76030f20240",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_46188d65441593b9",
       "type": "highlight",
       "category": "Destaque",
@@ -2366,7 +2278,7 @@
       "sourcePublishedAt": "2026-10-23T23:15:07Z",
       "expiryDate": "2026-11-22T23:15:07Z",
       "createdAt": "2026-10-24T08:58:15.337556Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2379,7 +2291,7 @@
           "Sociedade"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -2391,14 +2303,15 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-23T23:15:07Z",
         "sourceDescription": "Os partidos hoje mais empenhados em transformar a crise da habitação numa acusação contra o presente tiveram oportunidade de a travar no passado em vez disso baixaram os braços."
-      }
+      },
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [Acampada]: Artigo 'Acampada em Entrecampos' não corresponde ao título candidato."
     },
     {
       "id": "rss_highlight_4300b9a397100607",
       "type": "highlight",
       "category": "Destaque",
       "title": "O Brasil em tempo de vésperas",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "António Maria Mello e Castro",
       "description": "A ideia de consolidação de uma via política comum no espaço latino-americano e europeu parece-me algo arriscada ou precipitada.",
       "imageUrl": "/covers/highlight_o_brasil_em_tempo_de_v_speras_00a55020_78148b4725ad.jpg",
       "link": "https://observador.pt/opiniao/o-brasil-em-tempo-de-vesperas/",
@@ -2424,15 +2337,137 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:4300b9a397100607bd44f8aa",
         "score": 1.0,
         "coverHash": "f42118e32d0a3f06ff432a66cf832c80e588f9120be1b2fbd252e55230c852b3",
         "verifiedAt": "2026-10-24T08:58:18.272378Z",
         "resolvedTitle": "O Brasil em tempo de vésperas",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "António Maria Mello e Castro",
         "sourcePublishedAt": "2026-10-23T23:12:33Z",
         "sourceDescription": "A ideia de consolidação de uma via política comum no espaço latino-americano e europeu parece-me algo arriscada ou precipitada."
+      }
+    },
+    {
+      "id": "rss_podcast_ec55bcf9de9a951c",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Como seria um governo de Ventura com Passos? — Ouvintes",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “Como seria um governo de Ventura com Passos? — Ouvintes” do podcast Fora do Baralho, publicado em 25/10/2026.",
+      "imageUrl": "/covers/podcast_como_seria_um_governo_de_ventura_com_passos____ouvin_dbbca038_ec55bcf9de9a.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/como-seria-um-governo-de-ventura-com-passos-ouvintes",
+      "externalId": "90223d88-7506-45a4-85c7-b4ec010f13d3",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-25T06:00:00Z",
+      "expiryDate": "2026-10-28T06:00:00Z",
+      "createdAt": "2026-10-25T09:14:50.434768Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "90223d88-7506-45a4-85c7-b4ec010f13d3",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "90223d88-7506-45a4-85c7-b4ec010f13d3",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-10-25T09:14:51.289876Z",
+        "resolvedTitle": "Como seria um governo de Ventura com Passos? — Ouvintes",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-10-25T06:00:00Z",
+        "sourceDescription": "Episódio “Como seria um governo de Ventura com Passos? — Ouvintes” do podcast Fora do Baralho, publicado em 25/10/2026.",
+        "editorialDescription": "Análise sobre episódio “Como seria um governo de Ventura com Passos? — Ouvintes” do podcast Fora do Baralho, publicado em 25/10/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "b20d0daae51bb31f67c474c02a42fe988daadfe067cacfcf2d000b280ca1f784",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_8513291cb5a9a993",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Um em cada 10 residentes de Braga tem sotaque brasileiro",
+      "authorOrMeta": "www.rtp.pt",
+      "description": "Dez por cento da população de Braga veio do Brasil. Há mesmo quem fale em Bragasil. Na reportagem especial de hoje, olhamos para o modo da integração de milhares de novos residentes que dinamizou a economia e as escolas , mas colocou pressão na habitação e nos serviços públicos.",
+      "imageUrl": "/covers/highlight_um_em_cada_10_residentes_de_braga_tem_sotaque_bras_b288095b_95e7e394c89d.jpg",
+      "link": "https://www.rtp.pt/noticias/pais/um-em-cada-10-residentes-de-braga-tem-sotaque-brasileiro_v1774069",
+      "externalId": "article:url:8513291cb5a9a9938e39b47e",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-24T21:07:47Z",
+      "expiryDate": "2026-11-23T21:07:47Z",
+      "createdAt": "2026-10-25T09:14:52.180668Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://www.rtp.pt/noticias/rss/pais",
+        "guid": "https://www.rtp.pt/noticias/pais/um-em-cada-10-residentes-de-braga-tem-sotaque-brasileiro_v1774069",
+        "imageUrl": "https://cdn-images.rtp.pt/icm/images/a4/a4f6bc28f8c0e6c29960dab29f6311ba_N.jpg?",
+        "categories": [
+          "País"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:www.rtp.pt",
+        "entityId": "article:url:8513291cb5a9a9938e39b47e",
+        "score": 1.0,
+        "coverHash": "80c302321f1b0280273838fcf8b6aec4e2cef0e58b7c63c305a800ed938ec299",
+        "verifiedAt": "2026-10-25T09:14:52.664592Z",
+        "resolvedTitle": "Um em cada 10 residentes de Braga tem sotaque brasileiro",
+        "resolvedAuthor": "www.rtp.pt",
+        "sourcePublishedAt": "2026-10-24T21:07:47Z",
+        "sourceDescription": "Dez por cento da população de Braga veio do Brasil. Há mesmo quem fale em Bragasil. Na reportagem especial de hoje, olhamos para o modo da integração de milhares de novos residentes que dinamizou a economia e as escolas , mas colocou pressão na habitação e nos serviços públicos."
+      }
+    },
+    {
+      "id": "rss_highlight_505366001b929215",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "O despejo no Largo do Rato nº 2 o sacrifício da realidade",
+      "authorOrMeta": "observador.pt",
+      "description": "As acampadas, o desafio à PSP e a radicalização não visam condicionar o Governo mas sim o PS. Recriar a frente da geringonça é o objectivo. Carneiro vai deixar-se condicionar tal como Seguro em 2013?",
+      "imageUrl": "/covers/highlight_o_despejo_no_largo_do_rato_n__2_o_sacrif_cio_da_re_b69416bb_5954e1b07a4d.jpg",
+      "link": "https://observador.pt/opiniao/a-accao-de-despejo-no-largo-do-rato-no-2-e-o-sacrificio-da-realidade/",
+      "externalId": "article:url:505366001b92921583a6aadf",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-24T23:25:02Z",
+      "expiryDate": "2026-11-23T23:25:02Z",
+      "createdAt": "2026-10-25T09:14:52.235182Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/a-accao-de-despejo-no-largo-do-rato-no-2-e-o-sacrificio-da-realidade/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A2666%3A2665%3Anowe%3A0%3A814%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2026%2F05%2F04170545%2Fhelena-matos.jpg",
+        "categories": [
+          "PS",
+          "Política"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:505366001b92921583a6aadf",
+        "score": 1.0,
+        "coverHash": "5f96f0285c486e7a354ef875f381eace8e9d727810b02ceb2e594bc3cfe742cd",
+        "verifiedAt": "2026-10-25T09:14:52.829301Z",
+        "resolvedTitle": "O despejo no Largo do Rato nº 2 o sacrifício da realidade",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-24T23:25:02Z",
+        "sourceDescription": "As acampadas, o desafio à PSP e a radicalização não visam condicionar o Governo mas sim o PS. Recriar a frente da geringonça é o objectivo. Carneiro vai deixar-se condicionar tal como Seguro em 2013?"
       }
     }
   ],
