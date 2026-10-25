@@ -53,7 +53,7 @@ REQUEST_TIMEOUT = 20
 PODCAST_DESCRIPTION_VERSION = 1
 PODCAST_DESCRIPTION_MIN_CHARS = 70
 PODCAST_DESCRIPTION_MAX_CHARS = 138
-PODCAST_TITLE_MAX_CHARS = 72
+PODCAST_TITLE_MAX_CHARS = 80
 EDITORIAL_TITLE_MAX_CHARS = {
     "book": 58,
     "podcast": PODCAST_TITLE_MAX_CHARS,
@@ -814,6 +814,27 @@ def _editorialize_podcast_item(item, api_key):
         item["description"] = existing
         return changed
 
+    current_description = str(item.get("description") or "").strip()
+    if current_description and _podcast_description_is_valid(
+        current_description, title, source_description
+    ):
+        # A descricao atual ja cumpre o controlo editorial (ex.: corrigida
+        # manualmente); nao a regenerar via IA, so registar os metadados.
+        metadata_changed = any(
+            verification.get(key) != value
+            for key, value in (
+                ("editorialDescription", current_description),
+                ("editorialDescriptionVersion", PODCAST_DESCRIPTION_VERSION),
+                ("editorialSourceHash", source_hash),
+                ("editorialDescriptionProvider", "kept"),
+            )
+        )
+        verification["editorialDescription"] = current_description
+        verification["editorialDescriptionVersion"] = PODCAST_DESCRIPTION_VERSION
+        verification["editorialSourceHash"] = source_hash
+        verification["editorialDescriptionProvider"] = "kept"
+        return metadata_changed
+
     generated = _request_podcast_editorial_description(
         api_key,
         title=title,
@@ -1345,7 +1366,7 @@ def discover_highlight_candidates(api_key, engine_id, seen_links, limit):
                 not link.startswith("http")
                 or link in seen_links
                 or link in emitted_links
-                or "wikipedia.org" in hostname
+                or hostname == "wikipedia.org" or hostname.endswith(".wikipedia.org")
             ):
                 continue
             if not any(

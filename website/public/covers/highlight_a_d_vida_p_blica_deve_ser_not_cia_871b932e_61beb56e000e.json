@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.rtp.pt/noticias/opiniao/felisbela-lopes/a-divida-publica-deve-ser-noticia_1770587",
+  "coverHash": "41ff1fed36fdcf6e96d3bdb6a2cd9f0b4a34aac64d089cc5857dd904e79b16a3",
+  "coverSourceMime": "image/webp",
+  "coverSourceUrl": "https://cdn-images.rtp.pt/noticias/images/default_rtpnoticias.png?w=350&q=50&auto=format",
+  "entityId": "article:url:5f19d92f08243c38a64c308e",
+  "expiryDate": "2026-11-08T09:30:42Z",
+  "height": 196,
+  "isbn": "",
+  "resolvedAuthor": "www.rtp.pt",
+  "resolvedTitle": "A dívida pública deve ser notícia",
+  "score": 1.0,
+  "source": "news-rss:www.rtp.pt",
+  "sourcePublishedAt": "2026-10-09T09:30:42Z",
+  "title": "A dívida pública deve ser notícia",
+  "titleNormalized": "a divida publica deve ser noticia",
+  "type": "highlight",
+  "verifiedAt": "2026-10-09T11:24:52.258013Z",
+  "width": 350
+}

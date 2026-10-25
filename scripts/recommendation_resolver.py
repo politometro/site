@@ -895,8 +895,8 @@ def _clean_page_title(value: str) -> str:
 
 def _clean_description(value: str, max_chars: int = 360) -> str:
     text = html.unescape(str(value or ""))
-    text = re.sub(r"<script\b[^>]*>.*?</script>", " ", text, flags=re.I | re.S)
-    text = re.sub(r"<style\b[^>]*>.*?</style>", " ", text, flags=re.I | re.S)
+    text = re.sub(r"<script\b[^>]*>.*?</script[^>]*>", " ", text, flags=re.I | re.S)
+    text = re.sub(r"<style\b[^>]*>.*?</style[^>]*>", " ", text, flags=re.I | re.S)
     text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
     if len(text) <= max_chars:

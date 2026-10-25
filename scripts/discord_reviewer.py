@@ -643,8 +643,8 @@ async def replace_review_cover(original_msg_id, quadrant, raw_image_bytes):
             draft_sha,
         ),
     )
-    for path, content, message, sha in writes:
-        result = update_github_file(path, content, message, sha=sha)
+    for path, content, commit_message, sha in writes:
+        result = update_github_file(path, content, commit_message, sha=sha)
         if result is not True:
             return f"Erro ao guardar {path}: {result}"
 

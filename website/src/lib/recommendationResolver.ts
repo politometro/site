@@ -243,7 +243,7 @@ export function categoryForType(type: RecommendationType): string {
 export function sanitizeText(value: unknown, maxLength = 600): string {
   if (typeof value !== "string") return "";
   return value
-    .replace(/<[^>]*>/g, " ")
+    .replace(/<[^<>]*>/g, " ")
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
     .replace(/[\u200B-\u200F\u202A-\u202E\u2060-\u206F\uFEFF]/g, "")
     .replace(/\s+/g, " ")
@@ -750,6 +750,11 @@ async function fetchPublic(
 
   for (let redirect = 0; redirect <= maxRedirects; redirect += 1) {
     await assertPublicDns(currentUrl);
+    // currentUrl is validated before every fetch: normalizePublicUrl allows
+    // only http/https, rejects URL credentials and forbidden hostnames, and
+    // assertPublicDns resolves the host and rejects any private/reserved
+    // address, re-checked on every redirect hop.
+    // codeql[js/request-forgery]: URL validated by normalizePublicUrl + assertPublicDns (see above).
     const response = await fetch(currentUrl, {
       ...init,
       redirect: "manual",
@@ -1076,7 +1081,7 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
   for (const match of html.matchAll(
     /<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi,
   )) {
-    const raw = match[1].replace(/^\s*<!--|-->\s*$/g, "").trim();
+    const raw = match[1].replace(/^\s*<!--|--!?>\s*$/g, "").trim();
     if (!raw) continue;
     try {
       nodes.push(...jsonLdNodes(JSON.parse(raw)));

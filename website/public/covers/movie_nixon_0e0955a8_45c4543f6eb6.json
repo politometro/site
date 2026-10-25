@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0113987/",
+  "coverHash": "3a8cfab6cfc0c5bfe762b63184ca27117270c6d523cfd35dc6003148e8a8cf3a",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3f/President_Richard_Nixon_1974_%283084054600%29.jpg",
+  "entityId": "imdb:tt0113987",
+  "expiryDate": null,
+  "height": 471,
+  "isbn": "",
+  "resolvedAuthor": "Oliver Stone",
+  "resolvedTitle": "Nixon",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Nixon",
+  "titleNormalized": "nixon",
+  "type": "movie",
+  "verifiedAt": "2026-10-04T10:40:37.405241Z",
+  "width": 700
+}

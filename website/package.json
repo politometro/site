@@ -13,11 +13,11 @@
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
-    "fast-xml-parser": "^5.3.6",
-    "next": "16.2.10",
+    "fast-xml-parser": "^5.7.0",
+    "next": "16.4.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "sharp": "^0.34.5"
+    "sharp": "^0.35.5"
   },
   "devDependencies": {
     "@types/node": "^24",

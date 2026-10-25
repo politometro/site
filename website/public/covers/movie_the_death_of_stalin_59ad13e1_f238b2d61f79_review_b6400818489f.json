@@ -1,0 +1,26 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt4686844/",
+  "coverHash": "b6400818489f3aefec49db4969d81b848fa75dad68001944c071f5363899652f",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "discord-review://manual-upload",
+  "entityId": "imdb:tt4686844",
+  "expiryDate": null,
+  "height": 2835,
+  "isbn": "",
+  "resolvedAuthor": "Armando Iannucci",
+  "resolvedTitle": "The Death of Stalin",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "The Death of Stalin",
+  "titleNormalized": "the death of stalin",
+  "type": "movie",
+  "verifiedAt": "2026-08-29T19:40:04.304578Z",
+  "width": 1984,
+  "coverOverride": {
+    "status": "approved",
+    "source": "discord-review",
+    "approvedAt": "2026-08-29T19:40:04.304578Z"
+  }
+}

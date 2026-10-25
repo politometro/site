@@ -33,20 +33,23 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedGroqKey = localStorage.getItem("politometro_groq_api_key") || "";
+      // Segredos nunca persistidos em web storage (alerta CodeQL
+      // js/clear-text-storage-of-sensitive-data): introduzem-se em cada
+      // sessão e vivem apenas em estado. Limpa valores antigos, se existirem.
+      localStorage.removeItem("politometro_groq_api_key");
+      localStorage.removeItem("politometro_pinecone_api_key");
+      localStorage.removeItem("politometro_github_token");
       const savedGroqModel = localStorage.getItem("politometro_groq_model") || "llama-3.3-70b-versatile";
-      const savedPineconeKey = localStorage.getItem("politometro_pinecone_api_key") || "";
       const savedPineconeIndex = localStorage.getItem("politometro_pinecone_index_name") || "politometro";
-      const savedGithubToken = localStorage.getItem("politometro_github_token") || "";
       const savedGithubRepo = localStorage.getItem("politometro_github_repo") || "";
       const savedGithubBranch = localStorage.getItem("politometro_github_branch") || "main";
 
       setSettings({
-        groqApiKey: savedGroqKey,
+        groqApiKey: "",
         groqModel: savedGroqModel,
-        pineconeApiKey: savedPineconeKey,
+        pineconeApiKey: "",
         pineconeIndexName: savedPineconeIndex,
-        githubToken: savedGithubToken,
+        githubToken: "",
         githubRepo: savedGithubRepo,
         githubBranch: savedGithubBranch,
       });
@@ -56,11 +59,10 @@ export default function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (typeof window !== "undefined") {
-      localStorage.setItem("politometro_groq_api_key", settings.groqApiKey);
+      // Só definições não sensíveis persistem; as chaves vivem apenas em
+      // estado durante a sessão e nunca são escritas em web storage.
       localStorage.setItem("politometro_groq_model", settings.groqModel);
-      localStorage.setItem("politometro_pinecone_api_key", settings.pineconeApiKey);
       localStorage.setItem("politometro_pinecone_index_name", settings.pineconeIndexName);
-      localStorage.setItem("politometro_github_token", settings.githubToken);
       localStorage.setItem("politometro_github_repo", settings.githubRepo);
       localStorage.setItem("politometro_github_branch", settings.githubBranch);
     }

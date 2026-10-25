@@ -750,6 +750,7 @@ def run_twitch_bot_forever():
                 "connecting", "A estabelecer ligação com a Twitch."
             )
             context = ssl.create_default_context()
+            context.minimum_version = ssl.TLSVersion.TLSv1_2
             with socket.create_connection((IRC_HOST, IRC_PORT), timeout=30) as raw_sock:
                 with context.wrap_socket(raw_sock, server_hostname=IRC_HOST) as sock:
                     sock.settimeout(300)

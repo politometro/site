@@ -111,26 +111,43 @@ function values<T>(value: T | T[] | undefined): T[] {
   return Array.isArray(value) ? value : [value];
 }
 
+// Single-pass decoder: one replace never re-scans its own output, so an
+// entity produced by decoding (e.g. "&lt;" from "&amp;lt;") is not decoded
+// a second time (CodeQL js/double-escaping). Note this decodes only one
+// level of encoding, unlike the previous up-to-3-passes loop.
 function decodeHtmlEntities(value: string): string {
-  let decoded = value;
-  for (let pass = 0; pass < 3; pass += 1) {
-    const previous = decoded;
-    decoded = decoded
-      .replace(/&#x([0-9a-f]+);/gi, (_, hex: string) =>
-        String.fromCodePoint(Number.parseInt(hex, 16)),
-      )
-      .replace(/&#(\d+);/g, (_, number: string) =>
-        String.fromCodePoint(Number(number)),
-      )
-      .replace(/&nbsp;/gi, " ")
-      .replace(/&amp;/gi, "&")
-      .replace(/&quot;/gi, '"')
-      .replace(/&apos;|&#39;/gi, "'")
-      .replace(/&lt;/gi, "<")
-      .replace(/&gt;/gi, ">");
-    if (decoded === previous) break;
-  }
-  return decoded;
+  const fromCodePoint = (code: number): string | null =>
+    Number.isInteger(code) && code >= 0 && code <= 0x10ffff
+      ? String.fromCodePoint(code)
+      : null;
+  return value.replace(
+    /&#x([0-9a-f]+);|&#(\d+);|&nbsp;|&amp;|&quot;|&apos;|&#39;|&lt;|&gt;/gi,
+    (match, hex?: string, number?: string) => {
+      if (hex !== undefined) {
+        return fromCodePoint(Number.parseInt(hex, 16)) ?? match;
+      }
+      if (number !== undefined) {
+        return fromCodePoint(Number(number)) ?? match;
+      }
+      switch (match.toLowerCase()) {
+        case "&nbsp;":
+          return " ";
+        case "&amp;":
+          return "&";
+        case "&quot;":
+          return '"';
+        case "&apos;":
+        case "&#39;":
+          return "'";
+        case "&lt;":
+          return "<";
+        case "&gt;":
+          return ">";
+        default:
+          return match;
+      }
+    },
+  );
 }
 
 function plainText(value: unknown, maxLength: number): string {
@@ -141,8 +158,8 @@ function plainText(value: unknown, maxLength: number): string {
         ? String((value as { "#text": unknown })["#text"])
         : "";
   return decodeHtmlEntities(raw)
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<script[\s\S]*?<\/script[^>]*>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style[^>]*>/gi, " ")
     .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim()

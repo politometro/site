@@ -1,0 +1,26 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL32342092W/Democracy_in_America",
+  "coverHash": "e858942aaefc64a68714d9658f8959c4bf7291cee088a8585a71277b3ca9dead",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "discord-review://manual-upload",
+  "entityId": "openlibrary:/works/OL32342092W",
+  "expiryDate": null,
+  "height": 1969,
+  "isbn": "",
+  "resolvedAuthor": "Alexis de Tocqueville",
+  "resolvedTitle": "Democracy in America",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "Democracy in America",
+  "titleNormalized": "democracy in america",
+  "type": "book",
+  "verifiedAt": "2026-08-29T19:38:05.214649Z",
+  "width": 1200,
+  "coverOverride": {
+    "status": "approved",
+    "source": "discord-review",
+    "approvedAt": "2026-08-29T19:38:05.214649Z"
+  }
+}

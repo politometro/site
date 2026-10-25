@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt1013753/",
+  "coverHash": "e9c105b02d255f350280d157ad932f8b239d7229a19b0bd9d5fac24621245f80",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9a/Castro-nov08.jpg",
+  "entityId": "imdb:tt1013753",
+  "expiryDate": null,
+  "height": 267,
+  "isbn": "",
+  "resolvedAuthor": "Gus Van Sant",
+  "resolvedTitle": "Milk",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Milk",
+  "titleNormalized": "milk",
+  "type": "movie",
+  "verifiedAt": "2026-08-30T16:52:09.408539Z",
+  "width": 200
+}

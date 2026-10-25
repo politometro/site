@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt1020072/",
+  "coverHash": "7a4674625214906a6fee705a3eedc80625b0054255d842a9906b79f6af4df3b8",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3c/Bloody_Sunday-Alabama_police_attack.jpeg",
+  "entityId": "imdb:tt1020072",
+  "expiryDate": null,
+  "height": 274,
+  "isbn": "",
+  "resolvedAuthor": "Ava DuVernay",
+  "resolvedTitle": "Selma",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Selma",
+  "titleNormalized": "selma",
+  "type": "movie",
+  "verifiedAt": "2026-09-27T10:05:57.827937Z",
+  "width": 400
+}
