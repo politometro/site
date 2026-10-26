@@ -1977,7 +1977,7 @@
       "sourcePublishedAt": "2026-10-06T04:15:00Z",
       "expiryDate": "2026-10-27T04:15:00Z",
       "createdAt": "2026-10-18T16:00:25.998862Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -1986,7 +1986,7 @@
         "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/4b8af576-2509-4de3-8197-b4da01322bb0/image.jpg?t=1791229417&size=Large",
         "show": "Perguntar Não Ofende"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2002,7 +2002,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "54baaedf5c089c70ed3dfee39f455b966d2f4ad052d5d71bf05519868032978e",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Adolfo Mesquita Nunes: seremos governados pelo algoritmo?]: Conteúdo expira em 2026-10-27T04:15:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "ai_movie_ce34e9003d124362",
@@ -2076,47 +2077,6 @@
         "editorialDescriptionProvider": "extractive"
       },
       "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [“Os deputados do Chega viram tendas e pensaram: são ciganos. Querem a polícia a bater nos portuenses desde que sabem da Livraria Lelo”]: Conteúdo expira em 2026-10-21T22:05:22Z; são necessárias pelo menos 24 horas para revisão e publicação."
-    },
-    {
-      "id": "rss_highlight_442312c35c6ba3d4",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Quatro apontamentos sobre esperança, soberba, decadência e ignorância",
-      "authorOrMeta": "Nuno Lebreiro",
-      "description": "A coisa é azarada para o governo que se diz reformista e ao qual se aponta, fundamentalmente, o defeito de não ser reformista",
-      "imageUrl": "/covers/highlight_quatro_apontamentos_sobre_esperan_a__soberba__deca_49fad356_334f36617d0b.jpg",
-      "link": "https://observador.pt/opiniao/quatro-apontamentos-sobre-esperanca-soberba-decadencia-e-ignorancia/",
-      "externalId": "article:url:442312c35c6ba3d4d17a4b75",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-23T07:36:22Z",
-      "expiryDate": "2026-11-22T07:36:22Z",
-      "createdAt": "2026-10-23T09:26:31.967205Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/quatro-apontamentos-sobre-esperanca-soberba-decadencia-e-ignorancia/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A635%3A635%3Anowe%3A212%3A65%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F02%2F06000207%2F2696bedd-5924-43c3-9525-6b39c4c58d0a.jpeg",
-        "categories": [
-          "Governo",
-          "Política"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:442312c35c6ba3d4d17a4b75",
-        "score": 0.7503,
-        "coverHash": "9cf7c767734898c610f5fafbd45e661f9afcc366e0700d9a528f97cce254c58f",
-        "verifiedAt": "2026-10-24T16:05:35.972144Z",
-        "resolvedTitle": "Quatro apontamentos sobre esperança, soberba, decadência e ignorância",
-        "resolvedAuthor": "Nuno Lebreiro",
-        "sourcePublishedAt": "2026-10-23T07:36:22Z",
-        "sourceDescription": "A coisa é azarada para o governo que se diz reformista e ao qual se aponta, fundamentalmente, o defeito de não ser reformista"
-      },
-      "editorialTitle": "Quatro apontamentos sobre esperança, soberba, decadência"
     },
     {
       "id": "rss_podcast_5a37e3328d0fbb70",
@@ -2239,11 +2199,11 @@
         "resolvedTitle": "Como seria um governo de Ventura com Passos? — Ouvintes",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-10-25T06:00:00Z",
-        "sourceDescription": "Episódio “Como seria um governo de Ventura com Passos? — Ouvintes” do podcast Fora do Baralho, publicado em 25/10/2026.",
+        "sourceDescription": "Análise sobre episódio “Como seria um governo de Ventura com Passos? — Ouvintes” do podcast Fora do Baralho, publicado em 25/10/2026.",
         "editorialDescription": "Análise sobre episódio “Como seria um governo de Ventura com Passos? — Ouvintes” do podcast Fora do Baralho, publicado em 25/10/2026.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "b20d0daae51bb31f67c474c02a42fe988daadfe067cacfcf2d000b280ca1f784",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "7a876635d79b0654c706e891d091c288ff3a3f7382b09bd2b5b526e04ed104f1",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -2289,10 +2249,10 @@
       "id": "rss_highlight_505366001b929215",
       "type": "highlight",
       "category": "Destaque",
-      "title": "O despejo no Largo do Rato nº 2 o sacrifício da realidade",
-      "authorOrMeta": "observador.pt",
+      "title": "A acção de despejo no Largo do Rato nº 2 e o sacrifício da realidade",
+      "authorOrMeta": "Helena Matos",
       "description": "As acampadas, o desafio à PSP e a radicalização não visam condicionar o Governo mas sim o PS. Recriar a frente da geringonça é o objectivo. Carneiro vai deixar-se condicionar tal como Seguro em 2013?",
-      "imageUrl": "/covers/highlight_o_despejo_no_largo_do_rato_n__2_o_sacrif_cio_da_re_b69416bb_5954e1b07a4d.jpg",
+      "imageUrl": "/covers/highlight_a_ac__o_de_despejo_no_largo_do_rato_n__2_e_o_sacri_72229525_5954e1b07a4d.jpg",
       "link": "https://observador.pt/opiniao/a-accao-de-despejo-no-largo-do-rato-no-2-e-o-sacrificio-da-realidade/",
       "externalId": "article:url:505366001b92921583a6aadf",
       "priority": 4,
@@ -2314,15 +2274,158 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:505366001b92921583a6aadf",
-        "score": 1.0,
-        "coverHash": "5f96f0285c486e7a354ef875f381eace8e9d727810b02ceb2e594bc3cfe742cd",
-        "verifiedAt": "2026-10-25T09:14:52.829301Z",
-        "resolvedTitle": "O despejo no Largo do Rato nº 2 o sacrifício da realidade",
-        "resolvedAuthor": "observador.pt",
+        "score": 0.9055,
+        "coverHash": "5b685584148057e6dda8c854d6137fcc9fbd44080afb30602c0f3d25ae9b6e3d",
+        "verifiedAt": "2026-10-26T10:34:57.245928Z",
+        "resolvedTitle": "A acção de despejo no Largo do Rato nº 2 e o sacrifício da realidade",
+        "resolvedAuthor": "Helena Matos",
         "sourcePublishedAt": "2026-10-24T23:25:02Z",
         "sourceDescription": "As acampadas, o desafio à PSP e a radicalização não visam condicionar o Governo mas sim o PS. Recriar a frente da geringonça é o objectivo. Carneiro vai deixar-se condicionar tal como Seguro em 2013?"
+      },
+      "editorialTitle": "A acção de despejo no Largo do Rato nº 2 e o sacrifício"
+    },
+    {
+      "id": "rss_podcast_fdfe7912a59b2973",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Eduardo Souto de Moura: “Ver o que aconteceu ontem deixou-me muito triste. Lembrou-me os tempos antes do 25 de Abril”",
+      "editorialTitle": "Eduardo Souto de Moura: “Ver o que aconteceu ontem deixou-me muito triste.",
+      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
+      "description": "Análise sobre na segunda parte do programa, Ricardo Araújo Pereira conversa com o arquiteto Eduardo Souto Moura.",
+      "imageUrl": "/covers/podcast_eduardo_souto_de_moura___ver_o_que_aconteceu_ontem_d_c60eb398_fdfe7912a59b.jpg",
+      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/eduardo-souto-de-moura-ver-o-que-aconteceu-ontem-deixou-me-muito-triste-lembrou-me-os-tempos-antes-do-25-de-abril",
+      "externalId": "919e924c-8b4d-4f65-9a58-b4ee01778ac4",
+      "sourceSeriesId": "1585178009",
+      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-25T23:56:28Z",
+      "expiryDate": "2026-10-28T23:56:28Z",
+      "createdAt": "2026-10-26T10:34:57.802869Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
+        "guid": "919e924c-8b4d-4f65-9a58-b4ee01778ac4",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/919e924c-8b4d-4f65-9a58-b4ee01778ac4/image.jpg?t=1792971948&size=Large",
+        "show": "Isto É Gozar Com Quem Trabalha"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "919e924c-8b4d-4f65-9a58-b4ee01778ac4",
+        "score": 1.0,
+        "coverHash": "2e6a488b25ada4ca366abca5829c2a4ce352fa92d283d2c722a1aa3ed9eb2b05",
+        "verifiedAt": "2026-10-26T10:35:02.362935Z",
+        "resolvedTitle": "Eduardo Souto de Moura: “Ver o que aconteceu ontem deixou-me muito triste. Lembrou-me os tempos antes do 25 de Abril”",
+        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
+        "sourcePublishedAt": "2026-10-25T23:56:28Z",
+        "sourceDescription": "Na segunda parte do programa, Ricardo Araújo Pereira conversa com o arquiteto Eduardo Souto Moura. Desde investir o lucro da Caixa Geral de Depósitos em casas ao simples 'Então façam!', com muita boa disposição, falam sobre algumas soluções possíveis para para o problema.",
+        "editorialDescription": "Análise sobre na segunda parte do programa, Ricardo Araújo Pereira conversa com o arquiteto Eduardo Souto Moura.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "00f0d4a34460b75310afa7c5ea25c7f6c02d747b39021427f588ae2f737bddd0",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_b5033628911638fd",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Quem deve construir as casas: o Estado, as câmaras ou os privados?",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre acima de tudo, abriu-se um intenso debate político, que se intensifica há várias semanas.",
+      "imageUrl": "/covers/podcast_quem_deve_construir_as_casas__o_estado__as_c_maras_o_c304a3cc_b50336289116.jpg",
+      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/quem-deve-construir-as-casas-o-estado-as-c-maras-ou-os-privados",
+      "externalId": "36c69900-5c0e-4e50-a7de-b4ec017a38fc",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-24T05:03:35Z",
+      "expiryDate": "2026-11-03T05:03:35Z",
+      "createdAt": "2026-10-26T10:34:59.871959Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "36c69900-5c0e-4e50-a7de-b4ec017a38fc",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "36c69900-5c0e-4e50-a7de-b4ec017a38fc",
+        "score": 1.0,
+        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
+        "verifiedAt": "2026-10-24T08:58:13.028061Z",
+        "resolvedTitle": "Quem deve construir as casas: o Estado, as câmaras ou os privados?",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-10-24T05:03:35Z",
+        "sourceDescription": "Esta semana, o tema central é, naturalmente, a habitação. O que começou como o nome dado às acampadas ganhou, ao longo da semana, uma dimensão maior, gerando alguma tensão entre o Governo e os manifestantes que participaram nos protestos do Porto e de Lisboa. Mas, acima de tudo, abriu-se um intenso debate político, que se intensifica há várias semanas.",
+        "editorialDescription": "Análise sobre acima de tudo, abriu-se um intenso debate político, que se intensifica há várias semanas.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "0262bae31b7e3ef8b47d91c575575612a5afc7ec51b73a9ab976f76030f20240",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_70df25f133dc362b",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Acampadas põem em causa a democracia representativa?",
+      "authorOrMeta": "observador.pt",
+      "description": "Francisco Assis, eurodeputado do PS, ⁠Hélder Sousa e Silva, eurodeputado do PSD e ⁠Tiago Moreira de Sá, eurodeputado do Chega, debatem as manifestações e falam sobre as eleições do Brasil.",
+      "imageUrl": "/covers/highlight_acampadas_p_em_em_causa_a_democracia_representativ_3970ba17_868bc70cc328.jpg",
+      "link": "https://observador.pt/programas/explicador/acampadas-poem-em-causa-a-democracia-representativa/",
+      "externalId": "article:url:70df25f133dc362b49846fc9",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-26T10:11:39Z",
+      "expiryDate": "2026-11-25T10:11:39Z",
+      "createdAt": "2026-10-26T10:35:08.043538Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/acampadas-poem-em-causa-a-democracia-representativa/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "Governo",
+          "Política",
+          "Manifestações",
+          "Protestos",
+          "Sociedade",
+          "Habitação e Urbanismo",
+          "País",
+          "PS",
+          "PSD",
+          "Partido Chega",
+          "Brasil",
+          "Mundo",
+          "Eleições",
+          "Presidenciais",
+          "Lula da Silva"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:70df25f133dc362b49846fc9",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-10-26T10:35:08.300204Z",
+        "resolvedTitle": "Acampadas põem em causa a democracia representativa?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-26T10:11:39Z",
+        "sourceDescription": "Francisco Assis, eurodeputado do PS, ⁠Hélder Sousa e Silva, eurodeputado do PSD e ⁠Tiago Moreira de Sá, eurodeputado do Chega, debatem as manifestações e falam sobre as eleições do Brasil."
       }
     }
   ],
@@ -4685,8 +4788,8 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 0,
-      "podcast": 2,
-      "movie": 4,
+      "podcast": 1,
+      "movie": 2,
       "nostalgia": 4,
       "investigation": 0,
       "highlight": 4
