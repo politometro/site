@@ -2122,48 +2122,6 @@
       }
     },
     {
-      "id": "rss_highlight_4300b9a397100607",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "O Brasil em tempo de vésperas",
-      "authorOrMeta": "António Maria Mello e Castro",
-      "description": "A ideia de consolidação de uma via política comum no espaço latino-americano e europeu parece-me algo arriscada ou precipitada.",
-      "imageUrl": "/covers/highlight_o_brasil_em_tempo_de_v_speras_00a55020_78148b4725ad.jpg",
-      "link": "https://observador.pt/opiniao/o-brasil-em-tempo-de-vesperas/",
-      "externalId": "article:url:4300b9a397100607bd44f8aa",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-23T23:12:33Z",
-      "expiryDate": "2026-11-22T23:12:33Z",
-      "createdAt": "2026-10-24T08:58:15.338089Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/o-brasil-em-tempo-de-vesperas/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A467%3A467%3Anowe%3A0%3A80%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F01%2F02174005%2Fantonio-m-castro-png.jpg",
-        "categories": [
-          "Eleições no Brasil",
-          "Brasil",
-          "Mundo",
-          "Geopolítica"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:4300b9a397100607bd44f8aa",
-        "score": 1.0,
-        "coverHash": "f42118e32d0a3f06ff432a66cf832c80e588f9120be1b2fbd252e55230c852b3",
-        "verifiedAt": "2026-10-24T08:58:18.272378Z",
-        "resolvedTitle": "O Brasil em tempo de vésperas",
-        "resolvedAuthor": "António Maria Mello e Castro",
-        "sourcePublishedAt": "2026-10-23T23:12:33Z",
-        "sourceDescription": "A ideia de consolidação de uma via política comum no espaço latino-americano e europeu parece-me algo arriscada ou precipitada."
-      }
-    },
-    {
       "id": "rss_podcast_ec55bcf9de9a951c",
       "type": "podcast",
       "category": "Podcast",
@@ -2211,7 +2169,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Um em cada 10 residentes de Braga tem sotaque brasileiro",
-      "authorOrMeta": "www.rtp.pt",
+      "authorOrMeta": "Rádio e Televisão de Portugal",
       "description": "Dez por cento da população de Braga veio do Brasil. Há mesmo quem fale em Bragasil. Na reportagem especial de hoje, olhamos para o modo da integração de milhares de novos residentes que dinamizou a economia e as escolas , mas colocou pressão na habitação e nos serviços públicos.",
       "imageUrl": "/covers/highlight_um_em_cada_10_residentes_de_braga_tem_sotaque_bras_b288095b_95e7e394c89d.jpg",
       "link": "https://www.rtp.pt/noticias/pais/um-em-cada-10-residentes-de-braga-tem-sotaque-brasileiro_v1774069",
@@ -2234,13 +2192,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:www.rtp.pt",
+        "source": "news:www.rtp.pt",
         "entityId": "article:url:8513291cb5a9a9938e39b47e",
         "score": 1.0,
         "coverHash": "80c302321f1b0280273838fcf8b6aec4e2cef0e58b7c63c305a800ed938ec299",
         "verifiedAt": "2026-10-25T09:14:52.664592Z",
         "resolvedTitle": "Um em cada 10 residentes de Braga tem sotaque brasileiro",
-        "resolvedAuthor": "www.rtp.pt",
+        "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-10-24T21:07:47Z",
         "sourceDescription": "Dez por cento da população de Braga veio do Brasil. Há mesmo quem fale em Bragasil. Na reportagem especial de hoje, olhamos para o modo da integração de milhares de novos residentes que dinamizou a economia e as escolas , mas colocou pressão na habitação e nos serviços públicos."
       }
@@ -2326,8 +2284,8 @@
         "sourceDescription": "Na segunda parte do programa, Ricardo Araújo Pereira conversa com o arquiteto Eduardo Souto Moura. Desde investir o lucro da Caixa Geral de Depósitos em casas ao simples 'Então façam!', com muita boa disposição, falam sobre algumas soluções possíveis para para o problema.",
         "editorialDescription": "Análise sobre na segunda parte do programa, Ricardo Araújo Pereira conversa com o arquiteto Eduardo Souto Moura.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "00f0d4a34460b75310afa7c5ea25c7f6c02d747b39021427f588ae2f737bddd0",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "c91801fe5a68f1d0d4d0c8a3ff8b16da03c8b5d8a7db0487024a96a2ddddd3fd",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -2426,6 +2384,51 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-26T10:11:39Z",
         "sourceDescription": "Francisco Assis, eurodeputado do PS, ⁠Hélder Sousa e Silva, eurodeputado do PSD e ⁠Tiago Moreira de Sá, eurodeputado do Chega, debatem as manifestações e falam sobre as eleições do Brasil."
+      }
+    },
+    {
+      "id": "rss_highlight_7be889b49dc4425f",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Juiz Alexandre de Moraes morre depois de sofrer enfarte?",
+      "authorOrMeta": "observador.pt",
+      "description": "Ameaças e ataques virtuais ao ministro do Supremo Tribunal Federal do Brasil aumentaram após a condenação do ex-Presidente Jair Bolsonaro, num processo conduzido por Moraes.",
+      "imageUrl": "/covers/highlight_juiz_alexandre_de_moraes_morre_depois_de_sofrer_en_1c5d588b_44cf46bc50d0.jpg",
+      "link": "https://observador.pt/factchecks/fact-check-juiz-alexandre-de-moraes-morre-depois-de-sofrer-enfarte/",
+      "externalId": "article:url:7be889b49dc4425f90ae67cf",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-26T16:57:34Z",
+      "expiryDate": "2026-11-25T16:57:34Z",
+      "createdAt": "2026-10-26T18:45:06.681507Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/factchecks/fact-check-juiz-alexandre-de-moraes-morre-depois-de-sofrer-enfarte/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2020/01/09142359/fact_check-errado.png",
+        "categories": [
+          "Fact Check",
+          "Observador",
+          "Justiça",
+          "Brasil",
+          "Mundo",
+          "Óbito",
+          "Sociedade"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:7be889b49dc4425f90ae67cf",
+        "score": 1.0,
+        "coverHash": "33064a55d3fc33e4be7412acbe83679e52947471be506974c7185f650bc315e8",
+        "verifiedAt": "2026-10-26T18:45:07.159329Z",
+        "resolvedTitle": "Juiz Alexandre de Moraes morre depois de sofrer enfarte?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-26T16:57:34Z",
+        "sourceDescription": "Ameaças e ataques virtuais ao ministro do Supremo Tribunal Federal do Brasil aumentaram após a condenação do ex-Presidente Jair Bolsonaro, num processo conduzido por Moraes."
       }
     }
   ],
