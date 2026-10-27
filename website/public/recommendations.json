@@ -2137,7 +2137,7 @@
       "sourcePublishedAt": "2026-10-25T06:00:00Z",
       "expiryDate": "2026-10-28T06:00:00Z",
       "createdAt": "2026-10-25T09:14:50.434768Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2146,7 +2146,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2162,7 +2162,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "7a876635d79b0654c706e891d091c288ff3a3f7382b09bd2b5b526e04ed104f1",
         "editorialDescriptionProvider": "kept"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Como seria um governo de Ventura com Passos? — Ouvintes]: Conteúdo expira em 2026-10-28T06:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_8513291cb5a9a993",
@@ -2178,7 +2179,7 @@
       "sourcePublishedAt": "2026-10-24T21:07:47Z",
       "expiryDate": "2026-11-23T21:07:47Z",
       "createdAt": "2026-10-25T09:14:52.180668Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2189,7 +2190,7 @@
           "País"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news:www.rtp.pt",
@@ -2201,7 +2202,8 @@
         "resolvedAuthor": "Rádio e Televisão de Portugal",
         "sourcePublishedAt": "2026-10-24T21:07:47Z",
         "sourceDescription": "Dez por cento da população de Braga veio do Brasil. Há mesmo quem fale em Bragasil. Na reportagem especial de hoje, olhamos para o modo da integração de milhares de novos residentes que dinamizou a economia e as escolas , mas colocou pressão na habitação e nos serviços públicos."
-      }
+      },
+      "validationError": "SOURCE_MISMATCH [Um em cada 10 residentes de Braga tem sotaque brasileiro]: Editor indicado não corresponde ao domínio www.rtp.pt."
     },
     {
       "id": "rss_highlight_505366001b929215",
@@ -2429,6 +2431,90 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-26T16:57:34Z",
         "sourceDescription": "Ameaças e ataques virtuais ao ministro do Supremo Tribunal Federal do Brasil aumentaram após a condenação do ex-Presidente Jair Bolsonaro, num processo conduzido por Moraes."
+      }
+    },
+    {
+      "id": "rss_podcast_add4d949a91a3bf1",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Violência na Acampada + Argumentos ridículos - Conteúdo do Batáguas T03 Ep11",
+      "authorOrMeta": "Conteúdo do Batáguas",
+      "description": "Análise sobre os temas e questões de violência na acampada + argumentos ridículos - conteúdo do batáguas t03 ep11.",
+      "imageUrl": "/covers/podcast_viol_ncia_na_acampada___argumentos_rid_culos___conte_87b24871_add4d949a91a.jpg",
+      "link": "https://www.youtube.com/watch?v=Ga7RHbdPKDM",
+      "externalId": "https://www.youtube.com/watch?v=Ga7RHbdPKDM",
+      "sourceSeriesId": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+      "sourceSeriesTitle": "Conteúdo do Batáguas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-26T19:00:20Z",
+      "expiryDate": "2026-11-16T19:00:20Z",
+      "createdAt": "2026-10-27T09:54:44.866268Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+        "guid": "https://www.youtube.com/watch?v=Ga7RHbdPKDM",
+        "imageUrl": "https://www.youtube.com/v/Ga7RHbdPKDM?version=3",
+        "show": "Conteúdo do Batáguas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "https://www.youtube.com/watch?v=Ga7RHbdPKDM",
+        "score": 1.0,
+        "coverHash": "6af3e13651ffeead8d99162e2689ae03bc91cfc20bf1ea857aa186e8497cbfa1",
+        "verifiedAt": "2026-10-27T09:54:45.441095Z",
+        "resolvedTitle": "Violência na Acampada + Argumentos ridículos - Conteúdo do Batáguas T03 Ep11",
+        "resolvedAuthor": "Conteúdo do Batáguas",
+        "sourcePublishedAt": "2026-10-26T19:00:20Z",
+        "sourceDescription": "OPTIMISTA CÉPTICO https://kilt.pt/eventos/optimista-ceptico-diogo-bataguas RALLY DACARLOS https://rallydacarlos.pt SEGUIR https://www.instagram.com/diogobataguas https://www.twitter.com/diogobataguas https://www.tiktok.com/bataguas",
+        "editorialDescription": "Análise sobre os temas e questões de violência na acampada + argumentos ridículos - conteúdo do batáguas t03 ep11.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "dcf8b429e62590f3e10df0059250b7d159cc172b3655811b5d11aaaebbb48acc",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_796b9c8116e108ce",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Israel sem Netanyahu",
+      "authorOrMeta": "observador.pt",
+      "description": "No plano internacional, a mudança que tantos no Ocidente esperam desta eleição dificilmente chegará. Talvez Kissinger tivesse razão quando dizia que “Israel não tem política externa, só interna\"",
+      "imageUrl": "/covers/highlight_israel_sem_netanyahu_aacfbd24_72bbd5dbbe68.jpg",
+      "link": "https://observador.pt/opiniao/israel-sem-netanyahu/",
+      "externalId": "article:url:796b9c8116e108ce92867c09",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-27T08:59:07Z",
+      "expiryDate": "2026-11-26T08:59:07Z",
+      "createdAt": "2026-10-27T09:54:46.180809Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/opiniao/israel-sem-netanyahu/",
+        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A3024%3A3024%3Anowe%3A0%3A302%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F07%2F01184407%2Ffotografiajpg.jpg",
+        "categories": [
+          "Israel",
+          "Médio Oriente",
+          "Mundo"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:796b9c8116e108ce92867c09",
+        "score": 1.0,
+        "coverHash": "112eb938fe3dddfc5250d8457304affe0058f37b992cf10731f6b2c5eba4faac",
+        "verifiedAt": "2026-10-27T09:54:46.478670Z",
+        "resolvedTitle": "Israel sem Netanyahu",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-27T08:59:07Z",
+        "sourceDescription": "No plano internacional, a mudança que tantos no Ocidente esperam desta eleição dificilmente chegará. Talvez Kissinger tivesse razão quando dizia que “Israel não tem política externa, só interna\""
       }
     }
   ],
