@@ -2236,7 +2236,7 @@
         "status": "verified",
         "source": "news:observador.pt",
         "entityId": "article:url:505366001b92921583a6aadf",
-        "score": 0.9055,
+        "score": 1.0,
         "coverHash": "5b685584148057e6dda8c854d6137fcc9fbd44080afb30602c0f3d25ae9b6e3d",
         "verifiedAt": "2026-10-26T10:34:57.245928Z",
         "resolvedTitle": "A acção de despejo no Largo do Rato nº 2 e o sacrifício da realidade",
@@ -2287,7 +2287,7 @@
         "editorialDescription": "Análise sobre na segunda parte do programa, Ricardo Araújo Pereira conversa com o arquiteto Eduardo Souto Moura.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "c91801fe5a68f1d0d4d0c8a3ff8b16da03c8b5d8a7db0487024a96a2ddddd3fd",
-        "editorialDescriptionProvider": "kept"
+        "editorialDescriptionProvider": "extractive"
       }
     },
     {
@@ -2338,7 +2338,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Acampadas põem em causa a democracia representativa?",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Carla Jorge de Carvalho, Paulo Ferreira",
       "description": "Francisco Assis, eurodeputado do PS, ⁠Hélder Sousa e Silva, eurodeputado do PSD e ⁠Tiago Moreira de Sá, eurodeputado do Chega, debatem as manifestações e falam sobre as eleições do Brasil.",
       "imageUrl": "/covers/highlight_acampadas_p_em_em_causa_a_democracia_representativ_3970ba17_868bc70cc328.jpg",
       "link": "https://observador.pt/programas/explicador/acampadas-poem-em-causa-a-democracia-representativa/",
@@ -2377,13 +2377,13 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:70df25f133dc362b49846fc9",
         "score": 1.0,
         "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
         "verifiedAt": "2026-10-26T10:35:08.300204Z",
         "resolvedTitle": "Acampadas põem em causa a democracia representativa?",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Carla Jorge de Carvalho, Paulo Ferreira",
         "sourcePublishedAt": "2026-10-26T10:11:39Z",
         "sourceDescription": "Francisco Assis, eurodeputado do PS, ⁠Hélder Sousa e Silva, eurodeputado do PSD e ⁠Tiago Moreira de Sá, eurodeputado do Chega, debatem as manifestações e falam sobre as eleições do Brasil."
       }
