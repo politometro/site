@@ -2292,49 +2292,6 @@
       "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Eduardo Souto de Moura: “Ver o que aconteceu ontem deixou-me muito triste. Lembrou-me os tempos antes do 25 de Abril”]: Conteúdo expira em 2026-10-28T23:56:28Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
-      "id": "rss_podcast_b5033628911638fd",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Quem deve construir as casas: o Estado, as câmaras ou os privados?",
-      "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre acima de tudo, abriu-se um intenso debate político, que se intensifica há várias semanas.",
-      "imageUrl": "/covers/podcast_quem_deve_construir_as_casas__o_estado__as_c_maras_o_c304a3cc_b50336289116.jpg",
-      "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/quem-deve-construir-as-casas-o-estado-as-c-maras-ou-os-privados",
-      "externalId": "36c69900-5c0e-4e50-a7de-b4ec017a38fc",
-      "sourceSeriesId": "1441662761",
-      "sourceSeriesTitle": "Expresso da Meia-Noite",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-24T05:03:35Z",
-      "expiryDate": "2026-11-03T05:03:35Z",
-      "createdAt": "2026-10-26T10:34:59.871959Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
-        "guid": "36c69900-5c0e-4e50-a7de-b4ec017a38fc",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
-        "show": "Expresso da Meia-Noite"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "36c69900-5c0e-4e50-a7de-b4ec017a38fc",
-        "score": 1.0,
-        "coverHash": "d25f07b2ebaefd00f24309297ead43b57094731cf09fcc7da24ac2e4d14c5166",
-        "verifiedAt": "2026-10-24T08:58:13.028061Z",
-        "resolvedTitle": "Quem deve construir as casas: o Estado, as câmaras ou os privados?",
-        "resolvedAuthor": "Expresso da Meia-Noite",
-        "sourcePublishedAt": "2026-10-24T05:03:35Z",
-        "sourceDescription": "Esta semana, o tema central é, naturalmente, a habitação. O que começou como o nome dado às acampadas ganhou, ao longo da semana, uma dimensão maior, gerando alguma tensão entre o Governo e os manifestantes que participaram nos protestos do Porto e de Lisboa. Mas, acima de tudo, abriu-se um intenso debate político, que se intensifica há várias semanas.",
-        "editorialDescription": "Análise sobre acima de tudo, abriu-se um intenso debate político, que se intensifica há várias semanas.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "0262bae31b7e3ef8b47d91c575575612a5afc7ec51b73a9ab976f76030f20240",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
       "id": "rss_highlight_70df25f133dc362b",
       "type": "highlight",
       "category": "Destaque",
@@ -2517,6 +2474,95 @@
         "resolvedAuthor": "Manuel Castello Branco",
         "sourcePublishedAt": "2026-10-27T08:59:07Z",
         "sourceDescription": "No plano internacional, a mudança que tantos no Ocidente esperam desta eleição dificilmente chegará. Talvez Kissinger tivesse razão quando dizia que “Israel não tem política externa, só interna\""
+      }
+    },
+    {
+      "id": "rss_podcast_1b4909af4f6059ae",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Novo Podcast | Fazer a Democracia Nossa (Trailer)",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre os temas e questões de novo podcast | fazer a democracia nossa (trailer).",
+      "imageUrl": "/covers/podcast_novo_podcast___fazer_a_democracia_nossa__trailer__a47740b8_1b4909af4f60.jpg",
+      "link": "https://omny.fm/shows/fazer-a-democracia-nossa-fundacao-calouste-gulbenkian-expresso/novo-podcast-fazer-a-democracia-nossa-trailer",
+      "externalId": "92095dc6-0aad-43e1-a563-b4f100ecc3fb",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-28T14:23:15Z",
+      "expiryDate": "2026-11-07T14:23:15Z",
+      "createdAt": "2026-10-28T18:24:34.458470Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "92095dc6-0aad-43e1-a563-b4f100ecc3fb",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/d7b0db93-7429-4840-b997-b4f100ec5e72/92095dc6-0aad-43e1-a563-b4f100ecc3fb/image.jpg?t=1793200515&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "92095dc6-0aad-43e1-a563-b4f100ecc3fb",
+        "score": 1.0,
+        "coverHash": "5ccdb0fe01a9571d81cc4b6e48cf0d98333d2fecf11baf359df167b4c23dab0b",
+        "verifiedAt": "2026-10-28T18:24:37.927589Z",
+        "resolvedTitle": "Novo Podcast | Fazer a Democracia Nossa (Trailer)",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-10-28T14:23:15Z",
+        "sourceDescription": "A democracia constrói-se para além do voto, através da participação cívica, da defesa de causas e do envolvimento na resolução dos problemas da sociedade. Ao longo de oito episódios, o podcast Fazer a Democracia Nossa , uma produção do Expresso com o apoio da Fundação Calouste Gulbenkian , explora diferentes formas de participação e procura dar ferramentas…",
+        "editorialDescription": "Análise sobre os temas e questões de novo podcast | fazer a democracia nossa (trailer).",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "0c9b45036dd5561ebb9bb734bfbfb0c5182674d67d1f518017cfb1aaee0344f4",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_05c145c48ec95e92",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Temido votou contra Irmandade Muçulmana como terroristas?",
+      "authorOrMeta": "observador.pt",
+      "description": "Circulam nas redes sociais publicações que acusam a ex-ministra da Saúde socialista de ter votado contra resolução no Parlamento Europeu. Será verdade?",
+      "imageUrl": "/covers/highlight_temido_votou_contra_irmandade_mu_ulmana_como_terro_392d031f_54aafeb25193.jpg",
+      "link": "https://observador.pt/factchecks/fact-check-eurodeputada-marta-temido-votou-contra-classificacao-da-irmandade-muculmana-como-grupo-terrorista/",
+      "externalId": "article:url:05c145c48ec95e92733f9f07",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-28T17:50:53Z",
+      "expiryDate": "2026-11-27T17:50:53Z",
+      "createdAt": "2026-10-28T18:24:38.785889Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/factchecks/fact-check-eurodeputada-marta-temido-votou-contra-classificacao-da-irmandade-muculmana-como-grupo-terrorista/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2020/01/09142359/fact_check-errado.png",
+        "categories": [
+          "Fact Check",
+          "Observador",
+          "Irmandade Muçulmana",
+          "Médio Oriente",
+          "Mundo",
+          "Parlamento Europeu",
+          "União Europeia",
+          "Europa"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:05c145c48ec95e92733f9f07",
+        "score": 1.0,
+        "coverHash": "33064a55d3fc33e4be7412acbe83679e52947471be506974c7185f650bc315e8",
+        "verifiedAt": "2026-10-28T18:24:39.041845Z",
+        "resolvedTitle": "Temido votou contra Irmandade Muçulmana como terroristas?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-10-28T17:50:53Z",
+        "sourceDescription": "Circulam nas redes sociais publicações que acusam a ex-ministra da Saúde socialista de ter votado contra resolução no Parlamento Europeu. Será verdade?"
       }
     }
   ],
@@ -4883,7 +4929,7 @@
       "movie": 2,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 3
+      "highlight": 4
     },
     "missingSlots": [
       "q1/book",
