@@ -2533,7 +2533,7 @@
       "sourcePublishedAt": "2026-10-28T17:50:53Z",
       "expiryDate": "2026-11-27T17:50:53Z",
       "createdAt": "2026-10-28T18:24:38.785889Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2551,7 +2551,7 @@
           "Europa"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -2563,7 +2563,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-10-28T17:50:53Z",
         "sourceDescription": "Circulam nas redes sociais publicações que acusam a ex-ministra da Saúde socialista de ter votado contra resolução no Parlamento Europeu. Será verdade?"
-      }
+      },
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [Temido votou contra Irmandade Muçulmana como terroristas?]: Artigo 'Fact Check. Eurodeputada Marta Temido votou contra classificação da Irmandade Muçulmana como grupo terrorista?' não corresponde ao título candidato."
     }
   ],
   "history": [
@@ -4929,7 +4930,7 @@
       "movie": 2,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 4
+      "highlight": 3
     },
     "missingSlots": [
       "q1/book",
