@@ -2565,6 +2565,50 @@
         "sourceDescription": "Circulam nas redes sociais publicações que acusam a ex-ministra da Saúde socialista de ter votado contra resolução no Parlamento Europeu. Será verdade?"
       },
       "validationError": "HIGHLIGHT_TITLE_MISMATCH [Temido votou contra Irmandade Muçulmana como terroristas?]: Artigo 'Fact Check. Eurodeputada Marta Temido votou contra classificação da Irmandade Muçulmana como grupo terrorista?' não corresponde ao título candidato."
+    },
+    {
+      "id": "rss_podcast_e878a9bc908bb88f",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó Portuguesa”",
+      "editorialTitle": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó",
+      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
+      "description": "Análise sobre os temas e questões de novo podcast | tati bernardi vai à procura da história da avó em “a minha avó.",
+      "imageUrl": "/covers/podcast_novo_podcast___tati_bernardi_vai___procura_da_hist_r_e790fff4_e878a9bc908b.jpg",
+      "link": "https://omny.fm/shows/a-minha-avo-portuguesa-um-podcast-de-tati-bernardi/trailer-avo-carnaval-bossanova-final",
+      "externalId": "c55432bb-7b82-4fbb-9769-b4f0013dfc0f",
+      "sourceSeriesId": "1585178009",
+      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-30T06:00:00Z",
+      "expiryDate": "2026-11-02T06:00:00Z",
+      "createdAt": "2026-10-30T10:56:22.140984Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
+        "guid": "c55432bb-7b82-4fbb-9769-b4f0013dfc0f",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/e9dc2530-143e-4ca9-b1dd-b4ef01109359/c55432bb-7b82-4fbb-9769-b4f0013dfc0f/image.jpg?t=1793314223&size=Large",
+        "show": "Isto É Gozar Com Quem Trabalha"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "c55432bb-7b82-4fbb-9769-b4f0013dfc0f",
+        "score": 1.0,
+        "coverHash": "e32eba9aeb5a3300c1a36d3cb4584d3419279404b69be6be399b754c61f41edc",
+        "verifiedAt": "2026-10-30T10:56:25.458415Z",
+        "resolvedTitle": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó Portuguesa”",
+        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
+        "sourcePublishedAt": "2026-10-30T06:00:00Z",
+        "sourceDescription": "Tati Bernardi é escritora, roteirista, apresentadora de vários podcasts no Brasil e publicada em Portugal pela “Tinta da China.” Mas tudo o que precisa de saber agora é que é neta da Dona Maria Ribeiro Bernardi, uma mulher engraçada, brava, que nasceu num navio, no meio do Oceano Atlântico, vindo de Portugal a caminho do Brasil.",
+        "editorialDescription": "Análise sobre os temas e questões de novo podcast | tati bernardi vai à procura da história da avó em “a minha avó.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "4b6855294d2ca72d91729512c4404fa85ccf73b8e7e92d3aa58a78518678b987",
+        "editorialDescriptionProvider": "extractive"
+      }
     }
   ],
   "history": [
@@ -4926,15 +4970,14 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 0,
-      "podcast": 0,
+      "podcast": 1,
       "movie": 2,
       "nostalgia": 4,
       "investigation": 0,
       "highlight": 3
     },
     "missingSlots": [
-      "q1/book",
-      "q2/podcast"
+      "q1/book"
     ],
     "fallbackRequired": true
   }
