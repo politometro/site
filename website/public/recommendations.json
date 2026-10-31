@@ -1825,6 +1825,10 @@
         "resolvedTitle": "The Last King of Scotland",
         "resolvedAuthor": "Kevin Macdonald",
         "sourceDescription": "Drama sobre ditadura, cumplicidade e violência política no Uganda de Idi Amin."
+      },
+      "selectionRecovery": {
+        "slot": "q1",
+        "mode": "category_substitution"
       }
     },
     {
@@ -2400,10 +2404,10 @@
       "id": "rss_podcast_e878a9bc908bb88f",
       "type": "podcast",
       "category": "Podcast",
-      "title": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó Portuguesa”",
+      "title": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó",
       "editorialTitle": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó",
       "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Análise sobre os temas e questões de novo podcast | tati bernardi vai à procura da história da avó em “a minha avó portuguesa.",
+      "description": "Tati Bernardi é escritora, roteirista, apresentadora de vários podcasts no Brasil e publicada em Portugal pela “Tinta da China.” Mas tudo o que precisa de saber agora é que é neta da Dona Maria Ribeiro Bernardi, uma mulher engraçada, brava, que nasceu num navio, no meio do Oceano Atlântico, vindo de Portugal a caminho do Brasil.",
       "imageUrl": "/covers/podcast_novo_podcast___tati_bernardi_vai___procura_da_hist_r_e790fff4_e878a9bc908b.jpg",
       "link": "https://omny.fm/shows/a-minha-avo-portuguesa-um-podcast-de-tati-bernardi/trailer-avo-carnaval-bossanova-final",
       "externalId": "c55432bb-7b82-4fbb-9769-b4f0013dfc0f",
@@ -2433,11 +2437,7 @@
         "resolvedTitle": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó Portuguesa”",
         "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
         "sourcePublishedAt": "2026-10-30T06:00:00Z",
-        "sourceDescription": "Tati Bernardi é escritora, roteirista, apresentadora de vários podcasts no Brasil e publicada em Portugal pela “Tinta da China.” Mas tudo o que precisa de saber agora é que é neta da Dona Maria Ribeiro Bernardi, uma mulher engraçada, brava, que nasceu num navio, no meio do Oceano Atlântico, vindo de Portugal a caminho do Brasil.",
-        "editorialDescription": "Análise sobre os temas e questões de novo podcast | tati bernardi vai à procura da história da avó em “a minha avó portuguesa.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "217ae4101e6031719054df81f111c072776498a42a72acbfcae0fd19d1510f6f",
-        "editorialDescriptionProvider": "extractive"
+        "sourceDescription": "Tati Bernardi é escritora, roteirista, apresentadora de vários podcasts no Brasil e publicada em Portugal pela “Tinta da China.” Mas tudo o que precisa de saber agora é que é neta da Dona Maria Ribeiro Bernardi, uma mulher engraçada, brava, que nasceu num navio, no meio do Oceano Atlântico, vindo de Portugal a caminho do Brasil."
       }
     },
     {
