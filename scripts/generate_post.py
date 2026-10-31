@@ -515,6 +515,9 @@ def build_caption_within_limit(
 ):
     """Compact optional copy progressively; a long caption never aborts a draft."""
     strategies = (
+        # Tentar primeiro o texto COMPLETO: se a legenda completa couber no
+        # limite, nenhuma descrição é cortada (mesma regra do render da imagem).
+        (10000, 10000, 10000),
         (110, 80, 220),
         (96, 64, 170),
         (80, 48, 120),
@@ -1018,7 +1021,10 @@ def _compact_text(value, max_chars):
     if len(text) <= max_chars:
         return text
 
-    sentence_matches = list(re.finditer(r"[.!?](?:\s|$)", text))
+    # A frase pode terminar com aspas ou parêntesis de fecho (ex.: ... pela
+    # "Tinta da China.") — sem isto, o fim de frase a seguir a uma aspa não
+    # era reconhecido e o texto era cortado a meio da frase seguinte.
+    sentence_matches = list(re.finditer(r"[.!?][\"'“”‘’»)\]}]?(?:\s|$)", text))
     best_complete = ""
     for match in sentence_matches:
         candidate = text[: match.end()].strip()
