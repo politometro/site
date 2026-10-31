@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_e282149b936361759215",
-  "content_hash": "e282149b936361759215c0a82928bc84b1960022fc0eb7f60ae33ff63864cfc5",
+  "draft_id": "draft_629af9fbfc374ac55925",
+  "content_hash": "629af9fbfc374ac55925d040ef1f44452c0d909825bf258939bd38ed2559d04e",
   "post_type": "sunday_standard",
-  "created_at": "2026-10-31T19:39:27.344437+00:00",
+  "created_at": "2026-10-31T19:48:36.811101+00:00",
   "is_test": false,
-  "post_sha256": "8fa08d1dffe801dd49494f070a17f57733e7603e8ffbf8a47d7f1d25fded92d6",
-  "caption_sha256": "73366136f44551c359369145c20b78dd1ddc8dabbeffea8308368cd935a148ad",
+  "post_sha256": "35e10d2a5db5ae95971458fde6ee1bc81b17c67251385b67fe3008d8b66cbde4",
+  "caption_sha256": "fcffce9673a1079aa87653f5954b535eac225d2d8ed97b46f04aea8ac8b3bbba",
   "approval": {
     "approved": false
   },
@@ -46,8 +46,8 @@
     "id": "rss_podcast_e878a9bc908bb88f",
     "type": "podcast",
     "category": "Podcast",
-    "title": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó",
-    "editorialTitle": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó",
+    "title": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó Portuguesa”",
+    "editorialTitle": "Novo Podcast | Tati Bernardi vai à procura da história da avó em “A Minha Avó Portuguesa”",
     "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
     "description": "Tati Bernardi é escritora, roteirista, apresentadora de vários podcasts no Brasil e publicada em Portugal pela “Tinta da China.” Mas tudo o que precisa de saber agora é que é neta da Dona Maria Ribeiro Bernardi, uma mulher engraçada, brava, que nasceu num navio, no meio do Oceano Atlântico, vindo de Portugal a caminho do Brasil.",
     "imageUrl": "/covers/podcast_novo_podcast___tati_bernardi_vai___procura_da_hist_r_e790fff4_e878a9bc908b.jpg",
