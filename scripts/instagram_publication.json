@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "state": "publishing",
+  "state": "confirmed",
   "draft_id": "draft_629af9fbfc374ac55925",
   "content_hash": "629af9fbfc374ac55925d040ef1f44452c0d909825bf258939bd38ed2559d04e",
   "creation_id": "18218994460349156",
@@ -10,9 +10,15 @@
   "graph_api_version": "v25.0",
   "image_url": "https://raw.githubusercontent.com/politometro/site/65167518cacaeae91602b07e77952b8ea1107833/website/public/current_post.jpg",
   "story_creation_id": "18218994484349156",
-  "story_state": "prepared",
+  "story_state": "confirmed",
   "story_prepared_at": "2026-11-01T10:02:10.510352+00:00",
   "story_image_url": "https://raw.githubusercontent.com/politometro/site/65167518cacaeae91602b07e77952b8ea1107833/website/public/current_story.jpg",
   "publishing_started_at": "2026-11-01T10:02:12.513519+00:00",
-  "publish_attempts": 1
+  "publish_attempts": 1,
+  "last_publish_request_at": "2026-11-01T10:02:14.374912+00:00",
+  "post_id": "18098254853262655",
+  "published_at": "2026-11-01T10:02:17.941548+00:00",
+  "confirmation_source": "media_publish_response",
+  "story_post_id": "18347481574270235",
+  "story_published_at": "2026-11-01T10:02:20.338540+00:00"
 }
