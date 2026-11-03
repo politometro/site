@@ -2496,7 +2496,7 @@
         "editorialDescription": "Análise sobre entre IVA dos combustíveis, IRS, habitação e a compra de parte da REN pelo Estado, houve números, promessas e muito humor.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "9fb58fcec2848949475c79e80989211872eb162ac76eaa2faafaca50607af47e",
-        "editorialDescriptionProvider": "kept"
+        "editorialDescriptionProvider": "extractive"
       }
     },
     {
@@ -2535,11 +2535,11 @@
         "resolvedTitle": "\"Polícias que atiram petardos\" e o \"cumprimento da legalidade\" nas manifestações",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-11-02T08:58:34Z",
-        "sourceDescription": "Episódio “\"Polícias que atiram petardos\" e o \"cumprimento da legalidade\" nas manifestações” do podcast O Princípio da Incerteza, publicado em 02/11/2026.",
+        "sourceDescription": "Análise sobre os temas e questões de polícias que atiram petardos\" e o \"cumprimento da legalidade\" nas manifestações.",
         "editorialDescription": "Análise sobre os temas e questões de polícias que atiram petardos\" e o \"cumprimento da legalidade\" nas manifestações.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "0e6d2c114acfdc18fa4bdff19e4ce4947e3d4c794e2e0963394f537141dfef31",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "b9655ed81af97cdf1a67dd22b8a89826be0e920bf83f274f846ed57c9e61e634",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -2556,7 +2556,7 @@
       "sourcePublishedAt": "2026-11-02T11:30:53Z",
       "expiryDate": "2026-12-02T11:30:53Z",
       "createdAt": "2026-11-02T12:40:06.534074Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2572,7 +2572,7 @@
           "Observador Lab"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -2584,7 +2584,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-11-02T11:30:53Z",
         "sourceDescription": "O OE2027 deve promover uma política do medicamento orientada para o médio e longo prazo, evitando que a redução imediata da despesa comprometa a eficiência futura do SNS."
-      }
+      },
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [OE2027: Proteger o acesso aos medicamentos]: Artigo 'OE2027: Proteger o acesso aos medicamentos é garantir a sustentabilidade do SNS' não corresponde ao título candidato."
     },
     {
       "id": "rss_podcast_77e61b0593e1d8b2",
@@ -5151,7 +5152,7 @@
       "movie": 0,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 4
+      "highlight": 3
     },
     "missingSlots": [
       "q1/book",
