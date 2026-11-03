@@ -2386,7 +2386,7 @@
       "sourcePublishedAt": "2026-11-01T08:00:00Z",
       "expiryDate": "2026-11-04T08:00:00Z",
       "createdAt": "2026-11-01T11:23:07.289865Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2395,7 +2395,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2411,7 +2411,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "a8374836bf739c28ceeeb52bf150890840ada43f982ae6414290fc0117a63cf9",
         "editorialDescriptionProvider": "kept"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Compra de casas a estrangeiros deve ser limitada? — Ouvintes]: Conteúdo expira em 2026-11-04T08:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_6691e2d51bdc16c2",
@@ -2494,8 +2495,8 @@
         "sourceDescription": "Ricardo Araújo Pereira sentou o ministro das Finanças, e Miranda Sarmento, que costuma ser alvo de críticas, desta vez foi alvo de piadas, o que, em termos de carga fiscal sobre o ego, talvez seja uma ligeira descida. Entre IVA dos combustíveis, IRS, habitação e a compra de parte da REN pelo Estado, houve números, promessas e muito humor.",
         "editorialDescription": "Análise sobre entre IVA dos combustíveis, IRS, habitação e a compra de parte da REN pelo Estado, houve números, promessas e muito humor.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "2ffc7dca3e00b91f13183a945474a2dbec88b56ae5c194e4fad45eea70707a6c",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "9fb58fcec2848949475c79e80989211872eb162ac76eaa2faafaca50607af47e",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -2583,6 +2584,49 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-11-02T11:30:53Z",
         "sourceDescription": "O OE2027 deve promover uma política do medicamento orientada para o médio e longo prazo, evitando que a redução imediata da despesa comprometa a eficiência futura do SNS."
+      }
+    },
+    {
+      "id": "rss_podcast_77e61b0593e1d8b2",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Sandra Marques Pereira: chegou a geração sem casa?",
+      "authorOrMeta": "Perguntar Não Ofende",
+      "description": "Análise sobre os temas e questões de sandra marques pereira: chegou a geração sem casa.",
+      "imageUrl": "/covers/podcast_sandra_marques_pereira__chegou_a_gera__o_sem_casa__bc7e50df_77e61b0593e1.jpg",
+      "link": "https://omny.fm/shows/perguntar-n-o-ofende/sandra-marques-pereira-chegou-a-gera-o-sem-casa",
+      "externalId": "8bd804c2-c4c4-45b8-affb-b4f600c80671",
+      "sourceSeriesId": "1374367269",
+      "sourceSeriesTitle": "Perguntar Não Ofende",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-03T05:15:00Z",
+      "expiryDate": "2026-11-24T05:15:00Z",
+      "createdAt": "2026-11-03T12:05:52.151689Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/b9ad4462-e46a-4162-9cc4-adcf0103ac7c/podcast.rss",
+        "guid": "8bd804c2-c4c4-45b8-affb-b4f600c80671",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/8bd804c2-c4c4-45b8-affb-b4f600c80671/image.jpg?t=1793621506&size=Large",
+        "show": "Perguntar Não Ofende"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "8bd804c2-c4c4-45b8-affb-b4f600c80671",
+        "score": 1.0,
+        "coverHash": "5fffbb8685b85e3af2d1885a0ecebcdd724d17638fb274b585737a1fc2c05ef4",
+        "verifiedAt": "2026-11-03T12:05:54.794884Z",
+        "resolvedTitle": "Sandra Marques Pereira: chegou a geração sem casa?",
+        "resolvedAuthor": "Perguntar Não Ofende",
+        "sourcePublishedAt": "2026-11-03T05:15:00Z",
+        "sourceDescription": "A crise da habitação deixou de ser um problema circunscrito aos grandes centros urbanos e passou a atravessar gerações, classes sociais e territórios. Sandra Marques Pereira, socióloga e investigadora do DINÂMIA'CET, analisa a transformação de uma casa, durante décadas símbolo de segurança e ascensão social, numa das principais fontes de desigualdade.",
+        "editorialDescription": "Análise sobre os temas e questões de sandra marques pereira: chegou a geração sem casa.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "77ca540021c9293de87cbc9e1b9939d231022f6ee584dac466cf237cf70a7160",
+        "editorialDescriptionProvider": "extractive"
       }
     }
   ],
