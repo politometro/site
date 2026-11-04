@@ -2472,7 +2472,7 @@
       "sourcePublishedAt": "2026-11-01T23:13:30Z",
       "expiryDate": "2026-11-04T23:13:30Z",
       "createdAt": "2026-11-02T12:40:00.063061Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2481,7 +2481,7 @@
         "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/1c6fa3ed-a575-4bf9-a9be-b4f5017c2af9/image.jpg?t=1793574849&size=Large",
         "show": "Isto É Gozar Com Quem Trabalha"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2497,7 +2497,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "9fb58fcec2848949475c79e80989211872eb162ac76eaa2faafaca50607af47e",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [“Se o Orçamento resolvesse tudo, entregava-o em Fátima”, diz o Ministro das Finanças]: Conteúdo expira em 2026-11-04T23:13:30Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_podcast_9b3699071f4d88bf",
@@ -2627,6 +2628,50 @@
         "editorialDescription": "Análise sobre os temas e questões de sandra marques pereira: chegou a geração sem casa.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "77ca540021c9293de87cbc9e1b9939d231022f6ee584dac466cf237cf70a7160",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_9ed84d1db6147ba1",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Novo Podcast | Não perguntes o que a democracia pode fazer por ti; pergunta o que podes fazer pela democracia",
+      "editorialTitle": "Novo Podcast | Não perguntes o que a democracia pode fazer por ti; pergunta",
+      "authorOrMeta": "Expresso da Meia-Noite",
+      "description": "Análise sobre a democracia não se esgota no voto, mas também não se constrói sozinho, no sofá, a reclamar numa aplicação.",
+      "imageUrl": "/covers/podcast_novo_podcast___n_o_perguntes_o_que_a_democracia_pode_d826ccb5_9ed84d1db614.jpg",
+      "link": "https://omny.fm/shows/fazer-a-democracia-nossa-fundacao-calouste-gulbenkian-expresso/novo-podcast-n-o-perguntes-o-que-a-democracia-pode-fazer-por-ti-pergunta-o-que-podes-fazer-pela-democracia",
+      "externalId": "28449cd1-b4fb-45d7-9f22-b4f600ab7e77",
+      "sourceSeriesId": "1441662761",
+      "sourceSeriesTitle": "Expresso da Meia-Noite",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-04T05:15:00Z",
+      "expiryDate": "2026-11-14T05:15:00Z",
+      "createdAt": "2026-11-04T12:19:21.275517Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/podcast.rss",
+        "guid": "28449cd1-b4fb-45d7-9f22-b4f600ab7e77",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/d7b0db93-7429-4840-b997-b4f100ec5e72/28449cd1-b4fb-45d7-9f22-b4f600ab7e77/image.jpg?t=1793618408&size=Large",
+        "show": "Expresso da Meia-Noite"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "28449cd1-b4fb-45d7-9f22-b4f600ab7e77",
+        "score": 1.0,
+        "coverHash": "55d54e737fb0694f6842b27f92e7483ffbcdd38362f698b8dbee80c584181b31",
+        "verifiedAt": "2026-11-04T12:19:26.603495Z",
+        "resolvedTitle": "Novo Podcast | Não perguntes o que a democracia pode fazer por ti; pergunta o que podes fazer pela democracia",
+        "resolvedAuthor": "Expresso da Meia-Noite",
+        "sourcePublishedAt": "2026-11-04T05:15:00Z",
+        "sourceDescription": "A democracia não se esgota no voto, mas também não se constrói sozinho, no sofá, a reclamar numa aplicação. Nesta conversa, um investigador e um artista chegam a uma resposta surpreendentemente próxima: para participar, é preciso voltar a falar com quem está ao nosso lado.",
+        "editorialDescription": "Análise sobre a democracia não se esgota no voto, mas também não se constrói sozinho, no sofá, a reclamar numa aplicação.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "085892dd549504c71d9f2c6ae317d505d36808dd33077e1117805c51e24c0086",
         "editorialDescriptionProvider": "extractive"
       }
     }
