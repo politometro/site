@@ -2198,47 +2198,6 @@
       "validationError": "NEWS_NOT_ALLOWED [Juiz Alexandre de Moraes morre depois de sofrer enfarte?]: Notícias correntes não são elegíveis para Destaque."
     },
     {
-      "id": "rss_highlight_796b9c8116e108ce",
-      "type": "highlight",
-      "category": "Destaque",
-      "title": "Israel sem Netanyahu",
-      "authorOrMeta": "Manuel Castello Branco",
-      "description": "No plano internacional, a mudança que tantos no Ocidente esperam desta eleição dificilmente chegará. Talvez Kissinger tivesse razão quando dizia que “Israel não tem política externa, só interna\"",
-      "imageUrl": "/covers/highlight_israel_sem_netanyahu_aacfbd24_72bbd5dbbe68.jpg",
-      "link": "https://observador.pt/opiniao/israel-sem-netanyahu/",
-      "externalId": "article:url:796b9c8116e108ce92867c09",
-      "priority": 4,
-      "sourcePublishedAt": "2026-10-27T08:59:07Z",
-      "expiryDate": "2026-11-26T08:59:07Z",
-      "createdAt": "2026-10-27T09:54:46.180809Z",
-      "status": "queue",
-      "sourceHint": "trusted-rss",
-      "_discovery": {
-        "kind": "rss-highlight",
-        "feedUrl": "https://observador.pt/feed/",
-        "guid": "https://observador.pt/opiniao/israel-sem-netanyahu/",
-        "imageUrl": "https://wm.observador.pt/wm-op/wide-circle/https%3A%2F%2Fbordalo.observador.pt%2Fv2%2Frs%3Afill%3A303%3A303%2Fc%3A3024%3A3024%3Anowe%3A0%3A302%2Fq%3A100%2Ff%3Apng%2Fplain%2Fhttps%3A%2F%2Fs3.observador.pt%2Fwp-content%2Fuploads%2F2025%2F07%2F01184407%2Ffotografiajpg.jpg",
-        "categories": [
-          "Israel",
-          "Médio Oriente",
-          "Mundo"
-        ]
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "news:observador.pt",
-        "entityId": "article:url:796b9c8116e108ce92867c09",
-        "score": 1.0,
-        "coverHash": "112eb938fe3dddfc5250d8457304affe0058f37b992cf10731f6b2c5eba4faac",
-        "verifiedAt": "2026-10-27T09:54:46.478670Z",
-        "resolvedTitle": "Israel sem Netanyahu",
-        "resolvedAuthor": "Manuel Castello Branco",
-        "sourcePublishedAt": "2026-10-27T08:59:07Z",
-        "sourceDescription": "No plano internacional, a mudança que tantos no Ocidente esperam desta eleição dificilmente chegará. Talvez Kissinger tivesse razão quando dizia que “Israel não tem política externa, só interna\""
-      }
-    },
-    {
       "id": "rss_highlight_05c145c48ec95e92",
       "type": "highlight",
       "category": "Destaque",
@@ -2647,7 +2606,7 @@
       "sourcePublishedAt": "2026-11-04T18:06:58Z",
       "expiryDate": "2026-11-07T18:06:58Z",
       "createdAt": "2026-11-04T19:56:28.497820Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2656,7 +2615,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2672,16 +2631,17 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "796fa1c7df45fa365f9854e6b6423229d32bf1d3ce37887ce6ec63bcaffaf37c",
         "editorialDescriptionProvider": "kept"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Extra - Nos EUA, venceu o preço da gasolina?]: Conteúdo expira em 2026-11-07T18:06:58Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_a08cfa43b7bdf41c",
       "type": "highlight",
       "category": "Destaque",
-      "title": "Habitação.\"Acreditar na demagogia do Chega é uma ilusão\"",
-      "authorOrMeta": "observador.pt",
-      "description": "O antigo ministro da Justiça do PSD, Fernando Negrão, diz que a maioria dos portugueses quer uma aproximação PSD-CHEGA em matéria de habitação. E rejeita por isso entendimentos com o Chega.",
-      "imageUrl": "/covers/highlight_habita__o__acreditar_na_demagogia_do_chega___uma_i_0bede536_65fc0a23a9d9.jpg",
+      "title": "Habitação. \"Acreditar na demagogia do Chega é uma ilusão\"",
+      "authorOrMeta": "Carla Jorge de Carvalho, Paulo Ferreira",
+      "description": "O antigo ministro da Justiça do PSD, Fernando Negrão, diz que a maioria dos portugueses quer uma aproximação PSD-Chega em matéria de habitação. E rejeita, por isso, entendimentos com o Chega.",
+      "imageUrl": "/covers/highlight_habita__o___acreditar_na_demagogia_do_chega___uma__1ccae472_65fc0a23a9d9.jpg",
       "link": "https://observador.pt/programas/explicador/habitacao-acreditar-na-demagogia-do-chega-e-uma-ilusao/",
       "externalId": "article:url:a08cfa43b7bdf41c92756122",
       "priority": 4,
@@ -2712,15 +2672,108 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:a08cfa43b7bdf41c92756122",
         "score": 1.0,
-        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
-        "verifiedAt": "2026-11-05T12:33:19.162574Z",
-        "resolvedTitle": "Habitação.\"Acreditar na demagogia do Chega é uma ilusão\"",
-        "resolvedAuthor": "observador.pt",
+        "coverHash": "828e9c941a7561b3faee82b996324438d47996dfe11b39c5ae877896b2837613",
+        "verifiedAt": "2026-11-06T19:33:49.428134Z",
+        "resolvedTitle": "Habitação. \"Acreditar na demagogia do Chega é uma ilusão\"",
+        "resolvedAuthor": "Carla Jorge de Carvalho, Paulo Ferreira",
         "sourcePublishedAt": "2026-11-05T10:43:15Z",
-        "sourceDescription": "O antigo ministro da Justiça do PSD, Fernando Negrão, diz que a maioria dos portugueses quer uma aproximação PSD-CHEGA em matéria de habitação. E rejeita por isso entendimentos com o Chega."
+        "sourceDescription": "O antigo ministro da Justiça do PSD, Fernando Negrão, diz que a maioria dos portugueses quer uma aproximação PSD-Chega em matéria de habitação. E rejeita, por isso, entendimentos com o Chega."
+      }
+    },
+    {
+      "id": "rss_podcast_def802d8add84e72",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "“A habitação não se resolve com ideologia”: o duelo político que opõe liberalização e Estado na crise da casa em Portugal",
+      "editorialTitle": "“A habitação não se resolve com ideologia”: o duelo político que opõe",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre os temas e questões de a habitação não se resolve com ideologia”: o duelo político que opõe.",
+      "imageUrl": "/covers/podcast__a_habita__o_n_o_se_resolve_com_ideologia___o_duelo__5f6ad105_def802d8add8.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/a-habita-o-n-o-se-resolve-com-ideologia-o-duelo-pol-tico-que-op-e-liberaliza-o-e-estado-na-crise-da-casa-em-portugal",
+      "externalId": "41f5a205-3261-41fd-bce5-b4f30174f28e",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-10-31T08:46:53Z",
+      "expiryDate": "2026-11-10T08:46:53Z",
+      "createdAt": "2026-11-06T19:33:50.598056Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "41f5a205-3261-41fd-bce5-b4f30174f28e",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/image.jpg?t=1697105755&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "41f5a205-3261-41fd-bce5-b4f30174f28e",
+        "score": 1.0,
+        "coverHash": "c16166c357315a7caf764439323f87eebf34ca2ec7d215a18c4b58d68b388a60",
+        "verifiedAt": "2026-10-31T10:31:27.961547Z",
+        "resolvedTitle": "“A habitação não se resolve com ideologia”: o duelo político que opõe liberalização e Estado na crise da casa em Portugal",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-10-31T08:46:53Z",
+        "sourceDescription": "Entre a liberdade artística e a crise da habitação, o debate político português ferveu num frente-a-frente onde o Governo de Luís Montenegro foi posto à prova. De um lado, a defesa da liberdade de expressão, da imprensa e da criação artística, a propósito de manifestações e de incidentes de ordem pública que mobilizaram a polícia.",
+        "editorialDescription": "Análise sobre os temas e questões de a habitação não se resolve com ideologia”: o duelo político que opõe.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "66a4e944df56a0905dfe597729206d9de8086f33cf64be52583bbc880970e144",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_highlight_51ee35d4f0849360",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Habitação. Porque não há consenso entre os partidos?",
+      "authorOrMeta": "observador.pt",
+      "description": "Alexandre Poço (PSD) defende que a renda moderada é um limite fiscal. Já Isabel Mendes Lopes (Livre) acusa o Governo de não conhecer o país que tem.",
+      "imageUrl": "/covers/highlight_habita__o__porque_n_o_h__consenso_entre_os_partido_e909161b_655843e0c5d0.jpg",
+      "link": "https://observador.pt/programas/explicador/habitacao-porque-nao-ha-consenso-entre-os-partidos/",
+      "externalId": "article:url:51ee35d4f08493602cb27037",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-06T19:01:06Z",
+      "expiryDate": "2026-12-06T19:01:06Z",
+      "createdAt": "2026-11-06T19:33:55.415849Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/habitacao-porque-nao-ha-consenso-entre-os-partidos/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "Governo",
+          "Política",
+          "País",
+          "Sociedade",
+          "PSD",
+          "Partido LIVRE",
+          "Habitação e Urbanismo",
+          "Casas",
+          "Rendas"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:51ee35d4f08493602cb27037",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-11-06T19:33:56.801107Z",
+        "resolvedTitle": "Habitação. Porque não há consenso entre os partidos?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-11-06T19:01:06Z",
+        "sourceDescription": "Alexandre Poço (PSD) defende que a renda moderada é um limite fiscal. Já Isabel Mendes Lopes (Livre) acusa o Governo de não conhecer o país que tem."
       }
     }
   ],
@@ -5241,7 +5294,7 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 0,
-      "podcast": 3,
+      "podcast": 2,
       "movie": 0,
       "nostalgia": 4,
       "investigation": 0,
