@@ -899,7 +899,23 @@ def _request_podcast_editorial_description(
                         },
                     ],
                     "temperature": 0.05,
-                    "response_format": {"type": "json_object"},
+                    # json_object falha nos gpt-oss (json_validate_failed):
+                    # a Groq recomenda strict json_schema para estes modelos.
+                    "response_format": {
+                        "type": "json_schema",
+                        "json_schema": {
+                            "name": "podcast_description",
+                            "strict": True,
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "description": {"type": "string"}
+                                },
+                                "required": ["description"],
+                                "additionalProperties": False,
+                            },
+                        },
+                    },
                 },
                 timeout=35,
             )
@@ -1799,7 +1815,47 @@ Responde apenas com um objeto JSON com a chave "candidates", contendo objetos:
                         },
                     ],
                     "temperature": 0.25,
-                    "response_format": {"type": "json_object"},
+                    # json_object falha nos gpt-oss (json_validate_failed):
+                    # a Groq recomenda strict json_schema para estes modelos.
+                    "response_format": {
+                        "type": "json_schema",
+                        "json_schema": {
+                            "name": "catalogue_candidates",
+                            "strict": True,
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "candidates": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "type": {"type": "string"},
+                                                "title": {"type": "string"},
+                                                "authorOrMeta": {
+                                                    "type": "string"
+                                                },
+                                                "link": {"type": "string"},
+                                                "coverImageUrl": {
+                                                    "type": "string"
+                                                },
+                                            },
+                                            "required": [
+                                                "type",
+                                                "title",
+                                                "authorOrMeta",
+                                                "link",
+                                                "coverImageUrl",
+                                            ],
+                                            "additionalProperties": False,
+                                        },
+                                    }
+                                },
+                                "required": ["candidates"],
+                                "additionalProperties": False,
+                            },
+                        },
+                    },
                 },
                 timeout=45,
             )
