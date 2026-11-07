@@ -2414,7 +2414,11 @@
         "resolvedTitle": "\"Polícias que atiram petardos\" e o \"cumprimento da legalidade\" nas manifestações",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-11-02T08:58:34Z",
-        "sourceDescription": "Análise sobre os temas e questões de polícias que atiram petardos\" e o \"cumprimento da legalidade\" nas manifestações."
+        "sourceDescription": "Análise sobre os temas e questões de polícias que atiram petardos\" e o \"cumprimento da legalidade\" nas manifestações.",
+        "editorialDescription": "Análise sobre os temas e questões de polícias que atiram petardos\" e o \"cumprimento da legalidade\" nas manifestações.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "b9655ed81af97cdf1a67dd22b8a89826be0e920bf83f274f846ed57c9e61e634",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -2468,7 +2472,7 @@
       "category": "Podcast",
       "title": "Sandra Marques Pereira: chegou a geração sem casa?",
       "authorOrMeta": "Perguntar Não Ofende",
-      "description": "A crise da habitação deixou de ser um problema circunscrito aos grandes centros urbanos e passou a atravessar gerações, classes sociais e territórios. Sandra Marques Pereira, socióloga e investigadora do DINÂMIA'CET, analisa a transformação de uma casa, durante décadas símbolo de segurança e ascensão social, numa das principais fontes de desigualdade.",
+      "description": "Análise sobre a crise habitacional que se espalhou por gerações, classes e territórios, transformando a casa num símbolo de desigualdade.",
       "imageUrl": "/covers/podcast_sandra_marques_pereira__chegou_a_gera__o_sem_casa__bc7e50df_77e61b0593e1.jpg",
       "link": "https://omny.fm/shows/perguntar-n-o-ofende/sandra-marques-pereira-chegou-a-gera-o-sem-casa",
       "externalId": "8bd804c2-c4c4-45b8-affb-b4f600c80671",
@@ -2498,7 +2502,11 @@
         "resolvedTitle": "Sandra Marques Pereira: chegou a geração sem casa?",
         "resolvedAuthor": "Perguntar Não Ofende",
         "sourcePublishedAt": "2026-11-03T05:15:00Z",
-        "sourceDescription": "A crise da habitação deixou de ser um problema circunscrito aos grandes centros urbanos e passou a atravessar gerações, classes sociais e territórios. Sandra Marques Pereira, socióloga e investigadora do DINÂMIA'CET, analisa a transformação de uma casa, durante décadas símbolo de segurança e ascensão social, numa das principais fontes de desigualdade."
+        "sourceDescription": "A crise da habitação deixou de ser um problema circunscrito aos grandes centros urbanos e passou a atravessar gerações, classes sociais e territórios. Sandra Marques Pereira, socióloga e investigadora do DINÂMIA'CET, analisa a transformação de uma casa, durante décadas símbolo de segurança e ascensão social, numa das principais fontes de desigualdade.",
+        "editorialDescription": "Análise sobre a crise habitacional que se espalhou por gerações, classes e territórios, transformando a casa num símbolo de desigualdade.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "77ca540021c9293de87cbc9e1b9939d231022f6ee584dac466cf237cf70a7160",
+        "editorialDescriptionProvider": "groq"
       },
       "selectionRecovery": {
         "slot": "q3",
@@ -2830,6 +2838,146 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "79e68dacedcbb27fb93fdc76f82c510263169a8f08a69604c5291a9fd1a4f762",
         "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "ai_book_7d7e1aa4033145b8",
+      "type": "book",
+      "category": "Livro",
+      "title": "Leviathan",
+      "authorOrMeta": "Thomas Hobbes",
+      "description": "Tratado fundador sobre soberania, contrato social e a autoridade do Estado perante o medo e a desordem.",
+      "imageUrl": "/covers/book_leviathan_1ae9dba6_aa2d4c32a60d.jpg",
+      "link": "https://openlibrary.org/works/OL653987W/Leviathan",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-11-07T23:03:40.949788Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL653987W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL653987W",
+        "score": 1.0,
+        "coverHash": "14fb2e4170aea40d5403ea384140759a35d61d24008c62cf838b8a70c977a79f",
+        "verifiedAt": "2026-11-07T23:03:42.552776Z",
+        "resolvedTitle": "Leviathan",
+        "resolvedAuthor": "Thomas Hobbes",
+        "sourceDescription": "Tratado fundador sobre soberania, contrato social e a autoridade do Estado perante o medo e a desordem."
+      }
+    },
+    {
+      "id": "ai_book_fe2fcb2264824b88",
+      "type": "book",
+      "category": "Livro",
+      "title": "The Social Contract",
+      "authorOrMeta": "Jean-Jacques Rousseau",
+      "description": "Ensaio sobre liberdade, vontade geral e a legitimidade do poder político numa comunidade de iguais.",
+      "imageUrl": "/covers/book_the_social_contract_6b46dc58_dec3575ed1ec.jpg",
+      "link": "https://openlibrary.org/works/OL15250095W/The_Social_Contract",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-11-07T23:03:42.557180Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL15250095W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL15250095W",
+        "score": 1.0,
+        "coverHash": "516349fd0396a8c9f42bac0dc0301941da90c85b5d0c8c81fab1a6ceaf906ab1",
+        "verifiedAt": "2026-11-07T23:03:43.591186Z",
+        "resolvedTitle": "The Social Contract",
+        "resolvedAuthor": "Jean-Jacques Rousseau",
+        "sourceDescription": "Ensaio sobre liberdade, vontade geral e a legitimidade do poder político numa comunidade de iguais."
+      }
+    },
+    {
+      "id": "ai_book_8720c38bdc464f4c",
+      "type": "book",
+      "category": "Livro",
+      "title": "The Communist Manifesto",
+      "authorOrMeta": "Karl Marx, Frederick Engels, Phil Gasper",
+      "description": "Manifesto sobre luta de classes, capitalismo e a organização política dos trabalhadores.",
+      "imageUrl": "/covers/book_the_communist_manifesto_19f56590_a8107bbb162c.jpg",
+      "link": "https://openlibrary.org/works/OL36109370W/The_Communist_Manifesto",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-11-07T23:03:43.592658Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL36109370W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL36109370W",
+        "score": 1.0,
+        "coverHash": "a26f07674a97fba9aa2343bd40407b59d6d680ff1d5f5f58dd66c875ea8b7f95",
+        "verifiedAt": "2026-11-07T23:03:44.150679Z",
+        "resolvedTitle": "The Communist Manifesto",
+        "resolvedAuthor": "Karl Marx, Frederick Engels, Phil Gasper",
+        "sourceDescription": "Manifesto sobre luta de classes, capitalismo e a organização política dos trabalhadores."
+      }
+    },
+    {
+      "id": "ai_book_52d84426e78a4e64",
+      "type": "book",
+      "category": "Livro",
+      "title": "Brave New World",
+      "authorOrMeta": "Aldous Huxley",
+      "description": "Distopia sobre controlo social pelo prazer, pela tecnologia e pela uniformização do pensamento.",
+      "imageUrl": "/covers/book_brave_new_world_dd65eeae_f7ea9c082e1d.jpg",
+      "link": "https://openlibrary.org/works/OL64365W/Brave_New_World",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-11-07T23:03:44.178346Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL64365W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL64365W",
+        "score": 1.0,
+        "coverHash": "c8e6aae889d332aa57108c80509917444f68ea3fcfe53674c7ca29f691618f54",
+        "verifiedAt": "2026-11-07T23:03:45.020479Z",
+        "resolvedTitle": "Brave New World",
+        "resolvedAuthor": "Aldous Huxley",
+        "sourceDescription": "Distopia sobre controlo social pelo prazer, pela tecnologia e pela uniformização do pensamento."
+      }
+    },
+    {
+      "id": "ai_movie_f734747451f74aab",
+      "type": "movie",
+      "category": "Filme",
+      "title": "Citizenfour",
+      "authorOrMeta": "Laura Poitras",
+      "description": "Documents Edward Snowden's revelations on surveillance.",
+      "imageUrl": "/covers/movie_citizenfour_d3faed5c_293309f875a3.jpg",
+      "link": "https://www.imdb.com/title/tt4044364/",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-11-07T23:04:14.106014Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "imdb:tt4044364",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "wikidata+imdb",
+        "entityId": "imdb:tt4044364",
+        "score": 1.0,
+        "coverHash": "1332aca2e7582e2a62b3e535a8e24343df82825a10af5da06967fe60394c19d9",
+        "verifiedAt": "2026-11-07T23:04:15.498624Z",
+        "resolvedTitle": "Citizenfour",
+        "resolvedAuthor": "Laura Poitras",
+        "sourceDescription": "Documents Edward Snowden's revelations on surveillance."
       }
     }
   ],
@@ -5349,17 +5497,14 @@
   "readiness": {
     "postType": "sunday_standard",
     "strictCounts": {
-      "book": 0,
+      "book": 4,
       "podcast": 3,
-      "movie": 0,
+      "movie": 1,
       "nostalgia": 4,
       "investigation": 0,
       "highlight": 1
     },
-    "missingSlots": [
-      "q1/book",
-      "q3/movie-or-investigation"
-    ],
-    "fallbackRequired": true
+    "missingSlots": [],
+    "fallbackRequired": false
   }
 }

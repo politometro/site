@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL15250095W/The_Social_Contract",
+  "coverHash": "516349fd0396a8c9f42bac0dc0301941da90c85b5d0c8c81fab1a6ceaf906ab1",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://ia800103.us.archive.org/view_archive.php?archive=%2F4%2Fitems%2Folcovers11%2Folcovers11-L.zip&file=111360-L.jpg",
+  "entityId": "openlibrary:/works/OL15250095W",
+  "expiryDate": null,
+  "height": 500,
+  "isbn": "",
+  "resolvedAuthor": "Jean-Jacques Rousseau",
+  "resolvedTitle": "The Social Contract",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "The Social Contract",
+  "titleNormalized": "the social contract",
+  "type": "book",
+  "verifiedAt": "2026-11-07T23:03:43.591186Z",
+  "width": 306
+}

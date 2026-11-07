@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL36109370W/The_Communist_Manifesto",
+  "coverHash": "a26f07674a97fba9aa2343bd40407b59d6d680ff1d5f5f58dd66c875ea8b7f95",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://covers.openlibrary.org/b/id/15139661-L.jpg",
+  "entityId": "openlibrary:/works/OL36109370W",
+  "expiryDate": null,
+  "height": 484,
+  "isbn": "",
+  "resolvedAuthor": "Karl Marx, Frederick Engels, Phil Gasper",
+  "resolvedTitle": "The Communist Manifesto",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "The Communist Manifesto",
+  "titleNormalized": "the communist manifesto",
+  "type": "book",
+  "verifiedAt": "2026-11-07T23:03:44.150679Z",
+  "width": 500
+}

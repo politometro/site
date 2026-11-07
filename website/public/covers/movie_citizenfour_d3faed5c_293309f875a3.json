@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt4044364/",
+  "coverHash": "1332aca2e7582e2a62b3e535a8e24343df82825a10af5da06967fe60394c19d9",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://thumb.wikimedia.org/wikipedia/commons/thumb/1/13/2014_Citizenfour_trailer_at_70_seconds.jpg/1280px-2014_Citizenfour_trailer_at_70_seconds.jpg",
+  "entityId": "imdb:tt4044364",
+  "expiryDate": null,
+  "height": 653,
+  "isbn": "",
+  "resolvedAuthor": "Laura Poitras",
+  "resolvedTitle": "Citizenfour",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Citizenfour",
+  "titleNormalized": "citizenfour",
+  "type": "movie",
+  "verifiedAt": "2026-11-07T23:04:15.498624Z",
+  "width": 1280
+}

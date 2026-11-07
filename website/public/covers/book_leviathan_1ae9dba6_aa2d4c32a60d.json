@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL653987W/Leviathan",
+  "coverHash": "14fb2e4170aea40d5403ea384140759a35d61d24008c62cf838b8a70c977a79f",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://ia601908.us.archive.org/view_archive.php?archive=%2F7%2Fitems%2Folcovers652%2Folcovers652-L.zip&file=6525465-L.jpg",
+  "entityId": "openlibrary:/works/OL653987W",
+  "expiryDate": null,
+  "height": 500,
+  "isbn": "",
+  "resolvedAuthor": "Thomas Hobbes",
+  "resolvedTitle": "Leviathan",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "Leviathan",
+  "titleNormalized": "leviathan",
+  "type": "book",
+  "verifiedAt": "2026-11-07T23:03:42.552776Z",
+  "width": 328
+}

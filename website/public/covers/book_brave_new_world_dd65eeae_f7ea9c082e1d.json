@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL64365W/Brave_New_World",
+  "coverHash": "c8e6aae889d332aa57108c80509917444f68ea3fcfe53674c7ca29f691618f54",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://ia902809.us.archive.org/view_archive.php?archive=%2F18%2Fitems%2Fl_covers_0008%2Fl_covers_0008_23.zip&file=0008231823-L.jpg",
+  "entityId": "openlibrary:/works/OL64365W",
+  "expiryDate": null,
+  "height": 500,
+  "isbn": "",
+  "resolvedAuthor": "Aldous Huxley",
+  "resolvedTitle": "Brave New World",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "Brave New World",
+  "titleNormalized": "brave new world",
+  "type": "book",
+  "verifiedAt": "2026-11-07T23:03:45.020479Z",
+  "width": 314
+}
