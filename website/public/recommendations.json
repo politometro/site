@@ -2563,7 +2563,7 @@
       "sourcePublishedAt": "2026-11-05T10:43:15Z",
       "expiryDate": "2026-12-05T10:43:15Z",
       "createdAt": "2026-11-05T12:33:18.421298Z",
-      "status": "queue",
+      "status": "skip",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2596,7 +2596,9 @@
         "resolvedAuthor": "Carla Jorge de Carvalho, Paulo Ferreira",
         "sourcePublishedAt": "2026-11-05T10:43:15Z",
         "sourceDescription": "O antigo ministro da Justiça do PSD, Fernando Negrão, diz que a maioria dos portugueses quer uma aproximação PSD-Chega em matéria de habitação. E rejeita, por isso, entendimentos com o Chega."
-      }
+      },
+      "rejectedAt": "2026-11-07T22:50:50.657950+00:00",
+      "rejectedBy": "602275316156727296"
     },
     {
       "id": "rss_highlight_51ee35d4f0849360",
@@ -2612,7 +2614,7 @@
       "sourcePublishedAt": "2026-11-06T19:01:06Z",
       "expiryDate": "2026-12-06T19:01:06Z",
       "createdAt": "2026-11-06T19:33:55.415849Z",
-      "status": "queue",
+      "status": "skip",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2649,7 +2651,9 @@
       "selectionRecovery": {
         "slot": "q3",
         "mode": "category_substitution"
-      }
+      },
+      "rejectedAt": "2026-11-07T22:50:50.657950+00:00",
+      "rejectedBy": "602275316156727296"
     },
     {
       "id": "rss_podcast_4159c8d43c7ec27d",
@@ -2710,7 +2714,7 @@
       "sourcePublishedAt": "2026-11-06T20:34:00Z",
       "expiryDate": "2026-11-16T20:34:00Z",
       "createdAt": "2026-11-07T11:11:55.566304Z",
-      "status": "queue",
+      "status": "skip",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2735,7 +2739,9 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "79e68dacedcbb27fb93fdc76f82c510263169a8f08a69604c5291a9fd1a4f762",
         "editorialDescriptionProvider": "extractive"
-      }
+      },
+      "rejectedAt": "2026-11-07T22:50:50.657950+00:00",
+      "rejectedBy": "602275316156727296"
     },
     {
       "id": "rss_highlight_886b565729cfaa5e",
@@ -2751,7 +2757,7 @@
       "sourcePublishedAt": "2026-11-07T12:14:20Z",
       "expiryDate": "2026-12-07T12:14:20Z",
       "createdAt": "2026-11-07T17:47:40.637554Z",
-      "status": "queue",
+      "status": "skip",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2779,7 +2785,9 @@
       "selectionRecovery": {
         "slot": "q1",
         "mode": "category_substitution"
-      }
+      },
+      "rejectedAt": "2026-11-07T22:50:50.657950+00:00",
+      "rejectedBy": "602275316156727296"
     }
   ],
   "history": [
