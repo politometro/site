@@ -905,7 +905,7 @@ def _request_podcast_editorial_description(
             )
             if not response.ok:
                 print(
-                    f"  [PODCAST COPY/{model}] HTTP {response.status_code}"
+                    f"  [PODCAST COPY/{model}] HTTP {response.status_code}: {response.text[:500]}"
                 )
                 continue
             content = response.json()["choices"][0]["message"]["content"]
@@ -1804,7 +1804,7 @@ Responde apenas com um objeto JSON com a chave "candidates", contendo objetos:
                 timeout=45,
             )
             if not response.ok:
-                print(f"  [Groq/{model}] HTTP {response.status_code}")
+                print(f"  [Groq/{model}] HTTP {response.status_code}: {response.text[:500]}")
                 continue
             content = response.json()["choices"][0]["message"]["content"]
             parsed = json.loads(content)
