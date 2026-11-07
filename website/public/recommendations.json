@@ -2327,10 +2327,6 @@
         "resolvedAuthor": "Miguel Morgado",
         "sourcePublishedAt": "2026-11-01T05:02:59Z",
         "sourceDescription": "É este rasto indecoroso de crimes, corrupção, atentados ao Estado de Direito democrático, danificação das instituições, incompetências, obscenidades e abusos que o PS em Portugal tanto aplaude."
-      },
-      "selectionRecovery": {
-        "slot": "q1",
-        "mode": "category_substitution"
       }
     },
     {
@@ -2472,7 +2468,7 @@
       "category": "Podcast",
       "title": "Sandra Marques Pereira: chegou a geração sem casa?",
       "authorOrMeta": "Perguntar Não Ofende",
-      "description": "Análise sobre a crise habitacional que ultrapassa os grandes centros, atingindo gerações, e transforma a casa em fonte de desigualdade.",
+      "description": "Análise sobre a crise habitacional que ultrapassa centros, atingindo gerações e classes, e transforma a casa em fonte de desigualdade.",
       "imageUrl": "/covers/podcast_sandra_marques_pereira__chegou_a_gera__o_sem_casa__bc7e50df_77e61b0593e1.jpg",
       "link": "https://omny.fm/shows/perguntar-n-o-ofende/sandra-marques-pereira-chegou-a-gera-o-sem-casa",
       "externalId": "8bd804c2-c4c4-45b8-affb-b4f600c80671",
@@ -2503,7 +2499,7 @@
         "resolvedAuthor": "Perguntar Não Ofende",
         "sourcePublishedAt": "2026-11-03T05:15:00Z",
         "sourceDescription": "A crise da habitação deixou de ser um problema circunscrito aos grandes centros urbanos e passou a atravessar gerações, classes sociais e territórios. Sandra Marques Pereira, socióloga e investigadora do DINÂMIA'CET, analisa a transformação de uma casa, durante décadas símbolo de segurança e ascensão social, numa das principais fontes de desigualdade.",
-        "editorialDescription": "Análise sobre a crise habitacional que ultrapassa os grandes centros, atingindo gerações, e transforma a casa em fonte de desigualdade.",
+        "editorialDescription": "Análise sobre a crise habitacional que ultrapassa centros, atingindo gerações e classes, e transforma a casa em fonte de desigualdade.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "77ca540021c9293de87cbc9e1b9939d231022f6ee584dac466cf237cf70a7160",
         "editorialDescriptionProvider": "groq"
