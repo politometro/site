@@ -1,0 +1,202 @@
+{
+  "schema_version": 2,
+  "draft_id": "draft_1fb42f10a584e1aae559",
+  "content_hash": "1fb42f10a584e1aae559b3a6e8d5ec76b0b4b34a7ff3306e21fe933cf0069965",
+  "post_type": "sunday_standard",
+  "created_at": "2026-11-07T19:46:11.024223+00:00",
+  "is_test": false,
+  "post_sha256": "97cd33fc601eef47d48c58b4398a9c309f3d80a6fee60e8ba269b43e63fe8c5e",
+  "caption_sha256": "43230ca952bb0aa3c47fbda4cbda3f59bd57d11209d7795862c4c4cd05bcdeaf",
+  "approval": {
+    "approved": false
+  },
+  "q1": {
+    "id": "rss_highlight_886b565729cfaa5e",
+    "type": "highlight",
+    "category": "Destaque",
+    "title": "Fukuyama e a ascensão do populismo",
+    "authorOrMeta": "observador.pt",
+    "description": "O homem que ficou associado à ideia do \"Fim da História\" sente-se incompreendido. Uma entrevista sobre a democracia liberal, o fim de Trump e o motor dos populismos.",
+    "imageUrl": "/covers/highlight_fukuyama_e_a_ascens_o_do_populismo_caa4ce76_87fba3e0f8f8.jpg",
+    "link": "https://observador.pt/especiais/francis-fukuyama-e-a-ascensao-do-populismo-se-a-questao-fosse-apenas-economica-os-eleitores-votariam-em-massa-na-social-democracia/",
+    "externalId": "article:url:886b565729cfaa5ee8627fb9",
+    "priority": 4,
+    "sourcePublishedAt": "2026-11-07T12:14:20Z",
+    "expiryDate": "2026-12-07T12:14:20Z",
+    "createdAt": "2026-11-07T17:47:40.637554Z",
+    "status": "queue",
+    "sourceHint": "trusted-rss",
+    "_discovery": {
+      "kind": "rss-highlight",
+      "feedUrl": "https://observador.pt/feed/",
+      "guid": "https://observador.pt/especiais/francis-fukuyama-e-a-ascensao-do-populismo-se-a-questao-fosse-apenas-economica-os-eleitores-votariam-em-massa-na-social-democracia/",
+      "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:4096:2303:nowe:0:214/q:70/plain/https://s3.observador.pt/wp-content/uploads/2026/11/05154601/gettyimages-1135338745-scaled.jpg",
+      "categories": [
+        "Entrevista",
+        "Observador"
+      ]
+    },
+    "resolutionStatus": "verified",
+    "verification": {
+      "status": "verified",
+      "source": "news-rss:observador.pt",
+      "entityId": "article:url:886b565729cfaa5ee8627fb9",
+      "score": 1.0,
+      "coverHash": "d23df028116cf5ee9d291eebef3b276bba85688b6b963909ec8d841a53e02e19",
+      "verifiedAt": "2026-11-07T17:47:40.876661Z",
+      "resolvedTitle": "Fukuyama e a ascensão do populismo",
+      "resolvedAuthor": "observador.pt",
+      "sourcePublishedAt": "2026-11-07T12:14:20Z",
+      "sourceDescription": "O homem que ficou associado à ideia do \"Fim da História\" sente-se incompreendido. Uma entrevista sobre a democracia liberal, o fim de Trump e o motor dos populismos."
+    },
+    "selectionRecovery": {
+      "slot": "q1",
+      "mode": "category_substitution"
+    }
+  },
+  "q2": {
+    "id": "rss_podcast_3d54d6e619855510",
+    "type": "podcast",
+    "category": "Podcast",
+    "title": "Renata Cambra ou Luís Neves, quem vence a Tenda de Dourada?",
+    "authorOrMeta": "Fora do Baralho",
+    "description": "Análise sobre episódio “Renata Cambra ou Luís Neves, quem vence a Tenda de Dourada?” do podcast Fora do Baralho, publicado em 06/11/2026.",
+    "imageUrl": "/covers/podcast_renata_cambra_ou_lu_s_neves__quem_vence_a_tenda_de_d_b8e9cfb3_3d54d6e61985.jpg",
+    "link": "https://omny.fm/shows/fora-do-baralho/renata-cambra-ou-lu-s-neves-quem-vence-a-tenda-de-dourada",
+    "externalId": "be5483cc-cd87-4225-9b1a-b4fa0128c535",
+    "sourceSeriesId": "1597496780",
+    "sourceSeriesTitle": "Fora do Baralho",
+    "priority": 4,
+    "sourcePublishedAt": "2026-11-06T20:34:00Z",
+    "expiryDate": "2026-11-16T20:34:00Z",
+    "createdAt": "2026-11-07T11:11:55.566304Z",
+    "status": "queue",
+    "sourceHint": "podcast-rss",
+    "_discovery": {
+      "kind": "rss",
+      "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+      "guid": "be5483cc-cd87-4225-9b1a-b4fa0128c535",
+      "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+      "show": "Fora do Baralho"
+    },
+    "resolutionStatus": "verified",
+    "verification": {
+      "status": "verified",
+      "source": "podcast-rss",
+      "entityId": "be5483cc-cd87-4225-9b1a-b4fa0128c535",
+      "score": 1.0,
+      "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+      "verifiedAt": "2026-11-07T11:12:02.700927Z",
+      "resolvedTitle": "Renata Cambra ou Luís Neves, quem vence a Tenda de Dourada?",
+      "resolvedAuthor": "Fora do Baralho",
+      "sourcePublishedAt": "2026-11-06T20:34:00Z",
+      "sourceDescription": "Episódio “Renata Cambra ou Luís Neves, quem vence a Tenda de Dourada?” do podcast Fora do Baralho, publicado em 06/11/2026.",
+      "editorialDescription": "Análise sobre episódio “Renata Cambra ou Luís Neves, quem vence a Tenda de Dourada?” do podcast Fora do Baralho, publicado em 06/11/2026.",
+      "editorialDescriptionVersion": 1,
+      "editorialSourceHash": "79e68dacedcbb27fb93fdc76f82c510263169a8f08a69604c5291a9fd1a4f762",
+      "editorialDescriptionProvider": "extractive"
+    }
+  },
+  "q3": {
+    "id": "rss_highlight_51ee35d4f0849360",
+    "type": "highlight",
+    "category": "Destaque",
+    "title": "Habitação. Porque não há consenso entre os partidos?",
+    "authorOrMeta": "Ricardo Conceição, Judite França",
+    "description": "Alexandre Poço (PSD) defende que a renda moderada é um limite fiscal. Já Isabel Mendes Lopes (Livre) acusa o Governo de não conhecer o país que tem.",
+    "imageUrl": "/covers/highlight_habita__o__porque_n_o_h__consenso_entre_os_partido_e909161b_655843e0c5d0.jpg",
+    "link": "https://observador.pt/programas/explicador/habitacao-porque-nao-ha-consenso-entre-os-partidos/",
+    "externalId": "article:url:51ee35d4f08493602cb27037",
+    "priority": 4,
+    "sourcePublishedAt": "2026-11-06T19:01:06Z",
+    "expiryDate": "2026-12-06T19:01:06Z",
+    "createdAt": "2026-11-06T19:33:55.415849Z",
+    "status": "queue",
+    "sourceHint": "trusted-rss",
+    "_discovery": {
+      "kind": "rss-highlight",
+      "feedUrl": "https://observador.pt/feed/",
+      "guid": "https://observador.pt/programas/explicador/habitacao-porque-nao-ha-consenso-entre-os-partidos/",
+      "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+      "categories": [
+        "Rádio Observador",
+        "Observador",
+        "Governo",
+        "Política",
+        "País",
+        "Sociedade",
+        "PSD",
+        "Partido LIVRE",
+        "Habitação e Urbanismo",
+        "Casas",
+        "Rendas"
+      ]
+    },
+    "resolutionStatus": "verified",
+    "verification": {
+      "status": "verified",
+      "source": "news:observador.pt",
+      "entityId": "article:url:51ee35d4f08493602cb27037",
+      "score": 1.0,
+      "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+      "verifiedAt": "2026-11-06T19:33:56.801107Z",
+      "resolvedTitle": "Habitação. Porque não há consenso entre os partidos?",
+      "resolvedAuthor": "Ricardo Conceição, Judite França",
+      "sourcePublishedAt": "2026-11-06T19:01:06Z",
+      "sourceDescription": "Alexandre Poço (PSD) defende que a renda moderada é um limite fiscal. Já Isabel Mendes Lopes (Livre) acusa o Governo de não conhecer o país que tem."
+    },
+    "selectionRecovery": {
+      "slot": "q3",
+      "mode": "category_substitution"
+    }
+  },
+  "q4": {
+    "id": "rss_highlight_a08cfa43b7bdf41c",
+    "type": "highlight",
+    "category": "Destaque",
+    "title": "Habitação. \"Acreditar na demagogia do Chega é uma ilusão\"",
+    "authorOrMeta": "Carla Jorge de Carvalho, Paulo Ferreira",
+    "description": "O antigo ministro da Justiça do PSD, Fernando Negrão, diz que a maioria dos portugueses quer uma aproximação PSD-Chega em matéria de habitação. E rejeita, por isso, entendimentos com o Chega.",
+    "imageUrl": "/covers/highlight_habita__o___acreditar_na_demagogia_do_chega___uma__1ccae472_65fc0a23a9d9.jpg",
+    "link": "https://observador.pt/programas/explicador/habitacao-acreditar-na-demagogia-do-chega-e-uma-ilusao/",
+    "externalId": "article:url:a08cfa43b7bdf41c92756122",
+    "priority": 4,
+    "sourcePublishedAt": "2026-11-05T10:43:15Z",
+    "expiryDate": "2026-12-05T10:43:15Z",
+    "createdAt": "2026-11-05T12:33:18.421298Z",
+    "status": "queue",
+    "sourceHint": "trusted-rss",
+    "_discovery": {
+      "kind": "rss-highlight",
+      "feedUrl": "https://observador.pt/feed/",
+      "guid": "https://observador.pt/programas/explicador/habitacao-acreditar-na-demagogia-do-chega-e-uma-ilusao/",
+      "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+      "categories": [
+        "Rádio Observador",
+        "Observador",
+        "Justiça",
+        "PSD",
+        "Política",
+        "Governo",
+        "Partido Chega",
+        "Habitação e Urbanismo",
+        "País",
+        "Sociedade",
+        "Casas"
+      ]
+    },
+    "resolutionStatus": "verified",
+    "verification": {
+      "status": "verified",
+      "source": "news:observador.pt",
+      "entityId": "article:url:a08cfa43b7bdf41c92756122",
+      "score": 1.0,
+      "coverHash": "828e9c941a7561b3faee82b996324438d47996dfe11b39c5ae877896b2837613",
+      "verifiedAt": "2026-11-06T19:33:49.428134Z",
+      "resolvedTitle": "Habitação. \"Acreditar na demagogia do Chega é uma ilusão\"",
+      "resolvedAuthor": "Carla Jorge de Carvalho, Paulo Ferreira",
+      "sourcePublishedAt": "2026-11-05T10:43:15Z",
+      "sourceDescription": "O antigo ministro da Justiça do PSD, Fernando Negrão, diz que a maioria dos portugueses quer uma aproximação PSD-Chega em matéria de habitação. E rejeita, por isso, entendimentos com o Chega."
+    }
+  }
+}

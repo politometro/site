@@ -2603,7 +2603,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Habitação. Porque não há consenso entre os partidos?",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Ricardo Conceição, Judite França",
       "description": "Alexandre Poço (PSD) defende que a renda moderada é um limite fiscal. Já Isabel Mendes Lopes (Livre) acusa o Governo de não conhecer o país que tem.",
       "imageUrl": "/covers/highlight_habita__o__porque_n_o_h__consenso_entre_os_partido_e909161b_655843e0c5d0.jpg",
       "link": "https://observador.pt/programas/explicador/habitacao-porque-nao-ha-consenso-entre-os-partidos/",
@@ -2636,15 +2636,19 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:51ee35d4f08493602cb27037",
         "score": 1.0,
         "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
         "verifiedAt": "2026-11-06T19:33:56.801107Z",
         "resolvedTitle": "Habitação. Porque não há consenso entre os partidos?",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Ricardo Conceição, Judite França",
         "sourcePublishedAt": "2026-11-06T19:01:06Z",
         "sourceDescription": "Alexandre Poço (PSD) defende que a renda moderada é um limite fiscal. Já Isabel Mendes Lopes (Livre) acusa o Governo de não conhecer o país que tem."
+      },
+      "selectionRecovery": {
+        "slot": "q3",
+        "mode": "category_substitution"
       }
     },
     {
@@ -2771,6 +2775,10 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-11-07T12:14:20Z",
         "sourceDescription": "O homem que ficou associado à ideia do \"Fim da História\" sente-se incompreendido. Uma entrevista sobre a democracia liberal, o fim de Trump e o motor dos populismos."
+      },
+      "selectionRecovery": {
+        "slot": "q1",
+        "mode": "category_substitution"
       }
     }
   ],
