@@ -85,8 +85,10 @@ EDITORIAL_TRAILING_WORDS = {
     "que",
 }
 PODCAST_SUMMARY_MODELS = (
-    "llama-3.3-70b-versatile",
-    "llama-3.1-8b-instant",
+    # Ver _groq_catalogue_candidates: os Llama 3.x saíram dos planos
+    # free/Developer da Groq a 16 ago 2026.
+    "openai/gpt-oss-120b",
+    "openai/gpt-oss-20b",
 )
 ALLOWED_TYPES = (
     "book",
@@ -212,6 +214,86 @@ VERIFIED_CATALOGUE_CANDIDATES = (
         "title": "Argentina, 1985",
         "authorOrMeta": "Santiago Mitre",
     },
+    {"type": "book", "title": "Leviathan", "authorOrMeta": "Thomas Hobbes"},
+    {
+        "type": "book",
+        "title": "The Social Contract",
+        "authorOrMeta": "Jean-Jacques Rousseau",
+    },
+    {
+        "type": "book",
+        "title": "The Communist Manifesto",
+        "authorOrMeta": "Karl Marx",
+    },
+    {
+        "type": "book",
+        "title": "Brave New World",
+        "authorOrMeta": "Aldous Huxley",
+    },
+    {
+        "type": "book",
+        "title": "Fahrenheit 451",
+        "authorOrMeta": "Ray Bradbury",
+    },
+    {
+        "type": "book",
+        "title": "Darkness at Noon",
+        "authorOrMeta": "Arthur Koestler",
+    },
+    {"type": "book", "title": "The Trial", "authorOrMeta": "Franz Kafka"},
+    {
+        "type": "book",
+        "title": "The Gulag Archipelago",
+        "authorOrMeta": "Aleksandr Solzhenitsyn",
+    },
+    {
+        "type": "book",
+        "title": "The End of History and the Last Man",
+        "authorOrMeta": "Francis Fukuyama",
+    },
+    {
+        "type": "book",
+        "title": "The Clash of Civilizations",
+        "authorOrMeta": "Samuel P. Huntington",
+    },
+    {"type": "book", "title": "Sapiens", "authorOrMeta": "Yuval Noah Harari"},
+    {
+        "type": "book",
+        "title": "The Dictator's Handbook",
+        "authorOrMeta": "Bruce Bueno de Mesquita",
+    },
+    {
+        "type": "movie",
+        "title": "All the President's Men",
+        "authorOrMeta": "Alan J. Pakula",
+    },
+    {"type": "movie", "title": "Z", "authorOrMeta": "Costa-Gavras"},
+    {
+        "type": "movie",
+        "title": "The Lives of Others",
+        "authorOrMeta": "Florian Henckel von Donnersmarck",
+    },
+    {
+        "type": "movie",
+        "title": "Good Night, and Good Luck",
+        "authorOrMeta": "George Clooney",
+    },
+    {"type": "movie", "title": "Lincoln", "authorOrMeta": "Steven Spielberg"},
+    {
+        "type": "movie",
+        "title": "12 Years a Slave",
+        "authorOrMeta": "Steve McQueen",
+    },
+    {"type": "movie", "title": "Spotlight", "authorOrMeta": "Tom McCarthy"},
+    {"type": "movie", "title": "The Post", "authorOrMeta": "Steven Spielberg"},
+    {"type": "movie", "title": "Vice", "authorOrMeta": "Adam McKay"},
+    {
+        "type": "movie",
+        "title": "The Trial of the Chicago 7",
+        "authorOrMeta": "Aaron Sorkin",
+    },
+    {"type": "movie", "title": "JFK", "authorOrMeta": "Oliver Stone"},
+    {"type": "movie", "title": "Missing", "authorOrMeta": "Costa-Gavras"},
 )
 
 CATALOGUE_DESCRIPTIONS = {
@@ -313,6 +395,78 @@ CATALOGUE_DESCRIPTIONS = {
     ),
     ("movie", "Argentina, 1985"): (
         "Drama judicial sobre memória, justiça e responsabilização após a ditadura argentina."
+    ),
+    ("book", "Leviathan"): (
+        "Tratado fundador sobre soberania, contrato social e a autoridade do Estado perante o medo e a desordem."
+    ),
+    ("book", "The Social Contract"): (
+        "Ensaio sobre liberdade, vontade geral e a legitimidade do poder político numa comunidade de iguais."
+    ),
+    ("book", "The Communist Manifesto"): (
+        "Manifesto sobre luta de classes, capitalismo e a organização política dos trabalhadores."
+    ),
+    ("book", "Brave New World"): (
+        "Distopia sobre controlo social pelo prazer, pela tecnologia e pela uniformização do pensamento."
+    ),
+    ("book", "Fahrenheit 451"): (
+        "Distopia sobre censura, queima de livros e o empobrecimento do debate público."
+    ),
+    ("book", "Darkness at Noon"): (
+        "Romance sobre revolução, expurgos e a lógica do poder totalitário a devorar os seus."
+    ),
+    ("book", "The Trial"): (
+        "Romance sobre burocracia, culpa e um sistema judicial opaco que esmaga o indivíduo."
+    ),
+    ("book", "The Gulag Archipelago"): (
+        "Testemunho monumental sobre repressão, campos e a maquinaria do terror soviético."
+    ),
+    ("book", "The End of History and the Last Man"): (
+        "Tese sobre a democracia liberal como horizonte político após a Guerra Fria."
+    ),
+    ("book", "The Clash of Civilizations"): (
+        "Tese sobre identidade cultural e conflito entre civilizações na política mundial."
+    ),
+    ("book", "Sapiens"): (
+        "História da humanidade e das ficções partilhadas que sustentam Estados, economias e religiões."
+    ),
+    ("book", "The Dictator's Handbook"): (
+        "Análise de como líderes mantêm o poder e porque as instituições falham os cidadãos."
+    ),
+    ("movie", "All the President's Men"): (
+        "Thriller jornalístico sobre a investigação do Watergate e a queda de um Presidente."
+    ),
+    ("movie", "Z"): (
+        "Thriller político sobre assassinato, encobrimento e impunidade num regime autoritário."
+    ),
+    ("movie", "The Lives of Others"): (
+        "Drama sobre vigilância estatal, delação e consciência individual na Alemanha de Leste."
+    ),
+    ("movie", "Good Night, and Good Luck"): (
+        "Drama sobre jornalismo, liberdade de imprensa e o macartismo na televisão americana."
+    ),
+    ("movie", "Lincoln"): (
+        "Drama sobre liderança política e a luta pela abolição da escravatura nos Estados Unidos."
+    ),
+    ("movie", "12 Years a Slave"): (
+        "Drama sobre escravatura, liberdade e dignidade humana no século XIX americano."
+    ),
+    ("movie", "Spotlight"): (
+        "Drama jornalístico sobre a investigação que expôs abusos encobertos pela Igreja Católica."
+    ),
+    ("movie", "The Post"): (
+        "Drama sobre liberdade de imprensa e a publicação dos Papéis do Pentágono."
+    ),
+    ("movie", "Vice"): (
+        "Sátira biográfica sobre poder, bastidores e a ascensão de Dick Cheney."
+    ),
+    ("movie", "The Trial of the Chicago 7"): (
+        "Drama judicial sobre protesto, repressão e justiça política nos Estados Unidos."
+    ),
+    ("movie", "JFK"): (
+        "Thriller sobre o assassinato de Kennedy, teorias da conspiração e desconfiança institucional."
+    ),
+    ("movie", "Missing"): (
+        "Drama sobre golpe de Estado, desaparecidos políticos e a busca de justiça por uma família."
     ),
 }
 
@@ -1617,10 +1771,12 @@ Regras:
 Responde apenas com um objeto JSON com a chave "candidates", contendo objetos:
 {{"type":"book|movie","title":"...","authorOrMeta":"...","description":"..."}}.
 """.strip()
+    # A Groq retirou os Llama 3.x e o Gemma 2 dos planos free/Developer a
+    # 16 ago 2026 (passaram a Enterprise, só com contrato); os substitutos
+    # documentados pela própria Groq são os GPT-OSS.
     models = (
-        "llama-3.3-70b-versatile",
-        "llama-3.1-8b-instant",
-        "gemma2-9b-it",
+        "openai/gpt-oss-120b",
+        "openai/gpt-oss-20b",
     )
     for model in models:
         try:
