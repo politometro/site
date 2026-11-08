@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL103123W/Fahrenheit_451",
+  "coverHash": "3b3ea25ca888fb61eba56ad7f05acf53eb7222956e1055a650d45876cea91f59",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://ia800100.us.archive.org/view_archive.php?archive=%2F5%2Fitems%2Fl_covers_0012%2Fl_covers_0012_99.zip&file=0012993656-L.jpg",
+  "entityId": "openlibrary:/works/OL103123W",
+  "expiryDate": null,
+  "height": 500,
+  "isbn": "",
+  "resolvedAuthor": "Ray Bradbury",
+  "resolvedTitle": "Fahrenheit 451",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "Fahrenheit 451",
+  "titleNormalized": "fahrenheit 451",
+  "type": "book",
+  "verifiedAt": "2026-11-08T11:24:34.344769Z",
+  "width": 322
+}

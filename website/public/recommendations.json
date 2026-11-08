@@ -2427,7 +2427,7 @@
       "category": "Podcast",
       "title": "Sandra Marques Pereira: chegou a geração sem casa?",
       "authorOrMeta": "Perguntar Não Ofende",
-      "description": "Análise sobre a crise habitacional que ultrapassa centros, atingindo gerações e classes, e transforma a casa em fonte de desigualdade.",
+      "description": "Análise sobre como a crise habitacional se espalhou por gerações, classes e territórios, transformando a casa num símbolo de desigualdade.",
       "imageUrl": "/covers/podcast_sandra_marques_pereira__chegou_a_gera__o_sem_casa__bc7e50df_77e61b0593e1.jpg",
       "link": "https://omny.fm/shows/perguntar-n-o-ofende/sandra-marques-pereira-chegou-a-gera-o-sem-casa",
       "externalId": "8bd804c2-c4c4-45b8-affb-b4f600c80671",
@@ -2458,7 +2458,7 @@
         "resolvedAuthor": "Perguntar Não Ofende",
         "sourcePublishedAt": "2026-11-03T05:15:00Z",
         "sourceDescription": "A crise da habitação deixou de ser um problema circunscrito aos grandes centros urbanos e passou a atravessar gerações, classes sociais e territórios. Sandra Marques Pereira, socióloga e investigadora do DINÂMIA'CET, analisa a transformação de uma casa, durante décadas símbolo de segurança e ascensão social, numa das principais fontes de desigualdade.",
-        "editorialDescription": "Análise sobre a crise habitacional que ultrapassa centros, atingindo gerações e classes, e transforma a casa em fonte de desigualdade.",
+        "editorialDescription": "Análise sobre como a crise habitacional se espalhou por gerações, classes e territórios, transformando a casa num símbolo de desigualdade.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "77ca540021c9293de87cbc9e1b9939d231022f6ee584dac466cf237cf70a7160",
         "editorialDescriptionProvider": "groq"
@@ -2624,7 +2624,7 @@
       "category": "Podcast",
       "title": "Habitação em impasse: consenso ou bloqueio político?",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre a crise da habitação saltou das tendas para o centro da disputa política.",
+      "description": "Análise sobre intervenções policiais, apelo ao diálogo e a reunião entre partidos, mas ainda sem consenso.",
       "imageUrl": "/covers/podcast_habita__o_em_impasse__consenso_ou_bloqueio_pol_tico__b127c9be_4159c8d43c7e.jpg",
       "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/habita-o-em-impasse-consenso-ou-bloqueio-pol-tico",
       "externalId": "b2f62cda-43cb-4a82-b241-b4fb000091f4",
@@ -2655,10 +2655,10 @@
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-11-07T05:11:56Z",
         "sourceDescription": "A crise da habitação saltou das tendas para o centro da disputa política. Depois das intervenções policiais e do apelo do Presidente da República ao diálogo, Governo, PS e Chega sentaram-se à mesa, mas o entendimento continua distante.",
-        "editorialDescription": "Análise sobre a crise da habitação saltou das tendas para o centro da disputa política.",
+        "editorialDescription": "Análise sobre intervenções policiais, apelo ao diálogo e a reunião entre partidos, mas ainda sem consenso.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "e9f64c306b8cb83299c8adef18edf0f51ec8d9d89f3cf6dea80f770f4503e052",
-        "editorialDescriptionProvider": "extractive"
+        "editorialDescriptionProvider": "groq"
       }
     },
     {
@@ -2789,6 +2789,77 @@
         "resolvedTitle": "Brave New World",
         "resolvedAuthor": "Aldous Huxley",
         "sourceDescription": "Distopia sobre controlo social pelo prazer, pela tecnologia e pela uniformização do pensamento."
+      }
+    },
+    {
+      "id": "rss_podcast_bba9e11473dc4e67",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Há algum ministro “que se aproveite” nos últimos 15 anos?",
+      "authorOrMeta": "Fora do Baralho",
+      "description": "Análise sobre episódio “Há algum ministro “que se aproveite” nos últimos 15 anos?” do podcast Fora do Baralho, publicado em 08/11/2026.",
+      "imageUrl": "/covers/podcast_h__algum_ministro__que_se_aproveite__nos__ltimos_15__f1b3c2c3_bba9e11473dc.jpg",
+      "link": "https://omny.fm/shows/fora-do-baralho/h-algum-ministro-que-se-aproveite-nos-ltimos-15-anos",
+      "externalId": "17ab5fe0-8599-4894-9412-b4fa010a7119",
+      "sourceSeriesId": "1597496780",
+      "sourceSeriesTitle": "Fora do Baralho",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-08T06:00:00Z",
+      "expiryDate": "2026-11-11T06:00:00Z",
+      "createdAt": "2026-11-08T11:23:50.923886Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
+        "guid": "17ab5fe0-8599-4894-9412-b4fa010a7119",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
+        "show": "Fora do Baralho"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "17ab5fe0-8599-4894-9412-b4fa010a7119",
+        "score": 1.0,
+        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
+        "verifiedAt": "2026-11-08T11:23:53.762318Z",
+        "resolvedTitle": "Há algum ministro “que se aproveite” nos últimos 15 anos?",
+        "resolvedAuthor": "Fora do Baralho",
+        "sourcePublishedAt": "2026-11-08T06:00:00Z",
+        "sourceDescription": "Episódio “Há algum ministro “que se aproveite” nos últimos 15 anos?” do podcast Fora do Baralho, publicado em 08/11/2026.",
+        "editorialDescription": "Análise sobre episódio “Há algum ministro “que se aproveite” nos últimos 15 anos?” do podcast Fora do Baralho, publicado em 08/11/2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "3b229aab58d40850bda26c068099039b0282938ef4615085d620f3f9d12ef009",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "ai_book_ae8b5d4e02ad4e27",
+      "type": "book",
+      "category": "Livro",
+      "title": "Fahrenheit 451",
+      "authorOrMeta": "Ray Bradbury",
+      "description": "Distopia sobre censura, queima de livros e o empobrecimento do debate público.",
+      "imageUrl": "/covers/book_fahrenheit_451_f912552c_4bd8dee4b204.jpg",
+      "link": "https://openlibrary.org/works/OL103123W/Fahrenheit_451",
+      "priority": 3,
+      "expiryDate": null,
+      "createdAt": "2026-11-08T11:24:32.810869Z",
+      "status": "queue",
+      "sourceHint": "ai-catalogue-candidate",
+      "externalId": "openlibrary:/works/OL103123W",
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "openlibrary",
+        "entityId": "openlibrary:/works/OL103123W",
+        "score": 1.0,
+        "coverHash": "3b3ea25ca888fb61eba56ad7f05acf53eb7222956e1055a650d45876cea91f59",
+        "verifiedAt": "2026-11-08T11:24:34.344769Z",
+        "resolvedTitle": "Fahrenheit 451",
+        "resolvedAuthor": "Ray Bradbury",
+        "sourceDescription": "Distopia sobre censura, queima de livros e o empobrecimento do debate público."
       }
     }
   ],
@@ -5462,12 +5533,14 @@
     "strictCounts": {
       "book": 4,
       "podcast": 3,
-      "movie": 1,
+      "movie": 0,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 1
+      "highlight": 0
     },
-    "missingSlots": [],
-    "fallbackRequired": false
+    "missingSlots": [
+      "q3/movie-or-investigation"
+    ],
+    "fallbackRequired": true
   }
 }
