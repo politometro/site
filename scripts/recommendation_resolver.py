@@ -765,7 +765,11 @@ def _title_metrics(expected: str, actual: str) -> tuple[float, float, float]:
     left_tokens = set(_text_tokens(left))
     right_tokens = set(_text_tokens(right))
     if not left_tokens or not right_tokens:
-        token_f1 = 0.0
+        # Single-character titles (for example, the film "Z") have no
+        # multi-character tokens to compare; an exact normalised match is
+        # then a perfect token match, and anything else has no token
+        # evidence at all.
+        token_f1 = 1.0 if left == right else 0.0
     else:
         common = len(left_tokens & right_tokens)
         precision = common / len(right_tokens)
@@ -2456,7 +2460,11 @@ def _wikidata_search(title: str) -> list[Mapping[str, Any]]:
             "language": language,
             "uselang": language,
             "type": "item",
-            "limit": 15,
+            # Ambiguous one-word titles (for example, "Lincoln") only surface
+            # the film past the first dozen results, which are places and
+            # people. The loop only fetches entities whose description looks
+            # like a film, so the wider net stays cheap.
+            "limit": 50,
             "format": "json",
             "origin": "*",
         }
@@ -2508,9 +2516,15 @@ def _wikidata_entity(entity_id: str) -> Mapping[str, Any]:
 def _wikidata_matching_title(
     entity: Mapping[str, Any], expected: str
 ) -> tuple[str, float, float]:
-    """Use the closest Wikidata label/alias, regardless of search language."""
+    """Use the closest Wikidata label/alias, regardless of search language.
+
+    ``mul`` is the multilingual label Wikidata now uses as the default for
+    many entities (for example, "Spotlight" and "12 Years a Slave" have no
+    ``en`` label at all); without it the matcher only sees translations
+    and aliases and rejects the exact title.
+    """
     candidates: list[str] = []
-    for language in ("pt", "pt-br", "en", "es", "fr"):
+    for language in ("mul", "pt", "pt-br", "en", "es", "fr"):
         label = entity.get("labels", {}).get(language, {}).get("value")
         if label:
             candidates.append(str(label))
@@ -2562,25 +2576,150 @@ def _imdb_id_from_url(url: str) -> str:
     return match.group(1) if match else ""
 
 
-def _validate_imdb_page(
-    item: Mapping[str, Any], imdb_url: str, imdb_id: str
-) -> tuple[dict[str, Any], float]:
-    metadata = _page_metadata(imdb_url)
-    combined, sequence, _ = _title_metrics(
-        str(item.get("title", "")), metadata["title"]
+def _imdb_suggestion_poster(
+    title: str, imdb_id: str, failures: list[str] | None = None
+) -> str:
+    """Return the IMDb poster for ``imdb_id`` from IMDb's suggestion index.
+
+    IMDb answers automated requests for title pages with HTTP 202 and an
+    empty body, so the poster can no longer come from the title page itself.
+    The public suggestion index (``sg.media-imdb.com``) answers the same
+    requests and carries the poster URL per title. The match is by exact IMDb
+    ID, which Wikidata (P345) already confirmed for this title, so a
+    same-title namesake can never supply the poster. Returns "" when the
+    index does not carry this ID or cannot be read; the caller then falls
+    back to the Commons image.
+    """
+
+    query = re.sub(r"[^a-z0-9]+", "_", title.strip().casefold()).strip("_")
+    if not query or not query[0].isalnum():
+        return ""
+    url = (
+        "https://sg.media-imdb.com/suggests/"
+        f"{query[0]}/{urllib.parse.quote(query)}.json"
     )
-    if combined < 0.84 or sequence < 0.78:
-        raise RecommendationResolutionError(
-            "MOVIE_TITLE_MISMATCH",
-            f"IMDb descreve {metadata['title']!r}, não {item.get('title')!r}.",
-            item=item,
+    try:
+        _, _, body = _http_get(
+            url,
+            accept="application/javascript,application/json;q=0.9",
+            max_bytes=MAX_PAGE_BYTES,
+            allowed_mimes=JSON_MIME_TYPES,
+            purpose="suggestion",
         )
-    page_id = _imdb_id_from_url(metadata["canonical"])
-    if page_id and page_id != imdb_id:
-        raise RecommendationResolutionError(
-            "IMDB_ID_MISMATCH", "IMDb redirecionou para outro título.", item=item
+        start = body.find(b"(")
+        payload = json.loads(body[start + 1 :].rstrip().rstrip(b")"))
+    except (RecommendationResolutionError, ValueError, IndexError) as exc:
+        if failures is not None:
+            failures.append(
+                exc.code
+                if isinstance(exc, RecommendationResolutionError)
+                else "BAD_IMDB_SUGGESTION"
+            )
+        return ""
+    candidates = (
+        payload.get("d", []) if isinstance(payload, dict) else []
+    )
+    for candidate in candidates:
+        if not isinstance(candidate, Mapping):
+            continue
+        if str(candidate.get("id", "")) != imdb_id:
+            continue
+        image = candidate.get("i") or []
+        image_url = str(image[0]).strip() if image else ""
+        if not image_url:
+            return ""
+        try:
+            _assert_safe_url(image_url, purpose="image")
+        except RecommendationResolutionError as exc:
+            if failures is not None:
+                failures.append(exc.code)
+            return ""
+        return image_url
+    return ""
+
+
+def _wikipedia_extract(entity: Mapping[str, Any]) -> str:
+    """Return the intro of the film's Wikipedia article, via its sitelink.
+
+    Replaces the IMDb page description, which is no longer reachable. The
+    article is identified by the Wikidata sitelink, never by guessing a
+    title, so the extract always belongs to the confirmed entity.
+    """
+
+    sitelinks = entity.get("sitelinks", {})
+    if not isinstance(sitelinks, Mapping):
+        return ""
+    for language in ("en", "pt"):
+        link = sitelinks.get(f"{language}wiki")
+        if not isinstance(link, Mapping):
+            continue
+        page_title = str(link.get("title", "")).strip()
+        if not page_title:
+            continue
+        url = (
+            f"https://{language}.wikipedia.org/w/api.php?"
+            + urllib.parse.urlencode(
+                {
+                    "action": "query",
+                    "prop": "extracts",
+                    "exintro": "1",
+                    "explaintext": "1",
+                    "format": "json",
+                    "titles": page_title,
+                }
+            )
         )
-    return metadata, combined
+        try:
+            _, payload = _get_json(url)
+        except RecommendationResolutionError:
+            continue
+        pages = payload.get("query", {}).get("pages", {})
+        if not isinstance(pages, Mapping):
+            continue
+        for page in pages.values():
+            if isinstance(page, Mapping):
+                extract = str(page.get("extract", "")).strip()
+                if extract:
+                    return extract
+    return ""
+
+
+def _wikidata_description(entity: Mapping[str, Any]) -> str:
+    """Short Wikidata description (en, then pt), last-resort description."""
+
+    descriptions = entity.get("descriptions", {})
+    if not isinstance(descriptions, Mapping):
+        return ""
+    for language in ("en", "pt"):
+        value = descriptions.get(language, {})
+        if isinstance(value, Mapping):
+            text = str(value.get("value", "")).strip()
+            if text:
+                return text
+    return ""
+
+
+def _movie_poster_candidates(
+    entity: Mapping[str, Any],
+    title: str,
+    imdb_id: str,
+    failures: list[str] | None = None,
+) -> list[str]:
+    """Poster URLs for a confirmed film, best first.
+
+    The IMDb poster from the suggestion index is the theatrical poster; the
+    Commons image (P18) is usually a still. Both are verified downloads
+    downstream, so a URL that fails the raster check falls back to the next.
+    """
+
+    candidates: list[str] = []
+    poster = _imdb_suggestion_poster(title, imdb_id, failures)
+    if poster:
+        candidates.append(poster)
+    commons_filename = _claim_string(entity, "P18")
+    if commons_filename:
+        candidates.append(_commons_image_url(commons_filename))
+    return candidates
 
 
 def _wikidata_confirms_imdb(
@@ -2643,36 +2782,29 @@ def _resolve_movie(item: Mapping[str, Any]) -> EntityResolution:
                 item=item,
             )
         canonical_title, directors, wikidata_score, entity = confirmation
-        metadata: dict[str, Any] = {}
         imdb_score = wikidata_score
-        try:
-            metadata, imdb_score = _validate_imdb_page(
-                item, canonical_imdb, imdb_id
-            )
-        except RecommendationResolutionError:
-            # IMDb commonly answers automated, otherwise valid requests with
-            # HTTP 202. Wikidata already proves title, director and IMDb ID.
-            pass
-        image = str(metadata.get("image", ""))
-        if not image:
-            commons_filename = _claim_string(entity, "P18")
-            if commons_filename:
-                image = _commons_image_url(commons_filename)
-        if not image:
+        posters = _movie_poster_candidates(
+            entity, str(item.get("title", "")), imdb_id
+        )
+        if not posters:
             raise RecommendationResolutionError(
                 "COVER_NOT_FOUND",
                 "Wikidata/IMDb não disponibilizam um poster verificável.",
                 item=item,
             )
+        description = _wikipedia_extract(entity) or _wikidata_description(
+            entity
+        )
         return EntityResolution(
             link=canonical_imdb,
-            image_url=image,
+            image_url=posters[0],
             external_id=f"imdb:{imdb_id}",
             source="wikidata+imdb",
             score=(imdb_score * 0.5) + (wikidata_score * 0.5),
-            resolved_title=canonical_title or str(metadata.get("title", "")),
+            resolved_title=canonical_title,
             resolved_author=", ".join(directors),
-            description=str(metadata.get("description", "")),
+            description=description,
+            image_candidates=tuple(posters[1:]),
         )
 
     title = str(item.get("title", "")).strip()
@@ -2709,22 +2841,13 @@ def _resolve_movie(item: Mapping[str, Any]) -> EntityResolution:
         if director_expected and director_labels and director_score < 0.58:
             continue
         imdb_url = f"https://www.imdb.com/title/{imdb_id}/"
-        metadata: dict[str, Any] = {}
         imdb_score = combined
-        try:
-            metadata, imdb_score = _validate_imdb_page(
-                item, imdb_url, imdb_id
-            )
-        except RecommendationResolutionError as exc:
-            failures.append(exc.code)
-        image = str(metadata.get("image", ""))
-        if not image:
-            commons_filename = _claim_string(entity, "P18")
-            if commons_filename:
-                image = _commons_image_url(commons_filename)
-        if not image:
+        posters = _movie_poster_candidates(entity, title, imdb_id, failures)
+        if not posters:
             continue
-        source_description = str(metadata.get("description", "")).strip()
+        description = _wikipedia_extract(entity) or _wikidata_description(
+            entity
+        )
         score = (
             (combined * 0.55)
             + (imdb_score * 0.30)
@@ -2732,13 +2855,14 @@ def _resolve_movie(item: Mapping[str, Any]) -> EntityResolution:
         )
         return EntityResolution(
             link=imdb_url,
-            image_url=image,
+            image_url=posters[0],
             external_id=f"imdb:{imdb_id}",
             source="wikidata+imdb",
             score=min(1.0, score),
             resolved_title=label,
             resolved_author=", ".join(director_labels),
-            description=source_description,
+            description=description,
+            image_candidates=tuple(posters[1:]),
         )
     raise RecommendationResolutionError(
         "MOVIE_NOT_FOUND",
@@ -3479,7 +3603,10 @@ def resolve_recommendation(
     title = str(item.get("title", "")).strip()
     editorial_title = str(item.get("editorialTitle", "")).strip()
     media_type = str(item.get("type", "")).casefold().strip()
-    if not title or len(title) < 2:
+    # A one-character title is only legitimate for a film ("Z", 1969); the
+    # Wikidata title match still has to confirm it exactly, so this does
+    # not let junk titles through.
+    if not title or (len(title) < 2 and media_type != "movie"):
         raise RecommendationResolutionError(
             "BAD_TITLE", "Título em falta ou demasiado curto.", item=item
         )
