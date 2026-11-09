@@ -2581,7 +2581,7 @@
       "category": "Podcast",
       "title": "Habitação em impasse: consenso ou bloqueio político?",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre intervenções policiais e apelo ao diálogo que levaram a uma mesa de discussão, mas ainda sem entendimento.",
+      "description": "Análise sobre a crise da habitação que saiu das tendas para a disputa política, com intervenções policiais e diálogo, sem acordo.",
       "imageUrl": "/covers/podcast_habita__o_em_impasse__consenso_ou_bloqueio_pol_tico__b127c9be_4159c8d43c7e.jpg",
       "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/habita-o-em-impasse-consenso-ou-bloqueio-pol-tico",
       "externalId": "b2f62cda-43cb-4a82-b241-b4fb000091f4",
@@ -2612,7 +2612,7 @@
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-11-07T05:11:56Z",
         "sourceDescription": "A crise da habitação saltou das tendas para o centro da disputa política. Depois das intervenções policiais e do apelo do Presidente da República ao diálogo, Governo, PS e Chega sentaram-se à mesa, mas o entendimento continua distante.",
-        "editorialDescription": "Análise sobre intervenções policiais e apelo ao diálogo que levaram a uma mesa de discussão, mas ainda sem entendimento.",
+        "editorialDescription": "Análise sobre a crise da habitação que saiu das tendas para a disputa política, com intervenções policiais e diálogo, sem acordo.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "e9f64c306b8cb83299c8adef18edf0f51ec8d9d89f3cf6dea80f770f4503e052",
         "editorialDescriptionProvider": "groq"
@@ -2816,8 +2816,8 @@
         "sourceDescription": "As mães também foram para a acampada. Isabel Santos, das Mães pela Acampada do Porto, e Rita Assunção, das Mães pela Acampada de Lisboa, juntam-se a Ricardo Araújo Pereira para explicar por que razão decidiram apoiar os filhos na luta pelo direito à habitação.",
         "editorialDescription": "Análise sobre mães que foram à acampada e explicam o apoio aos filhos na luta pelo direito à habitação.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "29fb8f3a69418d737ebe4bec92ed280f67f08f3b501c8defed2bbcacdd2e7656",
-        "editorialDescriptionProvider": "groq"
+        "editorialSourceHash": "c730a31b47e983776f175ec176f3383a3c3449c8525727be1b0670a5344edfcd",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -2973,6 +2973,56 @@
         "resolvedTitle": "Good night, and good luck.",
         "resolvedAuthor": "George Clooney",
         "sourceDescription": "Good Night, and Good Luck (stylized as good night, and good luck.) is a 2005 historical drama film directed by George Clooney from a screenplay he wrote with Grant Heslov, who also produced. It stars David Strathairn, Patricia Clarkson, Clooney, Jeff Daniels, Robert Downey Jr. and Frank Langella, and portrays the conflict between veteran journalist Edward R."
+      }
+    },
+    {
+      "id": "rss_highlight_434af05961474036",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "\"O direito de manifestação não é um direito absoluto\"",
+      "authorOrMeta": "observador.pt",
+      "description": "Jorge Nuno de Sá avisa que acampada no Rossio está a afetar o comércio na Baixa e defende o fim urgente. O vice-presidente da União de Ass. de Comerciantes e Serviços aponta quebras de 30% no comércio",
+      "imageUrl": "/covers/highlight__o_direito_de_manifesta__o_n_o___um_direito_absolu_b64a3fe1_4318297c859f.jpg",
+      "link": "https://observador.pt/programas/explicador/comerciantes-o-direito-de-manifestacao-nao-e-um-direito-absoluto/",
+      "externalId": "article:url:434af05961474036f8a95a92",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-09T12:49:35Z",
+      "expiryDate": "2026-12-09T12:49:35Z",
+      "createdAt": "2026-11-09T13:04:53.985582Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/comerciantes-o-direito-de-manifestacao-nao-e-um-direito-absoluto/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "Comércio",
+          "Economia",
+          "Direito",
+          "Justiça",
+          "Manifestações",
+          "Protestos",
+          "Sociedade",
+          "Vendas",
+          "Mercado",
+          "Auto"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:434af05961474036f8a95a92",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-11-09T13:04:55.240617Z",
+        "resolvedTitle": "\"O direito de manifestação não é um direito absoluto\"",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-11-09T12:49:35Z",
+        "sourceDescription": "Jorge Nuno de Sá avisa que acampada no Rossio está a afetar o comércio na Baixa e defende o fim urgente. O vice-presidente da União de Ass. de Comerciantes e Serviços aponta quebras de 30% no comércio"
       }
     }
   ],
@@ -5649,7 +5699,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 0
+      "highlight": 1
     },
     "missingSlots": [],
     "fallbackRequired": false
