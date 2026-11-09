@@ -1000,7 +1000,12 @@ class RecommendationResolverTests(unittest.TestCase):
             "The Great Dictator", "tt0032553", "Charlie Chaplin"
         )
 
-    def test_supplied_imdb_movie_survives_http_202_with_wikidata_poster(self):
+    def test_supplied_imdb_movie_uses_wikidata_poster_when_suggestion_has_none(
+        self,
+    ):
+        # No IMDb title page is fetched any more: when the suggestion index
+        # carries no poster for the confirmed IMDb ID, the Commons image
+        # (P18) is the poster.
         entity = {
             "claims": {
                 "P18": [
@@ -1034,11 +1039,12 @@ class RecommendationResolverTests(unittest.TestCase):
                 return_value=confirmation,
             ),
             patch.object(
+                resolver, "_imdb_suggestion_poster", return_value=""
+            ),
+            patch.object(
                 resolver,
-                "_validate_imdb_page",
-                side_effect=resolver.ResolutionError(
-                    "HTTP_ERROR", "HTTP 202 ao obter IMDb."
-                ),
+                "_page_metadata",
+                side_effect=AssertionError("IMDb HTML must not be fetched"),
             ),
         ):
             result = resolver._resolve_movie(item)
@@ -1049,6 +1055,207 @@ class RecommendationResolverTests(unittest.TestCase):
         )
         self.assertIn("commons.wikimedia.org", result.image_url)
         self.assertEqual(result.resolved_author, "Charlie Chaplin")
+
+    def test_imdb_suggestion_poster_matches_exact_imdb_id(self):
+        body = (
+            b'imdb$spotlight({"d":['
+            b'{"i":["https://m.media-amazon.com/images/M/poster.jpg",500,750],'
+            b'"id":"tt1895587","l":"Spotlight","y":2015},'
+            b'{"i":["https://m.media-amazon.com/images/M/other.jpg",500,750],'
+            b'"id":"tt9999999","l":"Spotlight","y":2015}'
+            b']})'
+        )
+        with (
+            patch.object(
+                resolver,
+                "_http_get",
+                return_value=("https://sg.media-imdb.com/suggests/s/spotlight.json", "application/javascript", body),
+            ) as http_get,
+            patch.object(resolver, "_assert_safe_url"),
+        ):
+            poster = resolver._imdb_suggestion_poster(
+                "Spotlight", "tt1895587"
+            )
+
+        self.assertEqual(
+            poster, "https://m.media-amazon.com/images/M/poster.jpg"
+        )
+        self.assertIn("sg.media-imdb.com", http_get.call_args.args[0])
+        self.assertNotIn("imdb.com/title", http_get.call_args.args[0])
+
+    def test_imdb_suggestion_poster_ignores_other_titles_with_same_name(self):
+        body = (
+            b'imdb$z({"d":['
+            b'{"i":["https://m.media-amazon.com/images/M/other.jpg",500,750],'
+            b'"id":"tt0065234","l":"Z","y":1969}'
+            b']})'
+        )
+        with (
+            patch.object(
+                resolver,
+                "_http_get",
+                return_value=("https://sg.media-imdb.com/suggests/z/z.json", "application/javascript", body),
+            ),
+            patch.object(resolver, "_assert_safe_url"),
+        ):
+            poster = resolver._imdb_suggestion_poster("Z", "tt0000000")
+
+        self.assertEqual(poster, "")
+
+    def test_wikipedia_extract_uses_sitelink_title(self):
+        entity = {
+            "sitelinks": {"enwiki": {"title": "Z (1969 film)"}},
+        }
+        payload = {
+            "query": {
+                "pages": {
+                    "136605": {
+                        "extract": "Z is a 1969 political thriller film directed by Costa-Gavras."
+                    }
+                }
+            }
+        }
+        with patch.object(
+            resolver, "_get_json", return_value=("en.wikipedia.org", payload)
+        ) as get_json:
+            extract = resolver._wikipedia_extract(entity)
+
+        self.assertEqual(
+            extract, "Z is a 1969 political thriller film directed by Costa-Gavras."
+        )
+        self.assertIn(
+            "titles=Z+%281969+film%29", get_json.call_args.args[0]
+        )
+
+    def test_resolve_movie_search_never_fetches_imdb_title_page(self):
+        search_result = {
+            "id": "Q18154496",
+            "description": "2015 film by Tom McCarthy",
+        }
+        entity = {
+            "labels": {"en": {"value": "Spotlight"}},
+            "claims": {
+                "P345": [
+                    {"mainsnak": {"datavalue": {"value": "tt1895587"}}}
+                ],
+                "P57": [
+                    {
+                        "mainsnak": {
+                            "datavalue": {
+                                "value": {
+                                    "entity-type": "item",
+                                    "numeric-id": 123456,
+                                }
+                            }
+                        }
+                    }
+                ],
+            },
+            "sitelinks": {"enwiki": {"title": "Spotlight (film)"}},
+        }
+        item = {
+            "type": "movie",
+            "title": "Spotlight",
+            "authorOrMeta": "Tom McCarthy",
+        }
+        poster = "https://m.media-amazon.com/images/M/spotlight.jpg"
+        extract = (
+            "Spotlight is a 2015 American biographical drama film "
+            "directed by Tom McCarthy."
+        )
+
+        with (
+            patch.object(
+                resolver, "_wikidata_search", return_value=[search_result]
+            ),
+            patch.object(
+                resolver, "_wikidata_entity", return_value=entity
+            ),
+            patch.object(
+                resolver,
+                "_wikidata_labels",
+                return_value=["Tom McCarthy"],
+            ),
+            patch.object(
+                resolver, "_imdb_suggestion_poster", return_value=poster
+            ),
+            patch.object(
+                resolver, "_wikipedia_extract", return_value=extract
+            ),
+            patch.object(
+                resolver,
+                "_page_metadata",
+                side_effect=AssertionError("IMDb HTML must not be fetched"),
+            ),
+        ):
+            result = resolver._resolve_movie(item)
+
+        self.assertEqual(result.external_id, "imdb:tt1895587")
+        self.assertEqual(
+            result.link, "https://www.imdb.com/title/tt1895587/"
+        )
+        self.assertEqual(result.image_url, poster)
+        self.assertEqual(result.description, extract)
+        self.assertEqual(result.resolved_author, "Tom McCarthy")
+
+    def test_single_character_title_matches_exactly(self):
+        # "Z" has no multi-character token, so the token component of the
+        # title score is undefined; an exact match must still score 1.0.
+        combined, sequence, token_f1 = resolver._title_metrics("Z", "Z")
+        self.assertEqual((combined, sequence, token_f1), (1.0, 1.0, 1.0))
+        combined, _, _ = resolver._title_metrics("Z", "X")
+        self.assertEqual(combined, 0.0)
+
+    def test_wikidata_matching_title_uses_multilingual_label(self):
+        # Spotlight and 12 Years a Slave carry no "en" label; their
+        # canonical label lives under "mul".
+        entity = {
+            "labels": {"mul": {"value": "Spotlight"}},
+            "aliases": {},
+        }
+        label, combined, sequence = resolver._wikidata_matching_title(
+            entity, "Spotlight"
+        )
+        self.assertEqual(label, "Spotlight")
+        self.assertEqual(combined, 1.0)
+        self.assertEqual(sequence, 1.0)
+
+    def test_single_character_movie_title_passes_validation(self):
+        entity = self.entity(
+            media_type="movie", title="Z", author="Costa-Gavras"
+        )
+        result = self.resolve_with(
+            {
+                "id": "z",
+                "type": "movie",
+                "title": "Z",
+                "authorOrMeta": "Costa-Gavras",
+            },
+            entity,
+        )
+        self.assertEqual(result["title"], "Z")
+        with self.assertRaisesRegex(resolver.ResolutionError, "BAD_TITLE"):
+            self.resolve_with(
+                {
+                    "id": "b",
+                    "type": "book",
+                    "title": "Z",
+                    "authorOrMeta": "Autor",
+                },
+                self.entity(media_type="book", title="Z", author="Autor"),
+            )
+
+    def test_wikidata_search_uses_wider_limit_for_ambiguous_titles(self):
+        # The Lincoln film only surfaces around position 30 of the
+        # Wikidata search; the old limit of 15 never reached it.
+        with patch.object(
+            resolver, "_get_json", return_value=("wikidata.org", {"search": []})
+        ) as get_json:
+            self.assertEqual(resolver._wikidata_search("Lincoln"), [])
+
+        urls = [call.args[0] for call in get_json.call_args_list]
+        self.assertEqual(len(urls), 2)
+        self.assertTrue(all("limit=50" in url for url in urls))
 
     def test_http_202_is_classified_as_temporary_source_response(self):
         error = resolver.ResolutionError(
