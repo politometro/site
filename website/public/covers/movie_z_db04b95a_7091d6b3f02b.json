@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0065234/",
+  "coverHash": "e2ce135ffebfbe1378caa7976ffcb6ebd3b19ab2a0470eee6e7d86ffa512e491",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://m.media-amazon.com/images/M/MV5BMjFmZjUzZjctZTcyNi00MWY3LWEzZTctNTEyNWQyZmM2ZTYyXkEyXkFqcGc@._V1_.jpg",
+  "entityId": "imdb:tt0065234",
+  "expiryDate": null,
+  "height": 2400,
+  "isbn": "",
+  "resolvedAuthor": "Constantin Costa-Gavras",
+  "resolvedTitle": "Z",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Z",
+  "titleNormalized": "z",
+  "type": "movie",
+  "verifiedAt": "2026-11-09T10:06:52.410268Z",
+  "width": 1589
+}

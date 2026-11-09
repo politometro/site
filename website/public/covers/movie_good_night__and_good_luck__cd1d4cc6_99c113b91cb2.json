@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0433383/",
+  "coverHash": "080dac82b8df071878e2f9fd9e5181d8f0ac38cf68372bbe77bec372c940bb81",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://m.media-amazon.com/images/M/MV5BOTJhMmY5OGMtNDZhNS00ZjAyLWFmODQtOTA0NWM5NjMyOTk5XkEyXkFqcGc@._V1_.jpg",
+  "entityId": "imdb:tt0433383",
+  "expiryDate": null,
+  "height": 1440,
+  "isbn": "",
+  "resolvedAuthor": "George Clooney",
+  "resolvedTitle": "Good night, and good luck.",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Good night, and good luck.",
+  "titleNormalized": "good night and good luck",
+  "type": "movie",
+  "verifiedAt": "2026-11-09T10:06:55.347546Z",
+  "width": 960
+}

@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0074119/",
+  "coverHash": "32d30ca2bf6483fb18a33ee7c88e3d0c670f6a3c6be07e9d4e0c2100ae9947de",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://m.media-amazon.com/images/M/MV5BZGQzMzcwMDYtMmNjNS00YzZlLTg2MjUtNTE0MThlNTFjMDQ0XkEyXkFqcGc@._V1_.jpg",
+  "entityId": "imdb:tt0074119",
+  "expiryDate": null,
+  "height": 672,
+  "isbn": "",
+  "resolvedAuthor": "Alan J. Pakula",
+  "resolvedTitle": "All the President's Men",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "All the President's Men",
+  "titleNormalized": "all the president s men",
+  "type": "movie",
+  "verifiedAt": "2026-11-09T10:06:50.502288Z",
+  "width": 446
+}

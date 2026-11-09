@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0405094/",
+  "coverHash": "aaa92ca0992f6cd01c90d2aad89fa9557b3631ac743abd7ed17a36e686bd8a7f",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://m.media-amazon.com/images/M/MV5BYjM1N2Q0YWEtN2E5MC00NDM3LTk2NTEtMTc1NTk5OTA5ZGIzXkEyXkFqcGc@._V1_.jpg",
+  "entityId": "imdb:tt0405094",
+  "expiryDate": null,
+  "height": 1297,
+  "isbn": "",
+  "resolvedAuthor": "Florian Henckel von Donnersmarck",
+  "resolvedTitle": "The Lives of Others",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "The Lives of Others",
+  "titleNormalized": "the lives of others",
+  "type": "movie",
+  "verifiedAt": "2026-11-09T10:06:53.903686Z",
+  "width": 868
+}
