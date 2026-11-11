@@ -2384,7 +2384,7 @@
       "category": "Podcast",
       "title": "Sandra Marques Pereira: chegou a geração sem casa?",
       "authorOrMeta": "Perguntar Não Ofende",
-      "description": "Análise sobre os temas e questões de sandra marques pereira: chegou a geração sem casa.",
+      "description": "Análise sobre a crise da habitação se espalhou por gerações, classes e territórios, transformando a casa em fonte de desigualdade.",
       "imageUrl": "/covers/podcast_sandra_marques_pereira__chegou_a_gera__o_sem_casa__bc7e50df_77e61b0593e1.jpg",
       "link": "https://omny.fm/shows/perguntar-n-o-ofende/sandra-marques-pereira-chegou-a-gera-o-sem-casa",
       "externalId": "8bd804c2-c4c4-45b8-affb-b4f600c80671",
@@ -2415,10 +2415,10 @@
         "resolvedAuthor": "Perguntar Não Ofende",
         "sourcePublishedAt": "2026-11-03T05:15:00Z",
         "sourceDescription": "A crise da habitação deixou de ser um problema circunscrito aos grandes centros urbanos e passou a atravessar gerações, classes sociais e territórios. Sandra Marques Pereira, socióloga e investigadora do DINÂMIA'CET, analisa a transformação de uma casa, durante décadas símbolo de segurança e ascensão social, numa das principais fontes de desigualdade.",
-        "editorialDescription": "Análise sobre os temas e questões de sandra marques pereira: chegou a geração sem casa.",
+        "editorialDescription": "Análise sobre a crise da habitação se espalhou por gerações, classes e territórios, transformando a casa em fonte de desigualdade.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "77ca540021c9293de87cbc9e1b9939d231022f6ee584dac466cf237cf70a7160",
-        "editorialDescriptionProvider": "extractive"
+        "editorialDescriptionProvider": "groq"
       },
       "selectionRecovery": {
         "slot": "q3",
@@ -2581,7 +2581,7 @@
       "category": "Podcast",
       "title": "Habitação em impasse: consenso ou bloqueio político?",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre a crise habitacional que saiu das tendas para o debate político, após um apelo ao diálogo, ainda sem acordo.",
+      "description": "Análise sobre a crise da habitação que saiu das tendas para a disputa política, com intervenções policiais e apelo ao diálogo, sem acordo.",
       "imageUrl": "/covers/podcast_habita__o_em_impasse__consenso_ou_bloqueio_pol_tico__b127c9be_4159c8d43c7e.jpg",
       "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/habita-o-em-impasse-consenso-ou-bloqueio-pol-tico",
       "externalId": "b2f62cda-43cb-4a82-b241-b4fb000091f4",
@@ -2612,7 +2612,7 @@
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-11-07T05:11:56Z",
         "sourceDescription": "A crise da habitação saltou das tendas para o centro da disputa política. Depois das intervenções policiais e do apelo do Presidente da República ao diálogo, Governo, PS e Chega sentaram-se à mesa, mas o entendimento continua distante.",
-        "editorialDescription": "Análise sobre a crise habitacional que saiu das tendas para o debate político, após um apelo ao diálogo, ainda sem acordo.",
+        "editorialDescription": "Análise sobre a crise da habitação que saiu das tendas para a disputa política, com intervenções policiais e apelo ao diálogo, sem acordo.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "e9f64c306b8cb83299c8adef18edf0f51ec8d9d89f3cf6dea80f770f4503e052",
         "editorialDescriptionProvider": "groq"
@@ -2935,10 +2935,10 @@
       "id": "rss_highlight_434af05961474036",
       "type": "highlight",
       "category": "Destaque",
-      "title": "\"O direito de manifestação não é um direito absoluto\"",
-      "authorOrMeta": "observador.pt",
+      "title": "Comerciantes: \"O direito de manifestação não é um direito absoluto\"",
+      "authorOrMeta": "Miguel Videira",
       "description": "Jorge Nuno de Sá avisa que acampada no Rossio está a afetar o comércio na Baixa e defende o fim urgente. O vice-presidente da União de Ass. de Comerciantes e Serviços aponta quebras de 30% no comércio",
-      "imageUrl": "/covers/highlight__o_direito_de_manifesta__o_n_o___um_direito_absolu_b64a3fe1_4318297c859f.jpg",
+      "imageUrl": "/covers/highlight_comerciantes___o_direito_de_manifesta__o_n_o___um__ab56cd5d_4318297c859f.jpg",
       "link": "https://observador.pt/programas/explicador/comerciantes-o-direito-de-manifestacao-nao-e-um-direito-absoluto/",
       "externalId": "article:url:434af05961474036f8a95a92",
       "priority": 4,
@@ -2970,16 +2970,17 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:434af05961474036f8a95a92",
-        "score": 1.0,
+        "score": 0.8971,
         "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
-        "verifiedAt": "2026-11-09T13:04:55.240617Z",
-        "resolvedTitle": "\"O direito de manifestação não é um direito absoluto\"",
-        "resolvedAuthor": "observador.pt",
+        "verifiedAt": "2026-11-11T11:58:24.369429Z",
+        "resolvedTitle": "Comerciantes: \"O direito de manifestação não é um direito absoluto\"",
+        "resolvedAuthor": "Miguel Videira",
         "sourcePublishedAt": "2026-11-09T12:49:35Z",
         "sourceDescription": "Jorge Nuno de Sá avisa que acampada no Rossio está a afetar o comércio na Baixa e defende o fim urgente. O vice-presidente da União de Ass. de Comerciantes e Serviços aponta quebras de 30% no comércio"
-      }
+      },
+      "editorialTitle": "Comerciantes: \"O direito de manifestação não é um direito"
     },
     {
       "id": "rss_podcast_c740faff87388a1a",
