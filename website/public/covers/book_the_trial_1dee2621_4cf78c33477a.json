@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://openlibrary.org/works/OL43043884W/The_Trial",
+  "coverHash": "912413e628e7ed5574dd66d68678a2da46be1751c788a1f578f80e8be85b6122",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://covers.openlibrary.org/b/id/14910748-L.jpg",
+  "entityId": "openlibrary:/works/OL43043884W",
+  "expiryDate": null,
+  "height": 500,
+  "isbn": "",
+  "resolvedAuthor": "Franz Kafka",
+  "resolvedTitle": "The Trial",
+  "score": 1.0,
+  "source": "openlibrary",
+  "sourcePublishedAt": "",
+  "title": "The Trial",
+  "titleNormalized": "the trial",
+  "type": "book",
+  "verifiedAt": "2026-11-15T12:04:20.307267Z",
+  "width": 292
+}

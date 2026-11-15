@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt0443272/",
+  "coverHash": "a48c26a4e3bf9a140bb00bad57f5748c231a26d18b15849437ef2b432ba8e32d",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://m.media-amazon.com/images/M/MV5BMTQzNzczMDUyNV5BMl5BanBnXkFtZTcwNjM2ODEzOA@@._V1_.jpg",
+  "entityId": "imdb:tt0443272",
+  "expiryDate": null,
+  "height": 1100,
+  "isbn": "",
+  "resolvedAuthor": "Steven Spielberg",
+  "resolvedTitle": "Lincoln",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "Lincoln",
+  "titleNormalized": "lincoln",
+  "type": "movie",
+  "verifiedAt": "2026-11-15T12:04:22.416182Z",
+  "width": 743
+}
