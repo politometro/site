@@ -2384,7 +2384,7 @@
       "category": "Podcast",
       "title": "Sandra Marques Pereira: chegou a geração sem casa?",
       "authorOrMeta": "Perguntar Não Ofende",
-      "description": "Análise sobre a crise habitacional que passou de a atravessar gerações, classes e territórios, tornando a casa símbolo de desigualdade.",
+      "description": "Análise sobre os temas e questões de sandra marques pereira: chegou a geração sem casa.",
       "imageUrl": "/covers/podcast_sandra_marques_pereira__chegou_a_gera__o_sem_casa__bc7e50df_77e61b0593e1.jpg",
       "link": "https://omny.fm/shows/perguntar-n-o-ofende/sandra-marques-pereira-chegou-a-gera-o-sem-casa",
       "externalId": "8bd804c2-c4c4-45b8-affb-b4f600c80671",
@@ -2415,10 +2415,10 @@
         "resolvedAuthor": "Perguntar Não Ofende",
         "sourcePublishedAt": "2026-11-03T05:15:00Z",
         "sourceDescription": "A crise da habitação deixou de ser um problema circunscrito aos grandes centros urbanos e passou a atravessar gerações, classes sociais e territórios. Sandra Marques Pereira, socióloga e investigadora do DINÂMIA'CET, analisa a transformação de uma casa, durante décadas símbolo de segurança e ascensão social, numa das principais fontes de desigualdade.",
-        "editorialDescription": "Análise sobre a crise habitacional que passou de a atravessar gerações, classes e territórios, tornando a casa símbolo de desigualdade.",
+        "editorialDescription": "Análise sobre os temas e questões de sandra marques pereira: chegou a geração sem casa.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "77ca540021c9293de87cbc9e1b9939d231022f6ee584dac466cf237cf70a7160",
-        "editorialDescriptionProvider": "groq"
+        "editorialDescriptionProvider": "extractive"
       },
       "selectionRecovery": {
         "slot": "q3",
@@ -2591,7 +2591,7 @@
       "sourcePublishedAt": "2026-11-07T05:11:56Z",
       "expiryDate": "2026-11-17T05:11:56Z",
       "createdAt": "2026-11-07T11:11:54.937533Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2600,7 +2600,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/b8c478d4-5e31-4e6d-9792-ad8e0107088b/5b3d16e1-d137-458f-a63d-ad8e01070899/image.jpg?t=1673895095&size=Large",
         "show": "Expresso da Meia-Noite"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2616,7 +2616,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "e9f64c306b8cb83299c8adef18edf0f51ec8d9d89f3cf6dea80f770f4503e052",
         "editorialDescriptionProvider": "groq"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Habitação em impasse: consenso ou bloqueio político?]: Conteúdo expira em 2026-11-17T05:11:56Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_highlight_886b565729cfaa5e",
@@ -2868,53 +2869,10 @@
         "resolvedTitle": "E agora, quem no Partido Democrata vai liderar?",
         "resolvedAuthor": "Fora do Baralho",
         "sourcePublishedAt": "2026-11-15T06:00:00Z",
-        "sourceDescription": "Episódio “E agora, quem no Partido Democrata vai liderar?” do podcast Fora do Baralho, publicado em 15/11/2026.",
+        "sourceDescription": "Análise sobre episódio “E agora, quem no Partido Democrata vai liderar?” do podcast Fora do Baralho, publicado em 15/11/2026.",
         "editorialDescription": "Análise sobre episódio “E agora, quem no Partido Democrata vai liderar?” do podcast Fora do Baralho, publicado em 15/11/2026.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "7ebf26a619962dedfef01dc69c63e6a01a3ed804b05ceffeaddad8826be461f7",
-        "editorialDescriptionProvider": "extractive"
-      }
-    },
-    {
-      "id": "rss_podcast_c740faff87388a1a",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Ronaldo abandona + A tenda da Renata Cambra - Conteúdo do Batáguas T03 Ep12",
-      "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre a divulgação de novas datas do Optimista Cético, a promoção do Rally Dacarlos e a partilha de contactos nas redes sociais.",
-      "imageUrl": "/covers/podcast_ronaldo_abandona___a_tenda_da_renata_cambra___conte__6d951b8b_c740faff8738.jpg",
-      "link": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
-      "externalId": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
-      "sourceSeriesId": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
-      "sourceSeriesTitle": "Conteúdo do Batáguas",
-      "priority": 4,
-      "sourcePublishedAt": "2026-11-09T19:23:57Z",
-      "expiryDate": "2026-11-30T19:23:57Z",
-      "createdAt": "2026-11-15T12:03:55.352554Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
-        "guid": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
-        "imageUrl": "https://www.youtube.com/v/YQXRzyRk9K0?version=3",
-        "show": "Conteúdo do Batáguas"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
-        "score": 1.0,
-        "coverHash": "61d297fd7f439b320dcc9044509dc00f3fe30d599ae797f034561ae81fbac53a",
-        "verifiedAt": "2026-11-10T12:48:27.852473Z",
-        "resolvedTitle": "Ronaldo abandona + A tenda da Renata Cambra - Conteúdo do Batáguas T03 Ep12",
-        "resolvedAuthor": "Conteúdo do Batáguas",
-        "sourcePublishedAt": "2026-11-09T19:23:57Z",
-        "sourceDescription": "Análise sobre a divulgação de novas datas do Optimista Cético, a promoção do Rally Dacarlos e a partilha de contactos nas redes sociais.",
-        "editorialDescription": "Análise sobre a divulgação de novas datas do Optimista Cético, a promoção do Rally Dacarlos e a partilha de contactos nas redes sociais.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "3505a5f70fedd9f4b0df7e54ea029240d0d936e790a9f0cb2f598e4a189cb39b",
+        "editorialSourceHash": "c5c83bb3a99c08256194fc34281bc36f6be3c72d4b3c4b64dff33d8426a7b7d8",
         "editorialDescriptionProvider": "kept"
       }
     },
@@ -3018,6 +2976,141 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-11-15T18:01:23Z",
         "sourceDescription": "Publicações alegam que advogado está a receber avultados honorários pela defesa dos manifestantes, que lutam por habitação acessível. Mas a informação é falsa."
+      }
+    },
+    {
+      "id": "rss_podcast_3713674dd3cdcbbc",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Dino D’Santiago: “Tive um conflito gigante na infância. Os meus pais falavam em crioulo connosco e nós só respondíamos em algarvio”",
+      "editorialTitle": "Dino D’Santiago: “Tive um conflito gigante na infância. Os meus pais falavam",
+      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
+      "description": "Análise sobre os temas e questões de dino d’santiago: “tive um conflito gigante na infância. os meus pais falavam.",
+      "imageUrl": "/covers/podcast_dino_d_santiago___tive_um_conflito_gigante_na_inf_nc_562cc9da_3713674dd3cd.jpg",
+      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/dino-d-santiago-tive-um-conflito-gigante-na-inf-ncia-os-meus-pais-falavam-em-criolo-connosco-e-n-s-s-respond-amos-em-algarvio",
+      "externalId": "9d08dc9a-2097-41d5-a88d-b5030175d571",
+      "sourceSeriesId": "1585178009",
+      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-15T23:30:00Z",
+      "expiryDate": "2026-11-25T23:30:00Z",
+      "createdAt": "2026-11-16T12:56:58.346471Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
+        "guid": "9d08dc9a-2097-41d5-a88d-b5030175d571",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/9d08dc9a-2097-41d5-a88d-b5030175d571/image.jpg?t=1794785480&size=Large",
+        "show": "Isto É Gozar Com Quem Trabalha"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "9d08dc9a-2097-41d5-a88d-b5030175d571",
+        "score": 1.0,
+        "coverHash": "3a9f056367c6fdc1fd9cd2ec15effbd79c2f5d50e788af07fd1e1a4e1978b309",
+        "verifiedAt": "2026-11-16T12:57:02.765801Z",
+        "resolvedTitle": "Dino D’Santiago: “Tive um conflito gigante na infância. Os meus pais falavam em crioulo connosco e nós só respondíamos em algarvio”",
+        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
+        "sourcePublishedAt": "2026-11-15T23:30:00Z",
+        "sourceDescription": "Na segunda parte do programa, Ricardo Araújo Pereira entrevista Dino D’Santiago, a propósito da conquista de um Grammy latino. Desde as raízes algarvias do cantor à competição amigável para decidir quem visitou mais vezes Cabo-Verde, Ricardo e o artista português falam das influências musicais, da relação com Madonna e do problema da habitação, com especial…",
+        "editorialDescription": "Análise sobre os temas e questões de dino d’santiago: “tive um conflito gigante na infância. os meus pais falavam.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "374c0f6283a0aec4e40960226ce69bfef9f12ee0dedd8d02b52a972e624272ba",
+        "editorialDescriptionProvider": "extractive"
+      }
+    },
+    {
+      "id": "rss_podcast_8fe4064021167ab4",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "A Direção Executiva do SNS é uma \"asneira monumental\" da ministra Marta Temido",
+      "authorOrMeta": "O Princípio da Incerteza",
+      "description": "Análise sobre a crítica à Direção Executiva do SNS no episódio do podcast O Princípio da Incerteza, publicado 16 de novembro de 2026.",
+      "imageUrl": "/covers/podcast_a_dire__o_executiva_do_sns___uma__asneira_monumental_0d1fc702_8fe406402116.jpg",
+      "link": "https://omny.fm/shows/o-principio-da-incerteza/a-dire-o-executiva-do-sns-uma-asneira-monumental-da-ministra-marta-temido",
+      "externalId": "371a0f01-0f0a-4e69-aa49-b504008921f8",
+      "sourceSeriesId": "1747493813",
+      "sourceSeriesTitle": "O Princípio da Incerteza",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-16T08:26:20Z",
+      "expiryDate": "2026-11-26T08:26:20Z",
+      "createdAt": "2026-11-16T12:56:59.566135Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/podcast.rss",
+        "guid": "371a0f01-0f0a-4e69-aa49-b504008921f8",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/image.jpg?t=1793796255&size=Large",
+        "show": "O Princípio da Incerteza"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "371a0f01-0f0a-4e69-aa49-b504008921f8",
+        "score": 1.0,
+        "coverHash": "2eb982e7424f0bfd1eae00b4b8f0d8f06a08f61febe8ee80ea39d816692fa8df",
+        "verifiedAt": "2026-11-16T12:57:03.628589Z",
+        "resolvedTitle": "A Direção Executiva do SNS é uma \"asneira monumental\" da ministra Marta Temido",
+        "resolvedAuthor": "O Princípio da Incerteza",
+        "sourcePublishedAt": "2026-11-16T08:26:20Z",
+        "sourceDescription": "Episódio “A Direção Executiva do SNS é uma \"asneira monumental\" da ministra Marta Temido” do podcast O Princípio da Incerteza, publicado em 16/11/2026.",
+        "editorialDescription": "Análise sobre a crítica à Direção Executiva do SNS no episódio do podcast O Princípio da Incerteza, publicado 16 de novembro de 2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "bf0ed764dd6e58af48f8aaae456ac2e9696ddbeb230b8935bfff7da7b99f5c6e",
+        "editorialDescriptionProvider": "groq"
+      }
+    },
+    {
+      "id": "rss_highlight_b6977ffefdc00bd4",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "Habitação. É preciso acordo de regime para resolver crise?",
+      "authorOrMeta": "observador.pt",
+      "description": "Francisco Gomes (Chega) entende que sim, ao mesmo tempo que critica PS e diz que não vai \"segurar as calças do Governo\". Angelique da Teresa (IL) pede medidas que aumentem a oferta de casas.",
+      "imageUrl": "/covers/highlight_habita__o____preciso_acordo_de_regime_para_resolve_9f47785b_e46ab2b412ee.jpg",
+      "link": "https://observador.pt/programas/explicador/habitacao-e-preciso-acordo-de-regime-para-resolver-crise/",
+      "externalId": "article:url:b6977ffefdc00bd4a71e8427",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-16T10:43:58Z",
+      "expiryDate": "2026-12-16T10:43:58Z",
+      "createdAt": "2026-11-16T12:57:27.520006Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/programas/explicador/habitacao-e-preciso-acordo-de-regime-para-resolver-crise/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:770:433:nowe:0:0/q:70/plain/https://s3.observador.pt/wp-content/uploads/2019/09/24112758/770-podcast-explicador.png",
+        "categories": [
+          "Rádio Observador",
+          "Observador",
+          "Habitação e Urbanismo",
+          "País",
+          "Sociedade",
+          "Partido Chega",
+          "Política",
+          "Iniciativa Liberal",
+          "Orçamento do Estado",
+          "Economia"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:b6977ffefdc00bd4a71e8427",
+        "score": 1.0,
+        "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
+        "verifiedAt": "2026-11-16T12:57:27.711999Z",
+        "resolvedTitle": "Habitação. É preciso acordo de regime para resolver crise?",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-11-16T10:43:58Z",
+        "sourceDescription": "Francisco Gomes (Chega) entende que sim, ao mesmo tempo que critica PS e diz que não vai \"segurar as calças do Governo\". Angelique da Teresa (IL) pede medidas que aumentem a oferta de casas."
       }
     }
   ],
@@ -5848,11 +5941,11 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 4,
-      "podcast": 2,
+      "podcast": 1,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 1
+      "highlight": 2
     },
     "missingSlots": [],
     "fallbackRequired": false
