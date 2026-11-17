@@ -2849,7 +2849,7 @@
       "sourcePublishedAt": "2026-11-15T06:00:00Z",
       "expiryDate": "2026-11-18T06:00:00Z",
       "createdAt": "2026-11-15T12:03:55.207335Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2858,7 +2858,7 @@
         "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
         "show": "Fora do Baralho"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2874,7 +2874,8 @@
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "c5c83bb3a99c08256194fc34281bc36f6be3c72d4b3c4b64dff33d8426a7b7d8",
         "editorialDescriptionProvider": "kept"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [E agora, quem no Partido Democrata vai liderar?]: Conteúdo expira em 2026-11-18T06:00:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "ai_book_1f9709ef4431455c",
@@ -2946,7 +2947,7 @@
       "sourcePublishedAt": "2026-11-15T18:01:23Z",
       "expiryDate": "2026-12-15T18:01:23Z",
       "createdAt": "2026-11-15T18:59:16.081277Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -2964,7 +2965,7 @@
           "Justiça"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -2976,7 +2977,8 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-11-15T18:01:23Z",
         "sourceDescription": "Publicações alegam que advogado está a receber avultados honorários pela defesa dos manifestantes, que lutam por habitação acessível. Mas a informação é falsa."
-      }
+      },
+      "validationError": "HIGHLIGHT_TITLE_MISMATCH [Habitação. Sá Fernandes recebe dinheiro dos manifestantes?]: Artigo 'Fact Check. Ricardo Sá Fernandes está a receber honorários dos manifestantes das acampadas?' não corresponde ao título candidato."
     },
     {
       "id": "rss_podcast_3713674dd3cdcbbc",
@@ -2985,7 +2987,7 @@
       "title": "Dino D’Santiago: “Tive um conflito gigante na infância. Os meus pais falavam em crioulo connosco e nós só respondíamos em algarvio”",
       "editorialTitle": "Dino D’Santiago: “Tive um conflito gigante na infância. Os meus pais falavam",
       "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Análise sobre os temas e questões de dino d’santiago: “tive um conflito gigante na infância. os meus pais falavam.",
+      "description": "Análise sobre a conquista de um Grammy latino, a competição de quem visitou mais Cabo‑Verde e a discussão do problema da habitação.",
       "imageUrl": "/covers/podcast_dino_d_santiago___tive_um_conflito_gigante_na_inf_nc_562cc9da_3713674dd3cd.jpg",
       "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/dino-d-santiago-tive-um-conflito-gigante-na-inf-ncia-os-meus-pais-falavam-em-criolo-connosco-e-n-s-s-respond-amos-em-algarvio",
       "externalId": "9d08dc9a-2097-41d5-a88d-b5030175d571",
@@ -3016,10 +3018,10 @@
         "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
         "sourcePublishedAt": "2026-11-15T23:30:00Z",
         "sourceDescription": "Na segunda parte do programa, Ricardo Araújo Pereira entrevista Dino D’Santiago, a propósito da conquista de um Grammy latino. Desde as raízes algarvias do cantor à competição amigável para decidir quem visitou mais vezes Cabo-Verde, Ricardo e o artista português falam das influências musicais, da relação com Madonna e do problema da habitação, com especial…",
-        "editorialDescription": "Análise sobre os temas e questões de dino d’santiago: “tive um conflito gigante na infância. os meus pais falavam.",
+        "editorialDescription": "Análise sobre a conquista de um Grammy latino, a competição de quem visitou mais Cabo‑Verde e a discussão do problema da habitação.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "374c0f6283a0aec4e40960226ce69bfef9f12ee0dedd8d02b52a972e624272ba",
-        "editorialDescriptionProvider": "extractive"
+        "editorialSourceHash": "85e8b2133e1aac4005e533f251853b41c6d26b0673279bc6a2a14b87f0b06542",
+        "editorialDescriptionProvider": "groq"
       }
     },
     {
@@ -3058,11 +3060,11 @@
         "resolvedTitle": "A Direção Executiva do SNS é uma \"asneira monumental\" da ministra Marta Temido",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-11-16T08:26:20Z",
-        "sourceDescription": "Episódio “A Direção Executiva do SNS é uma \"asneira monumental\" da ministra Marta Temido” do podcast O Princípio da Incerteza, publicado em 16/11/2026.",
+        "sourceDescription": "Análise sobre a crítica à Direção Executiva do SNS no episódio do podcast O Princípio da Incerteza, publicado 16 de novembro de 2026.",
         "editorialDescription": "Análise sobre a crítica à Direção Executiva do SNS no episódio do podcast O Princípio da Incerteza, publicado 16 de novembro de 2026.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "bf0ed764dd6e58af48f8aaae456ac2e9696ddbeb230b8935bfff7da7b99f5c6e",
-        "editorialDescriptionProvider": "groq"
+        "editorialSourceHash": "6264c8713277e091756264366bf00ba370aea4ea71f14deab33fa7cef5625d9d",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -3070,7 +3072,7 @@
       "type": "highlight",
       "category": "Destaque",
       "title": "Habitação. É preciso acordo de regime para resolver crise?",
-      "authorOrMeta": "observador.pt",
+      "authorOrMeta": "Paulo Ferreira, Carla Jorge de Carvalho",
       "description": "Francisco Gomes (Chega) entende que sim, ao mesmo tempo que critica PS e diz que não vai \"segurar as calças do Governo\". Angelique da Teresa (IL) pede medidas que aumentem a oferta de casas.",
       "imageUrl": "/covers/highlight_habita__o____preciso_acordo_de_regime_para_resolve_9f47785b_e46ab2b412ee.jpg",
       "link": "https://observador.pt/programas/explicador/habitacao-e-preciso-acordo-de-regime-para-resolver-crise/",
@@ -3102,15 +3104,58 @@
       "resolutionStatus": "verified",
       "verification": {
         "status": "verified",
-        "source": "news-rss:observador.pt",
+        "source": "news:observador.pt",
         "entityId": "article:url:b6977ffefdc00bd4a71e8427",
         "score": 1.0,
         "coverHash": "69c715f18493dcc1891421583943a6c5757852d8ee50bc571632df21649d17ae",
         "verifiedAt": "2026-11-16T12:57:27.711999Z",
         "resolvedTitle": "Habitação. É preciso acordo de regime para resolver crise?",
-        "resolvedAuthor": "observador.pt",
+        "resolvedAuthor": "Paulo Ferreira, Carla Jorge de Carvalho",
         "sourcePublishedAt": "2026-11-16T10:43:58Z",
         "sourceDescription": "Francisco Gomes (Chega) entende que sim, ao mesmo tempo que critica PS e diz que não vai \"segurar as calças do Governo\". Angelique da Teresa (IL) pede medidas que aumentem a oferta de casas."
+      }
+    },
+    {
+      "id": "rss_podcast_c740faff87388a1a",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Ronaldo abandona + A tenda da Renata Cambra - Conteúdo do Batáguas T03 Ep12",
+      "authorOrMeta": "Conteúdo do Batáguas",
+      "description": "Análise sobre a divulgação de novos eventos como o Optimista Cético e o Rally Dacarlos, e a presença nas redes sociais de Diogo Batáguas.",
+      "imageUrl": "/covers/podcast_ronaldo_abandona___a_tenda_da_renata_cambra___conte__6d951b8b_c740faff8738.jpg",
+      "link": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
+      "externalId": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
+      "sourceSeriesId": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+      "sourceSeriesTitle": "Conteúdo do Batáguas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-09T19:23:57Z",
+      "expiryDate": "2026-11-30T19:23:57Z",
+      "createdAt": "2026-11-17T13:39:32.405770Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+        "guid": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
+        "imageUrl": "https://www.youtube.com/v/YQXRzyRk9K0?version=3",
+        "show": "Conteúdo do Batáguas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
+        "score": 1.0,
+        "coverHash": "61d297fd7f439b320dcc9044509dc00f3fe30d599ae797f034561ae81fbac53a",
+        "verifiedAt": "2026-11-10T12:48:27.852473Z",
+        "resolvedTitle": "Ronaldo abandona + A tenda da Renata Cambra - Conteúdo do Batáguas T03 Ep12",
+        "resolvedAuthor": "Conteúdo do Batáguas",
+        "sourcePublishedAt": "2026-11-09T19:23:57Z",
+        "sourceDescription": "OPTIMISTA CÉPTICO (NOVAS DATAS) https://kilt.pt/eventos/optimista-ceptico-diogo-bataguas RALLY DACARLOS https://rallydacarlos.pt SEGUIR https://www.instagram.com/diogobataguas https://www.twitter.com/diogobataguas https://www.tiktok.com/bataguas",
+        "editorialDescription": "Análise sobre a divulgação de novos eventos como o Optimista Cético e o Rally Dacarlos, e a presença nas redes sociais de Diogo Batáguas.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "e17cfa6ed4986e387d7c751e480bb19e64bc4d71c0337398f3e44a860804cdf0",
+        "editorialDescriptionProvider": "groq"
       }
     }
   ],
@@ -5945,7 +5990,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 2
+      "highlight": 1
     },
     "missingSlots": [],
     "fallbackRequired": false
