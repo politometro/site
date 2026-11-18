@@ -2987,7 +2987,7 @@
       "title": "Dino D’Santiago: “Tive um conflito gigante na infância. Os meus pais falavam em crioulo connosco e nós só respondíamos em algarvio”",
       "editorialTitle": "Dino D’Santiago: “Tive um conflito gigante na infância. Os meus pais falavam",
       "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
-      "description": "Análise sobre a conquista de um Grammy latino, a competição de quem visitou mais Cabo‑Verde e a discussão do problema da habitação.",
+      "description": "Análise sobre a entrevista onde Dino D’Santiago comenta o Grammy latino, raízes algarvias e a competição de quem visitou mais Cabo‑Verde.",
       "imageUrl": "/covers/podcast_dino_d_santiago___tive_um_conflito_gigante_na_inf_nc_562cc9da_3713674dd3cd.jpg",
       "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/dino-d-santiago-tive-um-conflito-gigante-na-inf-ncia-os-meus-pais-falavam-em-criolo-connosco-e-n-s-s-respond-amos-em-algarvio",
       "externalId": "9d08dc9a-2097-41d5-a88d-b5030175d571",
@@ -3018,7 +3018,7 @@
         "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
         "sourcePublishedAt": "2026-11-15T23:30:00Z",
         "sourceDescription": "Na segunda parte do programa, Ricardo Araújo Pereira entrevista Dino D’Santiago, a propósito da conquista de um Grammy latino. Desde as raízes algarvias do cantor à competição amigável para decidir quem visitou mais vezes Cabo-Verde, Ricardo e o artista português falam das influências musicais, da relação com Madonna e do problema da habitação, com especial…",
-        "editorialDescription": "Análise sobre a conquista de um Grammy latino, a competição de quem visitou mais Cabo‑Verde e a discussão do problema da habitação.",
+        "editorialDescription": "Análise sobre a entrevista onde Dino D’Santiago comenta o Grammy latino, raízes algarvias e a competição de quem visitou mais Cabo‑Verde.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "85e8b2133e1aac4005e533f251853b41c6d26b0673279bc6a2a14b87f0b06542",
         "editorialDescriptionProvider": "groq"
@@ -3151,11 +3151,11 @@
         "resolvedTitle": "Ronaldo abandona + A tenda da Renata Cambra - Conteúdo do Batáguas T03 Ep12",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-11-09T19:23:57Z",
-        "sourceDescription": "OPTIMISTA CÉPTICO (NOVAS DATAS) https://kilt.pt/eventos/optimista-ceptico-diogo-bataguas RALLY DACARLOS https://rallydacarlos.pt SEGUIR https://www.instagram.com/diogobataguas https://www.twitter.com/diogobataguas https://www.tiktok.com/bataguas",
+        "sourceDescription": "Análise sobre a divulgação de novos eventos como o Optimista Cético e o Rally Dacarlos, e a presença nas redes sociais de Diogo Batáguas.",
         "editorialDescription": "Análise sobre a divulgação de novos eventos como o Optimista Cético e o Rally Dacarlos, e a presença nas redes sociais de Diogo Batáguas.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "e17cfa6ed4986e387d7c751e480bb19e64bc4d71c0337398f3e44a860804cdf0",
-        "editorialDescriptionProvider": "groq"
+        "editorialSourceHash": "3d5135649d508a77f6b4996a6bce7816db856643cae5a26210f3f1a448619048",
+        "editorialDescriptionProvider": "kept"
       }
     }
   ],
