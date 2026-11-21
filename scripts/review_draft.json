@@ -1,12 +1,12 @@
 {
   "schema_version": 2,
-  "draft_id": "draft_33f20173275b830f0fcd",
-  "content_hash": "33f20173275b830f0fcd9e3b7b1ebdc887030335e5853dafd5b2cf201a69a61c",
+  "draft_id": "draft_18ec0d28d1f7a7b67afa",
+  "content_hash": "18ec0d28d1f7a7b67afa8c492d6fd9a02e1da499d4c2338d1098d9d187b30d12",
   "post_type": "sunday_standard",
-  "created_at": "2026-11-21T21:23:14.134032+00:00",
+  "created_at": "2026-11-21T21:28:50.373981+00:00",
   "is_test": false,
-  "post_sha256": "63b8fbee822b94a5810933309be9982bdd27c4053e8bdc6b77ae44677e8ea5fb",
-  "caption_sha256": "424e90cfd993265d81487b11487e89365648a0a8e77c7d5fd594fbe0e2c467e9",
+  "post_sha256": "c9e1c3d14205fe07ae2e49e250e6f78a526fda0bce894962e1bd3f6099efedee",
+  "caption_sha256": "fe51d8b47a73d1dc83dc86bbe117be97fca4a8d7a5c3854e87616e9f6b40d233",
   "approval": {
     "approved": false
   },
@@ -45,7 +45,7 @@
     "title": "“O balanço destes dias é mau para o país, ficámos com um OE que é um conjunto",
     "editorialTitle": "“O balanço destes dias é mau para o país, ficámos com um OE que é um conjunto",
     "authorOrMeta": "Linhas Vermelhas",
-    "description": "Análise sobre o Orçamento do Estado em discussão, considerado mau para o país e descrito como incapaz de ser linha condutora de políticas.",
+    "description": "Com o Orçamento do Estado em cima da mesa, Cecília Meireles considera que o resultado destes dias “é mau para o país”, com um orçamento que deixa de ser “uma linha condutora de políticas coerentes”.",
     "imageUrl": "/covers/podcast__o_balan_o_destes_dias___mau_para_o_pa_s__fic_mos_co_1f45bda8_f3caad0c58bc.jpg",
     "link": "https://omny.fm/shows/linhas-vermelhas/o-governo-governa-muito-para-o-presente-e-pouco-para-o-futuro",
     "externalId": "f6b4f2ca-e861-4fcd-ab12-b509008d8830",
@@ -71,15 +71,11 @@
       "entityId": "f6b4f2ca-e861-4fcd-ab12-b509008d8830",
       "score": 1.0,
       "coverHash": "b71739261e7a2d7265372b4f6ab0d3bc5bd9f59a93e96f0881e10c52c816fe9f",
-      "verifiedAt": "2026-11-21T21:22:50.954734Z",
+      "verifiedAt": "2026-11-21T21:28:36.945100Z",
       "resolvedTitle": "“O balanço destes dias é mau para o país, ficámos com um OE que é um conjunto de medidas avulsas”",
       "resolvedAuthor": "Linhas Vermelhas",
       "sourcePublishedAt": "2026-11-21T20:14:12Z",
-      "sourceDescription": "Com o Orçamento do Estado em cima da mesa, Cecília Meireles considera que o resultado destes dias “é mau para o país”, com um orçamento que deixa de ser “uma linha condutora de políticas coerentes”.",
-      "editorialDescription": "Análise sobre o Orçamento do Estado em discussão, considerado mau para o país e descrito como incapaz de ser linha condutora de políticas.",
-      "editorialDescriptionVersion": 1,
-      "editorialSourceHash": "60c744b3a81ff41c61df1f6609f03f51641e72897fffc8a8d1b9e197a5816d69",
-      "editorialDescriptionProvider": "groq"
+      "sourceDescription": "Com o Orçamento do Estado em cima da mesa, Cecília Meireles considera que o resultado destes dias “é mau para o país”, com um orçamento que deixa de ser “uma linha condutora de políticas coerentes”."
     }
   },
   "q3": {
@@ -88,7 +84,7 @@
     "category": "Filme",
     "title": "Z",
     "authorOrMeta": "Constantin Costa-Gavras",
-    "description": "Z (prt: Z - A Orgia do Poder; bra: Z) é um filme franco-argelino de 1969, dos gêneros drama histórico-policial e suspense, dirigido por Constantin Costa-Gavras, com roteiro dele e Jorge Semprún baseado no romance homônimo de Vassilis Vassilikos, por sua vez inspirado no assassinato do deputado grego Grigóris Lambrákis.",
+    "description": "Thriller político sobre assassinato, encobrimento e impunidade num regime autoritário.",
     "imageUrl": "/covers/movie_z_db04b95a_7091d6b3f02b.jpg",
     "link": "https://www.imdb.com/title/tt0065234/",
     "priority": 3,
@@ -107,7 +103,8 @@
       "verifiedAt": "2026-11-21T20:04:02.032319Z",
       "resolvedTitle": "Z",
       "resolvedAuthor": "Constantin Costa-Gavras",
-      "sourceDescription": "Z (prt: Z - A Orgia do Poder; bra: Z) é um filme franco-argelino de 1969, dos gêneros drama histórico-policial e suspense, dirigido por Constantin Costa-Gavras, com roteiro dele e Jorge Semprún baseado no romance homônimo de Vassilis Vassilikos, por sua vez inspirado no assassinato do deputado grego Grigóris Lambrákis."
+      "sourceDescription": "Z (prt: Z - A Orgia do Poder; bra: Z) é um filme franco-argelino de 1969, dos gêneros drama histórico-policial e suspense, dirigido por Constantin Costa-Gavras, com roteiro dele e Jorge Semprún baseado no romance homônimo de Vassilis Vassilikos, por sua vez inspirado no assassinato do deputado grego Grigóris Lambrákis.",
+      "editorialDescription": "Thriller político sobre assassinato, encobrimento e impunidade num regime autoritário."
     }
   },
   "q4": {
