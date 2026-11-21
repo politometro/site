@@ -3547,6 +3547,16 @@ def _already_verified(
             )
         ):
             cached["description"] = editorial_description
+        elif (
+            item.get("type") == "movie"
+            and _has_content_description(
+                editorial_description,
+                "movie",
+                canonical_title,
+                canonical_author,
+            )
+        ):
+            cached["description"] = editorial_description
         else:
             cached["description"] = grounded_description
         return cached
@@ -3780,7 +3790,17 @@ def resolve_recommendation(
         str(item.get("authorOrMeta", "")),
     ):
         item_description = ""
-    factual_description = source_description or item_description
+    # Filmes: o texto publicado é a descrição editorial do projeto
+    # (catálogo/IA), nunca o excerto da Wikipédia. O excerto fica só
+    # como prova em verification.sourceDescription.
+    movie_editorial_description = (
+        item_description if resolved_type == "movie" else ""
+    )
+    if movie_editorial_description:
+        factual_description = movie_editorial_description
+    else:
+        factual_description = source_description or item_description
+    evidence_description = source_description or factual_description
     nostalgia_description = _clean_description(
         str(item.get("editorialDescription", ""))
     )
@@ -3828,6 +3848,10 @@ def resolve_recommendation(
     )
     if source_published_at:
         provisional["verification"]["sourcePublishedAt"] = source_published_at
+    if movie_editorial_description:
+        provisional["verification"]["editorialDescription"] = (
+            movie_editorial_description
+        )
     if source_published_at:
         provisional["sourcePublishedAt"] = source_published_at
     if derived_expiry:
@@ -3851,7 +3875,11 @@ def resolve_recommendation(
                     provisional["description"] = factual_description
                     provisional["verification"][
                         "sourceDescription"
-                    ] = factual_description
+                    ] = evidence_description
+                    if movie_editorial_description:
+                        provisional["verification"][
+                            "editorialDescription"
+                        ] = movie_editorial_description
                     return provisional
             except (OSError, ValueError, TypeError, json.JSONDecodeError):
                 pass
@@ -3886,7 +3914,9 @@ def resolve_recommendation(
     }
     if source_published_at:
         verification["sourcePublishedAt"] = source_published_at
-    verification["sourceDescription"] = factual_description
+    verification["sourceDescription"] = evidence_description
+    if movie_editorial_description:
+        verification["editorialDescription"] = movie_editorial_description
 
     manifest = {
         "cacheVersion": CACHE_VERSION,
