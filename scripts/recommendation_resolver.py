@@ -2644,12 +2644,18 @@ def _wikipedia_extract(entity: Mapping[str, Any]) -> str:
     Replaces the IMDb page description, which is no longer reachable. The
     article is identified by the Wikidata sitelink, never by guessing a
     title, so the extract always belongs to the confirmed entity.
+
+    Only the Portuguese (ptwiki) article is used: the post copy is
+    Portuguese and only the title stays in its original language. When
+    there is no Portuguese article, return "" so the caller falls back
+    to the item's Portuguese description or the generic factual
+    sentence; never fall back to the English article.
     """
 
     sitelinks = entity.get("sitelinks", {})
     if not isinstance(sitelinks, Mapping):
         return ""
-    for language in ("en", "pt"):
+    for language in ("pt",):
         link = sitelinks.get(f"{language}wiki")
         if not isinstance(link, Mapping):
             continue
@@ -2685,12 +2691,16 @@ def _wikipedia_extract(entity: Mapping[str, Any]) -> str:
 
 
 def _wikidata_description(entity: Mapping[str, Any]) -> str:
-    """Short Wikidata description (en, then pt), last-resort description."""
+    """Short Wikidata description (pt only), last-resort description.
+
+    Portuguese only, for the same reason as _wikipedia_extract: the post
+    copy is Portuguese and only the title stays in its original language.
+    """
 
     descriptions = entity.get("descriptions", {})
     if not isinstance(descriptions, Mapping):
         return ""
-    for language in ("en", "pt"):
+    for language in ("pt",):
         value = descriptions.get(language, {})
         if isinstance(value, Mapping):
             text = str(value.get("value", "")).strip()
