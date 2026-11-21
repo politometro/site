@@ -3125,7 +3125,7 @@
       "title": "“O balanço destes dias é mau para o país, ficámos com um OE que é um conjunto",
       "editorialTitle": "“O balanço destes dias é mau para o país, ficámos com um OE que é um conjunto",
       "authorOrMeta": "Linhas Vermelhas",
-      "description": "Análise sobre o Orçamento do Estado em discussão, considerado mau para o país e descrito como incapaz de ser linha condutora de políticas.",
+      "description": "Com o Orçamento do Estado em cima da mesa, Cecília Meireles considera que o resultado destes dias “é mau para o país”, com um orçamento que deixa de ser “uma linha condutora de políticas coerentes”.",
       "imageUrl": "/covers/podcast__o_balan_o_destes_dias___mau_para_o_pa_s__fic_mos_co_1f45bda8_f3caad0c58bc.jpg",
       "link": "https://omny.fm/shows/linhas-vermelhas/o-governo-governa-muito-para-o-presente-e-pouco-para-o-futuro",
       "externalId": "f6b4f2ca-e861-4fcd-ab12-b509008d8830",
@@ -3151,15 +3151,11 @@
         "entityId": "f6b4f2ca-e861-4fcd-ab12-b509008d8830",
         "score": 1.0,
         "coverHash": "b71739261e7a2d7265372b4f6ab0d3bc5bd9f59a93e96f0881e10c52c816fe9f",
-        "verifiedAt": "2026-11-21T21:22:50.954734Z",
+        "verifiedAt": "2026-11-21T21:28:36.945100Z",
         "resolvedTitle": "“O balanço destes dias é mau para o país, ficámos com um OE que é um conjunto de medidas avulsas”",
         "resolvedAuthor": "Linhas Vermelhas",
         "sourcePublishedAt": "2026-11-21T20:14:12Z",
-        "sourceDescription": "Com o Orçamento do Estado em cima da mesa, Cecília Meireles considera que o resultado destes dias “é mau para o país”, com um orçamento que deixa de ser “uma linha condutora de políticas coerentes”.",
-        "editorialDescription": "Análise sobre o Orçamento do Estado em discussão, considerado mau para o país e descrito como incapaz de ser linha condutora de políticas.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "60c744b3a81ff41c61df1f6609f03f51641e72897fffc8a8d1b9e197a5816d69",
-        "editorialDescriptionProvider": "groq"
+        "sourceDescription": "Com o Orçamento do Estado em cima da mesa, Cecília Meireles considera que o resultado destes dias “é mau para o país”, com um orçamento que deixa de ser “uma linha condutora de políticas coerentes”."
       }
     }
   ],
