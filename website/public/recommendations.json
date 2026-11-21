@@ -2783,7 +2783,7 @@
       "category": "Filme",
       "title": "The Lives of Others",
       "authorOrMeta": "Florian Henckel von Donnersmarck",
-      "description": "Drama sobre vigilância estatal, delação e consciência individual na Alemanha de Leste.",
+      "description": "Das Leben der Anderen (em inglês, The Lives of Others Brasil: A Vida dos Outros / Portugal: As Vidas dos Outros) é um filme alemão lançado em 2006 escrito e dirigido por Florian Henckel von Donnersmarck e premiado com o Oscar de melhor filme estrangeiro. No Brasil, a Europa Filmes anunciou o lançamento do filme em blu-ray na Versátil Home Vídeo para 2021.",
       "imageUrl": "/covers/movie_the_lives_of_others_b0521a43_c06b9177857e.jpg",
       "link": "https://www.imdb.com/title/tt0405094/",
       "priority": 3,
@@ -2802,7 +2802,7 @@
         "verifiedAt": "2026-11-09T10:06:53.903686Z",
         "resolvedTitle": "The Lives of Others",
         "resolvedAuthor": "Florian Henckel von Donnersmarck",
-        "sourceDescription": "Drama sobre vigilância estatal, delação e consciência individual na Alemanha de Leste."
+        "sourceDescription": "Das Leben der Anderen (em inglês, The Lives of Others Brasil: A Vida dos Outros / Portugal: As Vidas dos Outros) é um filme alemão lançado em 2006 escrito e dirigido por Florian Henckel von Donnersmarck e premiado com o Oscar de melhor filme estrangeiro. No Brasil, a Europa Filmes anunciou o lançamento do filme em blu-ray na Versátil Home Vídeo para 2021."
       }
     },
     {
@@ -2811,7 +2811,7 @@
       "category": "Filme",
       "title": "Good night, and good luck.",
       "authorOrMeta": "George Clooney",
-      "description": "Drama sobre jornalismo, liberdade de imprensa e o macartismo na televisão americana.",
+      "description": "Good Night, and Good Luck. (br/pt: Boa Noite e Boa Sorte) é um filme estadunidense, britânico, francês e japonês de 2005, do gênero drama, dirigido por George Clooney e com roteiro escrito por Clooney e Grant Heslov. O título original do filme é uma referência à frase com a qual o verdadeiro Edward R. Murrow encerrava todos os seus programas.",
       "imageUrl": "/covers/movie_good_night__and_good_luck__cd1d4cc6_99c113b91cb2.jpg",
       "link": "https://www.imdb.com/title/tt0433383/",
       "priority": 3,
@@ -2830,7 +2830,7 @@
         "verifiedAt": "2026-11-09T10:06:55.347546Z",
         "resolvedTitle": "Good night, and good luck.",
         "resolvedAuthor": "George Clooney",
-        "sourceDescription": "Drama sobre jornalismo, liberdade de imprensa e o macartismo na televisão americana."
+        "sourceDescription": "Good Night, and Good Luck. (br/pt: Boa Noite e Boa Sorte) é um filme estadunidense, britânico, francês e japonês de 2005, do gênero drama, dirigido por George Clooney e com roteiro escrito por Clooney e Grant Heslov. O título original do filme é uma referência à frase com a qual o verdadeiro Edward R. Murrow encerrava todos os seus programas."
       }
     },
     {
@@ -2911,7 +2911,7 @@
       "category": "Filme",
       "title": "Lincoln",
       "authorOrMeta": "Steven Spielberg",
-      "description": "Drama sobre liderança política e a luta pela abolição da escravatura nos Estados Unidos.",
+      "description": "Lincoln é um filme de drama-épico e histórico norte-americano de 2012, dirigido por Steven Spielberg e estrelado por Daniel Day-Lewis como o presidente dos Estados Unidos, Abraham Lincoln, e Sally Field como Mary Todd Lincoln.",
       "imageUrl": "/covers/movie_lincoln_9984c6bb_b1f82fd52f40.jpg",
       "link": "https://www.imdb.com/title/tt0443272/",
       "priority": 3,
@@ -2930,7 +2930,7 @@
         "verifiedAt": "2026-11-15T12:04:22.416182Z",
         "resolvedTitle": "Lincoln",
         "resolvedAuthor": "Steven Spielberg",
-        "sourceDescription": "Drama sobre liderança política e a luta pela abolição da escravatura nos Estados Unidos."
+        "sourceDescription": "Lincoln é um filme de drama-épico e histórico norte-americano de 2012, dirigido por Steven Spielberg e estrelado por Daniel Day-Lewis como o presidente dos Estados Unidos, Abraham Lincoln, e Sally Field como Mary Todd Lincoln."
       }
     },
     {
@@ -2979,49 +2979,6 @@
         "sourceDescription": "Publicações alegam que advogado está a receber avultados honorários pela defesa dos manifestantes, que lutam por habitação acessível. Mas a informação é falsa."
       },
       "validationError": "HIGHLIGHT_TITLE_MISMATCH [Habitação. Sá Fernandes recebe dinheiro dos manifestantes?]: Artigo 'Fact Check. Ricardo Sá Fernandes está a receber honorários dos manifestantes das acampadas?' não corresponde ao título candidato."
-    },
-    {
-      "id": "rss_podcast_8fe4064021167ab4",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "A Direção Executiva do SNS é uma \"asneira monumental\" da ministra Marta Temido",
-      "authorOrMeta": "O Princípio da Incerteza",
-      "description": "Análise sobre a crítica à Direção Executiva do SNS no episódio do podcast O Princípio da Incerteza, publicado 16 de novembro de 2026.",
-      "imageUrl": "/covers/podcast_a_dire__o_executiva_do_sns___uma__asneira_monumental_0d1fc702_8fe406402116.jpg",
-      "link": "https://omny.fm/shows/o-principio-da-incerteza/a-dire-o-executiva-do-sns-uma-asneira-monumental-da-ministra-marta-temido",
-      "externalId": "371a0f01-0f0a-4e69-aa49-b504008921f8",
-      "sourceSeriesId": "1747493813",
-      "sourceSeriesTitle": "O Princípio da Incerteza",
-      "priority": 4,
-      "sourcePublishedAt": "2026-11-16T08:26:20Z",
-      "expiryDate": "2026-11-26T08:26:20Z",
-      "createdAt": "2026-11-16T12:56:59.566135Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/podcast.rss",
-        "guid": "371a0f01-0f0a-4e69-aa49-b504008921f8",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/image.jpg?t=1793796255&size=Large",
-        "show": "O Princípio da Incerteza"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "371a0f01-0f0a-4e69-aa49-b504008921f8",
-        "score": 1.0,
-        "coverHash": "2eb982e7424f0bfd1eae00b4b8f0d8f06a08f61febe8ee80ea39d816692fa8df",
-        "verifiedAt": "2026-11-16T12:57:03.628589Z",
-        "resolvedTitle": "A Direção Executiva do SNS é uma \"asneira monumental\" da ministra Marta Temido",
-        "resolvedAuthor": "O Princípio da Incerteza",
-        "sourcePublishedAt": "2026-11-16T08:26:20Z",
-        "sourceDescription": "Análise sobre a crítica à Direção Executiva do SNS no episódio do podcast O Princípio da Incerteza, publicado 16 de novembro de 2026.",
-        "editorialDescription": "Análise sobre a crítica à Direção Executiva do SNS no episódio do podcast O Princípio da Incerteza, publicado 16 de novembro de 2026.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "6264c8713277e091756264366bf00ba370aea4ea71f14deab33fa7cef5625d9d",
-        "editorialDescriptionProvider": "kept"
-      }
     },
     {
       "id": "rss_highlight_b6977ffefdc00bd4",
@@ -3154,6 +3111,50 @@
         "editorialDescription": "Análise sobre o episódio publicado a 20 de novembro de 2026 que discute coligações negativas, o fim do “bombom” e Isaltino.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "bbfc4c32cb7bb52046ba3b45b497932b7e520465c2a23299502830a75791e318",
+        "editorialDescriptionProvider": "groq"
+      }
+    },
+    {
+      "id": "rss_podcast_f3caad0c58bc2c25",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "“O balanço destes dias é mau para o país, ficámos com um OE que é um conjunto",
+      "editorialTitle": "“O balanço destes dias é mau para o país, ficámos com um OE que é um conjunto",
+      "authorOrMeta": "Linhas Vermelhas",
+      "description": "Análise sobre o Orçamento do Estado em discussão, considerado mau para o país e descrito como incapaz de ser linha condutora de políticas.",
+      "imageUrl": "/covers/podcast__o_balan_o_destes_dias___mau_para_o_pa_s__fic_mos_co_1f45bda8_f3caad0c58bc.jpg",
+      "link": "https://omny.fm/shows/linhas-vermelhas/o-governo-governa-muito-para-o-presente-e-pouco-para-o-futuro",
+      "externalId": "f6b4f2ca-e861-4fcd-ab12-b509008d8830",
+      "sourceSeriesId": "1596904063",
+      "sourceSeriesTitle": "Linhas Vermelhas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-21T20:14:12Z",
+      "expiryDate": "2026-12-01T20:14:12Z",
+      "createdAt": "2026-11-21T21:22:47.185985Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/4bde5a83-774d-4330-93c6-ade500c05d16/podcast.rss",
+        "guid": "f6b4f2ca-e861-4fcd-ab12-b509008d8830",
+        "imageUrl": "https://www.omnycontent.com/d/programs/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/cbf1aa6f-be1d-4658-b049-ade500bf0699/image.jpg?t=1749544672&size=Large",
+        "show": "Linhas Vermelhas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "f6b4f2ca-e861-4fcd-ab12-b509008d8830",
+        "score": 1.0,
+        "coverHash": "b71739261e7a2d7265372b4f6ab0d3bc5bd9f59a93e96f0881e10c52c816fe9f",
+        "verifiedAt": "2026-11-21T21:22:50.954734Z",
+        "resolvedTitle": "“O balanço destes dias é mau para o país, ficámos com um OE que é um conjunto de medidas avulsas”",
+        "resolvedAuthor": "Linhas Vermelhas",
+        "sourcePublishedAt": "2026-11-21T20:14:12Z",
+        "sourceDescription": "Com o Orçamento do Estado em cima da mesa, Cecília Meireles considera que o resultado destes dias “é mau para o país”, com um orçamento que deixa de ser “uma linha condutora de políticas coerentes”.",
+        "editorialDescription": "Análise sobre o Orçamento do Estado em discussão, considerado mau para o país e descrito como incapaz de ser linha condutora de políticas.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "60c744b3a81ff41c61df1f6609f03f51641e72897fffc8a8d1b9e197a5816d69",
         "editorialDescriptionProvider": "groq"
       }
     }
@@ -5985,7 +5986,7 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 4,
-      "podcast": 2,
+      "podcast": 3,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
