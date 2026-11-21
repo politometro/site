@@ -2755,7 +2755,7 @@
       "category": "Filme",
       "title": "Z",
       "authorOrMeta": "Constantin Costa-Gavras",
-      "description": "Thriller político sobre assassinato, encobrimento e impunidade num regime autoritário.",
+      "description": "Z (prt: Z - A Orgia do Poder; bra: Z) é um filme franco-argelino de 1969, dos gêneros drama histórico-policial e suspense, dirigido por Constantin Costa-Gavras, com roteiro dele e Jorge Semprún baseado no romance homônimo de Vassilis Vassilikos, por sua vez inspirado no assassinato do deputado grego Grigóris Lambrákis.",
       "imageUrl": "/covers/movie_z_db04b95a_7091d6b3f02b.jpg",
       "link": "https://www.imdb.com/title/tt0065234/",
       "priority": 3,
@@ -2771,10 +2771,10 @@
         "entityId": "imdb:tt0065234",
         "score": 1.0,
         "coverHash": "e2ce135ffebfbe1378caa7976ffcb6ebd3b19ab2a0470eee6e7d86ffa512e491",
-        "verifiedAt": "2026-11-09T10:06:52.410268Z",
+        "verifiedAt": "2026-11-21T20:04:02.032319Z",
         "resolvedTitle": "Z",
         "resolvedAuthor": "Constantin Costa-Gavras",
-        "sourceDescription": "Thriller político sobre assassinato, encobrimento e impunidade num regime autoritário."
+        "sourceDescription": "Z (prt: Z - A Orgia do Poder; bra: Z) é um filme franco-argelino de 1969, dos gêneros drama histórico-policial e suspense, dirigido por Constantin Costa-Gavras, com roteiro dele e Jorge Semprún baseado no romance homônimo de Vassilis Vassilikos, por sua vez inspirado no assassinato do deputado grego Grigóris Lambrákis."
       }
     },
     {
