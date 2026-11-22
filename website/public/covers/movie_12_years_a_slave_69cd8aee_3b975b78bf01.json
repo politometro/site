@@ -1,0 +1,21 @@
+{
+  "cacheVersion": 2,
+  "canonicalLink": "https://www.imdb.com/title/tt2024544/",
+  "coverHash": "b27f2c22fcb8a364e18d9478291cb08c061abdc97aa0d717f9d9604829575a8e",
+  "coverSourceMime": "image/jpeg",
+  "coverSourceUrl": "https://m.media-amazon.com/images/M/MV5BMjExMTEzODkyN15BMl5BanBnXkFtZTcwNTU4NTc4OQ@@._V1_.jpg",
+  "entityId": "imdb:tt2024544",
+  "expiryDate": null,
+  "height": 755,
+  "isbn": "",
+  "resolvedAuthor": "Steve McQueen",
+  "resolvedTitle": "12 Years a Slave",
+  "score": 1.0,
+  "source": "wikidata+imdb",
+  "sourcePublishedAt": "",
+  "title": "12 Years a Slave",
+  "titleNormalized": "12 years a slave",
+  "type": "movie",
+  "verifiedAt": "2026-11-22T12:43:41.809453Z",
+  "width": 509
+}
