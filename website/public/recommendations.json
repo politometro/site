@@ -2394,7 +2394,7 @@
       "sourcePublishedAt": "2026-11-03T05:15:00Z",
       "expiryDate": "2026-11-24T05:15:00Z",
       "createdAt": "2026-11-03T12:05:52.151689Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "podcast-rss",
       "_discovery": {
         "kind": "rss",
@@ -2403,7 +2403,7 @@
         "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/aedaaff4-4259-4f29-9e28-adcf0103ac6a/8bd804c2-c4c4-45b8-affb-b4f600c80671/image.jpg?t=1793621506&size=Large",
         "show": "Perguntar Não Ofende"
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "podcast-rss",
@@ -2423,7 +2423,8 @@
       "selectionRecovery": {
         "slot": "q3",
         "mode": "category_substitution"
-      }
+      },
+      "validationError": "CONTENT_TOO_CLOSE_TO_EXPIRY [Sandra Marques Pereira: chegou a geração sem casa?]: Conteúdo expira em 2026-11-24T05:15:00Z; são necessárias pelo menos 24 horas para revisão e publicação."
     },
     {
       "id": "rss_podcast_c23ad5e06cb07110",
@@ -2933,7 +2934,7 @@
       "category": "Podcast",
       "title": "Onde pode chegar o novo partido de Isaltino Morais?",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre a preparação de Isaltino Morais para fundar o partido “Fazemos” enquanto Governo, PS e Chega colidem no Orçamento.",
+      "description": "Análise sobre Isaltino Morais fundar o partido “Fazemos” com o Parlamento em tensão pela colisão entre Governo, PS e Chega no Orçamento.",
       "imageUrl": "/covers/podcast_onde_pode_chegar_o_novo_partido_de_isaltino_morais__c2ee5ab5_256dd8a8a7dc.jpg",
       "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/onde-pode-chegar-o-novo-partido-de-isaltino-morais",
       "externalId": "cae585a2-47a5-42a9-a4da-b50900003c95",
@@ -2964,52 +2965,9 @@
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-11-21T06:30:00Z",
         "sourceDescription": "Isaltino Morais prepara-se para fundar um partido e o país político já está a fazer contas. Numa semana de enorme agitação no Parlamento, com o Governo, o PS e o Chega em rota de colisão em torno do Orçamento do Estado, o autarca de Oeiras confirmou ao Expresso que o seu “Fazemos” é inevitável.",
-        "editorialDescription": "Análise sobre a preparação de Isaltino Morais para fundar o partido “Fazemos” enquanto Governo, PS e Chega colidem no Orçamento.",
+        "editorialDescription": "Análise sobre Isaltino Morais fundar o partido “Fazemos” com o Parlamento em tensão pela colisão entre Governo, PS e Chega no Orçamento.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "3ff565e943568b22b76ce500dd91175b2219ca28d666c990d3bb811220ff92db",
-        "editorialDescriptionProvider": "groq"
-      }
-    },
-    {
-      "id": "rss_podcast_f6742935d5d1831c",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Governos governam para sondagens e eleições? — Ouvintes",
-      "authorOrMeta": "Fora do Baralho",
-      "description": "Análise sobre a discussão de governos e sondagens no episódio do podcast Fora do Baralho, com participação de ouvintes.",
-      "imageUrl": "/covers/podcast_governos_governam_para_sondagens_e_elei__es____ouvin_29e619d0_f6742935d5d1.jpg",
-      "link": "https://omny.fm/shows/fora-do-baralho/governos-governam-para-sondagens-e-elei-es-ouvintes",
-      "externalId": "934f27a4-343e-4c15-acfa-b508010e6fa9",
-      "sourceSeriesId": "1597496780",
-      "sourceSeriesTitle": "Fora do Baralho",
-      "priority": 4,
-      "sourcePublishedAt": "2026-11-22T06:00:00Z",
-      "expiryDate": "2026-11-25T06:00:00Z",
-      "createdAt": "2026-11-22T12:43:14.865139Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/podcast.rss",
-        "guid": "934f27a4-343e-4c15-acfa-b508010e6fa9",
-        "imageUrl": "https://www.omnycontent.com/d/playlist/b04d3ae5-22c4-41b6-b20a-aa54000ba759/3a990b77-dc2e-4da3-bbda-ade8010d59b4/d7eefb28-832c-4a1f-bf41-ade8010f756f/image.jpg?t=1784887028&size=Large",
-        "show": "Fora do Baralho"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "934f27a4-343e-4c15-acfa-b508010e6fa9",
-        "score": 1.0,
-        "coverHash": "a074a909d4e82d307f82d800f201815ce01d5c0f70c6d574d909ff661a19e2d6",
-        "verifiedAt": "2026-11-22T12:43:17.034796Z",
-        "resolvedTitle": "Governos governam para sondagens e eleições? — Ouvintes",
-        "resolvedAuthor": "Fora do Baralho",
-        "sourcePublishedAt": "2026-11-22T06:00:00Z",
-        "sourceDescription": "",
-        "editorialDescription": "Análise sobre a discussão de governos e sondagens no episódio do podcast Fora do Baralho, com participação de ouvintes.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "a356ef7ab2bc95735fca4b0fdda30af4b6bc854e36f8c05945b8cc029084ef2e",
         "editorialDescriptionProvider": "groq"
       }
     },
@@ -3049,11 +3007,11 @@
         "resolvedTitle": "Ronaldo abandona + A tenda da Renata Cambra - Conteúdo do Batáguas T03 Ep12",
         "resolvedAuthor": "Conteúdo do Batáguas",
         "sourcePublishedAt": "2026-11-09T19:23:57Z",
-        "sourceDescription": "OPTIMISTA CÉPTICO (NOVAS DATAS) https://kilt.pt/eventos/optimista-ceptico-diogo-bataguas RALLY DACARLOS https://rallydacarlos.pt SEGUIR https://www.instagram.com/diogobataguas https://www.twitter.com/diogobataguas https://www.tiktok.com/bataguas",
+        "sourceDescription": "Análise sobre a divulgação de novas datas para o Optimista Cético e a promoção do Rally Dacarlos nas redes do Diogo Batáguas.",
         "editorialDescription": "Análise sobre a divulgação de novas datas para o Optimista Cético e a promoção do Rally Dacarlos nas redes do Diogo Batáguas.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "e17cfa6ed4986e387d7c751e480bb19e64bc4d71c0337398f3e44a860804cdf0",
-        "editorialDescriptionProvider": "groq"
+        "editorialSourceHash": "37dd40680c414bf440a2a8e34c54f322731a8e5cc99dd0cdcd8716d8b3c95924",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -3111,6 +3069,136 @@
         "resolvedAuthor": "Steve McQueen",
         "sourceDescription": "12 Years a Slave (bra: 12 Anos de Escravidão; prt: 12 Anos Escravo) é um filme britânico-luxemburguês-estadunidense de 2013, do gênero drama histórico-biográfico, com roteiro de John Ridley baseado no livro autobiográfico Twelve Years a Slave, de Solomon Northup.",
         "editorialDescription": "Drama sobre escravatura, liberdade e dignidade humana no século XIX americano."
+      }
+    },
+    {
+      "id": "rss_podcast_c5b8a288389a1385",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Mário Centeno, o “Ronaldo das Finanças”: “Quem estranha o banco é o Ronaldo, eu não”",
+      "editorialTitle": "Mário Centeno, o “Ronaldo das Finanças”: “Quem estranha o banco é o Ronaldo, eu",
+      "authorOrMeta": "Isto É Gozar Com Quem Trabalha",
+      "description": "Análise sobre o episódio do podcast Isto É Gozar Com Quem Trabalha, com Mário Centeno, publicado a 22 de novembro de 2026.",
+      "imageUrl": "/covers/podcast_m_rio_centeno__o__ronaldo_das_finan_as____quem_estra_b4105166_c5b8a288389a.jpg",
+      "link": "https://omny.fm/shows/isto-e-gozar-com-quem-trabalha/m-rio-centeno-o-ronaldo-das-finan-as-quem-estranha-o-banco-o-ronaldo-eu-n-o",
+      "externalId": "890e66a6-cd7b-413a-bb0a-b50a01763a89",
+      "sourceSeriesId": "1585178009",
+      "sourceSeriesTitle": "Isto É Gozar Com Quem Trabalha",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-22T23:22:45Z",
+      "expiryDate": "2026-12-02T23:22:45Z",
+      "createdAt": "2026-11-23T14:58:49.719651Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/a1d39605-c175-436c-8fc2-ad9e00e3c54b/podcast.rss",
+        "guid": "890e66a6-cd7b-413a-bb0a-b50a01763a89",
+        "imageUrl": "https://www.omnycontent.com/d/clips/8c0a4104-a688-4e57-91fd-ad7b00d5dddd/de7dcae9-8f2f-4f0e-8f0e-ad9e00e05421/890e66a6-cd7b-413a-bb0a-b50a01763a89/image.jpg?t=1795389752&size=Large",
+        "show": "Isto É Gozar Com Quem Trabalha"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "890e66a6-cd7b-413a-bb0a-b50a01763a89",
+        "score": 1.0,
+        "coverHash": "90160155f6ade6866754939cd77864e765ab411c6f753153277d597f041d5e4a",
+        "verifiedAt": "2026-11-23T14:58:53.086916Z",
+        "resolvedTitle": "Mário Centeno, o “Ronaldo das Finanças”: “Quem estranha o banco é o Ronaldo, eu não”",
+        "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
+        "sourcePublishedAt": "2026-11-22T23:22:45Z",
+        "sourceDescription": "",
+        "editorialDescription": "Análise sobre o episódio do podcast Isto É Gozar Com Quem Trabalha, com Mário Centeno, publicado a 22 de novembro de 2026.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "530fc6a97f0a82c0190279a6e83e95e401d005e2db9616f6a3a8f649c90ba2ad",
+        "editorialDescriptionProvider": "groq"
+      }
+    },
+    {
+      "id": "rss_podcast_5869ca660d046415",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "\"O Governo e o PSD estão a cometer erros gigantescos\"",
+      "authorOrMeta": "O Princípio da Incerteza",
+      "description": "Análise sobre o episódio do podcast O Princípio da Incerteza, publicado a 23 de novembro de 2026, que critica erros do Governo e do PSD.",
+      "imageUrl": "/covers/podcast__o_governo_e_o_psd_est_o_a_cometer_erros_gigantescos_1b7857cb_5869ca660d04.jpg",
+      "link": "https://omny.fm/shows/o-principio-da-incerteza/o-governo-e-o-psd-est-o-a-cometer-erros-gigantescos",
+      "externalId": "d4aa8a6f-5cbf-485b-8be9-b50b00c8e02a",
+      "sourceSeriesId": "1747493813",
+      "sourceSeriesTitle": "O Princípio da Incerteza",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-23T12:16:12Z",
+      "expiryDate": "2026-12-03T12:16:12Z",
+      "createdAt": "2026-11-23T14:58:50.569387Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/podcast.rss",
+        "guid": "d4aa8a6f-5cbf-485b-8be9-b50b00c8e02a",
+        "imageUrl": "https://www.omnycontent.com/d/playlist/a5afba10-ff2d-4550-adff-add50110b76b/0c332b87-d9a7-4c87-91d9-b17700ac6495/ec76c17d-c60a-4aa5-8dde-b17700ac64c8/image.jpg?t=1793796255&size=Large",
+        "show": "O Princípio da Incerteza"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "d4aa8a6f-5cbf-485b-8be9-b50b00c8e02a",
+        "score": 1.0,
+        "coverHash": "2eb982e7424f0bfd1eae00b4b8f0d8f06a08f61febe8ee80ea39d816692fa8df",
+        "verifiedAt": "2026-11-23T14:58:54.703525Z",
+        "resolvedTitle": "\"O Governo e o PSD estão a cometer erros gigantescos\"",
+        "resolvedAuthor": "O Princípio da Incerteza",
+        "sourcePublishedAt": "2026-11-23T12:16:12Z",
+        "sourceDescription": "",
+        "editorialDescription": "Análise sobre o episódio do podcast O Princípio da Incerteza, publicado a 23 de novembro de 2026, que critica erros do Governo e do PSD.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "fdd2d5b3235d4068e4036c7b64b3c5237e0d0268a7efb77ad7acdd58758c379e",
+        "editorialDescriptionProvider": "groq"
+      }
+    },
+    {
+      "id": "rss_highlight_1656544f1b44c768",
+      "type": "highlight",
+      "category": "Destaque",
+      "title": "\"Talvez o Chega e o PS estejam a tentar forçar eleições\"",
+      "authorOrMeta": "observador.pt",
+      "description": "Em entrevista ao Observador, António Leitão Amaro acusa a oposição de estar a fazer tudo para \"bloquear\" o país na esperança de crescer eleitoralmente e prejudicar o PSD. \"Prejudicam o país\", denuncia",
+      "imageUrl": "/covers/highlight__talvez_o_chega_e_o_ps_estejam_a_tentar_for_ar_ele_221e5359_279036303def.jpg",
+      "link": "https://observador.pt/especiais/talvez-o-chega-e-o-ps-estejam-a-tentar-forcar-eleicoes-mas-nos-nao-fazemos-birras/",
+      "externalId": "article:url:1656544f1b44c76868e4b127",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-23T13:00:33Z",
+      "expiryDate": "2026-12-23T13:00:33Z",
+      "createdAt": "2026-11-23T14:59:03.874209Z",
+      "status": "queue",
+      "sourceHint": "trusted-rss",
+      "_discovery": {
+        "kind": "rss-highlight",
+        "feedUrl": "https://observador.pt/feed/",
+        "guid": "https://observador.pt/especiais/talvez-o-chega-e-o-ps-estejam-a-tentar-forcar-eleicoes-mas-nos-nao-fazemos-birras/",
+        "imageUrl": "https://bordalo.observador.pt/v2/rs:fill:770:403/c:4096:2303:nowe:0:214/q:70/plain/https://s3.observador.pt/wp-content/uploads/2024/10/04133513/jporfirio-antonio-leitao-amaro-01-7-scaled.jpg",
+        "categories": [
+          "Governo",
+          "Política",
+          "PSD",
+          "Entrevista",
+          "Observador"
+        ]
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "news-rss:observador.pt",
+        "entityId": "article:url:1656544f1b44c76868e4b127",
+        "score": 1.0,
+        "coverHash": "42c91850a8b83eba61a911417d2266c65315e0a770ec2279ebab23e3feb2e1ab",
+        "verifiedAt": "2026-11-23T14:59:04.295865Z",
+        "resolvedTitle": "\"Talvez o Chega e o PS estejam a tentar forçar eleições\"",
+        "resolvedAuthor": "observador.pt",
+        "sourcePublishedAt": "2026-11-23T13:00:33Z",
+        "sourceDescription": "Em entrevista ao Observador, António Leitão Amaro acusa a oposição de estar a fazer tudo para \"bloquear\" o país na esperança de crescer eleitoralmente e prejudicar o PSD. \"Prejudicam o país\", denuncia"
       }
     }
   ],
@@ -6098,11 +6186,11 @@
     "postType": "sunday_standard",
     "strictCounts": {
       "book": 4,
-      "podcast": 3,
+      "podcast": 2,
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 0
+      "highlight": 1
     },
     "missingSlots": [],
     "fallbackRequired": false
