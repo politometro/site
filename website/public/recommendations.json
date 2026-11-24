@@ -2934,7 +2934,7 @@
       "category": "Podcast",
       "title": "Onde pode chegar o novo partido de Isaltino Morais?",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre Isaltino Morais fundar o partido “Fazemos” com o Parlamento em tensão pela colisão entre Governo, PS e Chega no Orçamento.",
+      "description": "Análise sobre Isaltino Morais fundar o partido “Fazemos” e o Governo, PS e Chega colidirem no debate do Orçamento do Estado.",
       "imageUrl": "/covers/podcast_onde_pode_chegar_o_novo_partido_de_isaltino_morais__c2ee5ab5_256dd8a8a7dc.jpg",
       "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/onde-pode-chegar-o-novo-partido-de-isaltino-morais",
       "externalId": "cae585a2-47a5-42a9-a4da-b50900003c95",
@@ -2965,53 +2965,10 @@
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-11-21T06:30:00Z",
         "sourceDescription": "Isaltino Morais prepara-se para fundar um partido e o país político já está a fazer contas. Numa semana de enorme agitação no Parlamento, com o Governo, o PS e o Chega em rota de colisão em torno do Orçamento do Estado, o autarca de Oeiras confirmou ao Expresso que o seu “Fazemos” é inevitável.",
-        "editorialDescription": "Análise sobre Isaltino Morais fundar o partido “Fazemos” com o Parlamento em tensão pela colisão entre Governo, PS e Chega no Orçamento.",
+        "editorialDescription": "Análise sobre Isaltino Morais fundar o partido “Fazemos” e o Governo, PS e Chega colidirem no debate do Orçamento do Estado.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "3ff565e943568b22b76ce500dd91175b2219ca28d666c990d3bb811220ff92db",
         "editorialDescriptionProvider": "groq"
-      }
-    },
-    {
-      "id": "rss_podcast_c740faff87388a1a",
-      "type": "podcast",
-      "category": "Podcast",
-      "title": "Ronaldo abandona + A tenda da Renata Cambra - Conteúdo do Batáguas T03 Ep12",
-      "authorOrMeta": "Conteúdo do Batáguas",
-      "description": "Análise sobre a divulgação de novas datas para o Optimista Cético e a promoção do Rally Dacarlos nas redes do Diogo Batáguas.",
-      "imageUrl": "/covers/podcast_ronaldo_abandona___a_tenda_da_renata_cambra___conte__6d951b8b_c740faff8738.jpg",
-      "link": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
-      "externalId": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
-      "sourceSeriesId": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
-      "sourceSeriesTitle": "Conteúdo do Batáguas",
-      "priority": 4,
-      "sourcePublishedAt": "2026-11-09T19:23:57Z",
-      "expiryDate": "2026-11-30T19:23:57Z",
-      "createdAt": "2026-11-22T12:43:15.063668Z",
-      "status": "queue",
-      "sourceHint": "podcast-rss",
-      "_discovery": {
-        "kind": "rss",
-        "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
-        "guid": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
-        "imageUrl": "https://www.youtube.com/v/YQXRzyRk9K0?version=3",
-        "show": "Conteúdo do Batáguas"
-      },
-      "resolutionStatus": "verified",
-      "verification": {
-        "status": "verified",
-        "source": "podcast-rss",
-        "entityId": "https://www.youtube.com/watch?v=YQXRzyRk9K0",
-        "score": 1.0,
-        "coverHash": "61d297fd7f439b320dcc9044509dc00f3fe30d599ae797f034561ae81fbac53a",
-        "verifiedAt": "2026-11-10T12:48:27.852473Z",
-        "resolvedTitle": "Ronaldo abandona + A tenda da Renata Cambra - Conteúdo do Batáguas T03 Ep12",
-        "resolvedAuthor": "Conteúdo do Batáguas",
-        "sourcePublishedAt": "2026-11-09T19:23:57Z",
-        "sourceDescription": "Análise sobre a divulgação de novas datas para o Optimista Cético e a promoção do Rally Dacarlos nas redes do Diogo Batáguas.",
-        "editorialDescription": "Análise sobre a divulgação de novas datas para o Optimista Cético e a promoção do Rally Dacarlos nas redes do Diogo Batáguas.",
-        "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "37dd40680c414bf440a2a8e34c54f322731a8e5cc99dd0cdcd8716d8b3c95924",
-        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -3108,11 +3065,11 @@
         "resolvedTitle": "Mário Centeno, o “Ronaldo das Finanças”: “Quem estranha o banco é o Ronaldo, eu não”",
         "resolvedAuthor": "Isto É Gozar Com Quem Trabalha",
         "sourcePublishedAt": "2026-11-22T23:22:45Z",
-        "sourceDescription": "",
+        "sourceDescription": "Análise sobre o episódio do podcast Isto É Gozar Com Quem Trabalha, com Mário Centeno, publicado a 22 de novembro de 2026.",
         "editorialDescription": "Análise sobre o episódio do podcast Isto É Gozar Com Quem Trabalha, com Mário Centeno, publicado a 22 de novembro de 2026.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "530fc6a97f0a82c0190279a6e83e95e401d005e2db9616f6a3a8f649c90ba2ad",
-        "editorialDescriptionProvider": "groq"
+        "editorialSourceHash": "ead1dfb5c284a49eb76f619bb364fd3e04b421e360a84fd1653cef05ec5b30cc",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -3151,11 +3108,11 @@
         "resolvedTitle": "\"O Governo e o PSD estão a cometer erros gigantescos\"",
         "resolvedAuthor": "O Princípio da Incerteza",
         "sourcePublishedAt": "2026-11-23T12:16:12Z",
-        "sourceDescription": "",
+        "sourceDescription": "Análise sobre o episódio do podcast O Princípio da Incerteza, publicado a 23 de novembro de 2026, que critica erros do Governo e do PSD.",
         "editorialDescription": "Análise sobre o episódio do podcast O Princípio da Incerteza, publicado a 23 de novembro de 2026, que critica erros do Governo e do PSD.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "fdd2d5b3235d4068e4036c7b64b3c5237e0d0268a7efb77ad7acdd58758c379e",
-        "editorialDescriptionProvider": "groq"
+        "editorialSourceHash": "4911ab459163400ae381695ab6b2b5c381c0c78a27c3f1e3313925ae82c989d8",
+        "editorialDescriptionProvider": "kept"
       }
     },
     {
@@ -3172,7 +3129,7 @@
       "sourcePublishedAt": "2026-11-23T13:00:33Z",
       "expiryDate": "2026-12-23T13:00:33Z",
       "createdAt": "2026-11-23T14:59:03.874209Z",
-      "status": "queue",
+      "status": "invalid",
       "sourceHint": "trusted-rss",
       "_discovery": {
         "kind": "rss-highlight",
@@ -3187,7 +3144,7 @@
           "Observador"
         ]
       },
-      "resolutionStatus": "verified",
+      "resolutionStatus": "rejected",
       "verification": {
         "status": "verified",
         "source": "news-rss:observador.pt",
@@ -3199,6 +3156,51 @@
         "resolvedAuthor": "observador.pt",
         "sourcePublishedAt": "2026-11-23T13:00:33Z",
         "sourceDescription": "Em entrevista ao Observador, António Leitão Amaro acusa a oposição de estar a fazer tudo para \"bloquear\" o país na esperança de crescer eleitoralmente e prejudicar o PSD. \"Prejudicam o país\", denuncia"
+      },
+      "validationError": "NEWS_NOT_ALLOWED [\"Talvez o Chega e o PS estejam a tentar forçar eleições\"]: Notícias correntes não são elegíveis para Destaque."
+    },
+    {
+      "id": "rss_podcast_e7b80155ee8e8b0c",
+      "type": "podcast",
+      "category": "Podcast",
+      "title": "Tempestade Charles + Dulce Pontes odeia-me + Moedas sem Glória - Conteúdo do Batáguas T03 Ep13",
+      "editorialTitle": "Tempestade Charles + Dulce Pontes odeia-me + Moedas sem Glória",
+      "authorOrMeta": "Conteúdo do Batáguas",
+      "description": "Análise sobre a divulgação das novas datas do Optimista Cético, a promoção do Rally Dacarlos e a partilha de contactos nas redes sociais.",
+      "imageUrl": "/covers/podcast_tempestade_charles___dulce_pontes_odeia_me___moedas__49f2efbe_e7b80155ee8e.jpg",
+      "link": "https://www.youtube.com/watch?v=of2EdvgAkzY",
+      "externalId": "https://www.youtube.com/watch?v=of2EdvgAkzY",
+      "sourceSeriesId": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+      "sourceSeriesTitle": "Conteúdo do Batáguas",
+      "priority": 4,
+      "sourcePublishedAt": "2026-11-23T18:54:57Z",
+      "expiryDate": "2026-12-14T18:54:57Z",
+      "createdAt": "2026-11-24T15:00:47.889441Z",
+      "status": "queue",
+      "sourceHint": "podcast-rss",
+      "_discovery": {
+        "kind": "rss",
+        "feedUrl": "https://www.youtube.com/feeds/videos.xml?channel_id=UCQ2IleutNd89c9F-LjrwwwQ",
+        "guid": "https://www.youtube.com/watch?v=of2EdvgAkzY",
+        "imageUrl": "https://www.youtube.com/v/of2EdvgAkzY?version=3",
+        "show": "Conteúdo do Batáguas"
+      },
+      "resolutionStatus": "verified",
+      "verification": {
+        "status": "verified",
+        "source": "podcast-rss",
+        "entityId": "https://www.youtube.com/watch?v=of2EdvgAkzY",
+        "score": 1.0,
+        "coverHash": "e1fd3a45bc92fe19e7644aabbb1161fa4ea9279bed391bfab954431b0bc7c202",
+        "verifiedAt": "2026-11-24T15:00:48.247339Z",
+        "resolvedTitle": "Tempestade Charles + Dulce Pontes odeia-me + Moedas sem Glória - Conteúdo do Batáguas T03 Ep13",
+        "resolvedAuthor": "Conteúdo do Batáguas",
+        "sourcePublishedAt": "2026-11-23T18:54:57Z",
+        "sourceDescription": "OPTIMISTA CÉPTICO (NOVAS DATAS) https://kilt.pt/eventos/optimista-ceptico-diogo-bataguas RALLY DACARLOS https://rallydacarlos.pt SEGUIR https://www.instagram.com/diogobataguas https://www.twitter.com/diogobataguas https://www.tiktok.com/bataguas",
+        "editorialDescription": "Análise sobre a divulgação das novas datas do Optimista Cético, a promoção do Rally Dacarlos e a partilha de contactos nas redes sociais.",
+        "editorialDescriptionVersion": 1,
+        "editorialSourceHash": "f5ff36689f313162c787a7e4a11e763a6ec286e5a5d56f9f091f5118e4a98da4",
+        "editorialDescriptionProvider": "groq"
       }
     }
   ],
@@ -6190,7 +6192,7 @@
       "movie": 4,
       "nostalgia": 4,
       "investigation": 0,
-      "highlight": 1
+      "highlight": 0
     },
     "missingSlots": [],
     "fallbackRequired": false
