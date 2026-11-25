@@ -2934,7 +2934,7 @@
       "category": "Podcast",
       "title": "Onde pode chegar o novo partido de Isaltino Morais?",
       "authorOrMeta": "Expresso da Meia-Noite",
-      "description": "Análise sobre Isaltino Morais fundar o partido “Fazemos” e o Governo, PS e Chega colidirem no debate do Orçamento do Estado.",
+      "description": "Análise sobre a preparação de Isaltino Morais para fundar o partido “Fazemos” enquanto Governo, PS e Chega colidem no Orçamento do Estado.",
       "imageUrl": "/covers/podcast_onde_pode_chegar_o_novo_partido_de_isaltino_morais__c2ee5ab5_256dd8a8a7dc.jpg",
       "link": "https://omny.fm/shows/expresso-expresso-da-meia-noite/onde-pode-chegar-o-novo-partido-de-isaltino-morais",
       "externalId": "cae585a2-47a5-42a9-a4da-b50900003c95",
@@ -2965,7 +2965,7 @@
         "resolvedAuthor": "Expresso da Meia-Noite",
         "sourcePublishedAt": "2026-11-21T06:30:00Z",
         "sourceDescription": "Isaltino Morais prepara-se para fundar um partido e o país político já está a fazer contas. Numa semana de enorme agitação no Parlamento, com o Governo, o PS e o Chega em rota de colisão em torno do Orçamento do Estado, o autarca de Oeiras confirmou ao Expresso que o seu “Fazemos” é inevitável.",
-        "editorialDescription": "Análise sobre Isaltino Morais fundar o partido “Fazemos” e o Governo, PS e Chega colidirem no debate do Orçamento do Estado.",
+        "editorialDescription": "Análise sobre a preparação de Isaltino Morais para fundar o partido “Fazemos” enquanto Governo, PS e Chega colidem no Orçamento do Estado.",
         "editorialDescriptionVersion": 1,
         "editorialSourceHash": "3ff565e943568b22b76ce500dd91175b2219ca28d666c990d3bb811220ff92db",
         "editorialDescriptionProvider": "groq"
@@ -3199,8 +3199,8 @@
         "sourceDescription": "OPTIMISTA CÉPTICO (NOVAS DATAS) https://kilt.pt/eventos/optimista-ceptico-diogo-bataguas RALLY DACARLOS https://rallydacarlos.pt SEGUIR https://www.instagram.com/diogobataguas https://www.twitter.com/diogobataguas https://www.tiktok.com/bataguas",
         "editorialDescription": "Análise sobre a divulgação das novas datas do Optimista Cético, a promoção do Rally Dacarlos e a partilha de contactos nas redes sociais.",
         "editorialDescriptionVersion": 1,
-        "editorialSourceHash": "f5ff36689f313162c787a7e4a11e763a6ec286e5a5d56f9f091f5118e4a98da4",
-        "editorialDescriptionProvider": "groq"
+        "editorialSourceHash": "489e5f6ebe0b28a64f7cd8b722a3caa6396e714ec15fb05cbf78a81cb9a53915",
+        "editorialDescriptionProvider": "kept"
       }
     }
   ],
